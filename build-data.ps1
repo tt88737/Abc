@@ -1157,6 +1157,114 @@ function New-ForecastEvaluation {
     }
 }
 
+function Get-Window5RawWindows {
+    param([object[]]$Rows)
+
+    if (@($Rows).Count -eq 0) { return @() }
+    $maxIssue = @($Rows | ForEach-Object { [int]$_.issue } | Measure-Object -Maximum).Maximum
+    $windows = @()
+    for ($start = 1; $start -le $maxIssue; $start += 5) {
+        $end = $start + 4
+        $chunk = @($Rows | Where-Object { [int]$_.issue -ge $start -and [int]$_.issue -le $end })
+        if ($chunk.Count -eq 0) { continue }
+        $nums = @($chunk | ForEach-Object { ([int]$_.balls[6].numberText).ToString('00') } | Select-Object -Unique)
+        $windows += [pscustomobject]@{ start = $start; end = $end; nums = $nums }
+    }
+    return $windows
+}
+
+function Get-GreedyWindow5Pool {
+    param([object[]]$Windows)
+
+    $selected = New-Object 'System.Collections.Generic.List[string]'
+    $uncovered = New-Object 'System.Collections.Generic.List[int]'
+    for ($i = 0; $i -lt @($Windows).Count; $i++) { $uncovered.Add($i) | Out-Null }
+    while ($uncovered.Count -gt 0) {
+        $bestNum = ''
+        $bestGain = -1
+        foreach ($n in 1..49) {
+            $num = $n.ToString('00')
+            if ($selected.Contains($num)) { continue }
+            $gain = 0
+            foreach ($idx in @($uncovered)) {
+                if (@($Windows[$idx].nums) -contains $num) { $gain++ }
+            }
+            if ($gain -gt $bestGain) {
+                $bestGain = $gain
+                $bestNum = $num
+            }
+        }
+        if ($bestGain -le 0 -or [string]::IsNullOrWhiteSpace($bestNum)) { break }
+        $selected.Add($bestNum) | Out-Null
+        foreach ($idx in @($uncovered.ToArray())) {
+            if (@($Windows[$idx].nums) -contains $bestNum) { $uncovered.Remove($idx) | Out-Null }
+        }
+    }
+    return @($selected)
+}
+
+function Get-StableWindow5Pool {
+    param([object[]]$SourceRows, [string]$CurrentYear)
+
+    $freq = @{}
+    $years = @($SourceRows | Where-Object { ([string]$_.date).Length -ge 4 -and -not ([string]$_.date).StartsWith($CurrentYear + '-') } | ForEach-Object { ([string]$_.date).Substring(0, 4) } | Sort-Object -Unique)
+    foreach ($year in $years) {
+        $rows = @($SourceRows | Where-Object { ([string]$_.date).StartsWith($year + '-') } | Sort-Object @{ Expression = 'issue'; Descending = $false })
+        $pool = @(Get-GreedyWindow5Pool -Windows (Get-Window5RawWindows -Rows $rows))
+        foreach ($num in $pool) {
+            if (-not $freq.ContainsKey($num)) { $freq[$num] = 0 }
+            $freq[$num]++
+        }
+    }
+    $take = if ($SourceRows[0].source -eq 'hk') { 15 } else { 13 }
+    return @($freq.GetEnumerator() | Sort-Object @{ Expression = 'Value'; Descending = $true }, @{ Expression = { [int]$_.Key }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.Key })
+}
+
+function New-Window5State {
+    param([object[]]$Records, [object]$Existing = $null, [string]$GeneratedAt = '')
+
+    $items = @(
+        foreach ($source in @('am', 'hk')) {
+            $sourceRows = @($Records | Where-Object { $_.source -eq $source -and -not [string]::IsNullOrWhiteSpace([string]$_.date) })
+            if ($sourceRows.Count -eq 0) { continue }
+            $latest = @($sourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First 1)[0]
+            $year = ([string]$latest.date).Substring(0, 4)
+            $yearRows = @($sourceRows | Where-Object { ([string]$_.date).StartsWith($year + '-') } | Sort-Object @{ Expression = 'issue'; Descending = $false })
+            $pool = @(Get-GreedyWindow5Pool -Windows (Get-Window5RawWindows -Rows $yearRows))
+            $existingItem = @($Existing.items | Where-Object { $_.source -eq $source -and [string]$_.year -eq $year } | Select-Object -First 1)
+            $oldPool = if ($existingItem.Count -gt 0) { @($existingItem[0].yearPool | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
+            $changed = ($pool -join ',') -ne ($oldPool -join ',')
+            $changeTime = if ($changed -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].changeTime)) { $GeneratedAt } else { [string]$existingItem[0].changeTime }
+            $interval = if ($source -eq 'hk') { 10 } else { 20 }
+            $latestIssue = [int]$latest.issue
+            $oldStablePool = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePool) { @($existingItem[0].stablePool | Where-Object { [int]$_ -ge 1 } | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
+            $oldStableIssue = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePoolLastIssue) { [int]$existingItem[0].stablePoolLastIssue } else { 0 }
+            $nextRecalcIssue = if ($oldStableIssue -gt 0) { $oldStableIssue + $interval } else { [Math]::Ceiling($latestIssue / $interval) * $interval }
+            $shouldRecalcStable = $existingItem.Count -eq 0 -or $oldStablePool.Count -eq 0 -or $latestIssue -ge $nextRecalcIssue -or [string]$existingItem[0].year -ne $year
+            $newStablePool = @(if ($shouldRecalcStable) { @(Get-StableWindow5Pool -SourceRows $sourceRows -CurrentYear $year) } else { $oldStablePool })
+            $stableChanged = ($newStablePool -join ',') -ne ($oldStablePool -join ',')
+            $stableChangeTime = if ($stableChanged -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].stablePoolChangeTime)) { $GeneratedAt } else { [string]$existingItem[0].stablePoolChangeTime }
+            [pscustomobject]@{
+                source = $source
+                year = $year
+                yearPool = $pool
+                adjustmentStatus = if ($changed) { (U @(0x6709,0x53D8,0x66F4)) } else { (U @(0x65E0,0x53D8,0x66F4)) }
+                adjustmentReason = if ($changed) { (U @(0x6700,0x65B0,0x5F00,0x5956,0x540E,0x5F53,0x5E74,0x8986,0x76D6,0x6C60,0x5DF2,0x8C03,0x6574)) } else { (U @(0x672C,0x6B21,0x91CD,0x7B97,0x4E0E,0x4E0A,0x6B21,0x4E00,0x81F4)) }
+                changeTime = $changeTime
+                stablePool = @($newStablePool)
+                stablePoolStatus = if (-not $shouldRecalcStable) { (U @(0x672A,0x89E6,0x53D1)) } elseif ($stableChanged) { (U @(0x6709,0x53D8,0x66F4)) } else { (U @(0x65E0,0x53D8,0x66F4)) }
+                stablePoolReason = if (-not $shouldRecalcStable) { (U @(0x672A,0x5230,0x91CD,0x7B97,0x6761,0x4EF6,0xFF0C,0x6CBF,0x7528,0x4E0A,0x6B21,0x8DE8,0x5E74,0x7A33,0x5B9A,0x6C60)) } else { (U @(0x5DF2,0x6309,0x5468,0x671F,0x89C4,0x5219,0x91CD,0x7B97,0x8DE8,0x5E74,0x7A33,0x5B9A,0x6C60)) }
+                stablePoolChangeTime = $stableChangeTime
+                stablePoolLastIssue = if ($shouldRecalcStable) { $latestIssue } else { $oldStableIssue }
+                stablePoolNextRecalcIssue = if ($shouldRecalcStable) { $latestIssue + $interval } else { $nextRecalcIssue }
+                computedAt = $GeneratedAt
+            }
+        }
+    )
+
+    return [pscustomobject]@{ generatedAt = $GeneratedAt; items = $items }
+}
+
 function New-GamePredictions {
     param([object[]]$Records, [object[]]$Existing = @())
 
@@ -1660,6 +1768,7 @@ __EMBEDDED_JSON__
     let generatedPredictions = {next: [], sanzhong: []};
     let gamePredictions = {items: []};
     let forecastPredictions = {items: []};
+    let window5State = {items: []};
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const pct = (value, max) => max ? Math.round(value / max * 100) : 0;
     function rankHtml(items, limit = 10) {
@@ -1790,8 +1899,9 @@ __EMBEDDED_JSON__
       const yearRows = sourceRows.filter(row => displayYear(row) === currentYear).sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
       const pools = window5Pools[source] || window5Pools.am;
       const rawYearWindows = fiveWindowRawWindows(yearRows);
-      const yearPool = greedyFiveWindowPool(rawYearWindows);
-      const stablePool = pools.stablePool;
+      const stateItem = (window5State.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
+      const yearPool = stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows);
+      const stablePool = stateItem?.stablePool?.length ? stateItem.stablePool : pools.stablePool;
       const yearWindows = fiveWindowCoverage(yearRows, yearPool);
       const stableWindows = fiveWindowCoverage(yearRows, stablePool);
       const latestIssue = Number(latest?.issue || 0);
@@ -1806,9 +1916,14 @@ __EMBEDDED_JSON__
         const misses = windows.filter(item => !item.covered);
         yearly.push({year, total: windows.length, covered: windows.length - misses.length, misses});
       });
-      const adjustmentStatus = yearPool.length > 0 ? '&#24050;&#37325;&#26032;&#35745;&#31639;' : '&#26080;&#25968;&#25454;';
-      const adjustmentReason = yearPool.length > 0 ? '&#22522;&#20110;&#26368;&#26032;&#24050;&#24320;&#22870;&#31383;&#21475;&#33258;&#21160;&#29983;&#25104;&#24403;&#24180;&#35206;&#30422;&#27744;' : '&#24403;&#24180;&#26242;&#26080;&#24320;&#22870;&#31383;&#21475;';
-      return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason};
+      const adjustmentStatus = stateItem?.adjustmentStatus || (yearPool.length > 0 ? '&#26080;&#21464;&#26356;' : '&#26080;&#25968;&#25454;');
+      const adjustmentReason = stateItem?.adjustmentReason || (yearPool.length > 0 ? '&#26412;&#27425;&#37325;&#31639;&#19982;&#19978;&#27425;&#19968;&#33268;' : '&#24403;&#24180;&#26242;&#26080;&#24320;&#22870;&#31383;&#21475;');
+      const changeTime = stateItem?.changeTime || summary.generatedAt || '';
+      const stablePoolStatus = stateItem?.stablePoolStatus || '&#26410;&#35302;&#21457;';
+      const stablePoolReason = stateItem?.stablePoolReason || '';
+      const stablePoolChangeTime = stateItem?.stablePoolChangeTime || '';
+      const stablePoolNextRecalcIssue = stateItem?.stablePoolNextRecalcIssue || '';
+      return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, stablePoolStatus, stablePoolReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
     }
     function recommendationSummary(rows) {
       const map = new Map();
@@ -2080,9 +2195,8 @@ __EMBEDDED_JSON__
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
-        <section class="panel"><h2>&#35206;&#30422;&#27744;&#29366;&#24577;</h2><p>${analysis.adjustmentStatus}</p><p class="muted">${analysis.adjustmentReason}</p></section>
-        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}</section>
-        <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}</section>
+        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${analysis.adjustmentStatus}</p><p class="muted">${analysis.adjustmentReason}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
+        <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${analysis.stablePoolStatus}</p><p class="muted">${analysis.stablePoolReason}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
         <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
         <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></section>
       </div>`;
@@ -2122,6 +2236,7 @@ __EMBEDDED_JSON__
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
       gamePredictions = data.games || {items: []};
       forecastPredictions = data.forecasts || {items: []};
+      window5State = data.window5 || {items: []};
       renderOverview();
     } catch (err) {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
@@ -2245,7 +2360,14 @@ $forecasts = New-ForecastPredictions -Records $deduped -Existing $existingForeca
 $forecastEvaluationPath = Join-Path $dataDir 'forecast-evaluation.json'
 $forecastEvaluation = New-ForecastEvaluation -Forecasts $forecasts
 [IO.File]::WriteAllText($forecastEvaluationPath, ($forecastEvaluation | ConvertTo-Json -Depth 12), $Utf8NoBom)
-$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; forecasts = $forecasts }
+$window5Path = Join-Path $dataDir 'window5-state.json'
+$existingWindow5 = $null
+if (Test-Path -LiteralPath $window5Path) {
+    try { $existingWindow5 = Get-Content -LiteralPath $window5Path -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $existingWindow5 = $null }
+}
+$window5 = New-Window5State -Records $deduped -Existing $existingWindow5 -GeneratedAt $summary.generatedAt
+[IO.File]::WriteAllText($window5Path, ($window5 | ConvertTo-Json -Depth 8), $Utf8NoBom)
+$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; forecasts = $forecasts; window5 = $window5 }
 $jsonPath = Join-Path $dataDir 'records.json'
 $json = $payload | ConvertTo-Json -Depth 10
 [IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)

@@ -617,6 +617,31 @@ try {
     if (-not $dashboard.Contains('adjustmentStatus') -or -not $dashboard.Contains('adjustmentReason')) {
         throw 'five-issue window page should show recalculation status and reason'
     }
+    if (-not $dashboard.Contains('changeTime')) {
+        throw 'five-issue window page should show coverage pool change time'
+    }
+    if ($dashboard.Contains('&#24050;&#37325;&#26032;&#35745;&#31639;')) {
+        throw 'five-issue window status should use no-change/changed wording instead of recalculated'
+    }
+    if (-not $dashboard.Contains('stablePoolStatus') -or -not $dashboard.Contains('stablePoolChangeTime') -or -not $dashboard.Contains('stablePoolNextRecalcIssue')) {
+        throw 'five-issue window page should show stable pool update status, change time, and next recalculation issue'
+    }
+    $windowStateFile = Join-Path $outDir 'data/window5-state.json'
+    if (-not (Test-Path -LiteralPath $windowStateFile)) {
+        throw 'window5-state.json was not created'
+    }
+    $windowState = Get-Content -LiteralPath $windowStateFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($item in @($windowState.items)) {
+        if ($null -eq $item.stablePool -or $null -eq $item.stablePoolStatus -or $null -eq $item.stablePoolChangeTime -or $null -eq $item.stablePoolNextRecalcIssue) {
+            throw 'window5-state item should include stable pool state fields'
+        }
+        if (@($item.stablePool | ForEach-Object { [string]$_ }) -contains '00') {
+            throw 'window5 stable pool should not contain placeholder 00'
+        }
+    }
+    if ($dashboard.Contains('<h2>&#35206;&#30422;&#27744;&#29366;&#24577;</h2>')) {
+        throw 'five-issue window status should be displayed under current-year pool, not as a separate card'
+    }
     if (-not $dashboard.Contains('function forecastSection(source, game, title)')) {
         throw 'dashboard should render forecast observations in a dedicated tab'
     }
