@@ -87,6 +87,7 @@ $hkSample = @"
 "@
 
 [IO.File]::WriteAllText((Join-Path $pagesDir 'hk.html'), $hkSample, $utf8NoBom)
+[IO.File]::WriteAllText((Join-Path $outDir 'kjjl.html'), '<html><body>lottery records</body></html>', $utf8NoBom)
 
 $dataDir = Join-Path $outDir 'data'
 New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
@@ -281,10 +282,19 @@ try {
     if ($data.summary.totalRecords -ne 4) {
         throw 'summary total mismatch'
     }
-    if (-not (Test-Path -LiteralPath (Join-Path $outDir 'dashboard.html'))) {
-        throw 'dashboard.html was not created'
+    if (-not (Test-Path -LiteralPath (Join-Path $outDir 'index.html'))) {
+        throw 'index.html dashboard was not created'
     }
-    $dashboard = [IO.File]::ReadAllText((Join-Path $outDir 'dashboard.html'), [Text.Encoding]::UTF8)
+    if (-not (Test-Path -LiteralPath (Join-Path $outDir 'kjjl.html'))) {
+        throw 'kjjl.html lottery records page was not created'
+    }
+    if (Test-Path -LiteralPath (Join-Path $outDir 'dashboard.html')) {
+        throw 'dashboard.html should not be generated after renaming dashboard to index.html'
+    }
+    $dashboard = [IO.File]::ReadAllText((Join-Path $outDir 'index.html'), [Text.Encoding]::UTF8)
+    if (-not $dashboard.Contains('href="kjjl.html"')) {
+        throw 'dashboard should link back to kjjl.html'
+    }
     $buildScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'build-data.ps1'), [Text.Encoding]::UTF8)
     if ($buildScript.Contains('C:\codex\test\am')) {
         throw 'build-data.ps1 should not use a machine-specific default path'
@@ -715,7 +725,7 @@ global.document = { getElementById: () => ({ value: 'am', addEventListener() {},
 new Function(script)();
 console.log('RUNTIME_OK');
 '@
-    $runtimeOutput = $runtimeCheck | node - (Join-Path $outDir 'dashboard.html')
+    $runtimeOutput = $runtimeCheck | node - (Join-Path $outDir 'index.html')
     if ($LASTEXITCODE -ne 0 -or ($runtimeOutput -join "`n") -notmatch 'RUNTIME_OK') {
         throw "dashboard runtime check failed: $($runtimeOutput -join ' ')"
     }
