@@ -15,13 +15,21 @@ concurrency:
 
 jobs:
   fetch:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure Git
+        shell: pwsh
+        run: |
+          git config --global --add safe.directory "$env:GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run collector
         shell: pwsh
@@ -29,20 +37,27 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File .\build-data.ps1
 
       - name: Commit generated data
+        id: commit
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
           git add .
           git diff --cached --quiet
           if ($LASTEXITCODE -eq 0) {
             Write-Host "No generated changes to commit."
+            "has_changes=false" >> $env:GITHUB_OUTPUT
             exit 0
           }
           $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
           git commit -m "daily fetch $timestamp"
-          git pull --rebase origin main
+          "has_changes=true" >> $env:GITHUB_OUTPUT
+
+      - name: Push generated data
+        if: steps.commit.outputs.has_changes == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git remote set-url origin "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
