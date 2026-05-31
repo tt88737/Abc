@@ -1,6 +1,6 @@
 param(
     [string]$SourceUrl = 'https://2025kj.zkclhb.com:2025/am.html',
-    [string]$OutputDir = 'C:\codex\test\am',
+    [string]$OutputDir = $PSScriptRoot,
     [string]$BaseUrl = 'https://2025kj.zkclhb.com:2025/am.html',
     [switch]$SkipSnapshot
 )
@@ -320,8 +320,8 @@ try {
 
     $localHtml = Convert-ToLocalViewHtml -Html $html -BaseUrl $baseUrlForRewrite -OutputDir $OutputDir -PageMap $pageMap
 
-    $indexPath = Join-Path $OutputDir 'index.html'
-    [IO.File]::WriteAllText($indexPath, $localHtml, $Utf8NoBom)
+    $recordsPagePath = Join-Path $OutputDir 'kjjl.html'
+    [IO.File]::WriteAllText($recordsPagePath, $localHtml, $Utf8NoBom)
 
     $rootPage = $allPages[([Uri]$baseUrlForRewrite).AbsoluteUri]
     if ($null -ne $rootPage) {
@@ -356,7 +356,7 @@ try {
             New-Item -ItemType Directory -Path $snapshotDir -Force | Out-Null
         }
         $snapshotName = 'am-{0}.html' -f (Get-Date -Format 'yyyyMMdd-HHmmss')
-        Copy-Item -LiteralPath $indexPath -Destination (Join-Path $snapshotDir $snapshotName) -Force
+        Copy-Item -LiteralPath $recordsPagePath -Destination (Join-Path $snapshotDir $snapshotName) -Force
     }
 
     $buildDataScript = Join-Path $OutputDir 'build-data.ps1'
@@ -365,8 +365,8 @@ try {
         Write-Log "Dashboard data refreshed"
     }
 
-    Write-Log "Fetch success: $indexPath"
-    Write-Host "Saved: $indexPath"
+    Write-Log "Fetch success: $recordsPagePath"
+    Write-Host "Saved: $recordsPagePath"
 }
 catch {
     Write-Log $_.Exception.Message 'ERROR'

@@ -1,77 +1,62 @@
-# 澳门开奖记录本地抓取工具
+# 开奖记录数据看板
 
-## 文件说明
+这是一个静态数据看板项目，用于采集澳门 / 香港开奖记录，生成可部署到 Vercel 的静态页面。
 
-- `fetch-am.ps1`：抓取原站开奖记录并保存到本地。
-- `index.html`：本地查看页，双击即可打开。
-- `dashboard.html`：数据看板入口，包含看板、趋势、选号、游戏、日报。
-- `dashboard.html` 已内嵌数据，直接双击打开即可，不依赖浏览器 `fetch` 读取本地 JSON。
-- 游戏标签包含开奖记录挑战和下一期预测；预测记录保存在当前浏览器的 `localStorage`。
-- 游戏标签包含“三中三每日推荐”：按每期前 6 个号码生成 10 组三码组合，仅作概率游戏参考。
-- 游戏标签包含“特别号防连错”：只看每期最后一个特别号，固定列举 N=30-38 的全历史最优组合；同时按期号周期 `001-005`、`006-010` 等列出周期 8 码组合。
-- 看板、趋势、选号、游戏、日报均在页面内提供统一的“来源”下拉，按澳门 / 香港分开统计和操作。
-- 生肖筛选固定为十二生肖；历史页面里带有五行后缀的数据会自动归一到生肖本身。
+## 页面入口
+
+- `index.html`：数据看板首页，包含看板、游戏、5期窗口、三中三5期窗口、日报。
+- `kjjl.html`：原始开奖记录页面。
 - `report.html`：独立日报页面。
-- `data/records.json`：从本地 HTML 解析出的结构化开奖记录。
-- `build-data.ps1`：根据 `pages/*.html` 重新生成 `records.json`、`dashboard.html` 和 `report.html`。
-- `pages/`：从首页按钮发现并抓回来的本地功能页面，例如香港记录、年份记录、更多期数。
-- `assets/`：页面使用的 CSS、JS 等静态资源。
-- `install-task.ps1`：安装 Windows 计划任务，每天晚上 9:45 自动抓取。
-- `run-hidden.vbs`：计划任务使用的隐藏运行包装脚本，避免弹出 PowerShell 窗口。
-- `run-now.ps1`：立即手动抓取一次。
-- `logs/fetch.log`：抓取日志。
-- `snapshots/`：每次抓取的历史快照。
 
-## 第一次使用
+## 自动采集
 
-在 PowerShell 中运行：
+项目通过 GitHub Actions 定时运行 `.github/workflows/daily-fetch.yml`：
 
-```powershell
-cd C:\codex\test\am
-powershell -ExecutionPolicy Bypass -File .\run-now.ps1
-```
+- 每天北京时间 `21:45` 执行一次。
+- 运行 `build-data.ps1` 重新解析 `pages/*.html` 并生成数据。
+- 如果生成文件有变化，自动提交到 `main`。
+- Vercel 绑定 GitHub 仓库后会自动重新部署。
 
-打开本地文件：
+也可以在 GitHub 的 `Actions -> Daily Fetch -> Run workflow` 手动触发。
 
-```text
-C:\codex\test\am\index.html
-```
+## 关键文件
 
-打开数据工具：
+- `build-data.ps1`：根据 `pages/*.html` 生成 `data/*.json`、`index.html`、`report.html`。
+- `fetch-am.ps1`：从来源页面抓取开奖记录和相关页面，主要用于本地手动采集。
+- `pages/`：采集回来的源页面，是生成结构化数据的输入。
+- `data/records.json`：结构化开奖记录。
+- `data/game-predictions.json`：游戏推荐记录和结算状态。
+- `data/window5-state.json`：5期窗口覆盖池状态。
+- `test-build-data.ps1`：主构建回归测试。
+- `test-fetch-am.ps1`：采集脚本测试。
+- `test-sanzhong-coverage.ps1`：三中三组合覆盖测试。
 
-```text
-C:\codex\test\am\dashboard.html
-```
-
-打开日报：
-
-```text
-C:\codex\test\am\report.html
-```
-
-## 安装每天晚上 9:45 自动抓取
+## 本地生成
 
 ```powershell
-cd C:\codex\test\am
-powershell -ExecutionPolicy Bypass -File .\install-task.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build-data.ps1
 ```
 
-计划任务名称：
-
-```text
-Fetch-AM-Lottery-Records
-```
-
-## 手动触发计划任务
+## 本地测试
 
 ```powershell
-Start-ScheduledTask -TaskName Fetch-AM-Lottery-Records
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test-build-data.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test-fetch-am.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\test-sanzhong-coverage.ps1
 ```
 
-## 修改抓取时间
+## 部署说明
 
-例如改成晚上 10:00：
+Vercel 直接导入 GitHub 仓库即可。当前项目不需要构建命令，静态文件位于仓库根目录。
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\install-task.ps1 -RunAt 22:00
-```
+建议确认 GitHub 仓库设置：
+
+`Settings -> Actions -> General -> Workflow permissions -> Read and write permissions`
+
+## 不提交的运行产物
+
+- `logs/`
+- `snapshots/`
+- `test-output/`
+- `test-data-output/`
+- `test-sanzhong-output/`
