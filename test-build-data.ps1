@@ -299,8 +299,8 @@ try {
     if ($buildScript.Contains('C:\codex\test\am')) {
         throw 'build-data.ps1 should not use a machine-specific default path'
     }
-    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"')) {
-        throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, and daily tabs'
+    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"')) {
+        throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, pattern watch, and daily tabs'
     }
     if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
         throw 'dashboard should not expose trend, picker, sandbox, or forecast modules'
@@ -613,6 +613,18 @@ try {
     if (-not $dashboard.Contains('function renderThreeWindow5()')) {
         throw 'dashboard should expose a three-hit five-issue window renderer'
     }
+    if (-not $dashboard.Contains('function renderPatternWatch()')) {
+        throw 'dashboard should expose a pattern watch renderer'
+    }
+    if (-not $dashboard.Contains('function patternWatchAnalysis(source)')) {
+        throw 'dashboard should calculate pattern watch metrics'
+    }
+    if (-not $dashboard.Contains('function randomWindowBaseline(pickCount, totalCount, drawsPerWindow)')) {
+        throw 'dashboard should calculate random window baselines'
+    }
+    if (-not $dashboard.Contains('function patternLevel(edge, currentMiss, maxMiss)')) {
+        throw 'dashboard should classify pattern observation levels'
+    }
     if (-not $dashboard.Contains('function threeWindowAnalysis(source)')) {
         throw 'dashboard should calculate three-hit five-issue window analysis'
     }
@@ -717,6 +729,7 @@ const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
   .replace(/document.getElementById\('overview-source'\)\.addEventListener\('change', renderOverview\);/g, '')
   .replace(/document.getElementById\('window5-source'\)\.addEventListener\('change', renderWindow5\);/g, '')
   .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
+  .replace(/document.getElementById\('pattern-source'\)\.addEventListener\('change', renderPatternWatch\);/g, '')
   .replace(/document.getElementById\('daily-source'\)\.addEventListener\('change', renderDaily\);/g, '')
   .replace(/document.getElementById\('game-source'\)\.addEventListener\('change', renderGames\);/g, '')
   .replace(/renderOverview\(\);/, "renderOverview(); fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
