@@ -1,5 +1,5 @@
 {
-    "generatedAt":  "2026-06-01 00:54:28",
+    "generatedAt":  "2026-06-01 01:06:39",
     "items":  [
                   {
                       "source":  "am",
@@ -32,7 +32,7 @@
                       "stablePoolChangeTime":  "2026-05-31 01:05:33",
                       "stablePoolLastIssue":  150,
                       "stablePoolNextRecalcIssue":  170,
-                      "computedAt":  "2026-06-01 00:54:28"
+                      "computedAt":  "2026-06-01 01:06:39"
                   },
                   {
                       "source":  "hk",
@@ -62,7 +62,7 @@
                       "stablePoolChangeTime":  "2026-05-31 01:05:33",
                       "stablePoolLastIssue":  58,
                       "stablePoolNextRecalcIssue":  68,
-                      "computedAt":  "2026-06-01 00:54:28"
+                      "computedAt":  "2026-06-01 01:06:39"
                   }
               ]
 }

@@ -718,6 +718,9 @@ try {
     if ($dashboard.Contains($mojibakeMarker)) {
         throw 'dashboard contains mojibake marker'
     }
+    if ($dashboard.Contains('&amp;#30721;') -or $dashboard.Contains('&amp;#32452;') -or $dashboard.Contains('&amp;#22855;') -or $dashboard.Contains('&amp;#20598;')) {
+        throw 'pattern watch should not double-escape size or structure labels'
+    }
     $runtimeCheck = @'
 const fs = require('fs');
 const html = fs.readFileSync(process.argv[2], 'utf8');

@@ -2081,7 +2081,7 @@ __EMBEDDED_JSON__
         const spanName = span <= 12 ? '0-12' : span <= 24 ? '13-24' : '25+';
         spans.set(spanName, (spans.get(spanName) || 0) + 1);
         const odd = nums.filter(n => n % 2 === 1).length;
-        const key = `${odd}&#22855;${3 - odd}&#20598;`;
+        const key = `${odd}\u5947${3 - odd}\u5076`;
         parity.set(key, (parity.get(key) || 0) + 1);
       });
       const toRows = (map) => [...map.entries()].map(([name, count]) => ({name, count})).sort((a, b) => b.count - a.count || String(a.name).localeCompare(String(b.name)));
@@ -2330,9 +2330,9 @@ __EMBEDDED_JSON__
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="pattern-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel full"><h2>&#35268;&#24459;&#35266;&#23519;</h2><p class="muted">${esc(analysis.currentYear)}&#24180;&#65292;&#23545;&#27604;&#23454;&#38469;5&#26399;&#31383;&#21475;&#21629;&#20013;&#29575;&#19982;&#38543;&#26426;&#22522;&#20934;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35268;&#27169;</th><th>&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36229;&#39069;</th><th>&#24403;&#21069;&#28431;&#31383;</th><th>&#26368;&#22823;&#28431;&#31383;</th><th>&#36817;10&#31383;&#21475;</th><th>&#31561;&#32423;</th></tr></thead><tbody>
-          ${patternMetricRow('&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#27744;', analysis.special, `${analysis.special.poolSize}&#30721;`)}
-          ${patternMetricRow('&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#27744;', analysis.stable, `${analysis.stable.poolSize}&#30721;`)}
-          ${patternMetricRow('&#19977;&#20013;&#19977;&#32452;&#21512;&#27744;', analysis.three, `${analysis.three.comboSize}&#32452;`)}
+          ${patternMetricRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, `${analysis.special.poolSize}\u7801`)}
+          ${patternMetricRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, `${analysis.stable.poolSize}\u7801`)}
+          ${patternMetricRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, `${analysis.three.comboSize}\u7EC4`)}
         </tbody></table></section>
         <section class="panel wide"><h2>&#29305;&#21035;&#21495;&#39068;&#33394;&#32467;&#26500;</h2>${simpleRankList(analysis.special.structure.colors)}</section>
         <section class="panel wide"><h2>&#29305;&#21035;&#21495;&#23614;&#25968;&#32467;&#26500;</h2>${simpleRankList(analysis.special.structure.tails.slice(0, 10))}</section>
