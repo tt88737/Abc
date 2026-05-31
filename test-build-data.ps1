@@ -285,13 +285,13 @@ try {
         throw 'dashboard.html was not created'
     }
     $dashboard = [IO.File]::ReadAllText((Join-Path $outDir 'dashboard.html'), [Text.Encoding]::UTF8)
-    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="forecast"') -or -not $dashboard.Contains('data-tab="window5"')) {
-        throw 'dashboard should expose overview, games, forecast, 5-window, and daily tabs'
+    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"')) {
+        throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, and daily tabs'
     }
-    if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"')) {
-        throw 'dashboard should not expose trend, picker, or sandbox modules'
+    if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
+        throw 'dashboard should not expose trend, picker, sandbox, or forecast modules'
     }
-    if ($dashboard.Contains('function renderTrend') -or $dashboard.Contains('function renderPicker') -or $dashboard.Contains('function renderGame()') -or $dashboard.Contains('function renderSandbox()') -or $dashboard.Contains('function sandboxSection')) {
+    if ($dashboard.Contains('function renderTrend') -or $dashboard.Contains('function renderPicker') -or $dashboard.Contains('function renderGame()') -or $dashboard.Contains('function renderSandbox()') -or $dashboard.Contains('function sandboxSection') -or $dashboard.Contains('function renderForecast()') -or $dashboard.Contains('function forecastSection')) {
         throw 'removed modules should not be emitted'
     }
     if ($dashboard.Contains('trend-source') -or $dashboard.Contains('pick-source') -or $dashboard.Contains('special-source')) {
@@ -551,9 +551,6 @@ try {
     if (-not $dashboard.Contains('normalizeNumberGroup(nums).map')) {
         throw 'number chip renderer should use normalized number groups'
     }
-    if (-not $dashboard.Contains('normalizeNumberGroup(group).map')) {
-        throw 'forecast copy text should use normalized number groups'
-    }
     if (-not $dashboard.Contains('function recommendationSummary(rows)')) {
         throw 'dashboard should summarize duplicate algorithm recommendations'
     }
@@ -596,17 +593,29 @@ try {
     if (-not $dashboard.Contains('11&#31639;&#27861;&#25972;&#20307;&#25112;&#32489;')) {
         throw 'dashboard should render aggregate stats for eleven algorithms'
     }
-    if (-not $dashboard.Contains('function renderForecast()')) {
-        throw 'dashboard should expose a dedicated forecast renderer'
-    }
     if (-not $dashboard.Contains('function renderWindow5()')) {
         throw 'dashboard should expose a five-issue window coverage renderer'
+    }
+    if (-not $dashboard.Contains('function renderThreeWindow5()')) {
+        throw 'dashboard should expose a three-hit five-issue window renderer'
+    }
+    if (-not $dashboard.Contains('function threeWindowAnalysis(source)')) {
+        throw 'dashboard should calculate three-hit five-issue window analysis'
+    }
+    if (-not $dashboard.Contains('function buildThreeHitCombos(records)')) {
+        throw 'dashboard should build ranked three-hit combination pools'
+    }
+    if (-not $dashboard.Contains('function threeHitWindowCoverage(rows, combos)')) {
+        throw 'dashboard should evaluate three-hit combination hits by five-issue window'
     }
     if (-not $dashboard.Contains('function fiveWindowAnalysis(source)')) {
         throw 'dashboard should calculate five-issue window coverage analysis'
     }
     if (-not $dashboard.Contains('function greedyFiveWindowPool(windows)')) {
         throw 'dashboard should automatically recalculate the current-year five-window pool'
+    }
+    if (-not $dashboard.Contains('const maxWindow5PoolSize = 8') -or -not $dashboard.Contains('const maxStableWindow5PoolSize = 15') -or -not $dashboard.Contains('selected.length >= maxWindow5PoolSize')) {
+        throw 'five-issue window pools should expose current-year and stable caps in the dashboard'
     }
     if ($dashboard.Contains("yearPool: ['40','42','19','34','27']") -or $dashboard.Contains("yearPool: ['01','27','37','16','23','29','12','10']")) {
         throw 'five-issue window current-year pool should not be hard-coded'
@@ -635,6 +644,12 @@ try {
         if ($null -eq $item.stablePool -or $null -eq $item.stablePoolStatus -or $null -eq $item.stablePoolChangeTime -or $null -eq $item.stablePoolNextRecalcIssue) {
             throw 'window5-state item should include stable pool state fields'
         }
+        if (@($item.yearPool).Count -gt 8) {
+            throw 'window5 current-year pool should be capped at eight numbers'
+        }
+        if (@($item.stablePool).Count -gt 15) {
+            throw 'window5 stable pool should be capped at fifteen numbers'
+        }
         if (@($item.stablePool | ForEach-Object { [string]$_ }) -contains '00') {
             throw 'window5 stable pool should not contain placeholder 00'
         }
@@ -642,26 +657,8 @@ try {
     if ($dashboard.Contains('<h2>&#35206;&#30422;&#27744;&#29366;&#24577;</h2>')) {
         throw 'five-issue window status should be displayed under current-year pool, not as a separate card'
     }
-    if (-not $dashboard.Contains('function forecastSection(source, game, title)')) {
-        throw 'dashboard should render forecast observations in a dedicated tab'
-    }
-    if (-not $dashboard.Contains('forecastPredictions = data.forecasts')) {
-        throw 'dashboard should load forecast observations separately from games'
-    }
-    if (-not $dashboard.Contains('function forecastBacktestHtml(row)')) {
-        throw 'forecast page should render backtest metrics'
-    }
-    if (-not $dashboard.Contains('function forecastStrategyPoolHtml(row)')) {
-        throw 'forecast page should render evaluated strategy pool'
-    }
-    if (-not $dashboard.Contains('edgeVsRandom')) {
-        throw 'forecast page should expose edge versus random baseline'
-    }
-    if (-not $dashboard.Contains('roiVsRandom') -or -not $dashboard.Contains('netProfit') -or -not $dashboard.Contains('totalPayout')) {
-        throw 'forecast page should expose payout, net profit, ROI, and ROI versus random'
-    }
-    if (-not $dashboard.Contains('weeklyProfitGate') -or -not $dashboard.Contains('qualityScore') -or -not $dashboard.Contains('recommendationStatus')) {
-        throw 'forecast page should expose weekly profit gate, quality score, and recommendation status'
+    if ($dashboard.Contains('forecastPredictions = data.forecasts') -or $dashboard.Contains('function forecastBacktestHtml(row)') -or $dashboard.Contains('function forecastStrategyPoolHtml(row)')) {
+        throw 'forecast page helpers should not be emitted'
     }
     $gameSectionBody = [regex]::Match($dashboard, 'function gameSection\(source, game, title\) \{[\s\S]*?function renderGames').Value
     if ($gameSectionBody.Contains('MiroFish &#27801;&#30424;&#25512;&#28436;')) {
@@ -694,6 +691,29 @@ try {
     $mojibakeMarker = [string][char]0x951F
     if ($dashboard.Contains($mojibakeMarker)) {
         throw 'dashboard contains mojibake marker'
+    }
+    $runtimeCheck = @'
+const fs = require('fs');
+const html = fs.readFileSync(process.argv[2], 'utf8');
+const json = JSON.parse(html.match(/<script id="embedded-records" type="application\/json">\s*([\s\S]*?)\s*<\/script>/)[1]);
+const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
+  .replace(/const app = document.getElementById\('app'\);/, "const app = {innerHTML:''};")
+  .replace(/const tabs = document.querySelectorAll\('\.tabs button'\);/, "const tabs = [];")
+  .replace(/document.getElementById\('embedded-records'\)\.textContent/, "JSON.stringify(__DATA__)")
+  .replace(/document.getElementById\('overview-source'\)\.addEventListener\('change', renderOverview\);/g, '')
+  .replace(/document.getElementById\('window5-source'\)\.addEventListener\('change', renderWindow5\);/g, '')
+  .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
+  .replace(/document.getElementById\('daily-source'\)\.addEventListener\('change', renderDaily\);/g, '')
+  .replace(/document.getElementById\('game-source'\)\.addEventListener\('change', renderGames\);/g, '')
+  .replace(/renderOverview\(\);/, "renderOverview(); fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
+global.__DATA__ = json;
+global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
+new Function(script)();
+console.log('RUNTIME_OK');
+'@
+    $runtimeOutput = $runtimeCheck | node - (Join-Path $outDir 'dashboard.html')
+    if ($LASTEXITCODE -ne 0 -or ($runtimeOutput -join "`n") -notmatch 'RUNTIME_OK') {
+        throw "dashboard runtime check failed: $($runtimeOutput -join ' ')"
     }
 
     Write-Host 'PASS'

@@ -1176,10 +1176,11 @@ function Get-Window5RawWindows {
 function Get-GreedyWindow5Pool {
     param([object[]]$Windows)
 
+    $maxPoolSize = 8
     $selected = New-Object 'System.Collections.Generic.List[string]'
     $uncovered = New-Object 'System.Collections.Generic.List[int]'
     for ($i = 0; $i -lt @($Windows).Count; $i++) { $uncovered.Add($i) | Out-Null }
-    while ($uncovered.Count -gt 0) {
+    while ($uncovered.Count -gt 0 -and $selected.Count -lt $maxPoolSize) {
         $bestNum = ''
         $bestGain = -1
         foreach ($n in 1..49) {
@@ -1216,7 +1217,7 @@ function Get-StableWindow5Pool {
             $freq[$num]++
         }
     }
-    $take = if ($SourceRows[0].source -eq 'hk') { 15 } else { 13 }
+    $take = 15
     return @($freq.GetEnumerator() | Sort-Object @{ Expression = 'Value'; Descending = $true }, @{ Expression = { [int]$_.Key }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.Key })
 }
 
@@ -1230,18 +1231,18 @@ function New-Window5State {
             $latest = @($sourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First 1)[0]
             $year = ([string]$latest.date).Substring(0, 4)
             $yearRows = @($sourceRows | Where-Object { ([string]$_.date).StartsWith($year + '-') } | Sort-Object @{ Expression = 'issue'; Descending = $false })
-            $pool = @(Get-GreedyWindow5Pool -Windows (Get-Window5RawWindows -Rows $yearRows))
+            $pool = @(Get-GreedyWindow5Pool -Windows (Get-Window5RawWindows -Rows $yearRows) | Select-Object -First 8)
             $existingItem = @($Existing.items | Where-Object { $_.source -eq $source -and [string]$_.year -eq $year } | Select-Object -First 1)
-            $oldPool = if ($existingItem.Count -gt 0) { @($existingItem[0].yearPool | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
+            $oldPool = if ($existingItem.Count -gt 0) { @($existingItem[0].yearPool | Select-Object -First 8 | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
             $changed = ($pool -join ',') -ne ($oldPool -join ',')
             $changeTime = if ($changed -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].changeTime)) { $GeneratedAt } else { [string]$existingItem[0].changeTime }
             $interval = if ($source -eq 'hk') { 10 } else { 20 }
             $latestIssue = [int]$latest.issue
-            $oldStablePool = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePool) { @($existingItem[0].stablePool | Where-Object { [int]$_ -ge 1 } | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
+            $oldStablePool = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePool) { @($existingItem[0].stablePool | Where-Object { [int]$_ -ge 1 } | Select-Object -First 15 | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
             $oldStableIssue = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePoolLastIssue) { [int]$existingItem[0].stablePoolLastIssue } else { 0 }
             $nextRecalcIssue = if ($oldStableIssue -gt 0) { $oldStableIssue + $interval } else { [Math]::Ceiling($latestIssue / $interval) * $interval }
             $shouldRecalcStable = $existingItem.Count -eq 0 -or $oldStablePool.Count -eq 0 -or $latestIssue -ge $nextRecalcIssue -or [string]$existingItem[0].year -ne $year
-            $newStablePool = @(if ($shouldRecalcStable) { @(Get-StableWindow5Pool -SourceRows $sourceRows -CurrentYear $year) } else { $oldStablePool })
+            $newStablePool = @(if ($shouldRecalcStable) { @(Get-StableWindow5Pool -SourceRows $sourceRows -CurrentYear $year | Select-Object -First 15) } else { @($oldStablePool | Select-Object -First 15) })
             $stableChanged = ($newStablePool -join ',') -ne ($oldStablePool -join ',')
             $stableChangeTime = if ($stableChanged -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].stablePoolChangeTime)) { $GeneratedAt } else { [string]$existingItem[0].stablePoolChangeTime }
             [pscustomobject]@{
@@ -1751,8 +1752,8 @@ function New-DashboardHtml {
     <nav class="tabs">
       <button class="active" data-tab="overview">&#30475;&#26495;</button>
       <button data-tab="games">&#28216;&#25103;</button>
-      <button data-tab="forecast">&#39044;&#27979;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
+      <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="daily">&#26085;&#25253;</button>
     </nav>
     <section id="app"></section>
@@ -1767,7 +1768,6 @@ __EMBEDDED_JSON__
     let summary = null;
     let generatedPredictions = {next: [], sanzhong: []};
     let gamePredictions = {items: []};
-    let forecastPredictions = {items: []};
     let window5State = {items: []};
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const pct = (value, max) => max ? Math.round(value / max * 100) : 0;
@@ -1822,9 +1822,6 @@ __EMBEDDED_JSON__
     function gameRows(source, game) {
       return (gamePredictions.items || []).filter(item => item.source === source && item.game === game);
     }
-    function forecastRows(source, game) {
-      return (forecastPredictions.items || []).filter(item => item.source === source && item.game === game);
-    }
     function asArray(value) {
       if (Array.isArray(value)) return value;
       if (value === null || value === undefined || value === '') return [];
@@ -1858,11 +1855,14 @@ __EMBEDDED_JSON__
       }
       return windows;
     }
+    const maxWindow5PoolSize = 8;
+    const maxStableWindow5PoolSize = 15;
     function greedyFiveWindowPool(windows) {
       const allNums = Array.from({length: 49}, (_, idx) => String(idx + 1).padStart(2, '0'));
       const uncovered = new Set(windows.map((_, idx) => idx));
       const selected = [];
       while (uncovered.size > 0) {
+        if (selected.length >= maxWindow5PoolSize) break;
         let best = null;
         allNums.forEach(num => {
           if (selected.includes(num)) return;
@@ -1900,8 +1900,8 @@ __EMBEDDED_JSON__
       const pools = window5Pools[source] || window5Pools.am;
       const rawYearWindows = fiveWindowRawWindows(yearRows);
       const stateItem = (window5State.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
-      const yearPool = stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows);
-      const stablePool = stateItem?.stablePool?.length ? stateItem.stablePool : pools.stablePool;
+      const yearPool = (stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows)).slice(0, 8);
+      const stablePool = (stateItem?.stablePool?.length ? stateItem.stablePool : pools.stablePool).slice(0, maxStableWindow5PoolSize);
       const yearWindows = fiveWindowCoverage(yearRows, yearPool);
       const stableWindows = fiveWindowCoverage(yearRows, stablePool);
       const latestIssue = Number(latest?.issue || 0);
@@ -1924,6 +1924,106 @@ __EMBEDDED_JSON__
       const stablePoolChangeTime = stateItem?.stablePoolChangeTime || '';
       const stablePoolNextRecalcIssue = stateItem?.stablePoolNextRecalcIssue || '';
       return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, stablePoolStatus, stablePoolReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
+    }
+    function regularNums(record) {
+      return (record?.balls || []).slice(0, 6).map(ball => String(ball.numberText || ball.number || '').padStart(2, '0'));
+    }
+    function comboKey(nums) {
+      return nums.map(n => String(n).padStart(2, '0')).sort((a, b) => Number(a) - Number(b)).join('-');
+    }
+    function buildThreeHitCombos(records) {
+      const rows = records.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      const numberCounts = new Map();
+      rows.forEach(row => regularNums(row).forEach(num => numberCounts.set(num, (numberCounts.get(num) || 0) + 1)));
+      const pool = [...numberCounts.entries()]
+        .sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0]))
+        .slice(0, 18)
+        .map(item => item[0])
+        .sort((a, b) => Number(a) - Number(b));
+      const comboMap = new Map();
+      rows.forEach(row => {
+        const nums = regularNums(row).filter(num => pool.includes(num)).sort((a, b) => Number(a) - Number(b));
+        for (let i = 0; i < nums.length - 2; i++) {
+          for (let j = i + 1; j < nums.length - 1; j++) {
+            for (let k = j + 1; k < nums.length; k++) {
+              const numbers = [nums[i], nums[j], nums[k]];
+              const key = comboKey(numbers);
+              if (!comboMap.has(key)) comboMap.set(key, {numbers, hits: 0, windows: new Set(), lastIssue: 0});
+              const item = comboMap.get(key);
+              item.hits++;
+              item.windows.add(Math.floor((Number(row.issue || 0) - 1) / 5));
+              item.lastIssue = Math.max(item.lastIssue, Number(row.issue || 0));
+            }
+          }
+        }
+      });
+      const ranked = [...comboMap.values()].map(item => ({
+        numbers: item.numbers,
+        hits: item.hits,
+        windowHits: item.windows.size,
+        lastIssue: item.lastIssue,
+        score: item.windows.size * 10 + item.hits + item.lastIssue / 1000
+      })).sort((a, b) => b.score - a.score || comboKey(a.numbers).localeCompare(comboKey(b.numbers)));
+      const selected = [];
+      ranked.forEach(item => {
+        if (selected.length >= 12) return;
+        const overlapTooHigh = selected.filter(existing => item.numbers.filter(num => existing.numbers.includes(num)).length >= 2).length >= 3;
+        if (!overlapTooHigh) selected.push(item);
+      });
+      ranked.forEach(item => {
+        if (selected.length >= 12) return;
+        if (!selected.some(existing => comboKey(existing.numbers) === comboKey(item.numbers))) selected.push(item);
+      });
+      return {numberPool: pool, combos: selected};
+    }
+    function threeHitWindowCoverage(rows, combos) {
+      if (!rows.length) return [];
+      const maxIssue = Math.max(...rows.map(row => Number(row.issue || 0)));
+      const windows = [];
+      for (let start = 1; start <= maxIssue; start += 5) {
+        const end = start + 4;
+        const chunk = rows.filter(row => Number(row.issue || 0) >= start && Number(row.issue || 0) <= end);
+        if (!chunk.length) continue;
+        const hits = [];
+        chunk.forEach(row => {
+          const regular = regularNums(row);
+          combos.forEach(combo => {
+            if (combo.numbers.every(num => regular.includes(num))) hits.push({issue: row.issue, date: row.date, combo: combo.numbers});
+          });
+        });
+        windows.push({start, end, count: chunk.length, hits, covered: hits.length > 0});
+      }
+      return windows;
+    }
+    function threeWindowAnalysis(source) {
+      const sourceRows = cachedSourceRecords(source).slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      const latest = sourceRows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0];
+      const currentYear = displayYear(latest);
+      const yearRows = sourceRows.filter(row => displayYear(row) === currentYear).sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      const built = buildThreeHitCombos(yearRows.length ? yearRows : sourceRows);
+      const yearWindows = threeHitWindowCoverage(yearRows, built.combos);
+      const latestIssue = Number(latest?.issue || 0);
+      const currentStart = Math.floor((latestIssue - 1) / 5) * 5 + 1;
+      const currentWindow = yearWindows.find(item => item.start === currentStart) || {start: currentStart, end: currentStart + 4, count: 0, hits: [], covered: false};
+      let maxMiss = 0;
+      let currentMiss = 0;
+      let run = 0;
+      let hitWindows = 0;
+      yearWindows.forEach(item => {
+        if (item.covered) {
+          hitWindows++;
+          maxMiss = Math.max(maxMiss, run);
+          run = 0;
+        } else {
+          run++;
+        }
+      });
+      maxMiss = Math.max(maxMiss, run);
+      for (let i = yearWindows.length - 1; i >= 0; i--) {
+        if (yearWindows[i].covered) break;
+        currentMiss++;
+      }
+      return {source, latest, currentYear, numberPool: built.numberPool, combos: built.combos, currentWindow, yearWindows, stats: {total: yearWindows.length, hits: hitWindows, misses: yearWindows.length - hitWindows, hitRate: yearWindows.length ? Math.round(hitWindows / yearWindows.length * 100) : 0, currentMiss, maxMiss}};
     }
     function recommendationSummary(rows) {
       const map = new Map();
@@ -2105,87 +2205,6 @@ __EMBEDDED_JSON__
       </div>`;
       document.getElementById('game-source').addEventListener('change', renderGames);
     }
-    function forecastStats(rows) {
-      const settled = rows.filter(row => row.status === 'settled').sort((a, b) => String(b.actualDate || '').localeCompare(String(a.actualDate || '')) || Number(b.actualIssue || 0) - Number(a.actualIssue || 0));
-      let currentMiss = 0;
-      for (const row of settled) {
-        if (row.hit) break;
-        currentMiss++;
-      }
-      let maxMiss = 0;
-      let run = 0;
-      let hits = 0;
-      [...settled].reverse().forEach(row => {
-        if (row.hit) {
-          hits++;
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      maxMiss = Math.max(maxMiss, run);
-      return {currentMiss, maxMiss, hits, settled: settled.length};
-    }
-    function forecastNumberHtml(row) {
-      if (!row) return '<p class="muted">&#26242;&#26080;&#39044;&#27979;</p>';
-      if (row.game === 'three-hit-three') {
-        return `<div class="history-list">${asArray(row.numbers).map(group => `<div>${numberChips(group)}</div>`).join('')}</div>`;
-      }
-      return numberChips(row.numbers);
-    }
-    function forecastCopyText(row) {
-      if (!row) return '';
-      if (row.game === 'three-hit-three') {
-        return asArray(row.numbers).map(group => `\uFF08${normalizeNumberGroup(group).map(n => String(Number(n)).padStart(2, '0')).join('-')}\uFF09`).join(',');
-      }
-      return asArray(row.numbers).map(n => String(Number(n))).join(',');
-    }
-    function forecastBacktestHtml(row) {
-      if (!row || !row.backtest) return '<p class="muted">&#26242;&#26080;&#22238;&#27979;</p>';
-      const bt = row.backtest || {};
-      const rb = row.randomBaseline || {};
-      return `<div class="grid">
-        <section class="panel"><h2>&#31574;&#30053;&#22238;&#27979;</h2><p>&#27979;&#35797;&#65306;${esc(bt.tested || 0)}&#65292;&#21629;&#20013;&#65306;${esc(bt.hits || 0)}</p><p>&#21629;&#20013;&#29575;&#65306;${esc(bt.hitRate || 0)}%</p><p>&#24403;&#21069;&#36951;&#33853;&#65306;${esc(bt.currentMiss || 0)}&#65292;&#26368;&#22823;&#36951;&#33853;&#65306;${esc(bt.maxMiss || 0)}</p></section>
-        <section class="panel"><h2>&#22238;&#27979;&#30408;&#20111;</h2><p>&#36180;&#29575;&#65306;${esc(bt.odds || row.odds || 0)}&#20493;&#65292;&#25237;&#20837;&#65306;${esc(bt.totalStake || 0)}</p><p>&#36820;&#22870;&#65306;${esc(bt.totalPayout || 0)}&#65292;&#20928;&#30408;&#20111;&#65306;${esc(bt.netProfit || 0)}</p><p>ROI&#65306;${esc(bt.roi || 0)}%</p></section>
-        <section class="panel"><h2>&#38543;&#26426;&#22522;&#20934;</h2><p>&#27979;&#35797;&#65306;${esc(rb.tested || 0)}&#65292;&#21629;&#20013;&#65306;${esc(rb.hits || 0)}</p><p>&#21629;&#20013;&#29575;&#65306;${esc(rb.hitRate || 0)}%&#65292;ROI&#65306;${esc(rb.roi || 0)}%</p><p>&#21629;&#20013;&#29575;&#24046;&#65306;${esc(bt.edgeVsRandom || 0)}%&#65292;ROI&#24046;&#65306;${esc(bt.roiVsRandom || 0)}%</p></section>
-        <section class="panel"><h2>&#30408;&#21033;&#38376;&#27099;</h2><p>&#29366;&#24577;&#65306;${esc(row.recommendationStatus || '')}</p><p>&#33258;&#28982;&#21608;&#65306;${esc(row.weekBacktest?.weekStart || '')} - ${esc(row.weekBacktest?.weekEnd || '')}</p><p>&#33258;&#28982;&#21608;&#20928;&#30408;&#20111;&#65306;${esc(row.weekBacktest?.netProfit ?? 0)}&#65292;ROI&#65306;${esc(row.weekBacktest?.roi ?? 0)}%</p><p>&#28378;&#21160;&#22238;&#27979;&#20928;&#30408;&#20111;&#65306;${esc(row.walkForwardBacktest?.netProfit ?? 0)}&#65292;ROI&#65306;${esc(row.walkForwardBacktest?.roi ?? 0)}%</p><p>&#35780;&#20998;&#65306;${esc(row.qualityScore ?? 0)} / ${esc(row.qualityLevel || '')}</p></section>
-      </div>`;
-    }
-    function forecastStrategyPoolHtml(row) {
-      const pool = asArray(row?.strategyPool);
-      if (pool.length === 0) return '<p class="muted">&#26242;&#26080;&#31574;&#30053;&#27744;</p>';
-      return `<h3>&#31574;&#30053;&#27744;&#22238;&#27979;</h3>
-        <table class="compact-table"><thead><tr><th>&#31574;&#30053;</th><th>&#35780;&#20998;</th><th>&#27979;&#35797;</th><th>&#21629;&#20013;</th><th>&#21629;&#20013;&#29575;</th><th>ROI</th><th>&#20928;&#30408;&#20111;</th><th>&#26368;&#22823;&#36951;&#33853;</th></tr></thead><tbody>${pool.map(item => `<tr><td>${esc(item.name || item.id)}</td><td>${esc(item.score || 0)}</td><td>${esc(item.tested || 0)}</td><td>${esc(item.hits || 0)}</td><td>${esc(item.hitRate || 0)}%</td><td>${esc(item.roi || 0)}%</td><td>${esc(item.netProfit || 0)}</td><td>${esc(item.maxMiss || 0)}</td></tr>`).join('')}</tbody></table>`;
-    }
-    function forecastSection(source, game, title) {
-      const rows = forecastRows(source, game).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || Number(b.issue || 0) - Number(a.issue || 0));
-      const latest = rows.find(row => row.status === 'pending') || rows[0];
-      const stats = forecastStats(rows);
-      const copyText = forecastCopyText(latest);
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(copyText)}`;
-      return `<section class="panel full">
-        <h2>${title}</h2>
-        <div class="grid">
-          <section class="panel wide"><h2>&#26412;&#26399;&#35266;&#23519;</h2>${latest ? `<p>${esc(latest.targetDate || '')} ${esc(latest.displayYear || '')} / ${esc(latest.issue || '')}</p>${forecastNumberHtml(latest)}` : '<p class="muted">&#26242;&#26080;&#39044;&#27979;</p>'}</section>
-          <section class="panel"><h2>&#35266;&#23519;&#25112;&#32489;</h2><p>&#24403;&#21069;&#36951;&#33853;&#65306;${stats.currentMiss}</p><p>&#21382;&#21490;&#26368;&#22823;&#36951;&#33853;&#65306;${stats.maxMiss}</p><p>&#24050;&#32467;&#31639;&#65306;${stats.settled}&#65292;&#21629;&#20013;&#65306;${stats.hits}</p></section>
-        </div>
-        <div class="copy-qr"><div><strong>&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;</strong><code>${esc(copyText)}</code></div><img alt="QR" src="${qrUrl}"></div>
-        ${forecastBacktestHtml(latest)}
-        ${forecastStrategyPoolHtml(latest)}
-        <h3>&#35266;&#23519;&#35760;&#24405;</h3>
-        <table class="compact-table"><thead><tr><th class="col-time">&#26102;&#38388;</th><th class="col-issue">&#26399;&#21495;</th><th>&#39044;&#27979;</th><th class="col-result">&#32467;&#26524;</th><th class="col-draw">&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 30).map(row => `<tr><td>${esc(row.createdAt)}</td><td>${esc(row.actualDate || row.targetDate || '')}<br>${esc(row.displayYear || '')} / ${esc(row.actualIssue || row.issue || '')}</td><td>${forecastNumberHtml(row)}</td><td>${row.status === 'settled' ? (row.hit ? '&#21629;&#20013;' : '&#26410;&#20013;') : '&#24453;&#24320;&#22870;'}</td><td>${row.actualNumbers ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table>
-      </section>`;
-    }
-    function renderForecast() {
-      const selected = document.getElementById('forecast-source')?.value || 'am';
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="forecast-source">${sourceOptions(selected)}</select></label></div></section>
-        ${forecastSection(selected, 'three-hit-three', '&#19977;&#20013;&#19977;&#39044;&#27979;&#35266;&#23519;')}
-        ${forecastSection(selected, 'special-number', '&#29305;&#21035;&#21495;&#39044;&#27979;&#35266;&#23519;')}
-      </div>`;
-      document.getElementById('forecast-source').addEventListener('change', renderForecast);
-    }
     function renderWindow5() {
       const selected = document.getElementById('window5-source')?.value || 'am';
       const analysis = fiveWindowAnalysis(selected);
@@ -2201,6 +2220,23 @@ __EMBEDDED_JSON__
         <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></section>
       </div>`;
       document.getElementById('window5-source').addEventListener('change', renderWindow5);
+    }
+    function renderThreeWindow5() {
+      const selected = document.getElementById('three-window5-source')?.value || 'am';
+      const analysis = threeWindowAnalysis(selected);
+      const win = analysis.currentWindow;
+      const copyText = analysis.combos.map(item => `\uFF08${item.numbers.join('-')}\uFF09`).join(',');
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(copyText)}`;
+      const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.combo.join('-'))}`).join(' / ') : '&#35266;&#23519;&#20013;';
+      app.innerHTML = `<div class="grid">
+        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="three-window5-source">${sourceOptions(selected)}</select></label></div></section>
+        <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
+        <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
+        <section class="panel"><h2>&#24403;&#24180;&#21495;&#30721;&#27744;</h2>${numberChips(analysis.numberPool)}<p class="muted">&#22522;&#20110;&#24403;&#24180;&#21069;6&#20010;&#24179;&#30721;&#39057;&#27425;&#29983;&#25104;</p></section>
+        <section class="panel full"><h2>&#24403;&#21069;&#25512;&#33616;&#32452;&#21512;</h2><div class="copy-qr"><div><strong>&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;</strong><code>${esc(copyText)}</code></div><img alt="QR" src="${qrUrl}"></div><table class="compact-table"><thead><tr><th>&#32452;&#21512;</th><th>&#21382;&#21490;&#21629;&#20013;</th><th>&#21629;&#20013;&#31383;&#21475;</th><th>&#26368;&#36817;&#21629;&#20013;&#26399;</th></tr></thead><tbody>${analysis.combos.map(item => `<tr><td>${numberChips(item.numbers)}</td><td>${esc(item.hits)}</td><td>${esc(item.windowHits)}</td><td>${esc(item.lastIssue)}</td></tr>`).join('')}</tbody></table></section>
+        <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#32452;&#21512;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hit.combo.join('-'))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
+      </div>`;
+      document.getElementById('three-window5-source').addEventListener('change', renderThreeWindow5);
     }
     function renderDaily() {
       const selected = document.getElementById('daily-source')?.value || 'am';
@@ -2224,8 +2260,8 @@ __EMBEDDED_JSON__
     const renderers = {
       overview: renderOverview,
       games: renderGames,
-      forecast: renderForecast,
       window5: renderWindow5,
+      threeWindow5: renderThreeWindow5,
       daily: renderDaily
     };
     tabs.forEach(btn => btn.addEventListener('click', () => { tabs.forEach(item => item.classList.remove('active')); btn.classList.add('active'); renderers[btn.dataset.tab](); }));
@@ -2235,7 +2271,6 @@ __EMBEDDED_JSON__
       summary = data.summary || {};
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
       gamePredictions = data.games || {items: []};
-      forecastPredictions = data.forecasts || {items: []};
       window5State = data.window5 || {items: []};
       renderOverview();
     } catch (err) {

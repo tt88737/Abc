@@ -1,5 +1,5 @@
 {
-    "generatedAt":  "2026-05-31 01:05:33",
+    "generatedAt":  "2026-05-31 22:41:21",
     "items":  [
                   {
                       "source":  "am",
@@ -16,7 +16,7 @@
                                    ],
                       "adjustmentStatus":  "无变更",
                       "adjustmentReason":  "本次重算与上次一致",
-                      "changeTime":  "2026-05-31 00:30:19",
+                      "changeTime":  "2026-05-31 21:45:59",
                       "stablePool":  [
                                          "08",
                                          "05",
@@ -25,19 +25,14 @@
                                          "20",
                                          "30",
                                          "01",
-                                         "02",
-                                         "03",
-                                         "10",
-                                         "12",
-                                         "23",
-                                         "24"
+                                         "02"
                                      ],
-                      "stablePoolStatus":  "有变更",
-                      "stablePoolReason":  "已按周期规则重算跨年稳定池",
+                      "stablePoolStatus":  "未触发",
+                      "stablePoolReason":  "未到重算条件，沿用上次跨年稳定池",
                       "stablePoolChangeTime":  "2026-05-31 01:05:33",
                       "stablePoolLastIssue":  150,
                       "stablePoolNextRecalcIssue":  170,
-                      "computedAt":  "2026-05-31 01:05:33"
+                      "computedAt":  "2026-05-31 22:41:21"
                   },
                   {
                       "source":  "hk",
@@ -60,21 +55,14 @@
                                          "03",
                                          "07",
                                          "10",
-                                         "11",
-                                         "13",
-                                         "24",
-                                         "39",
-                                         "44",
-                                         "06",
-                                         "14",
-                                         "15"
+                                         "11"
                                      ],
-                      "stablePoolStatus":  "有变更",
-                      "stablePoolReason":  "已按周期规则重算跨年稳定池",
+                      "stablePoolStatus":  "未触发",
+                      "stablePoolReason":  "未到重算条件，沿用上次跨年稳定池",
                       "stablePoolChangeTime":  "2026-05-31 01:05:33",
                       "stablePoolLastIssue":  58,
                       "stablePoolNextRecalcIssue":  68,
-                      "computedAt":  "2026-05-31 01:05:33"
+                      "computedAt":  "2026-05-31 22:41:21"
                   }
               ]
 }
