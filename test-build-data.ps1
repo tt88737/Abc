@@ -285,6 +285,10 @@ try {
         throw 'dashboard.html was not created'
     }
     $dashboard = [IO.File]::ReadAllText((Join-Path $outDir 'dashboard.html'), [Text.Encoding]::UTF8)
+    $buildScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'build-data.ps1'), [Text.Encoding]::UTF8)
+    if ($buildScript.Contains('C:\codex\test\am')) {
+        throw 'build-data.ps1 should not use a machine-specific default path'
+    }
     if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"')) {
         throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, and daily tabs'
     }

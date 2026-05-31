@@ -1,5 +1,5 @@
 param(
-    [string]$RootDir = 'C:\codex\test\am'
+    [string]$RootDir = $PSScriptRoot
 )
 
 $ErrorActionPreference = 'Stop'
