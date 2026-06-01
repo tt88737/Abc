@@ -619,6 +619,21 @@ try {
     if (-not $dashboard.Contains('function patternWatchAnalysis(source)')) {
         throw 'dashboard should calculate pattern watch metrics'
     }
+    if (-not $dashboard.Contains('function optimizedSpecialPool(rows, basePool, size)')) {
+        throw 'pattern watch should calculate optimized special-number pools'
+    }
+    if (-not $dashboard.Contains('function optimizedThreeCombos(rows, baseCombos, size)')) {
+        throw 'pattern watch should calculate optimized three-hit combo pools'
+    }
+    if (-not $dashboard.Contains('function optimizationCompareRow(name, original, optimized, baseline)')) {
+        throw 'pattern watch should compare original and optimized pool performance'
+    }
+    if (-not $dashboard.Contains('&#35268;&#24459;&#20248;&#21270;&#27744;')) {
+        throw 'pattern watch should render the optimized pool section'
+    }
+    if (-not $dashboard.Contains('&#21407;&#27744;&#19981;&#21160;')) {
+        throw 'pattern watch should state original pools remain unchanged'
+    }
     if (-not $dashboard.Contains('function randomWindowBaseline(pickCount, totalCount, drawsPerWindow)')) {
         throw 'dashboard should calculate random window baselines'
     }
