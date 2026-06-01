@@ -643,6 +643,18 @@ try {
     if (-not $dashboard.Contains('function windowRhythmTable(analysis)')) {
         throw 'pattern watch should render window rhythm observation'
     }
+    if (-not $dashboard.Contains('function failureProfileForWindow(item, context)')) {
+        throw 'pattern watch should classify missed windows'
+    }
+    if (-not $dashboard.Contains('function failureProfileTable(analysis)')) {
+        throw 'pattern watch should render failure profile observation'
+    }
+    if (-not $dashboard.Contains('&#22833;&#36133;&#30011;&#20687;&#35266;&#23519;')) {
+        throw 'pattern watch should render failure profile section'
+    }
+    if (-not $dashboard.Contains('&#26368;&#36817;&#28431;&#31383;') -or -not $dashboard.Contains('&#22833;&#36133;&#26631;&#31614;') -or -not $dashboard.Contains('&#26368;&#22823;&#39118;&#38505;&#26631;&#31614;')) {
+        throw 'failure profile should include missed windows, failure tags, and largest risk tag'
+    }
     if (-not $dashboard.Contains('&#31383;&#21475;&#33410;&#22863;&#35266;&#23519;')) {
         throw 'pattern watch should render window rhythm section'
     }

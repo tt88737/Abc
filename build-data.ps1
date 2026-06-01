@@ -2315,6 +2315,51 @@ __EMBEDDED_JSON__
         ${windowRhythmRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.threeWindows)}
       </tbody></table></section>`;
     }
+    function failureProfileForWindow(item, context) {
+      const tags = [];
+      const idx = context.windows.indexOf(item);
+      const prev1 = idx > 0 ? context.windows[idx - 1] : null;
+      const prev2 = idx > 1 ? context.windows[idx - 2] : null;
+      const optimized = context.optimizedWindows?.[idx];
+      if (context.structure !== '&#20581;&#24247;') tags.push('&#32467;&#26500;&#20559;&#26012;');
+      if (prev1?.covered && prev2?.covered) tags.push('&#36830;&#20013;&#21518;&#34928;&#20943;');
+      if (Number(item.count || 0) >= 5 && !item.covered) tags.push('&#21518;&#21322;&#31383;&#26410;&#34917;');
+      if (optimized?.covered && !item.covered) tags.push('&#20248;&#21270;&#27744;&#32988;&#20986;');
+      if (!optimized?.covered && item.covered) tags.push('&#21407;&#27744;&#32988;&#20986;');
+      if (context.windows.length < 6) tags.push('&#26679;&#26412;&#19981;&#36275;');
+      return tags.length ? tags : ['&#24120;&#35268;&#28431;&#31383;'];
+    }
+    function failureProfileSummary(name, type, windows, optimizedWindows, analysisItem) {
+      const completed = windows.filter(item => Number(item.count || 0) >= 5);
+      const missed = completed.filter(item => !item.covered).slice(-8);
+      const structure = structureHealthForPattern(type, analysisItem);
+      const context = {windows: completed, optimizedWindows: optimizedWindows.filter(item => Number(item.count || 0) >= 5), structure};
+      const tagCounts = new Map();
+      const rows = missed.map(item => {
+        const tags = failureProfileForWindow(item, context);
+        tags.forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+        return {window: `${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}`, tags};
+      });
+      const top = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0] || ['-', 0];
+      let action = '&#32487;&#32493;&#35266;&#23519;';
+      if (top[0] === '&#20248;&#21270;&#27744;&#32988;&#20986;') action = '&#20248;&#20808;&#35266;&#23519;&#20248;&#21270;&#27744;';
+      else if (top[0] === '&#32467;&#26500;&#20559;&#26012;') action = '&#38477;&#26435;&#24182;&#37325;&#31639;';
+      else if (top[0] === '&#36830;&#20013;&#21518;&#34928;&#20943;') action = '&#36830;&#20013;&#21518;&#38477;&#26435;';
+      else if (top[0] === '&#21518;&#21322;&#31383;&#26410;&#34917;') action = '&#31561;&#24453;&#19979;&#31383;&#24674;&#22797;';
+      return {name, rows, topTag: top[0], topCount: top[1], totalMissed: missed.length, action};
+    }
+    function failureProfileRow(item) {
+      const missed = item.rows.length ? item.rows.map(row => `${row.window}: ${row.tags.join(' / ')}`).join('<br>') : '-';
+      return `<tr><td>${item.name}</td><td>${missed}</td><td>${item.topTag} ${esc(item.topCount ? `(${item.topCount})` : '')}</td><td>${esc(item.totalMissed)}</td><td>${item.action}</td></tr>`;
+    }
+    function failureProfileTable(analysis) {
+      const rows = [
+        failureProfileSummary('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', 'special', analysis.specialWindows, analysis.optimized.special.windows, analysis.special),
+        failureProfileSummary('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stableWindows, analysis.optimized.stable.windows, analysis.stable),
+        failureProfileSummary('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.threeWindows, analysis.optimized.three.windows, analysis.three)
+      ];
+      return `<section class="panel full"><h2>&#22833;&#36133;&#30011;&#20687;&#35266;&#23519;</h2><p class="muted">&#25226;&#26368;&#36817;&#28431;&#31383;&#25353;&#22833;&#36133;&#26631;&#31614;&#24402;&#22240;&#65292;&#35266;&#23519;&#28431;&#31383;&#20027;&#35201;&#30001;&#32467;&#26500;&#12289;&#33410;&#22863;&#36824;&#26159;&#21407;&#27744;/&#20248;&#21270;&#27744;&#24046;&#24322;&#24341;&#36215;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#26368;&#36817;&#28431;&#31383; / &#22833;&#36133;&#26631;&#31614;</th><th>&#26368;&#22823;&#39118;&#38505;&#26631;&#31614;</th><th>&#28431;&#31383;&#25968;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(failureProfileRow).join('')}</tbody></table></section>`;
+    }
     function patternWatchAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
@@ -2581,6 +2626,7 @@ __EMBEDDED_JSON__
         ${patternScoreTable(analysis)}
         ${patternDiagnosticsTable(analysis)}
         ${windowRhythmTable(analysis)}
+        ${failureProfileTable(analysis)}
         <section class="panel full"><h2>&#35268;&#24459;&#20248;&#21270;&#27744;</h2><p class="muted">&#21407;&#27744;&#19981;&#21160;&#65292;&#27492;&#22788;&#20165;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#32467;&#26500;&#20248;&#21270;&#21518;&#30340;&#22238;&#27979;&#34920;&#29616;&#12290;</p><div class="grid">
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#20248;&#21270;</h2>${numberChips(analysis.optimized.special.pool)}<p class="muted">&#20445;&#30041;&#21407;&#27744;&#26680;&#24515;&#65292;&#25353;&#24403;&#24180;&#39057;&#27425;&#12289;&#39068;&#33394;&#12289;&#23614;&#25968;&#20998;&#25955;&#20248;&#21270;&#12290;</p></section>
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#20248;&#21270;</h2>${numberChips(analysis.optimized.stable.pool)}<p class="muted">&#20445;&#30041;&#36328;&#24180;&#31283;&#23450;&#27744;&#26435;&#37325;&#65292;&#25353;&#24403;&#24180;&#32467;&#26500;&#20570;&#36731;&#37327;&#35843;&#25972;&#12290;</p></section>
