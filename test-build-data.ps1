@@ -649,6 +649,18 @@ try {
     if (-not $dashboard.Contains('function failureProfileTable(analysis)')) {
         throw 'pattern watch should render failure profile observation'
     }
+    if (-not $dashboard.Contains('function poolRelationTable(analysis)')) {
+        throw 'pattern watch should render pool relation observation'
+    }
+    if (-not $dashboard.Contains('function poolRelationStats(windows)')) {
+        throw 'pattern watch should calculate pool relation stats'
+    }
+    if (-not $dashboard.Contains('&#27744;&#23376;&#20851;&#31995;&#35266;&#23519;')) {
+        throw 'pattern watch should render pool relation section'
+    }
+    if (-not $dashboard.Contains('&#20132;&#38598;&#21306;') -or -not $dashboard.Contains('&#24403;&#24180;&#29420;&#26377;') -or -not $dashboard.Contains('&#31283;&#23450;&#29420;&#26377;') -or -not $dashboard.Contains('&#39640;&#20849;&#25391;') -or -not $dashboard.Contains('&#20302;&#20849;&#25391;')) {
+        throw 'pool relation should include intersection, unique pools, and resonance groups'
+    }
     if (-not $dashboard.Contains('&#22833;&#36133;&#30011;&#20687;&#35266;&#23519;')) {
         throw 'pattern watch should render failure profile section'
     }

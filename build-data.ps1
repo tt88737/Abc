@@ -2360,6 +2360,50 @@ __EMBEDDED_JSON__
       ];
       return `<section class="panel full"><h2>&#22833;&#36133;&#30011;&#20687;&#35266;&#23519;</h2><p class="muted">&#25226;&#26368;&#36817;&#28431;&#31383;&#25353;&#22833;&#36133;&#26631;&#31614;&#24402;&#22240;&#65292;&#35266;&#23519;&#28431;&#31383;&#20027;&#35201;&#30001;&#32467;&#26500;&#12289;&#33410;&#22863;&#36824;&#26159;&#21407;&#27744;/&#20248;&#21270;&#27744;&#24046;&#24322;&#24341;&#36215;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#26368;&#36817;&#28431;&#31383; / &#22833;&#36133;&#26631;&#31614;</th><th>&#26368;&#22823;&#39118;&#38505;&#26631;&#31614;</th><th>&#28431;&#31383;&#25968;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(failureProfileRow).join('')}</tbody></table></section>`;
     }
+    function poolRelationStats(windows) {
+      const stats = patternStats(windows);
+      return {...stats, label: `${stats.hitRate}%`, missLabel: `${stats.currentMiss} / ${stats.maxMiss}`};
+    }
+    function specialPoolRelationRows(yearRows, analysis) {
+      const yearSet = new Set(analysis.yearPool);
+      const stableSet = new Set(analysis.stablePool);
+      const intersection = analysis.yearPool.filter(num => stableSet.has(num));
+      const yearOnly = analysis.yearPool.filter(num => !stableSet.has(num));
+      const stableOnly = analysis.stablePool.filter(num => !yearSet.has(num));
+      return [
+        {name: '&#20132;&#38598;&#21306;', pool: intersection, stats: poolRelationStats(fiveWindowCoverage(yearRows, intersection))},
+        {name: '&#24403;&#24180;&#29420;&#26377;', pool: yearOnly, stats: poolRelationStats(fiveWindowCoverage(yearRows, yearOnly))},
+        {name: '&#31283;&#23450;&#29420;&#26377;', pool: stableOnly, stats: poolRelationStats(fiveWindowCoverage(yearRows, stableOnly))}
+      ];
+    }
+    function threeResonanceRelationRows(yearRows, combos, strongPool) {
+      const strong = new Set(strongPool);
+      const high = combos.filter(item => item.numbers.filter(num => strong.has(num)).length >= 2);
+      const low = combos.filter(item => item.numbers.filter(num => strong.has(num)).length < 2);
+      return [
+        {name: '&#39640;&#20849;&#25391;', combos: high, stats: poolRelationStats(threeHitWindowCoverage(yearRows, high))},
+        {name: '&#20302;&#20849;&#25391;', combos: low, stats: poolRelationStats(threeHitWindowCoverage(yearRows, low))}
+      ];
+    }
+    function relationVerdict(rows) {
+      const best = rows.slice().sort((a, b) => Number(b.stats.hitRate || 0) - Number(a.stats.hitRate || 0) || Number(a.stats.currentMiss || 0) - Number(b.stats.currentMiss || 0))[0];
+      if (!best || Number(best.stats.total || 0) === 0) return '&#26679;&#26412;&#19981;&#36275;';
+      return `${best.name} &#21344;&#20248;`;
+    }
+    function poolRelationRow(group, item) {
+      const content = item.pool ? numberChips(item.pool) : comboListHtml(item.combos || []);
+      return `<tr><td>${group}</td><td>${item.name}</td><td>${content}</td><td>${esc(item.stats.label)}</td><td>${esc(item.stats.recentHitRate)}%</td><td>${esc(item.stats.missLabel)}</td></tr>`;
+    }
+    function poolRelationTable(analysis) {
+      const specialRows = specialPoolRelationRows(analysis.yearRows, analysis);
+      const resonanceRows = threeResonanceRelationRows(analysis.yearRows, analysis.threeCombos, analysis.special.yearPool || []);
+      const specialVerdict = relationVerdict(specialRows);
+      const threeVerdict = relationVerdict(resonanceRows);
+      return `<section class="panel full"><h2>&#27744;&#23376;&#20851;&#31995;&#35266;&#23519;</h2><p class="muted">&#25226;&#27744;&#23376;&#25353;&#20132;&#38598;&#12289;&#29420;&#26377;&#21644;&#20849;&#25391;&#25386;&#24320;&#22238;&#27979;&#65292;&#35266;&#23519;&#24403;&#21069;&#21629;&#20013;&#26159;&#30001;&#32769;&#21495;&#31283;&#23450;&#12289;&#24403;&#24180;&#28909;&#27744;&#36824;&#26159;&#32452;&#21512;&#20849;&#25391;&#36129;&#29486;&#12290;</p><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#20851;&#31995;</th><th>&#27744;&#23376;</th><th>&#31383;&#21475;&#21629;&#20013;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th></tr></thead><tbody>
+        ${specialRows.map(item => poolRelationRow('\u7279\u522B\u53F7', item)).join('')}
+        ${resonanceRows.map(item => poolRelationRow('\u4E09\u4E2D\u4E09', item)).join('')}
+      </tbody></table><p class="muted">&#29305;&#21035;&#21495;&#20851;&#31995;&#32467;&#35770;&#65306;${specialVerdict}&#65307;&#19977;&#20013;&#19977;&#20849;&#25391;&#32467;&#35770;&#65306;${threeVerdict}</p></section>`;
+    }
     function patternWatchAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
@@ -2382,6 +2426,10 @@ __EMBEDDED_JSON__
       return {
         source,
         currentYear: special.currentYear,
+        yearRows,
+        yearPool: special.yearPool,
+        stablePool: special.stablePool,
+        threeCombos: three.combos,
         specialWindows: special.yearWindows,
         stableWindows: special.stableWindows,
         threeWindows: three.yearWindows,
@@ -2627,6 +2675,7 @@ __EMBEDDED_JSON__
         ${patternDiagnosticsTable(analysis)}
         ${windowRhythmTable(analysis)}
         ${failureProfileTable(analysis)}
+        ${poolRelationTable(analysis)}
         <section class="panel full"><h2>&#35268;&#24459;&#20248;&#21270;&#27744;</h2><p class="muted">&#21407;&#27744;&#19981;&#21160;&#65292;&#27492;&#22788;&#20165;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#32467;&#26500;&#20248;&#21270;&#21518;&#30340;&#22238;&#27979;&#34920;&#29616;&#12290;</p><div class="grid">
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#20248;&#21270;</h2>${numberChips(analysis.optimized.special.pool)}<p class="muted">&#20445;&#30041;&#21407;&#27744;&#26680;&#24515;&#65292;&#25353;&#24403;&#24180;&#39057;&#27425;&#12289;&#39068;&#33394;&#12289;&#23614;&#25968;&#20998;&#25955;&#20248;&#21270;&#12290;</p></section>
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#20248;&#21270;</h2>${numberChips(analysis.optimized.stable.pool)}<p class="muted">&#20445;&#30041;&#36328;&#24180;&#31283;&#23450;&#27744;&#26435;&#37325;&#65292;&#25353;&#24403;&#24180;&#32467;&#26500;&#20570;&#36731;&#37327;&#35843;&#25972;&#12290;</p></section>
