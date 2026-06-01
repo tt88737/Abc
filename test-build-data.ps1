@@ -628,6 +628,21 @@ try {
     if (-not $dashboard.Contains('function optimizationCompareRow(name, original, optimized, baseline)')) {
         throw 'pattern watch should compare original and optimized pool performance'
     }
+    if (-not $dashboard.Contains('function patternScoreItem(name, original, optimized, baseline, sizeLabel)')) {
+        throw 'pattern watch should calculate score table rows'
+    }
+    if (-not $dashboard.Contains('function patternScoreTable(analysis)')) {
+        throw 'pattern watch should render a score summary table'
+    }
+    if (-not $dashboard.Contains('&#35268;&#24459;&#35780;&#20998;&#24635;&#34920;')) {
+        throw 'pattern watch should render the pattern score summary'
+    }
+    if (-not $dashboard.Contains('&#24314;&#35758;&#21160;&#20316;')) {
+        throw 'pattern watch score table should include suggested action'
+    }
+    if (-not $dashboard.Contains('&#31561;&#24453;&#31383;&#21475;&#32467;&#26463;') -or -not $dashboard.Contains('&#20248;&#20808;&#35266;&#23519;&#20248;&#21270;&#27744;') -or -not $dashboard.Contains('&#26242;&#20572;&#35813;&#35268;&#24459;')) {
+        throw 'pattern watch score table should include actionable status labels'
+    }
     if (-not $dashboard.Contains('&#35268;&#24459;&#20248;&#21270;&#27744;')) {
         throw 'pattern watch should render the optimized pool section'
     }

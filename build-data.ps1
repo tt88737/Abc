@@ -2166,6 +2166,39 @@ __EMBEDDED_JSON__
       const verdict = delta > 0 ? '\u4F18\u5316\u66F4\u4F18' : delta < 0 ? '\u539F\u6C60\u66F4\u4F18' : '\u6301\u5E73';
       return `<tr><td>${name}</td><td>${esc(original.hitRate)}%</td><td>${esc(optimized.hitRate)}%</td><td>${esc(baseline)}%</td><td>${esc(originalEdge)}%</td><td>${esc(optimizedEdge)}%</td><td>${esc(delta)}%</td><td>${verdict}</td></tr>`;
     }
+    function patternScoreItem(name, original, optimized, baseline, sizeLabel) {
+      const optimizedHitRate = Number(optimized?.hitRate || 0);
+      const originalHitRate = Number(original?.hitRate || 0);
+      const edge = Math.round((originalHitRate - baseline) * 100) / 100;
+      const optimizedEdge = Math.round((optimizedHitRate - baseline) * 100) / 100;
+      const delta = Math.round((optimizedHitRate - originalHitRate) * 100) / 100;
+      const recentDelta = Math.round((Number(original.recentHitRate || 0) - originalHitRate) * 100) / 100;
+      const missPenalty = Math.min(24, Number(original.currentMiss || 0) * 8);
+      const maxMiss = Number(original.maxMiss || 0);
+      let score = 50 + edge * 0.9 + recentDelta * 0.35 - missPenalty;
+      if (delta > 0) score += Math.min(12, delta * 0.5);
+      if (delta < 0) score += Math.max(-10, delta * 0.35);
+      if (original.level === '&#20248;&#31168;') score += 12;
+      if (original.level === '&#33391;&#22909;') score += 6;
+      if (original.level === '&#22833;&#25928;') score -= 18;
+      score = Math.max(0, Math.min(100, Math.round(score)));
+      const grade = score >= 90 ? '&#20248;' : score >= 80 ? '&#33391;' : score >= 60 ? '&#21450;&#26684;' : '&#35266;&#23519;';
+      let action = '&#32487;&#32493;&#35266;&#23519;';
+      if (original.level === '&#22833;&#25928;' || edge < 0) action = '&#26242;&#20572;&#35813;&#35268;&#24459;';
+      else if (maxMiss > 0 && Number(original.currentMiss || 0) >= maxMiss) action = '&#31561;&#24453;&#31383;&#21475;&#32467;&#26463;';
+      else if (score < 60) action = '&#35302;&#21457;&#37325;&#31639;';
+      else if (delta >= 5 && optimizedEdge >= edge) action = '&#20248;&#20808;&#35266;&#23519;&#20248;&#21270;&#27744;';
+      else if (delta <= -5) action = '&#20248;&#20808;&#37319;&#29992;&#21407;&#27744;';
+      return {name, sizeLabel, score, grade, hitRate: originalHitRate, optimizedHitRate, baseline, edge, optimizedEdge, recentHitRate: original.recentHitRate, currentMiss: original.currentMiss, maxMiss: original.maxMiss, action};
+    }
+    function patternScoreTable(analysis) {
+      const rows = [
+        patternScoreItem('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, analysis.optimized.special.stats, analysis.special.baseline, `${analysis.special.poolSize}\u7801`),
+        patternScoreItem('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, analysis.optimized.stable.stats, analysis.stable.baseline, `${analysis.stable.poolSize}\u7801`),
+        patternScoreItem('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, analysis.optimized.three.stats, analysis.three.baseline, `${analysis.three.comboSize}\u7EC4`)
+      ];
+      return `<section class="panel full"><h2>&#35268;&#24459;&#35780;&#20998;&#24635;&#34920;</h2><p class="muted">&#35780;&#20998;&#21482;&#29992;&#20110;&#35266;&#23519;&#65292;&#20197;&#23436;&#25104;&#30340;5&#26399;&#31383;&#21475;&#22238;&#27979;&#20026;&#20934;&#65292;&#19981;&#35745;&#20837;&#26410;&#32467;&#26463;&#31383;&#21475;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35268;&#27169;</th><th>&#35780;&#20998;</th><th>&#31561;&#32423;</th><th>&#21407;&#27744;&#23454;&#38469;</th><th>&#20248;&#21270;&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${item.name}</td><td>${esc(item.sizeLabel)}</td><td>${esc(item.score)}</td><td>${item.grade}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.optimizedHitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.recentHitRate)}%</td><td>${esc(item.currentMiss)} / ${esc(item.maxMiss)}</td><td>${item.action}</td></tr>`).join('')}</tbody></table></section>`;
+    }
     function patternWatchAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
@@ -2423,6 +2456,7 @@ __EMBEDDED_JSON__
           ${patternMetricRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, `${analysis.stable.poolSize}\u7801`)}
           ${patternMetricRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, `${analysis.three.comboSize}\u7EC4`)}
         </tbody></table></section>
+        ${patternScoreTable(analysis)}
         <section class="panel full"><h2>&#35268;&#24459;&#20248;&#21270;&#27744;</h2><p class="muted">&#21407;&#27744;&#19981;&#21160;&#65292;&#27492;&#22788;&#20165;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#32467;&#26500;&#20248;&#21270;&#21518;&#30340;&#22238;&#27979;&#34920;&#29616;&#12290;</p><div class="grid">
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#20248;&#21270;</h2>${numberChips(analysis.optimized.special.pool)}<p class="muted">&#20445;&#30041;&#21407;&#27744;&#26680;&#24515;&#65292;&#25353;&#24403;&#24180;&#39057;&#27425;&#12289;&#39068;&#33394;&#12289;&#23614;&#25968;&#20998;&#25955;&#20248;&#21270;&#12290;</p></section>
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#20248;&#21270;</h2>${numberChips(analysis.optimized.stable.pool)}<p class="muted">&#20445;&#30041;&#36328;&#24180;&#31283;&#23450;&#27744;&#26435;&#37325;&#65292;&#25353;&#24403;&#24180;&#32467;&#26500;&#20570;&#36731;&#37327;&#35843;&#25972;&#12290;</p></section>
