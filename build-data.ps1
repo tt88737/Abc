@@ -2261,6 +2261,60 @@ __EMBEDDED_JSON__
         ${patternDiagnosticRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.three, analysis.threeWindows, analysis.optimized.three.windows, analysis.optimized.three.stats)}
       </tbody></table></section>`;
     }
+    function windowRhythmStats(windows) {
+      const completed = windows.filter(item => Number(item.count || 0) >= 5);
+      let earlyHits = 0;
+      let lateHits = 0;
+      let missRebounds = 0;
+      let missFollowCount = 0;
+      let streakFollowCount = 0;
+      let streakBreaks = 0;
+      completed.forEach((item, idx) => {
+        if (item.covered) {
+          const firstHitIssue = Math.min(...(item.hits || []).map(hit => Number(hit.issue || item.start)));
+          const offset = firstHitIssue - Number(item.start || firstHitIssue) + 1;
+          if (offset <= 2) earlyHits++;
+          else lateHits++;
+        }
+        if (idx > 0 && !completed[idx - 1].covered) {
+          missFollowCount++;
+          if (item.covered) missRebounds++;
+        }
+        if (idx > 1 && completed[idx - 1].covered && completed[idx - 2].covered) {
+          streakFollowCount++;
+          if (!item.covered) streakBreaks++;
+        }
+      });
+      const last = completed[completed.length - 1];
+      const active = windows.find(item => Number(item.count || 0) > 0 && Number(item.count || 0) < 5) || null;
+      const earlyTotal = earlyHits + lateHits;
+      const rhythm = earlyTotal === 0 ? '&#26679;&#26412;&#19981;&#36275;' : earlyHits >= lateHits ? '&#21069;&#21322;&#31383;&#20559;&#24378;' : '&#21518;&#21322;&#31383;&#20559;&#24378;';
+      const reboundRate = missFollowCount ? Math.round(missRebounds / missFollowCount * 10000) / 100 : 0;
+      const decayRate = streakFollowCount ? Math.round(streakBreaks / streakFollowCount * 10000) / 100 : 0;
+      let phase = '&#24179;&#31283;&#35266;&#23519;';
+      if (active && Number(active.count || 0) <= 2 && !active.covered) phase = '&#26089;&#26399;&#35266;&#23519;';
+      else if (active && Number(active.count || 0) >= 3 && !active.covered) phase = '&#21518;&#21322;&#31383;&#21387;&#21147;';
+      else if (last && !last.covered) phase = '&#28431;&#31383;&#24674;&#22797;';
+      else if (completed.length >= 2 && completed[completed.length - 1]?.covered && completed[completed.length - 2]?.covered) phase = '&#36830;&#20013;&#34928;&#20943;';
+      let action = '&#32487;&#32493;&#36319;&#36394;';
+      if (phase === '&#21518;&#21322;&#31383;&#21387;&#21147;') action = '&#31561;&#31383;&#21475;&#32467;&#26463;';
+      else if (phase === '&#28431;&#31383;&#24674;&#22797;' && reboundRate < 50) action = '&#35302;&#21457;&#37325;&#31639;';
+      else if (phase === '&#36830;&#20013;&#34928;&#20943;' && decayRate >= 50) action = '&#38477;&#20302;&#26435;&#37325;';
+      return {rhythm, earlyHits, lateHits, reboundRate, missRebounds, missFollowCount, decayRate, streakBreaks, streakFollowCount, phase, action};
+    }
+    function windowRhythmRow(name, windows) {
+      const stats = windowRhythmStats(windows);
+      const rebound = stats.missFollowCount ? `${stats.reboundRate}% (${stats.missRebounds}/${stats.missFollowCount})` : '-';
+      const decay = stats.streakFollowCount ? `${stats.decayRate}% (${stats.streakBreaks}/${stats.streakFollowCount})` : '-';
+      return `<tr><td>${name}</td><td>${stats.rhythm}<br><span class="muted">${esc(stats.earlyHits)} / ${esc(stats.lateHits)}</span></td><td>${esc(rebound)}</td><td>${esc(decay)}</td><td>${stats.phase}</td><td>${stats.action}</td></tr>`;
+    }
+    function windowRhythmTable(analysis) {
+      return `<section class="panel full"><h2>&#31383;&#21475;&#33410;&#22863;&#35266;&#23519;</h2><p class="muted">&#35266;&#23519;5&#26399;&#31383;&#21475;&#20869;&#30340;&#21629;&#20013;&#20301;&#32622;&#12289;&#28431;&#31383;&#21518;&#21453;&#24377;&#21644;&#36830;&#32493;&#35206;&#30422;&#34928;&#20943;&#65292;&#29992;&#20110;&#21028;&#26029;&#24403;&#21069;&#27809;&#20013;&#26159;&#31561;&#24453;&#36824;&#26159;&#21464;&#24369;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#39318;&#23614;&#26399;&#33410;&#22863;</th><th>&#28431;&#31383;&#21518;&#21453;&#24377;</th><th>&#36830;&#32493;&#35206;&#30422;&#34928;&#20943;</th><th>&#24403;&#21069;&#38454;&#27573;</th><th>&#33410;&#22863;&#24314;&#35758;</th></tr></thead><tbody>
+        ${windowRhythmRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.specialWindows)}
+        ${windowRhythmRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stableWindows)}
+        ${windowRhythmRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.threeWindows)}
+      </tbody></table></section>`;
+    }
     function patternWatchAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
@@ -2526,6 +2580,7 @@ __EMBEDDED_JSON__
         </tbody></table></section>
         ${patternScoreTable(analysis)}
         ${patternDiagnosticsTable(analysis)}
+        ${windowRhythmTable(analysis)}
         <section class="panel full"><h2>&#35268;&#24459;&#20248;&#21270;&#27744;</h2><p class="muted">&#21407;&#27744;&#19981;&#21160;&#65292;&#27492;&#22788;&#20165;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#32467;&#26500;&#20248;&#21270;&#21518;&#30340;&#22238;&#27979;&#34920;&#29616;&#12290;</p><div class="grid">
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#20248;&#21270;</h2>${numberChips(analysis.optimized.special.pool)}<p class="muted">&#20445;&#30041;&#21407;&#27744;&#26680;&#24515;&#65292;&#25353;&#24403;&#24180;&#39057;&#27425;&#12289;&#39068;&#33394;&#12289;&#23614;&#25968;&#20998;&#25955;&#20248;&#21270;&#12290;</p></section>
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#20248;&#21270;</h2>${numberChips(analysis.optimized.stable.pool)}<p class="muted">&#20445;&#30041;&#36328;&#24180;&#31283;&#23450;&#27744;&#26435;&#37325;&#65292;&#25353;&#24403;&#24180;&#32467;&#26500;&#20570;&#36731;&#37327;&#35843;&#25972;&#12290;</p></section>

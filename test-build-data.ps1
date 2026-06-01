@@ -637,6 +637,21 @@ try {
     if (-not $dashboard.Contains('function patternDiagnosticsTable(analysis)')) {
         throw 'pattern watch should render pattern diagnostics'
     }
+    if (-not $dashboard.Contains('function windowRhythmStats(windows)')) {
+        throw 'pattern watch should calculate window rhythm stats'
+    }
+    if (-not $dashboard.Contains('function windowRhythmTable(analysis)')) {
+        throw 'pattern watch should render window rhythm observation'
+    }
+    if (-not $dashboard.Contains('&#31383;&#21475;&#33410;&#22863;&#35266;&#23519;')) {
+        throw 'pattern watch should render window rhythm section'
+    }
+    if (-not $dashboard.Contains('&#39318;&#23614;&#26399;&#33410;&#22863;') -or -not $dashboard.Contains('&#28431;&#31383;&#21518;&#21453;&#24377;') -or -not $dashboard.Contains('&#36830;&#32493;&#35206;&#30422;&#34928;&#20943;')) {
+        throw 'window rhythm should include hit timing, miss rebound, and consecutive coverage decay'
+    }
+    if ($dashboard.Contains('&#243弱;')) {
+        throw 'window rhythm copy should not contain mixed malformed entity text'
+    }
     if (-not $dashboard.Contains('function rollingWindowCompare(originalWindows, optimizedWindows)')) {
         throw 'pattern diagnostics should compare recent original and optimized windows'
     }
