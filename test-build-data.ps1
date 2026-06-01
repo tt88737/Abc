@@ -634,6 +634,21 @@ try {
     if (-not $dashboard.Contains('function patternScoreTable(analysis)')) {
         throw 'pattern watch should render a score summary table'
     }
+    if (-not $dashboard.Contains('function patternDiagnosticsTable(analysis)')) {
+        throw 'pattern watch should render pattern diagnostics'
+    }
+    if (-not $dashboard.Contains('function rollingWindowCompare(originalWindows, optimizedWindows)')) {
+        throw 'pattern diagnostics should compare recent original and optimized windows'
+    }
+    if (-not $dashboard.Contains('function structureHealthForPattern(type, analysisItem)')) {
+        throw 'pattern diagnostics should calculate structure health'
+    }
+    if (-not $dashboard.Contains('&#35268;&#24459;&#35786;&#26029;')) {
+        throw 'pattern watch should render diagnostics section'
+    }
+    if (-not $dashboard.Contains('&#32467;&#26500;&#20581;&#24247;') -or -not $dashboard.Contains('&#36817;10&#31383;&#21475;&#32988;&#29575;') -or -not $dashboard.Contains('&#28431;&#31383;&#24674;&#22797;')) {
+        throw 'pattern diagnostics should include structure health, rolling win rate, and miss recovery'
+    }
     if (-not $dashboard.Contains('&#35268;&#24459;&#35780;&#20998;&#24635;&#34920;')) {
         throw 'pattern watch should render the pattern score summary'
     }

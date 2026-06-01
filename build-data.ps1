@@ -2199,6 +2199,68 @@ __EMBEDDED_JSON__
       ];
       return `<section class="panel full"><h2>&#35268;&#24459;&#35780;&#20998;&#24635;&#34920;</h2><p class="muted">&#35780;&#20998;&#21482;&#29992;&#20110;&#35266;&#23519;&#65292;&#20197;&#23436;&#25104;&#30340;5&#26399;&#31383;&#21475;&#22238;&#27979;&#20026;&#20934;&#65292;&#19981;&#35745;&#20837;&#26410;&#32467;&#26463;&#31383;&#21475;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35268;&#27169;</th><th>&#35780;&#20998;</th><th>&#31561;&#32423;</th><th>&#21407;&#27744;&#23454;&#38469;</th><th>&#20248;&#21270;&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${item.name}</td><td>${esc(item.sizeLabel)}</td><td>${esc(item.score)}</td><td>${item.grade}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.optimizedHitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.recentHitRate)}%</td><td>${esc(item.currentMiss)} / ${esc(item.maxMiss)}</td><td>${item.action}</td></tr>`).join('')}</tbody></table></section>`;
     }
+    function rollingWindowCompare(originalWindows, optimizedWindows) {
+      const original = originalWindows.filter(item => Number(item.count || 0) >= 5).slice(-10);
+      const optimized = optimizedWindows.filter(item => Number(item.count || 0) >= 5).slice(-10);
+      const count = Math.min(original.length, optimized.length);
+      let originalWins = 0;
+      let optimizedWins = 0;
+      let ties = 0;
+      for (let i = 0; i < count; i++) {
+        const oldHit = !!original[original.length - count + i]?.covered;
+        const newHit = !!optimized[optimized.length - count + i]?.covered;
+        if (oldHit === newHit) ties++;
+        else if (newHit) optimizedWins++;
+        else originalWins++;
+      }
+      return {count, originalWins, optimizedWins, ties, label: `${optimizedWins}/${count}`};
+    }
+    function concentrationHealth(items) {
+      const total = items.reduce((sum, item) => sum + Number(item.count || 0), 0);
+      const top = items.slice(0, 2).reduce((sum, item) => sum + Number(item.count || 0), 0);
+      if (!total) return '&#26679;&#26412;&#19981;&#36275;';
+      const ratio = top / total;
+      if (ratio >= 0.75) return '&#20559;&#26012;';
+      if (ratio >= 0.62) return '&#30053;&#20559;';
+      return '&#20581;&#24247;';
+    }
+    function structureHealthForPattern(type, analysisItem) {
+      if (type === 'three') {
+        const span = concentrationHealth(analysisItem.structure?.spans || []);
+        const parity = concentrationHealth(analysisItem.structure?.parity || []);
+        return span === '&#20581;&#24247;' && parity === '&#20581;&#24247;' ? '&#20581;&#24247;' : `${span} / ${parity}`;
+      }
+      const colors = concentrationHealth(analysisItem.structure?.colors || []);
+      const tails = concentrationHealth(analysisItem.structure?.tails || []);
+      return colors === '&#20581;&#24247;' && tails === '&#20581;&#24247;' ? '&#20581;&#24247;' : `${colors} / ${tails}`;
+    }
+    function missRecoveryLabel(item) {
+      const currentMiss = Number(item.currentMiss || 0);
+      const maxMiss = Number(item.maxMiss || 0);
+      if (currentMiss <= 0) return '&#26080;&#28431;&#31383;';
+      if (maxMiss > 0 && currentMiss >= maxMiss) return '&#38656;&#35201;&#31561;&#24453;&#31383;&#21475;&#32467;&#26463;';
+      if (currentMiss >= 2) return '&#35266;&#23519;&#24674;&#22797;';
+      return '&#36731;&#24230;&#28431;&#31383;';
+    }
+    function patternDiagnosticRow(name, type, item, originalWindows, optimizedWindows, optimizedStats) {
+      const rolling = rollingWindowCompare(originalWindows, optimizedWindows);
+      const structure = structureHealthForPattern(type, item);
+      const recovery = missRecoveryLabel(item);
+      const delta = Math.round((Number(optimizedStats.hitRate || 0) - Number(item.hitRate || 0)) * 100) / 100;
+      let action = '&#32487;&#32493;&#35266;&#23519;';
+      if (item.level === '&#22833;&#25928;' || item.edge < 0) action = '&#26242;&#20572;&#35813;&#35268;&#24459;';
+      else if (recovery === '&#38656;&#35201;&#31561;&#24453;&#31383;&#21475;&#32467;&#26463;') action = '&#31561;&#24453;&#31383;&#21475;&#32467;&#26463;';
+      else if (structure !== '&#20581;&#24247;' && delta <= 0) action = '&#38477;&#26435;&#21407;&#32467;&#26500;';
+      else if (rolling.optimizedWins > rolling.originalWins || delta >= 5) action = '&#20248;&#20808;&#35266;&#23519;&#20248;&#21270;&#27744;';
+      return `<tr><td>${name}</td><td>${structure}</td><td>${esc(rolling.label)} &#65288;&#20248;&#21270;&#32988; / &#31383;&#21475;&#25968;&#65289;</td><td>${recovery}</td><td>${esc(delta)}%</td><td>${action}</td></tr>`;
+    }
+    function patternDiagnosticsTable(analysis) {
+      return `<section class="panel full"><h2>&#35268;&#24459;&#35786;&#26029;</h2><p class="muted">&#29992;&#32467;&#26500;&#20581;&#24247;&#12289;&#36817;10&#31383;&#21475;&#32988;&#29575;&#21644;&#28431;&#31383;&#24674;&#22797;&#21028;&#26029;&#24403;&#21069;&#35268;&#24459;&#26159;&#21542;&#36824;&#20540;&#24471;&#36319;&#36394;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#32467;&#26500;&#20581;&#24247;</th><th>&#36817;10&#31383;&#21475;&#32988;&#29575;</th><th>&#28431;&#31383;&#24674;&#22797;</th><th>&#20248;&#21270;&#24046;&#20540;</th><th>&#35786;&#26029;&#24314;&#35758;</th></tr></thead><tbody>
+        ${patternDiagnosticRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', 'special', analysis.special, analysis.specialWindows, analysis.optimized.special.windows, analysis.optimized.special.stats)}
+        ${patternDiagnosticRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stable, analysis.stableWindows, analysis.optimized.stable.windows, analysis.optimized.stable.stats)}
+        ${patternDiagnosticRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.three, analysis.threeWindows, analysis.optimized.three.windows, analysis.optimized.three.stats)}
+      </tbody></table></section>`;
+    }
     function patternWatchAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
@@ -2212,16 +2274,22 @@ __EMBEDDED_JSON__
       const optimizedSpecial = optimizedSpecialPool(yearRows, special.yearPool, 8);
       const optimizedStable = optimizedSpecialPool(yearRows, special.stablePool, 15);
       const optimizedThree = optimizedThreeCombos(yearRows, three.combos, 12);
-      const optimizedSpecialStats = patternStats(fiveWindowCoverage(yearRows, optimizedSpecial));
-      const optimizedStableStats = patternStats(fiveWindowCoverage(yearRows, optimizedStable));
-      const optimizedThreeStats = patternStats(threeHitWindowCoverage(yearRows, optimizedThree));
+      const optimizedSpecialWindows = fiveWindowCoverage(yearRows, optimizedSpecial);
+      const optimizedStableWindows = fiveWindowCoverage(yearRows, optimizedStable);
+      const optimizedThreeWindows = threeHitWindowCoverage(yearRows, optimizedThree);
+      const optimizedSpecialStats = patternStats(optimizedSpecialWindows);
+      const optimizedStableStats = patternStats(optimizedStableWindows);
+      const optimizedThreeStats = patternStats(optimizedThreeWindows);
       return {
         source,
         currentYear: special.currentYear,
+        specialWindows: special.yearWindows,
+        stableWindows: special.stableWindows,
+        threeWindows: three.yearWindows,
         special: {...specialStats, baseline: specialBaseline, edge: Math.round((specialStats.hitRate - specialBaseline) * 100) / 100, level: patternLevel(specialStats.hitRate - specialBaseline, specialStats.currentMiss, specialStats.maxMiss), poolSize: special.yearPool.length, structure: specialStructureStats(yearRows)},
-        stable: {...stableStats, baseline: stableBaseline, edge: Math.round((stableStats.hitRate - stableBaseline) * 100) / 100, level: patternLevel(stableStats.hitRate - stableBaseline, stableStats.currentMiss, stableStats.maxMiss), poolSize: special.stablePool.length},
+        stable: {...stableStats, baseline: stableBaseline, edge: Math.round((stableStats.hitRate - stableBaseline) * 100) / 100, level: patternLevel(stableStats.hitRate - stableBaseline, stableStats.currentMiss, stableStats.maxMiss), poolSize: special.stablePool.length, structure: specialStructureStats(yearRows)},
         three: {...threeStats, baseline: threeBaseline, edge: Math.round((threeStats.hitRate - threeBaseline) * 100) / 100, level: patternLevel(threeStats.hitRate - threeBaseline, threeStats.currentMiss, threeStats.maxMiss), comboSize: three.combos.length, structure: threeComboStructureStats(three.combos)},
-        optimized: {special: {pool: optimizedSpecial, stats: optimizedSpecialStats}, stable: {pool: optimizedStable, stats: optimizedStableStats}, three: {combos: optimizedThree, stats: optimizedThreeStats}}
+        optimized: {special: {pool: optimizedSpecial, stats: optimizedSpecialStats, windows: optimizedSpecialWindows}, stable: {pool: optimizedStable, stats: optimizedStableStats, windows: optimizedStableWindows}, three: {combos: optimizedThree, stats: optimizedThreeStats, windows: optimizedThreeWindows}}
       };
     }
     function recommendationSummary(rows) {
@@ -2457,6 +2525,7 @@ __EMBEDDED_JSON__
           ${patternMetricRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, `${analysis.three.comboSize}\u7EC4`)}
         </tbody></table></section>
         ${patternScoreTable(analysis)}
+        ${patternDiagnosticsTable(analysis)}
         <section class="panel full"><h2>&#35268;&#24459;&#20248;&#21270;&#27744;</h2><p class="muted">&#21407;&#27744;&#19981;&#21160;&#65292;&#27492;&#22788;&#20165;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#32467;&#26500;&#20248;&#21270;&#21518;&#30340;&#22238;&#27979;&#34920;&#29616;&#12290;</p><div class="grid">
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#20248;&#21270;</h2>${numberChips(analysis.optimized.special.pool)}<p class="muted">&#20445;&#30041;&#21407;&#27744;&#26680;&#24515;&#65292;&#25353;&#24403;&#24180;&#39057;&#27425;&#12289;&#39068;&#33394;&#12289;&#23614;&#25968;&#20998;&#25955;&#20248;&#21270;&#12290;</p></section>
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#20248;&#21270;</h2>${numberChips(analysis.optimized.stable.pool)}<p class="muted">&#20445;&#30041;&#36328;&#24180;&#31283;&#23450;&#27744;&#26435;&#37325;&#65292;&#25353;&#24403;&#24180;&#32467;&#26500;&#20570;&#36731;&#37327;&#35843;&#25972;&#12290;</p></section>
