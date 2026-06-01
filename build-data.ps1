@@ -2031,23 +2031,23 @@ __EMBEDDED_JSON__
       return Math.round((1 - Math.pow(1 - pickCount / totalCount, drawsPerWindow)) * 10000) / 100;
     }
     function patternLevel(edge, currentMiss, maxMiss) {
-      const pressure = maxMiss ? currentMiss / maxMiss : 0;
-      if (edge >= 15 && pressure <= 0.5) return '&#20248;&#31168;';
-      if (edge >= 8 && pressure <= 0.75) return '&#33391;&#22909;';
-      if (edge >= 0 && pressure < 1) return '&#35266;&#23519;';
-      return '&#22833;&#25928;';
+      if (edge < 0 || (maxMiss > 0 && currentMiss > maxMiss)) return '&#22833;&#25928;';
+      if (edge >= 15 && currentMiss <= 2) return '&#20248;&#31168;';
+      if (edge >= 8 && currentMiss <= 3) return '&#33391;&#22909;';
+      return '&#35266;&#23519;';
     }
     function patternStats(windows) {
-      const total = windows.length;
-      const hits = windows.filter(item => item.covered).length;
+      const completed = windows.filter(item => Number(item.count || 0) >= 5);
+      const total = completed.length;
+      const hits = completed.filter(item => item.covered).length;
       let currentMiss = 0;
-      for (let i = windows.length - 1; i >= 0; i--) {
-        if (windows[i].covered) break;
+      for (let i = completed.length - 1; i >= 0; i--) {
+        if (completed[i].covered) break;
         currentMiss++;
       }
       let maxMiss = 0;
       let run = 0;
-      windows.forEach(item => {
+      completed.forEach(item => {
         if (item.covered) {
           maxMiss = Math.max(maxMiss, run);
           run = 0;
@@ -2056,7 +2056,7 @@ __EMBEDDED_JSON__
         }
       });
       maxMiss = Math.max(maxMiss, run);
-      const recent = windows.slice(-10);
+      const recent = completed.slice(-10);
       const recentHits = recent.filter(item => item.covered).length;
       return {total, hits, hitRate: total ? Math.round(hits / total * 10000) / 100 : 0, currentMiss, maxMiss, recentHitRate: recent.length ? Math.round(recentHits / recent.length * 10000) / 100 : 0};
     }

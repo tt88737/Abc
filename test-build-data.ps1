@@ -625,6 +625,12 @@ try {
     if (-not $dashboard.Contains('function patternLevel(edge, currentMiss, maxMiss)')) {
         throw 'dashboard should classify pattern observation levels'
     }
+    if (-not $dashboard.Contains('const completed = windows.filter(item => Number(item.count || 0) >= 5)')) {
+        throw 'pattern watch stats should only count completed five-issue windows'
+    }
+    if (-not $dashboard.Contains('if (edge < 0 || (maxMiss > 0 && currentMiss > maxMiss))')) {
+        throw 'pattern watch should only mark invalid when current miss exceeds historical max or underperforms baseline'
+    }
     if (-not $dashboard.Contains('function threeWindowAnalysis(source)')) {
         throw 'dashboard should calculate three-hit five-issue window analysis'
     }
