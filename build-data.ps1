@@ -1762,6 +1762,7 @@ function New-DashboardHtml {
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#35268;&#24459;&#35266;&#23519;</button>
+      <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
       <button data-tab="daily">&#26085;&#25253;</button>
     </nav>
     <section id="app"></section>
@@ -2755,12 +2756,66 @@ __EMBEDDED_JSON__
       </div>`;
       document.getElementById('daily-source').addEventListener('change', renderDaily);
     }
+    const defaultFetchUrls = {
+      am: 'https://2025kj.zkclhb.com:2025/am.html',
+      hk: 'https://2025kj.zkclhb.com:2025/hk.html'
+    };
+    function manualFetchSourceOptions(selected = 'am') {
+      return `<option value="am" ${selected === 'am' ? 'selected' : ''}>&#28595;&#38376;</option><option value="hk" ${selected === 'hk' ? 'selected' : ''}>&#39321;&#28207;</option>`;
+    }
+    async function triggerManualFetch() {
+      const btn = document.getElementById('manual-fetch-submit');
+      const result = document.getElementById('manual-fetch-result');
+      const source = document.getElementById('manual-fetch-source').value;
+      const sourceUrl = document.getElementById('manual-fetch-url').value.trim();
+      const baseUrl = document.getElementById('manual-fetch-base').value.trim() || sourceUrl;
+      if (!sourceUrl) {
+        result.innerHTML = '<span class="muted">&#35831;&#20808;&#22635;&#20889;&#37319;&#38598;&#32593;&#22336;</span>';
+        return;
+      }
+      btn.disabled = true;
+      result.innerHTML = '<span class="muted">&#24050;&#25552;&#20132;&#65292;&#31561;&#24453; GitHub Actions &#24320;&#22987;&#36816;&#34892;...</span>';
+      try {
+        const response = await fetch('/api/manual-fetch', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({source, sourceUrl, baseUrl})
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || data.detail || `HTTP ${response.status}`);
+        result.innerHTML = `<strong>&#24050;&#35302;&#21457;&#25163;&#21160;&#37319;&#38598;</strong><p class="muted">GitHub Actions &#20250;&#25235;&#21462;&#24182;&#25552;&#20132;&#26368;&#26032;&#25968;&#25454;&#65292;Vercel &#38543;&#21518;&#33258;&#21160;&#37096;&#32626;&#12290;</p>`;
+      } catch (err) {
+        result.innerHTML = `<strong>&#35302;&#21457;&#22833;&#36133;</strong><p class="muted">${esc(err.message)}</p>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+    function renderManualFetch() {
+      const selected = document.getElementById('manual-fetch-source')?.value || 'am';
+      const defaultUrl = defaultFetchUrls[selected] || defaultFetchUrls.am;
+      app.innerHTML = `<div class="grid">
+        <section class="panel full">
+          <h2>&#25163;&#21160;&#37319;&#38598;</h2>
+          <p class="muted">&#22312; Vercel &#39029;&#38754;&#30452;&#25509;&#35302;&#21457; GitHub Actions &#37319;&#38598;&#65292;&#37319;&#38598;&#32593;&#22336;&#22833;&#25928;&#26102;&#21487;&#20197;&#22312;&#36825;&#37324;&#26367;&#25442;&#12290;</p>
+          <div class="filters">
+            <label>&#26469;&#28304;<select id="manual-fetch-source">${manualFetchSourceOptions(selected)}</select></label>
+            <label>&#37319;&#38598;&#32593;&#22336;<input id="manual-fetch-url" style="min-width:360px" value="${esc(defaultUrl)}"></label>
+            <label>Base URL<input id="manual-fetch-base" style="min-width:360px" value="${esc(defaultUrl)}"></label>
+          </div>
+          <div class="actions"><button id="manual-fetch-submit" class="primary">&#31435;&#21363;&#37319;&#38598;</button><a class="secondary" href="https://github.com/tt88737/Abc/actions/workflows/manual-fetch.yml" target="_blank" rel="noreferrer">GitHub Actions</a></div>
+          <div id="manual-fetch-result" class="mini">&#38656;&#35201;&#22312; Vercel &#37197;&#32622; GITHUB_TOKEN&#65292;&#25165;&#33021;&#20174;&#39029;&#38754;&#35302;&#21457;&#12290;</div>
+        </section>
+      </div>`;
+      document.getElementById('manual-fetch-source').addEventListener('change', renderManualFetch);
+      document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
+    }
     const renderers = {
       overview: renderOverview,
       games: renderGames,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       patternWatch: renderPatternWatch,
+      manualFetch: renderManualFetch,
       daily: renderDaily
     };
     tabs.forEach(btn => btn.addEventListener('click', () => { tabs.forEach(item => item.classList.remove('active')); btn.classList.add('active'); renderers[btn.dataset.tab](); }));

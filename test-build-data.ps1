@@ -299,8 +299,8 @@ try {
     if ($buildScript.Contains('C:\codex\test\am')) {
         throw 'build-data.ps1 should not use a machine-specific default path'
     }
-    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"')) {
-        throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, pattern watch, and daily tabs'
+    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, pattern watch, manual fetch, and daily tabs'
     }
     if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
         throw 'dashboard should not expose trend, picker, sandbox, or forecast modules'
@@ -616,6 +616,18 @@ try {
     if (-not $dashboard.Contains('function renderPatternWatch()')) {
         throw 'dashboard should expose a pattern watch renderer'
     }
+    if (-not $dashboard.Contains('function renderManualFetch()')) {
+        throw 'dashboard should expose a manual fetch renderer'
+    }
+    if (-not $dashboard.Contains('function triggerManualFetch()')) {
+        throw 'dashboard should trigger manual fetch API'
+    }
+    if (-not $dashboard.Contains('/api/manual-fetch')) {
+        throw 'manual fetch should call the Vercel API endpoint'
+    }
+    if (-not $dashboard.Contains('&#25163;&#21160;&#37319;&#38598;') -or -not $dashboard.Contains('&#37319;&#38598;&#32593;&#22336;') -or -not $dashboard.Contains('&#31435;&#21363;&#37319;&#38598;')) {
+        throw 'dashboard should render manual fetch labels'
+    }
     if (-not $dashboard.Contains('function patternWatchAnalysis(source)')) {
         throw 'dashboard should calculate pattern watch metrics'
     }
@@ -818,6 +830,22 @@ try {
     }
     if (-not $dashboard.Contains('hit: group.some(row => row.hit)')) {
         throw 'grouped algorithm stats should count an issue as hit when any algorithm hits'
+    }
+    $apiPath = Join-Path $PSScriptRoot 'api/manual-fetch.js'
+    if (-not (Test-Path -LiteralPath $apiPath)) {
+        throw 'manual fetch API endpoint should exist'
+    }
+    $apiScript = [IO.File]::ReadAllText($apiPath, [Text.Encoding]::UTF8)
+    if (-not $apiScript.Contains('GITHUB_TOKEN') -or -not $apiScript.Contains('workflow_dispatch') -or -not $apiScript.Contains('manual-fetch.yml')) {
+        throw 'manual fetch API should dispatch the GitHub manual fetch workflow'
+    }
+    $workflowPath = Join-Path $PSScriptRoot '.github/workflows/manual-fetch.yml'
+    if (-not (Test-Path -LiteralPath $workflowPath)) {
+        throw 'manual fetch workflow should exist'
+    }
+    $manualWorkflow = [IO.File]::ReadAllText($workflowPath, [Text.Encoding]::UTF8)
+    if (-not $manualWorkflow.Contains('workflow_dispatch') -or -not $manualWorkflow.Contains('source_url') -or -not $manualWorkflow.Contains('fetch-am.ps1') -or -not $manualWorkflow.Contains('build-data.ps1')) {
+        throw 'manual fetch workflow should accept source URL and run fetch/build scripts'
     }
     $mojibakeMarker = [string][char]0x951F
     if ($dashboard.Contains($mojibakeMarker)) {

@@ -1,0 +1,81 @@
+name: Manual Fetch
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_url:
+        description: "Collection URL"
+        required: true
+        type: string
+      base_url:
+        description: "Base URL for rewriting assets and links"
+        required: false
+        type: string
+      root_page_name:
+        description: "Root page name saved under pages/"
+        required: true
+        default: "am.html"
+        type: choice
+        options:
+          - am.html
+          - hk.html
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manual-fetch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure Git
+        shell: pwsh
+        run: |
+          git config --global --add safe.directory "$env:GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run manual collector
+        shell: pwsh
+        run: |
+          $sourceUrl = '${{ inputs.source_url }}'
+          $baseUrl = '${{ inputs.base_url }}'
+          if ([string]::IsNullOrWhiteSpace($baseUrl)) { $baseUrl = $sourceUrl }
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\fetch-am.ps1 -SourceUrl $sourceUrl -BaseUrl $baseUrl -RootPageName '${{ inputs.root_page_name }}' -SkipSnapshot
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\build-data.ps1
+
+      - name: Commit generated data
+        id: commit
+        shell: pwsh
+        run: |
+          git add .
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "No generated changes to commit."
+            "has_changes=false" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+          git commit -m "manual fetch $timestamp"
+          "has_changes=true" >> $env:GITHUB_OUTPUT
+
+      - name: Push generated data
+        if: steps.commit.outputs.has_changes == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git remote set-url origin "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main

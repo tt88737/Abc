@@ -2,6 +2,7 @@ param(
     [string]$SourceUrl = 'https://2025kj.zkclhb.com:2025/am.html',
     [string]$OutputDir = $PSScriptRoot,
     [string]$BaseUrl = 'https://2025kj.zkclhb.com:2025/am.html',
+    [string]$RootPageName = 'am.html',
     [switch]$SkipSnapshot
 )
 
@@ -240,7 +241,7 @@ function Get-SiteHtmlPages {
     $pages = [ordered]@{}
     $queue = New-Object 'System.Collections.Generic.Queue[object]'
 
-    $rootPageName = 'am.html'
+    $rootPageName = $RootPageName
     $rootKey = $rootUri.AbsoluteUri
     $pages[$rootKey] = [pscustomobject]@{
         Uri = $rootUri
