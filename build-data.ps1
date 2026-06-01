@@ -2404,6 +2404,48 @@ __EMBEDDED_JSON__
         ${resonanceRows.map(item => poolRelationRow('\u4E09\u4E2D\u4E09', item)).join('')}
       </tbody></table><p class="muted">&#29305;&#21035;&#21495;&#20851;&#31995;&#32467;&#35770;&#65306;${specialVerdict}&#65307;&#19977;&#20013;&#19977;&#20849;&#25391;&#32467;&#35770;&#65306;${threeVerdict}</p></section>`;
     }
+    function triggerDecisionItem(name, item, context) {
+      const plus = [];
+      const minus = [];
+      let score = 50;
+      const edge = Number(item.edge || 0);
+      const recent = Number(item.recentHitRate || 0);
+      const hitRate = Number(item.hitRate || 0);
+      const currentMiss = Number(item.currentMiss || 0);
+      const maxMiss = Number(item.maxMiss || 0);
+      if (edge > 0) { score += Math.min(18, edge * 0.8); plus.push('&#36229;&#36807;&#38543;&#26426;&#22522;&#20934;'); }
+      else { score -= 18; minus.push('&#20302;&#20110;&#38543;&#26426;&#22522;&#20934;'); }
+      if (recent > hitRate) { score += 8; plus.push('&#36817;10&#31383;&#21475;&#36739;&#24378;'); }
+      if (recent + 8 < hitRate) { score -= 8; minus.push('&#36817;10&#31383;&#21475;&#36716;&#24369;'); }
+      if (currentMiss > 0) { score -= Math.min(18, currentMiss * 6); minus.push('&#24403;&#21069;&#28431;&#31383;'); }
+      if (maxMiss > 0 && currentMiss >= maxMiss) { score -= 16; minus.push('&#25509;&#36817;&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;'); }
+      if (context.rhythm?.phase === '&#26089;&#26399;&#35266;&#23519;' || context.rhythm?.phase === '&#24179;&#31283;&#35266;&#23519;') { score += 6; plus.push('&#33410;&#22863;&#21487;&#35266;&#23519;'); }
+      if (context.rhythm?.phase === '&#21518;&#21322;&#31383;&#21387;&#21147;') { score -= 10; minus.push('&#21518;&#21322;&#31383;&#21387;&#21147;'); }
+      if (context.rhythm?.phase === '&#36830;&#20013;&#34928;&#20943;') { score -= 6; minus.push('&#36830;&#20013;&#34928;&#20943;'); }
+      if (context.failure?.topTag === '&#20248;&#21270;&#27744;&#32988;&#20986;') { score -= 8; minus.push('&#21407;&#27744;&#36755;&#32473;&#20248;&#21270;&#27744;'); }
+      if (context.failure?.topTag === '&#32467;&#26500;&#20559;&#26012;') { score -= 10; minus.push('&#32467;&#26500;&#20559;&#26012;'); }
+      if (context.relationVerdict && context.relationVerdict !== '&#26679;&#26412;&#19981;&#36275;') { score += 6; plus.push(context.relationVerdict); }
+      if (Number(item.total || 0) < 6) { score -= 10; minus.push('&#26679;&#26412;&#19981;&#36275;'); }
+      score = Math.max(0, Math.min(100, Math.round(score)));
+      let action = '&#27491;&#24120;&#35266;&#23519;';
+      if (score >= 85) action = '&#24378;&#36319;&#36394;';
+      else if (context.rhythm?.phase === '&#21518;&#21322;&#31383;&#21387;&#21147;' || (maxMiss > 0 && currentMiss >= maxMiss)) action = '&#31561;&#24453;&#31383;&#21475;&#32467;&#26463;';
+      else if (score >= 70) action = '&#27491;&#24120;&#35266;&#23519;';
+      else if (score >= 55) action = '&#38477;&#26435;&#35266;&#23519;';
+      else if (score >= 40) action = '&#35302;&#21457;&#37325;&#31639;';
+      else action = '&#26242;&#20572;&#35813;&#35268;&#24459;';
+      return {name, score, action, plus: plus.slice(0, 3), minus: minus.slice(0, 3), phase: context.rhythm?.phase || '-'};
+    }
+    function triggerDecisionTable(analysis) {
+      const specialRows = specialPoolRelationRows(analysis.yearRows, analysis);
+      const resonanceRows = threeResonanceRelationRows(analysis.yearRows, analysis.threeCombos, analysis.special.yearPool || []);
+      const rows = [
+        triggerDecisionItem('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, {rhythm: windowRhythmStats(analysis.specialWindows), failure: failureProfileSummary('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', 'special', analysis.specialWindows, analysis.optimized.special.windows, analysis.special), relationVerdict: relationVerdict(specialRows)}),
+        triggerDecisionItem('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, {rhythm: windowRhythmStats(analysis.stableWindows), failure: failureProfileSummary('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stableWindows, analysis.optimized.stable.windows, analysis.stable), relationVerdict: relationVerdict(specialRows)}),
+        triggerDecisionItem('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, {rhythm: windowRhythmStats(analysis.threeWindows), failure: failureProfileSummary('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.threeWindows, analysis.optimized.three.windows, analysis.three), relationVerdict: relationVerdict(resonanceRows)})
+      ];
+      return `<section class="panel full"><h2>&#26465;&#20214;&#35302;&#21457;&#24635;&#34920;</h2><p class="muted">&#27719;&#24635;&#21629;&#20013;&#36229;&#39069;&#12289;&#36817;&#26399;&#36235;&#21183;&#12289;&#28431;&#31383;&#12289;&#33410;&#22863;&#12289;&#22833;&#36133;&#30011;&#20687;&#21644;&#27744;&#23376;&#20851;&#31995;&#65292;&#29992;&#20110;&#21028;&#26029;&#24403;&#21069;&#31383;&#21475;&#35813;&#24378;&#36319;&#36394;&#12289;&#35266;&#23519;&#36824;&#26159;&#38477;&#26435;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35302;&#21457;&#35780;&#20998;</th><th>&#24403;&#21069;&#29366;&#24577;</th><th>&#20027;&#35201;&#21152;&#20998;</th><th>&#20027;&#35201;&#25187;&#20998;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${item.name}</td><td>${esc(item.score)}</td><td>${item.phase}</td><td>${item.plus.join('<br>') || '-'}</td><td>${item.minus.join('<br>') || '-'}</td><td>${item.action}</td></tr>`).join('')}</tbody></table></section>`;
+    }
     function patternWatchAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
@@ -2671,6 +2713,7 @@ __EMBEDDED_JSON__
           ${patternMetricRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, `${analysis.stable.poolSize}\u7801`)}
           ${patternMetricRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, `${analysis.three.comboSize}\u7EC4`)}
         </tbody></table></section>
+        ${triggerDecisionTable(analysis)}
         ${patternScoreTable(analysis)}
         ${patternDiagnosticsTable(analysis)}
         ${windowRhythmTable(analysis)}

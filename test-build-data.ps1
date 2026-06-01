@@ -652,6 +652,18 @@ try {
     if (-not $dashboard.Contains('function poolRelationTable(analysis)')) {
         throw 'pattern watch should render pool relation observation'
     }
+    if (-not $dashboard.Contains('function triggerDecisionItem(name, item, context)')) {
+        throw 'pattern watch should calculate trigger decision items'
+    }
+    if (-not $dashboard.Contains('function triggerDecisionTable(analysis)')) {
+        throw 'pattern watch should render trigger decision summary'
+    }
+    if (-not $dashboard.Contains('&#26465;&#20214;&#35302;&#21457;&#24635;&#34920;')) {
+        throw 'pattern watch should render trigger decision summary section'
+    }
+    if (-not $dashboard.Contains('&#35302;&#21457;&#35780;&#20998;') -or -not $dashboard.Contains('&#20027;&#35201;&#21152;&#20998;') -or -not $dashboard.Contains('&#20027;&#35201;&#25187;&#20998;') -or -not $dashboard.Contains('&#24378;&#36319;&#36394;')) {
+        throw 'trigger decision summary should include score, plus/minus factors, and strong tracking action'
+    }
     if (-not $dashboard.Contains('function poolRelationStats(windows)')) {
         throw 'pattern watch should calculate pool relation stats'
     }
