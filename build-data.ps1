@@ -1218,6 +1218,13 @@ function Get-StableWindow5Pool {
         }
     }
     $take = 15
+    if ($freq.Count -lt $take) {
+        foreach ($row in $SourceRows) {
+            $num = ([int]$row.balls[6].numberText).ToString('00')
+            if (-not $freq.ContainsKey($num)) { $freq[$num] = 0 }
+            $freq[$num]++
+        }
+    }
     return @($freq.GetEnumerator() | Sort-Object @{ Expression = 'Value'; Descending = $true }, @{ Expression = { [int]$_.Key }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.Key })
 }
 
@@ -1241,7 +1248,7 @@ function New-Window5State {
             $oldStablePool = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePool) { @($existingItem[0].stablePool | Where-Object { [int]$_ -ge 1 } | Select-Object -First 15 | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
             $oldStableIssue = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePoolLastIssue) { [int]$existingItem[0].stablePoolLastIssue } else { 0 }
             $nextRecalcIssue = if ($oldStableIssue -gt 0) { $oldStableIssue + $interval } else { [Math]::Ceiling($latestIssue / $interval) * $interval }
-            $shouldRecalcStable = $existingItem.Count -eq 0 -or $oldStablePool.Count -eq 0 -or $latestIssue -ge $nextRecalcIssue -or [string]$existingItem[0].year -ne $year
+            $shouldRecalcStable = $existingItem.Count -eq 0 -or $oldStablePool.Count -lt 15 -or $latestIssue -ge $nextRecalcIssue -or [string]$existingItem[0].year -ne $year
             $newStablePool = @(if ($shouldRecalcStable) { @(Get-StableWindow5Pool -SourceRows $sourceRows -CurrentYear $year | Select-Object -First 15) } else { @($oldStablePool | Select-Object -First 15) })
             $stableChanged = ($newStablePool -join ',') -ne ($oldStablePool -join ',')
             $stableChangeTime = if ($stableChanged -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].stablePoolChangeTime)) { $GeneratedAt } else { [string]$existingItem[0].stablePoolChangeTime }

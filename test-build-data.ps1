@@ -701,6 +701,9 @@ try {
             throw 'window5 stable pool should not contain placeholder 00'
         }
     }
+    if (-not $buildScript.Contains('$oldStablePool.Count -lt 15')) {
+        throw 'window5 stable pool should recalculate when an old pool has fewer than fifteen numbers'
+    }
     if ($dashboard.Contains('<h2>&#35206;&#30422;&#27744;&#29366;&#24577;</h2>')) {
         throw 'five-issue window status should be displayed under current-year pool, not as a separate card'
     }
