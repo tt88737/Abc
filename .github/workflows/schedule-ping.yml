@@ -1,0 +1,13 @@
+name: Schedule Ping
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print UTC time
+        run: date -u
