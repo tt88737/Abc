@@ -1,6 +1,966 @@
 {
-    "generatedAt":  "2026-06-02 21:31:45",
+    "generatedAt":  "2026-06-02 14:24:11",
     "items":  [
+                  {
+                      "id":  "am-special-number-2026-154-ant-colony",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "ant-colony",
+                      "algorithmName":  "蚁群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-association-rules",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "association-rules",
+                      "algorithmName":  "关联规则",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "03"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-backtracking",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "backtracking",
+                      "algorithmName":  "回溯",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "03"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-bayesian",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "bayesian",
+                      "algorithmName":  "贝叶斯推断",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-dynamic-programming",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "dynamic-programming",
+                      "algorithmName":  "动态规划",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "39"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-ensemble",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "ensemble",
+                      "algorithmName":  "综合主推",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-genetic",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "genetic",
+                      "algorithmName":  "遗传算法",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-greedy",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "greedy",
+                      "algorithmName":  "贪心",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-markov-chain",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "markov-chain",
+                      "algorithmName":  "马尔可夫链",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "01"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-monte-carlo",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "monte-carlo",
+                      "algorithmName":  "蒙特卡洛",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-particle-swarm",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "particle-swarm",
+                      "algorithmName":  "粒子群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "27"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-special-number-2026-154-simulated-annealing",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "simulated-annealing",
+                      "algorithmName":  "模拟退火",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-ant-colony",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "ant-colony",
+                      "algorithmName":  "蚁群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "22",
+                                      "15",
+                                      "25"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-association-rules",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "association-rules",
+                      "algorithmName":  "关联规则",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49",
+                                      "15",
+                                      "03"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-backtracking",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "backtracking",
+                      "algorithmName":  "回溯",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49",
+                                      "03",
+                                      "44"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-bayesian",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "bayesian",
+                      "algorithmName":  "贝叶斯推断",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49",
+                                      "15",
+                                      "44"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-dynamic-programming",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "dynamic-programming",
+                      "algorithmName":  "动态规划",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "49",
+                                      "03",
+                                      "15"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-ensemble",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "ensemble",
+                      "algorithmName":  "综合主推",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "15",
+                                      "49",
+                                      "03"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-genetic",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "genetic",
+                      "algorithmName":  "遗传算法",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "15",
+                                      "22",
+                                      "03"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-greedy",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "greedy",
+                      "algorithmName":  "贪心",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "25",
+                                      "22",
+                                      "24"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-markov-chain",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "markov-chain",
+                      "algorithmName":  "马尔可夫链",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "46",
+                                      "48",
+                                      "32"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-monte-carlo",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "monte-carlo",
+                      "algorithmName":  "蒙特卡洛",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "32",
+                                      "29",
+                                      "30"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-particle-swarm",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "particle-swarm",
+                      "algorithmName":  "粒子群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "20",
+                                      "24",
+                                      "25"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "am-three-hit-three-2026-154-simulated-annealing",
+                      "source":  "am",
+                      "sourceName":  "澳门",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "simulated-annealing",
+                      "algorithmName":  "模拟退火",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  154,
+                      "targetDate":  "2026-06-03",
+                      "numbers":  [
+                                      "44",
+                                      "15",
+                                      "49"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-ant-colony",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "ant-colony",
+                      "algorithmName":  "蚁群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-association-rules",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "association-rules",
+                      "algorithmName":  "关联规则",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "39"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-backtracking",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "backtracking",
+                      "algorithmName":  "回溯",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "23"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-bayesian",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "bayesian",
+                      "algorithmName":  "贝叶斯推断",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-dynamic-programming",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "dynamic-programming",
+                      "algorithmName":  "动态规划",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "45"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-ensemble",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "ensemble",
+                      "algorithmName":  "综合主推",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-genetic",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "genetic",
+                      "algorithmName":  "遗传算法",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-greedy",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "greedy",
+                      "algorithmName":  "贪心",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-markov-chain",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "markov-chain",
+                      "algorithmName":  "马尔可夫链",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "45"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-monte-carlo",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "monte-carlo",
+                      "algorithmName":  "蒙特卡洛",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-particle-swarm",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "particle-swarm",
+                      "algorithmName":  "粒子群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "08"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-special-number-2026-60-simulated-annealing",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "special-number",
+                      "gameName":  "特别号",
+                      "algorithmId":  "simulated-annealing",
+                      "algorithmName":  "模拟退火",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "20"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-ant-colony",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "ant-colony",
+                      "algorithmName":  "蚁群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "02",
+                                      "37"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-association-rules",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "association-rules",
+                      "algorithmName":  "关联规则",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "02",
+                                      "18"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-backtracking",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "backtracking",
+                      "algorithmName":  "回溯",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "24",
+                                      "18",
+                                      "30"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-bayesian",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "bayesian",
+                      "algorithmName":  "贝叶斯推断",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "18",
+                                      "32"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-dynamic-programming",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "dynamic-programming",
+                      "algorithmName":  "动态规划",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "02",
+                                      "18"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-ensemble",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "ensemble",
+                      "algorithmName":  "综合主推",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "02",
+                                      "18"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-genetic",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "genetic",
+                      "algorithmName":  "遗传算法",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "02",
+                                      "18"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-greedy",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "greedy",
+                      "algorithmName":  "贪心",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "02",
+                                      "37"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-markov-chain",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "markov-chain",
+                      "algorithmName":  "马尔可夫链",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "06",
+                                      "02"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-monte-carlo",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "monte-carlo",
+                      "algorithmName":  "蒙特卡洛",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "18",
+                                      "37"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-particle-swarm",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "particle-swarm",
+                      "algorithmName":  "粒子群",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "37",
+                                      "02"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
+                  {
+                      "id":  "hk-three-hit-three-2026-60-simulated-annealing",
+                      "source":  "hk",
+                      "sourceName":  "香港",
+                      "game":  "three-hit-three",
+                      "gameName":  "三中三",
+                      "algorithmId":  "simulated-annealing",
+                      "algorithmName":  "模拟退火",
+                      "year":  2025,
+                      "displayYear":  "2026",
+                      "issue":  60,
+                      "targetDate":  "2026-06-04",
+                      "numbers":  [
+                                      "28",
+                                      "18",
+                                      "12"
+                                  ],
+                      "createdAt":  "2026-06-02 14:24:11",
+                      "status":  "pending",
+                      "savedBy":  "fetch"
+                  },
                   {
                       "id":  "am-special-number-2026-153-ant-colony",
                       "source":  "am",
@@ -17,8 +977,14 @@
                                       "49"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-association-rules",
@@ -36,8 +1002,14 @@
                                       "03"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-backtracking",
@@ -55,8 +1027,14 @@
                                       "03"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-bayesian",
@@ -74,8 +1052,14 @@
                                       "49"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-dynamic-programming",
@@ -93,8 +1077,14 @@
                                       "39"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-ensemble",
@@ -112,8 +1102,14 @@
                                       "39"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-genetic",
@@ -131,8 +1127,14 @@
                                       "39"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-greedy",
@@ -150,8 +1152,14 @@
                                       "49"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-markov-chain",
@@ -169,8 +1177,14 @@
                                       "01"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-monte-carlo",
@@ -188,8 +1202,14 @@
                                       "39"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-particle-swarm",
@@ -207,8 +1227,14 @@
                                       "16"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-153-simulated-annealing",
@@ -226,8 +1252,14 @@
                                       "39"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "41"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-ant-colony",
@@ -247,8 +1279,19 @@
                                       "25"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-association-rules",
@@ -268,8 +1311,19 @@
                                       "03"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-backtracking",
@@ -289,8 +1343,19 @@
                                       "44"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-bayesian",
@@ -310,8 +1375,19 @@
                                       "44"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-dynamic-programming",
@@ -331,8 +1407,19 @@
                                       "15"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-ensemble",
@@ -352,8 +1439,19 @@
                                       "03"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-genetic",
@@ -373,8 +1471,19 @@
                                       "03"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-greedy",
@@ -394,8 +1503,19 @@
                                       "24"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-markov-chain",
@@ -415,8 +1535,19 @@
                                       "24"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-monte-carlo",
@@ -436,8 +1567,19 @@
                                       "48"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-particle-swarm",
@@ -457,8 +1599,19 @@
                                       "25"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-three-hit-three-2026-153-simulated-annealing",
@@ -478,8 +1631,19 @@
                                       "01"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  153,
+                      "actualNumbers":  [
+                                            "01",
+                                            "38",
+                                            "33",
+                                            "28",
+                                            "06",
+                                            "40"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-152-ant-colony",
@@ -1865,8 +3029,14 @@
                                       "08"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-association-rules",
@@ -1884,8 +3054,14 @@
                                       "39"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-backtracking",
@@ -1903,8 +3079,14 @@
                                       "23"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-bayesian",
@@ -1922,8 +3104,14 @@
                                       "08"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-dynamic-programming",
@@ -1941,8 +3129,14 @@
                                       "45"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-ensemble",
@@ -1960,8 +3154,14 @@
                                       "08"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-genetic",
@@ -1979,8 +3179,14 @@
                                       "45"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-greedy",
@@ -1998,8 +3204,14 @@
                                       "08"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-markov-chain",
@@ -2017,8 +3229,14 @@
                                       "13"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-monte-carlo",
@@ -2036,8 +3254,14 @@
                                       "45"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-particle-swarm",
@@ -2055,8 +3279,14 @@
                                       "08"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-special-number-2026-59-simulated-annealing",
@@ -2074,8 +3304,14 @@
                                       "08"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "20"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-ant-colony",
@@ -2095,8 +3331,19 @@
                                       "18"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-association-rules",
@@ -2116,8 +3363,19 @@
                                       "18"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-backtracking",
@@ -2137,8 +3395,19 @@
                                       "30"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-bayesian",
@@ -2158,8 +3427,19 @@
                                       "32"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-dynamic-programming",
@@ -2179,8 +3459,19 @@
                                       "18"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-ensemble",
@@ -2200,8 +3491,19 @@
                                       "18"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-genetic",
@@ -2221,8 +3523,19 @@
                                       "18"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-greedy",
@@ -2242,8 +3555,19 @@
                                       "37"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-markov-chain",
@@ -2263,8 +3587,19 @@
                                       "06"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-monte-carlo",
@@ -2284,8 +3619,19 @@
                                       "19"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-particle-swarm",
@@ -2305,8 +3651,19 @@
                                       "02"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "hk-three-hit-three-2026-59-simulated-annealing",
@@ -2326,8 +3683,19 @@
                                       "06"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
+                      "savedBy":  "fetch",
+                      "status":  "settled",
+                      "hit":  false,
+                      "actualDate":  "2026-06-02",
+                      "actualIssue":  59,
+                      "actualNumbers":  [
+                                            "14",
+                                            "16",
+                                            "45",
+                                            "09",
+                                            "35",
+                                            "37"
+                                        ]
                   },
                   {
                       "id":  "am-special-number-2026-150-ant-colony",
