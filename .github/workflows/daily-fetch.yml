@@ -2,8 +2,9 @@ name: Daily Fetch
 
 on:
   schedule:
-    # Temporary schedule test: every 10 minutes. Restore to "45 13 * * *" after confirming GitHub schedule triggers.
-    - cron: "*/10 * * * *"
+    # UTC time. China time: 21:45, 21:55, 22:10. Multiple runs reduce GitHub schedule delay/drop risk.
+    - cron: "45,55 13 * * *"
+    - cron: "10 14 * * *"
   workflow_dispatch:
 
 permissions:
