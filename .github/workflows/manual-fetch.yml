@@ -24,12 +24,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: manual-fetch
+  group: data-fetch
   cancel-in-progress: false
 
 jobs:
   fetch:
     runs-on: windows-2025
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
