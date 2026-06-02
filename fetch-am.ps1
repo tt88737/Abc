@@ -3,7 +3,8 @@ param(
     [string]$OutputDir = $PSScriptRoot,
     [string]$BaseUrl = 'https://2025kj.zkclhb.com:2025/am.html',
     [string]$RootPageName = 'am.html',
-    [switch]$SkipSnapshot
+    [switch]$SkipSnapshot,
+    [switch]$SkipBuild
 )
 
 $ErrorActionPreference = 'Stop'
@@ -361,7 +362,7 @@ try {
     }
 
     $buildDataScript = Join-Path $OutputDir 'build-data.ps1'
-    if (Test-Path -LiteralPath $buildDataScript) {
+    if ((-not $SkipBuild) -and (Test-Path -LiteralPath $buildDataScript)) {
         & $buildDataScript -RootDir $OutputDir | Out-Null
         Write-Log "Dashboard data refreshed"
     }

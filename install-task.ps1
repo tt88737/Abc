@@ -1,6 +1,6 @@
 param(
-    [string]$TaskName = 'Fetch-AM-Lottery-Records',
-    [string]$ScriptPath = (Join-Path $PSScriptRoot 'fetch-am.ps1'),
+    [string]$TaskName = 'Fetch-Lottery-Records',
+    [string]$ScriptPath = (Join-Path $PSScriptRoot 'fetch-all.ps1'),
     [string]$RunAt = '21:45'
 )
 

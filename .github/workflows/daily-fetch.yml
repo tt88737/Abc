@@ -36,7 +36,7 @@ jobs:
       - name: Run collector
         shell: pwsh
         run: |
-          powershell -NoProfile -ExecutionPolicy Bypass -File .\build-data.ps1
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\fetch-all.ps1 -SkipSnapshot
 
       - name: Commit generated data
         id: commit

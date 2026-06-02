@@ -23,11 +23,17 @@ export default async function handler(req, res) {
     }
 
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-    const sourceUrl = String(body.sourceUrl || '').trim();
-    const baseUrl = String(body.baseUrl || sourceUrl).trim();
-    const rootPageName = body.source === 'hk' ? 'hk.html' : 'am.html';
+    const defaultAmUrl = 'https://2025kj.zkclhb.com:2025/am.html';
+    const defaultHkUrl = 'https://2025kj.zkclhb.com:2025/hk.html';
+    const selectedSource = body.source === 'hk' ? 'hk' : 'am';
+    const selectedSourceUrl = String(body.sourceUrl || '').trim();
+    const selectedBaseUrl = String(body.baseUrl || selectedSourceUrl).trim();
+    const amSourceUrl = String(body.amSourceUrl || (selectedSource === 'am' ? selectedSourceUrl : defaultAmUrl) || defaultAmUrl).trim();
+    const amBaseUrl = String(body.amBaseUrl || (selectedSource === 'am' ? selectedBaseUrl : amSourceUrl) || amSourceUrl).trim();
+    const hkSourceUrl = String(body.hkSourceUrl || (selectedSource === 'hk' ? selectedSourceUrl : defaultHkUrl) || defaultHkUrl).trim();
+    const hkBaseUrl = String(body.hkBaseUrl || (selectedSource === 'hk' ? selectedBaseUrl : hkSourceUrl) || hkSourceUrl).trim();
 
-    if (!/^https?:\/\/.+/i.test(sourceUrl)) {
+    if (!/^https?:\/\/.+/i.test(amSourceUrl) || !/^https?:\/\/.+/i.test(hkSourceUrl)) {
       return res.status(400).json({ error: 'Invalid sourceUrl' });
     }
 
@@ -42,9 +48,10 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         ref,
         inputs: {
-          source_url: sourceUrl,
-          base_url: baseUrl,
-          root_page_name: rootPageName
+          am_source_url: amSourceUrl,
+          am_base_url: amBaseUrl,
+          hk_source_url: hkSourceUrl,
+          hk_base_url: hkBaseUrl
         }
       })
     });
@@ -54,7 +61,7 @@ export default async function handler(req, res) {
       return res.status(response.status).json({ error: 'workflow_dispatch failed', detail: text });
     }
 
-    return res.status(202).json({ ok: true, workflow: 'manual-fetch.yml', ref, sourceUrl, baseUrl, rootPageName });
+    return res.status(202).json({ ok: true, workflow: 'manual-fetch.yml', ref, amSourceUrl, amBaseUrl, hkSourceUrl, hkBaseUrl });
   } catch (error) {
     return res.status(500).json({
       error: 'manual-fetch handler failed',

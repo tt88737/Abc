@@ -836,7 +836,7 @@ try {
         throw 'manual fetch API endpoint should exist'
     }
     $apiScript = [IO.File]::ReadAllText($apiPath, [Text.Encoding]::UTF8)
-    if (-not $apiScript.Contains('GITHUB_TOKEN') -or -not $apiScript.Contains('workflow_dispatch') -or -not $apiScript.Contains('manual-fetch.yml')) {
+    if (-not $apiScript.Contains('GITHUB_TOKEN') -or -not $apiScript.Contains('workflow_dispatch') -or -not $apiScript.Contains('manual-fetch.yml') -or -not $apiScript.Contains('am_source_url') -or -not $apiScript.Contains('hk_source_url')) {
         throw 'manual fetch API should dispatch the GitHub manual fetch workflow'
     }
     $workflowPath = Join-Path $PSScriptRoot '.github/workflows/manual-fetch.yml'
@@ -844,8 +844,29 @@ try {
         throw 'manual fetch workflow should exist'
     }
     $manualWorkflow = [IO.File]::ReadAllText($workflowPath, [Text.Encoding]::UTF8)
-    if (-not $manualWorkflow.Contains('workflow_dispatch') -or -not $manualWorkflow.Contains('source_url') -or -not $manualWorkflow.Contains('fetch-am.ps1') -or -not $manualWorkflow.Contains('build-data.ps1')) {
-        throw 'manual fetch workflow should accept source URL and run fetch/build scripts'
+    if (-not $manualWorkflow.Contains('workflow_dispatch') -or -not $manualWorkflow.Contains('am_source_url') -or -not $manualWorkflow.Contains('hk_source_url') -or -not $manualWorkflow.Contains('fetch-all.ps1')) {
+        throw 'manual fetch workflow should accept Macau/Hong Kong URLs and run the unified fetch script'
+    }
+    $dailyWorkflowPath = Join-Path $PSScriptRoot '.github/workflows/daily-fetch.yml'
+    $dailyWorkflow = [IO.File]::ReadAllText($dailyWorkflowPath, [Text.Encoding]::UTF8)
+    if (-not $dailyWorkflow.Contains('fetch-all.ps1') -or $dailyWorkflow.Contains('-File .\build-data.ps1')) {
+        throw 'daily fetch workflow should fetch both sources before rebuilding data'
+    }
+    $fetchAllPath = Join-Path $PSScriptRoot 'fetch-all.ps1'
+    if (-not (Test-Path -LiteralPath $fetchAllPath)) {
+        throw 'unified fetch-all.ps1 script should exist'
+    }
+    $fetchAllScript = [IO.File]::ReadAllText($fetchAllPath, [Text.Encoding]::UTF8)
+    if (-not $fetchAllScript.Contains('am.html') -or -not $fetchAllScript.Contains('hk.html') -or -not $fetchAllScript.Contains('build-data.ps1')) {
+        throw 'fetch-all.ps1 should fetch Macau and Hong Kong then rebuild data once'
+    }
+    $fetchScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'fetch-am.ps1'), [Text.Encoding]::UTF8)
+    if (-not $fetchScript.Contains('[switch]$SkipBuild')) {
+        throw 'fetch-am.ps1 should support skipping build so fetch-all can rebuild once'
+    }
+    $installTaskScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'install-task.ps1'), [Text.Encoding]::UTF8)
+    if (-not $installTaskScript.Contains('fetch-all.ps1')) {
+        throw 'local scheduled task should run the unified fetch-all script'
     }
     $mojibakeMarker = [string][char]0x951F
     if ($dashboard.Contains($mojibakeMarker)) {

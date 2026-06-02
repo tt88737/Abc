@@ -3,22 +3,26 @@ name: Manual Fetch
 on:
   workflow_dispatch:
     inputs:
-      source_url:
-        description: "Collection URL"
-        required: true
-        type: string
-      base_url:
-        description: "Base URL for rewriting assets and links"
+      am_source_url:
+        description: "Macau collection URL"
         required: false
+        default: "https://2025kj.zkclhb.com:2025/am.html"
         type: string
-      root_page_name:
-        description: "Root page name saved under pages/"
-        required: true
-        default: "am.html"
-        type: choice
-        options:
-          - am.html
-          - hk.html
+      am_base_url:
+        description: "Macau base URL for rewriting assets and links"
+        required: false
+        default: "https://2025kj.zkclhb.com:2025/am.html"
+        type: string
+      hk_source_url:
+        description: "Hong Kong collection URL"
+        required: false
+        default: "https://2025kj.zkclhb.com:2025/hk.html"
+        type: string
+      hk_base_url:
+        description: "Hong Kong base URL for rewriting assets and links"
+        required: false
+        default: "https://2025kj.zkclhb.com:2025/hk.html"
+        type: string
 
 permissions:
   contents: write
@@ -49,11 +53,11 @@ jobs:
       - name: Run manual collector
         shell: pwsh
         run: |
-          $sourceUrl = '${{ inputs.source_url }}'
-          $baseUrl = '${{ inputs.base_url }}'
-          if ([string]::IsNullOrWhiteSpace($baseUrl)) { $baseUrl = $sourceUrl }
-          powershell -NoProfile -ExecutionPolicy Bypass -File .\fetch-am.ps1 -SourceUrl $sourceUrl -BaseUrl $baseUrl -RootPageName '${{ inputs.root_page_name }}' -SkipSnapshot
-          powershell -NoProfile -ExecutionPolicy Bypass -File .\build-data.ps1
+          $amSourceUrl = '${{ inputs.am_source_url }}'
+          $amBaseUrl = '${{ inputs.am_base_url }}'
+          $hkSourceUrl = '${{ inputs.hk_source_url }}'
+          $hkBaseUrl = '${{ inputs.hk_base_url }}'
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\fetch-all.ps1 -AmSourceUrl $amSourceUrl -AmBaseUrl $amBaseUrl -HkSourceUrl $hkSourceUrl -HkBaseUrl $hkBaseUrl -SkipSnapshot
 
       - name: Commit generated data
         id: commit

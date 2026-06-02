@@ -2769,6 +2769,10 @@ __EMBEDDED_JSON__
       const source = document.getElementById('manual-fetch-source').value;
       const sourceUrl = document.getElementById('manual-fetch-url').value.trim();
       const baseUrl = document.getElementById('manual-fetch-base').value.trim() || sourceUrl;
+      const amSourceUrl = source === 'am' ? sourceUrl : defaultFetchUrls.am;
+      const amBaseUrl = source === 'am' ? baseUrl : defaultFetchUrls.am;
+      const hkSourceUrl = source === 'hk' ? sourceUrl : defaultFetchUrls.hk;
+      const hkBaseUrl = source === 'hk' ? baseUrl : defaultFetchUrls.hk;
       if (!sourceUrl) {
         result.innerHTML = '<span class="muted">&#35831;&#20808;&#22635;&#20889;&#37319;&#38598;&#32593;&#22336;</span>';
         return;
@@ -2779,11 +2783,11 @@ __EMBEDDED_JSON__
         const response = await fetch('/api/manual-fetch', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({source, sourceUrl, baseUrl})
+          body: JSON.stringify({source, sourceUrl, baseUrl, amSourceUrl, amBaseUrl, hkSourceUrl, hkBaseUrl})
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || data.detail || `HTTP ${response.status}`);
-        result.innerHTML = `<strong>&#24050;&#35302;&#21457;&#25163;&#21160;&#37319;&#38598;</strong><p class="muted">GitHub Actions &#20250;&#25235;&#21462;&#24182;&#25552;&#20132;&#26368;&#26032;&#25968;&#25454;&#65292;Vercel &#38543;&#21518;&#33258;&#21160;&#37096;&#32626;&#12290;</p>`;
+        result.innerHTML = `<strong>&#24050;&#35302;&#21457;&#25163;&#21160;&#37319;&#38598;</strong><p class="muted">GitHub Actions &#20250;&#19968;&#27425;&#25235;&#21462;&#28595;&#38376;&#21644;&#39321;&#28207;&#65292;&#24182;&#25552;&#20132;&#26368;&#26032;&#25968;&#25454;&#12290;</p>`;
       } catch (err) {
         result.innerHTML = `<strong>&#35302;&#21457;&#22833;&#36133;</strong><p class="muted">${esc(err.message)}</p>`;
       } finally {
@@ -2796,7 +2800,7 @@ __EMBEDDED_JSON__
       app.innerHTML = `<div class="grid">
         <section class="panel full">
           <h2>&#25163;&#21160;&#37319;&#38598;</h2>
-          <p class="muted">&#22312; Vercel &#39029;&#38754;&#30452;&#25509;&#35302;&#21457; GitHub Actions &#37319;&#38598;&#65292;&#37319;&#38598;&#32593;&#22336;&#22833;&#25928;&#26102;&#21487;&#20197;&#22312;&#36825;&#37324;&#26367;&#25442;&#12290;</p>
+          <p class="muted">&#22312; Vercel &#39029;&#38754;&#30452;&#25509;&#35302;&#21457; GitHub Actions &#37319;&#38598;&#65292;&#28857;&#20987;&#19968;&#27425;&#20250;&#21516;&#26102;&#37319;&#38598;&#28595;&#38376;&#21644;&#39321;&#28207;&#12290;&#19979;&#26041;&#19979;&#25289;&#26694;&#29992;&#20110;&#20462;&#25913;&#26576;&#19968;&#20010;&#26469;&#28304;&#30340;&#37319;&#38598;&#32593;&#22336;&#12290;</p>
           <div class="filters">
             <label>&#26469;&#28304;<select id="manual-fetch-source">${manualFetchSourceOptions(selected)}</select></label>
             <label>&#37319;&#38598;&#32593;&#22336;<input id="manual-fetch-url" style="min-width:360px" value="${esc(defaultUrl)}"></label>
