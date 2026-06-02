@@ -1,5 +1,5 @@
 {
-    "generatedAt":  "2026-06-02 13:08:31",
+    "generatedAt":  "2026-06-02 21:31:45",
     "items":  [
                   {
                       "id":  "am-special-number-2026-153-ant-colony",
@@ -167,25 +167,6 @@
                       "targetDate":  "2026-06-02",
                       "numbers":  [
                                       "01"
-                                  ],
-                      "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
-                  },
-                  {
-                      "id":  "am-special-number-2026-153-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  153,
-                      "targetDate":  "2026-06-02",
-                      "numbers":  [
-                                      "47"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
                       "status":  "pending",
@@ -432,27 +413,6 @@
                                       "32",
                                       "17",
                                       "24"
-                                  ],
-                      "createdAt":  "2026-06-01 21:46:35",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
-                  },
-                  {
-                      "id":  "am-three-hit-three-2026-153-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  153,
-                      "targetDate":  "2026-06-02",
-                      "numbers":  [
-                                      "03",
-                                      "07",
-                                      "17"
                                   ],
                       "createdAt":  "2026-06-01 21:46:35",
                       "status":  "pending",
@@ -735,31 +695,6 @@
                       "targetDate":  "2026-06-01",
                       "numbers":  [
                                       "46"
-                                  ],
-                      "createdAt":  "2026-05-31 21:46:26",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-06-01",
-                      "actualIssue":  152,
-                      "actualNumbers":  [
-                                            "45"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-152-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  152,
-                      "targetDate":  "2026-06-01",
-                      "numbers":  [
-                                      "47"
                                   ],
                       "createdAt":  "2026-05-31 21:46:26",
                       "savedBy":  "fetch",
@@ -1135,38 +1070,6 @@
                                         ]
                   },
                   {
-                      "id":  "am-three-hit-three-2026-152-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  152,
-                      "targetDate":  "2026-06-01",
-                      "numbers":  [
-                                      "03",
-                                      "07",
-                                      "49"
-                                  ],
-                      "createdAt":  "2026-05-31 21:46:26",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-06-01",
-                      "actualIssue":  152,
-                      "actualNumbers":  [
-                                            "34",
-                                            "47",
-                                            "16",
-                                            "36",
-                                            "44",
-                                            "01"
-                                        ]
-                  },
-                  {
                       "id":  "am-three-hit-three-2026-152-monte-carlo",
                       "source":  "am",
                       "sourceName":  "澳门",
@@ -1476,31 +1379,6 @@
                       "targetDate":  "2026-05-31",
                       "numbers":  [
                                       "06"
-                                  ],
-                      "createdAt":  "2026-05-30 21:46:31",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-31",
-                      "actualIssue":  151,
-                      "actualNumbers":  [
-                                            "31"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-151-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  151,
-                      "targetDate":  "2026-05-31",
-                      "numbers":  [
-                                      "21"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
                       "savedBy":  "fetch",
@@ -1876,38 +1754,6 @@
                                         ]
                   },
                   {
-                      "id":  "am-three-hit-three-2026-151-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  151,
-                      "targetDate":  "2026-05-31",
-                      "numbers":  [
-                                      "03",
-                                      "07",
-                                      "15"
-                                  ],
-                      "createdAt":  "2026-05-30 21:46:31",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-31",
-                      "actualIssue":  151,
-                      "actualNumbers":  [
-                                            "27",
-                                            "15",
-                                            "29",
-                                            "42",
-                                            "20",
-                                            "41"
-                                        ]
-                  },
-                  {
                       "id":  "am-three-hit-three-2026-151-monte-carlo",
                       "source":  "am",
                       "sourceName":  "澳门",
@@ -2175,25 +2021,6 @@
                       "savedBy":  "fetch"
                   },
                   {
-                      "id":  "hk-special-number-2026-59-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  59,
-                      "targetDate":  "2026-06-01",
-                      "numbers":  [
-                                      "17"
-                                  ],
-                      "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
-                  },
-                  {
                       "id":  "hk-special-number-2026-59-monte-carlo",
                       "source":  "hk",
                       "sourceName":  "香港",
@@ -2434,27 +2261,6 @@
                                       "28",
                                       "37",
                                       "06"
-                                  ],
-                      "createdAt":  "2026-05-30 21:46:31",
-                      "status":  "pending",
-                      "savedBy":  "fetch"
-                  },
-                  {
-                      "id":  "hk-three-hit-three-2026-59-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  59,
-                      "targetDate":  "2026-06-01",
-                      "numbers":  [
-                                      "28",
-                                      "06",
-                                      "24"
                                   ],
                       "createdAt":  "2026-05-30 21:46:31",
                       "status":  "pending",
@@ -2737,31 +2543,6 @@
                       "targetDate":  "2026-05-30",
                       "numbers":  [
                                       "17"
-                                  ],
-                      "createdAt":  "2026-05-29 21:46:25",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-30",
-                      "actualIssue":  150,
-                      "actualNumbers":  [
-                                            "09"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-150-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  150,
-                      "targetDate":  "2026-05-30",
-                      "numbers":  [
-                                      "21"
                                   ],
                       "createdAt":  "2026-05-29 21:46:25",
                       "savedBy":  "fetch",
@@ -3137,38 +2918,6 @@
                                         ]
                   },
                   {
-                      "id":  "am-three-hit-three-2026-150-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  150,
-                      "targetDate":  "2026-05-30",
-                      "numbers":  [
-                                      "03",
-                                      "07",
-                                      "17"
-                                  ],
-                      "createdAt":  "2026-05-29 21:46:25",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-30",
-                      "actualIssue":  150,
-                      "actualNumbers":  [
-                                            "11",
-                                            "04",
-                                            "22",
-                                            "25",
-                                            "44",
-                                            "19"
-                                        ]
-                  },
-                  {
                       "id":  "am-three-hit-three-2026-150-monte-carlo",
                       "source":  "am",
                       "sourceName":  "澳门",
@@ -3478,31 +3227,6 @@
                       "targetDate":  "2026-05-29",
                       "numbers":  [
                                       "17"
-                                  ],
-                      "createdAt":  "2026-05-28 21:46:22",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-29",
-                      "actualIssue":  149,
-                      "actualNumbers":  [
-                                            "27"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-149-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  149,
-                      "targetDate":  "2026-05-29",
-                      "numbers":  [
-                                      "21"
                                   ],
                       "createdAt":  "2026-05-28 21:46:22",
                       "savedBy":  "fetch",
@@ -3878,38 +3602,6 @@
                                         ]
                   },
                   {
-                      "id":  "am-three-hit-three-2026-149-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  149,
-                      "targetDate":  "2026-05-29",
-                      "numbers":  [
-                                      "03",
-                                      "17",
-                                      "07"
-                                  ],
-                      "createdAt":  "2026-05-28 21:46:22",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-29",
-                      "actualIssue":  149,
-                      "actualNumbers":  [
-                                            "28",
-                                            "30",
-                                            "44",
-                                            "45",
-                                            "04",
-                                            "20"
-                                        ]
-                  },
-                  {
                       "id":  "am-three-hit-three-2026-149-monte-carlo",
                       "source":  "am",
                       "sourceName":  "澳门",
@@ -4219,31 +3911,6 @@
                       "targetDate":  "2026-05-30",
                       "numbers":  [
                                       "45"
-                                  ],
-                      "createdAt":  "2026-05-28 21:46:22",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-30",
-                      "actualIssue":  58,
-                      "actualNumbers":  [
-                                            "42"
-                                        ]
-                  },
-                  {
-                      "id":  "hk-special-number-2026-58-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  58,
-                      "targetDate":  "2026-05-30",
-                      "numbers":  [
-                                      "17"
                                   ],
                       "createdAt":  "2026-05-28 21:46:22",
                       "savedBy":  "fetch",
@@ -4619,38 +4286,6 @@
                                         ]
                   },
                   {
-                      "id":  "hk-three-hit-three-2026-58-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  58,
-                      "targetDate":  "2026-05-30",
-                      "numbers":  [
-                                      "28",
-                                      "24",
-                                      "12"
-                                  ],
-                      "createdAt":  "2026-05-28 21:46:22",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-30",
-                      "actualIssue":  58,
-                      "actualNumbers":  [
-                                            "39",
-                                            "40",
-                                            "21",
-                                            "01",
-                                            "12",
-                                            "41"
-                                        ]
-                  },
-                  {
                       "id":  "hk-three-hit-three-2026-58-monte-carlo",
                       "source":  "hk",
                       "sourceName":  "香港",
@@ -4960,31 +4595,6 @@
                       "targetDate":  "2026-05-28",
                       "numbers":  [
                                       "17"
-                                  ],
-                      "createdAt":  "2026-05-27 21:46:31",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-28",
-                      "actualIssue":  148,
-                      "actualNumbers":  [
-                                            "48"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-148-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  148,
-                      "targetDate":  "2026-05-28",
-                      "numbers":  [
-                                      "21"
                                   ],
                       "createdAt":  "2026-05-27 21:46:31",
                       "savedBy":  "fetch",
@@ -5360,38 +4970,6 @@
                                         ]
                   },
                   {
-                      "id":  "am-three-hit-three-2026-148-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  148,
-                      "targetDate":  "2026-05-28",
-                      "numbers":  [
-                                      "24",
-                                      "17",
-                                      "25"
-                                  ],
-                      "createdAt":  "2026-05-27 21:46:31",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-28",
-                      "actualIssue":  148,
-                      "actualNumbers":  [
-                                            "28",
-                                            "24",
-                                            "31",
-                                            "23",
-                                            "04",
-                                            "27"
-                                        ]
-                  },
-                  {
                       "id":  "am-three-hit-three-2026-148-monte-carlo",
                       "source":  "am",
                       "sourceName":  "澳门",
@@ -5701,31 +5279,6 @@
                       "targetDate":  "2026-05-27",
                       "numbers":  [
                                       "35"
-                                  ],
-                      "createdAt":  "2026-05-26 21:46:27",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-27",
-                      "actualIssue":  147,
-                      "actualNumbers":  [
-                                            "13"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-147-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  147,
-                      "targetDate":  "2026-05-27",
-                      "numbers":  [
-                                      "21"
                                   ],
                       "createdAt":  "2026-05-26 21:46:27",
                       "savedBy":  "fetch",
@@ -6101,38 +5654,6 @@
                                         ]
                   },
                   {
-                      "id":  "am-three-hit-three-2026-147-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  147,
-                      "targetDate":  "2026-05-27",
-                      "numbers":  [
-                                      "17",
-                                      "15",
-                                      "07"
-                                  ],
-                      "createdAt":  "2026-05-26 21:46:27",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-27",
-                      "actualIssue":  147,
-                      "actualNumbers":  [
-                                            "29",
-                                            "40",
-                                            "06",
-                                            "18",
-                                            "31",
-                                            "10"
-                                        ]
-                  },
-                  {
                       "id":  "am-three-hit-three-2026-147-monte-carlo",
                       "source":  "am",
                       "sourceName":  "澳门",
@@ -6442,31 +5963,6 @@
                       "targetDate":  "2026-05-28",
                       "numbers":  [
                                       "01"
-                                  ],
-                      "createdAt":  "2026-05-26 21:46:27",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-28",
-                      "actualIssue":  57,
-                      "actualNumbers":  [
-                                            "47"
-                                        ]
-                  },
-                  {
-                      "id":  "hk-special-number-2026-57-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  57,
-                      "targetDate":  "2026-05-28",
-                      "numbers":  [
-                                      "21"
                                   ],
                       "createdAt":  "2026-05-26 21:46:27",
                       "savedBy":  "fetch",
@@ -6842,38 +6338,6 @@
                                         ]
                   },
                   {
-                      "id":  "hk-three-hit-three-2026-57-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  57,
-                      "targetDate":  "2026-05-28",
-                      "numbers":  [
-                                      "28",
-                                      "37",
-                                      "18"
-                                  ],
-                      "createdAt":  "2026-05-26 21:46:27",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-28",
-                      "actualIssue":  57,
-                      "actualNumbers":  [
-                                            "35",
-                                            "07",
-                                            "13",
-                                            "40",
-                                            "25",
-                                            "43"
-                                        ]
-                  },
-                  {
                       "id":  "hk-three-hit-three-2026-57-monte-carlo",
                       "source":  "hk",
                       "sourceName":  "香港",
@@ -6967,120 +6431,6 @@
                                             "40",
                                             "25",
                                             "43"
-                                        ]
-                  },
-                  {
-                      "id":  "am-special-number-2026-146-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  146,
-                      "targetDate":  "2026-05-26",
-                      "numbers":  [
-                                      "21"
-                                  ],
-                      "createdAt":  "2026-05-26 19:51:05",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-26",
-                      "actualIssue":  146,
-                      "actualNumbers":  [
-                                            "42"
-                                        ]
-                  },
-                  {
-                      "id":  "am-three-hit-three-2026-146-mirofish-sandbox",
-                      "source":  "am",
-                      "sourceName":  "澳门",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  146,
-                      "targetDate":  "2026-05-26",
-                      "numbers":  [
-                                      "17",
-                                      "24",
-                                      "15"
-                                  ],
-                      "createdAt":  "2026-05-26 19:51:05",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-26",
-                      "actualIssue":  146,
-                      "actualNumbers":  [
-                                            "11",
-                                            "30",
-                                            "20",
-                                            "19",
-                                            "05",
-                                            "16"
-                                        ]
-                  },
-                  {
-                      "id":  "hk-special-number-2026-56-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "special-number",
-                      "gameName":  "特别号",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  56,
-                      "targetDate":  "2026-05-27",
-                      "numbers":  [
-                                      "17"
-                                  ],
-                      "createdAt":  "2026-05-26 19:51:05",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-26",
-                      "actualIssue":  56,
-                      "actualNumbers":  [
-                                            "33"
-                                        ]
-                  },
-                  {
-                      "id":  "hk-three-hit-three-2026-56-mirofish-sandbox",
-                      "source":  "hk",
-                      "sourceName":  "香港",
-                      "game":  "three-hit-three",
-                      "gameName":  "三中三",
-                      "algorithmId":  "mirofish-sandbox",
-                      "algorithmName":  "MiroFish 娌欑洏鎺ㄦ紨",
-                      "year":  2025,
-                      "displayYear":  "2026",
-                      "issue":  56,
-                      "targetDate":  "2026-05-27",
-                      "numbers":  [
-                                      "28",
-                                      "24",
-                                      "18"
-                                  ],
-                      "createdAt":  "2026-05-26 19:51:05",
-                      "savedBy":  "fetch",
-                      "status":  "settled",
-                      "hit":  false,
-                      "actualDate":  "2026-05-26",
-                      "actualIssue":  56,
-                      "actualNumbers":  [
-                                            "32",
-                                            "34",
-                                            "10",
-                                            "47",
-                                            "18",
-                                            "11"
                                         ]
                   },
                   {

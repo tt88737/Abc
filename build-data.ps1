@@ -394,24 +394,6 @@ function Get-AlgorithmNumbers {
     ) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { [int]$_.numberText }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.numberText }
 }
 
-function Get-MiroFishSandboxNumbers {
-    param([object[]]$SourceRecords, [string]$Game, [string]$SeedIdentity = '')
-
-    $take = if ($Game -eq 'three-hit-three') { 3 } else { 1 }
-    $stats = Get-NumberStats -SourceRecords $SourceRecords -Game $Game
-    return @(
-        foreach ($item in $stats.Values) {
-            $noise = Get-SeededNoise "$SeedIdentity|mirofish-sandbox|$Game|$($item.numberText)"
-            $hotAgent = $item.recentHits * 2.4 + $item.hits * 0.25
-            $coldAgent = [Math]::Min($item.miss, 120) * 0.85
-            $cycleAgent = [Math]::Sin(([int]$item.numberText + $SourceRecords.Count) / 7.0) * 8
-            $coverageAgent = (49 - [int]$item.numberText) * 0.04 + $noise * 9
-            $score = $hotAgent + $coldAgent + $cycleAgent + $coverageAgent
-            [pscustomobject]@{ numberText = $item.numberText; score = [double]$score }
-        }
-    ) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { [int]$_.numberText }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.numberText }
-}
-
 function Settle-GameItem {
     param([object]$Item, [object[]]$Records)
 
@@ -1295,7 +1277,7 @@ function New-GamePredictions {
             $gameName = if ($game -eq 'three-hit-three') { (U @(0x4E09, 0x4E2D, 0x4E09)) } else { (U @(0x7279, 0x522B, 0x53F7)) }
             $existingForTarget = @($items | Where-Object { $_.source -eq $source -and $_.game -eq $game -and [int]$_.issue -eq $issue -and $_.displayYear -eq $displayYear -and [string]$_.targetDate -eq [string]$targetDate })
             $existingAlgorithmIds = @($existingForTarget | ForEach-Object { $_.algorithmId })
-            $hasCompleteTarget = $existingForTarget.Count -ge 13 -and ($existingAlgorithmIds -contains 'ensemble') -and ($existingAlgorithmIds -contains 'mirofish-sandbox') -and (@(Get-GameAlgorithms | Where-Object { $existingAlgorithmIds -notcontains $_.id }).Count -eq 0)
+            $hasCompleteTarget = $existingForTarget.Count -ge 12 -and ($existingAlgorithmIds -contains 'ensemble') -and (@(Get-GameAlgorithms | Where-Object { $existingAlgorithmIds -notcontains $_.id }).Count -eq 0)
             if ($hasCompleteTarget) { continue }
 
             $algorithmRows = @()
@@ -1348,26 +1330,6 @@ function New-GamePredictions {
                     issue = $issue
                     targetDate = $targetDate
                     numbers = $ensembleNumbers
-                    createdAt = $createdAt
-                    status = 'pending'
-                    savedBy = 'fetch'
-                }) | Out-Null
-            }
-            if ($existingAlgorithmIds -notcontains 'mirofish-sandbox') {
-                $miroFishNumbers = @(Get-MiroFishSandboxNumbers -SourceRecords $sourceRecords -Game $game -SeedIdentity $seedIdentity)
-                $items.Add([pscustomobject]@{
-                    id = ('{0}-{1}-{2}-{3}-mirofish-sandbox' -f $source, $game, $displayYear, $issue)
-                    source = $source
-                    sourceName = Get-SourceName $source
-                    game = $game
-                    gameName = $gameName
-                    algorithmId = 'mirofish-sandbox'
-                    algorithmName = 'MiroFish 沙盘推演'
-                    year = $latest.year
-                    displayYear = $displayYear
-                    issue = $issue
-                    targetDate = $targetDate
-                    numbers = $miroFishNumbers
                     createdAt = $createdAt
                     status = 'pending'
                     savedBy = 'fetch'
@@ -2510,7 +2472,7 @@ __EMBEDDED_JSON__
         <table><thead><tr><th>&#25512;&#33616;&#32452;&#21512;</th><th>&#27425;&#25968;</th><th>&#26469;&#28304;&#31639;&#27861;</th></tr></thead><tbody>${summaryRows.map(item => `<tr><td>${numberChips(item.numbers)}</td><td>${item.count}</td><td>${esc(item.algorithms.join(', '))}</td></tr>`).join('')}</tbody></table>`;
     }
     function recommendationHistoryHtml(rows) {
-      const historyRows = rows.filter(row => row.algorithmId !== 'ensemble' && row.algorithmId !== 'mirofish-sandbox');
+      const historyRows = rows.filter(row => row.algorithmId !== 'ensemble');
       const map = new Map();
       historyRows.forEach(row => {
         const key = [row.targetDate || '', row.displayYear || '', row.issue || '', row.createdAt || ''].join('|');
@@ -2635,11 +2597,11 @@ __EMBEDDED_JSON__
       const pendingOrLatest = rows.find(row => row.status === 'pending') || rows[0];
       const targetRows = pendingOrLatest ? rows.filter(row => Number(row.issue) === Number(pendingOrLatest.issue) && String(row.displayYear || '') === String(pendingOrLatest.displayYear || '') && String(row.targetDate || '') === String(pendingOrLatest.targetDate || '')) : [];
       const ensemble = targetRows.find(row => row.algorithmId === 'ensemble');
-      const algorithms = targetRows.filter(row => row.algorithmId !== 'ensemble' && row.algorithmId !== 'mirofish-sandbox');
+      const algorithms = targetRows.filter(row => row.algorithmId !== 'ensemble');
       const ensembleHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, ensemble ? [ensemble] : []);
       const algorithmHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, algorithms);
       const ensembleStats = gameMissStats(rows.filter(row => row.algorithmId === 'ensemble'), ensembleHistoricalMaxMiss);
-      const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble' && row.algorithmId !== 'mirofish-sandbox'), algorithmHistoricalMaxMiss);
+      const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble'), algorithmHistoricalMaxMiss);
       return `<section class="panel full">
         <h2>${title}</h2>
         <div class="grid">
@@ -2929,7 +2891,7 @@ $existingGameItems = @()
 if (Test-Path -LiteralPath $gamePredictionsPath) {
     try {
         $existingGameData = Get-Content -LiteralPath $gamePredictionsPath -Raw -Encoding UTF8 | ConvertFrom-Json
-        $existingGameItems = @($existingGameData.items)
+        $existingGameItems = @($existingGameData.items | Where-Object { $_.algorithmId -ne 'mirofish-sandbox' })
     }
     catch {
         $existingGameItems = @()

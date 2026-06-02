@@ -389,22 +389,17 @@ try {
                 $_.displayYear -eq $latestTarget[0].displayYear -and
                 [int]$_.issue -eq [int]$latestTarget[0].issue
             })
-            if ($rows.Count -ne 13) {
-                throw "expected 13 recommendation rows for $source $game"
+            if ($rows.Count -ne 12) {
+                throw "expected 12 recommendation rows for $source $game"
             }
             if (@($rows | Where-Object { $_.algorithmId -eq 'ensemble' }).Count -ne 1) {
                 throw "expected ensemble recommendation for $source $game"
             }
-            if (@($rows | Where-Object { $_.algorithmId -ne 'ensemble' -and $_.algorithmId -ne 'mirofish-sandbox' }).Count -ne 11) {
+            if (@($rows | Where-Object { $_.algorithmId -ne 'ensemble' }).Count -ne 11) {
                 throw "expected eleven algorithm recommendations for $source $game"
             }
-            $miroFishRows = @($rows | Where-Object { $_.algorithmId -eq 'mirofish-sandbox' })
-            if ($miroFishRows.Count -ne 1) {
-                throw "expected one MiroFish sandbox recommendation for $source $game"
-            }
-            $expectedMiroFishCount = if ($game -eq 'three-hit-three') { 3 } else { 1 }
-            if (@($miroFishRows[0].numbers).Count -ne $expectedMiroFishCount) {
-                throw "unexpected MiroFish recommendation number count for $source $game"
+            if (@($rows | Where-Object { $_.algorithmId -eq 'mirofish-sandbox' }).Count -ne 0) {
+                throw "MiroFish sandbox recommendations should not be generated for $source $game"
             }
         }
     }
@@ -589,8 +584,8 @@ try {
     if (-not $dashboard.Contains('function recommendationHistoryHtml(rows)')) {
         throw 'dashboard should render grouped recommendation history'
     }
-    if (-not $dashboard.Contains("const historyRows = rows.filter(row => row.algorithmId !== 'ensemble' && row.algorithmId !== 'mirofish-sandbox')")) {
-        throw 'recommendation history should exclude ensemble and MiroFish rows before grouping'
+    if (-not $dashboard.Contains("const historyRows = rows.filter(row => row.algorithmId !== 'ensemble')")) {
+        throw 'recommendation history should exclude ensemble rows before grouping'
     }
     if (-not $dashboard.Contains('<details class="history-group"')) {
         throw 'recommendation history should use collapsible groups'
@@ -804,11 +799,11 @@ try {
         throw 'forecast page helpers should not be emitted'
     }
     $gameSectionBody = [regex]::Match($dashboard, 'function gameSection\(source, game, title\) \{[\s\S]*?function renderGames').Value
-    if ($gameSectionBody.Contains('MiroFish &#27801;&#30424;&#25512;&#28436;')) {
-        throw 'game module should not render MiroFish prediction cards'
+    if ($dashboard.Contains('mirofish-sandbox') -or $dashboard.Contains('MiroFish') -or $gameSectionBody.Contains('MiroFish &#27801;&#30424;&#25512;&#28436;')) {
+        throw 'dashboard should not include MiroFish sandbox logic or data'
     }
-    if (-not $dashboard.Contains("targetRows.filter(row => row.algorithmId !== 'ensemble' && row.algorithmId !== 'mirofish-sandbox')")) {
-        throw 'dashboard should exclude MiroFish from eleven algorithm stats'
+    if (-not $dashboard.Contains("targetRows.filter(row => row.algorithmId !== 'ensemble')")) {
+        throw 'dashboard should calculate eleven algorithm stats from non-ensemble rows'
     }
     if (-not $dashboard.Contains('function gameGroupStats(rows, historicalMaxMiss = null)')) {
         throw 'dashboard should calculate grouped stats for eleven algorithms'
@@ -825,7 +820,7 @@ try {
     if (-not $dashboard.Contains("maxMiss: historicalMaxMiss ??")) {
         throw 'stats cards should use historical max miss when available'
     }
-    if (-not $dashboard.Contains("const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble' && row.algorithmId !== 'mirofish-sandbox'), algorithmHistoricalMaxMiss)")) {
+    if (-not $dashboard.Contains("const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble'), algorithmHistoricalMaxMiss)")) {
         throw 'algorithm aggregate stats should use issue-level grouped non-ensemble rows'
     }
     if (-not $dashboard.Contains('hit: group.some(row => row.hit)')) {
