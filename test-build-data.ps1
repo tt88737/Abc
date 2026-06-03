@@ -213,44 +213,6 @@ $existingGame = [pscustomobject]@{
 }
 [IO.File]::WriteAllText((Join-Path $dataDir 'game-predictions.json'), ($existingGame | ConvertTo-Json -Depth 8), $utf8NoBom)
 
-$existingForecast = [pscustomobject]@{
-    items = @(
-        [pscustomobject]@{
-            id = 'test-forecast-three-hit'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'three-hit-three'
-            gameName = 'three-hit-three'
-            strategyId = 'vote-pool-v1'
-            strategyName = 'vote-pool-v1'
-            year = 2025
-            displayYear = '2026'
-            issue = 55
-            targetDate = '2026-05-25'
-            numbers = @(@('12', '23', '37'), @('01', '02', '03'))
-            createdAt = '2026-05-24 21:45:00'
-            status = 'pending'
-        },
-        [pscustomobject]@{
-            id = 'test-forecast-special'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'special-number'
-            gameName = 'special-number'
-            strategyId = 'vote-pool-v1'
-            strategyName = 'vote-pool-v1'
-            year = 2025
-            displayYear = '2026'
-            issue = 55
-            targetDate = '2026-05-25'
-            numbers = @('03', '18', '22', '27', '31', '44')
-            createdAt = '2026-05-24 21:45:00'
-            status = 'pending'
-        }
-    )
-}
-[IO.File]::WriteAllText((Join-Path $dataDir 'prediction-observations.json'), ($existingForecast | ConvertTo-Json -Depth 8), $utf8NoBom)
-
 try {
     & $scriptPath -RootDir $outDir | Out-Null
 
@@ -332,8 +294,8 @@ try {
     if (-not $dashboard.Contains('"predictions":')) {
         throw 'collection-time predictions were not embedded'
     }
-    if (-not $dashboard.Contains('"forecasts":')) {
-        throw 'prediction observation data should be embedded'
+    if ($dashboard.Contains('"forecasts":')) {
+        throw 'prediction observation data should not be embedded'
     }
     if (-not $dashboard.Contains('function displayYear(record)')) {
         throw 'dashboard should display draw year from record date'
@@ -430,126 +392,11 @@ try {
     if ($futureThree.status -ne 'pending') {
         throw 'future dated am 145 prediction should remain pending until exact target date is drawn'
     }
-    $forecastFile = Join-Path $outDir 'data/prediction-observations.json'
-    if (-not (Test-Path -LiteralPath $forecastFile)) {
-        throw 'prediction-observations.json was not created'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/prediction-observations.json')) {
+        throw 'prediction-observations.json should not be generated after forecast removal'
     }
-    $forecastData = Get-Content -LiteralPath $forecastFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    foreach ($source in @('am', 'hk')) {
-        foreach ($game in @('three-hit-three', 'special-number')) {
-            $latestForecast = @($forecastData.items |
-                Where-Object { $_.source -eq $source -and $_.game -eq $game -and $_.id -notlike 'test-*' } |
-                Sort-Object @{ Expression = 'targetDate'; Descending = $true }, @{ Expression = 'displayYear'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } |
-                Select-Object -First 1)
-            if ($latestForecast.Count -eq 0) {
-                throw "expected generated forecast for $source $game"
-            }
-            if ($game -eq 'three-hit-three' -and @($latestForecast[0].numbers).Count -ne 6) {
-                throw "three-hit-three forecast should emit six groups for $source"
-            }
-            if ($game -eq 'three-hit-three') {
-                foreach ($group in @($latestForecast[0].numbers)) {
-                    $values = if ($null -ne $group.value) { @($group.value) } else { @($group) }
-                    if (@($values).Count -ne 3) {
-                        throw "three-hit-three forecast groups should contain three numbers for $source"
-                    }
-                }
-            }
-            if ($game -eq 'special-number' -and @($latestForecast[0].numbers).Count -ne 6) {
-                throw "special-number forecast should emit six numbers for $source"
-            }
-            if ($game -eq 'special-number') {
-                $sourceRecords = @($data.records | Where-Object { $_.source -eq $source } | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true })
-                $recentSpecials = @($sourceRecords | Select-Object -First 6 | ForEach-Object { ([int]$_.balls[6].numberText).ToString('00') })
-                $forecastSpecials = @($latestForecast[0].numbers | ForEach-Object { ([int]$_).ToString('00') })
-                if (($forecastSpecials -join ',') -eq ($recentSpecials -join ',')) {
-                    throw "special-number forecast should not copy the latest six special results for $source"
-                }
-            }
-            if ([string]::IsNullOrWhiteSpace([string]$latestForecast[0].selectedStrategy)) {
-                throw "forecast should record selected strategy for $source $game"
-            }
-            if (@($latestForecast[0].strategyPool).Count -lt 5) {
-                throw "forecast should evaluate a strategy pool for $source $game"
-            }
-            if ($null -eq $latestForecast[0].backtest -or [int]$latestForecast[0].backtest.tested -le 0) {
-                throw "forecast should include rolling backtest for $source $game"
-            }
-            if ($null -eq $latestForecast[0].randomBaseline -or [int]$latestForecast[0].randomBaseline.tested -le 0) {
-                throw "forecast should include random baseline for $source $game"
-            }
-            if ($null -eq $latestForecast[0].backtest.edgeVsRandom) {
-                throw "forecast should include edge versus random baseline for $source $game"
-            }
-            $expectedOdds = if ($game -eq 'three-hit-three') { 650 } else { 47 }
-            if ([int]$latestForecast[0].odds -ne $expectedOdds) {
-                throw "forecast should record configured odds for $source $game"
-            }
-            if ($null -eq $latestForecast[0].backtest.netProfit -or $null -eq $latestForecast[0].backtest.roi -or $null -eq $latestForecast[0].backtest.totalStake -or $null -eq $latestForecast[0].backtest.totalPayout) {
-                throw "forecast backtest should include stake, payout, net profit, and ROI for $source $game"
-            }
-            if ($null -eq $latestForecast[0].randomBaseline.netProfit -or $null -eq $latestForecast[0].randomBaseline.roi) {
-                throw "forecast random baseline should include net profit and ROI for $source $game"
-            }
-            if ($null -eq $latestForecast[0].backtest.roiVsRandom) {
-                throw "forecast should include ROI versus random for $source $game"
-            }
-            if ($null -eq $latestForecast[0].weekBacktest -or $null -eq $latestForecast[0].weekBacktest.netProfit -or $null -eq $latestForecast[0].weekBacktest.roi) {
-                throw "forecast should include natural-week profitability backtest for $source $game"
-            }
-            if ([string]$latestForecast[0].weekBacktest.mode -ne 'natural-week-current-picks' -or [string]::IsNullOrWhiteSpace([string]$latestForecast[0].weekBacktest.weekStart) -or [string]::IsNullOrWhiteSpace([string]$latestForecast[0].weekBacktest.weekEnd)) {
-                throw "forecast weekly gate should use natural week boundaries for $source $game"
-            }
-            if ($null -eq $latestForecast[0].walkForwardBacktest -or $null -eq $latestForecast[0].walkForwardBacktest.netProfit -or $null -eq $latestForecast[0].walkForwardBacktest.roi) {
-                throw "forecast should include walk-forward profitability backtest for $source $game"
-            }
-            if ($null -eq $latestForecast[0].weeklyProfitGate -or [string]::IsNullOrWhiteSpace([string]$latestForecast[0].recommendationStatus)) {
-                throw "forecast should include weekly profit gate and recommendation status for $source $game"
-            }
-            if ($latestForecast[0].weeklyProfitGate -and [int]$latestForecast[0].weekBacktest.netProfit -le 0) {
-                throw "weekly profit gate should only pass when natural-week net profit is positive for $source $game"
-            }
-            if ($latestForecast[0].weeklyProfitGate -and [int]$latestForecast[0].walkForwardBacktest.netProfit -le 0) {
-                throw "weekly profit gate should only pass when walk-forward net profit is positive for $source $game"
-            }
-            if (-not (@($latestForecast[0].strategyPool | ForEach-Object { $_.id }) -contains 'weekly-profit-guard')) {
-                throw "forecast should evaluate weekly-profit-guard strategy for $source $game"
-            }
-            if ($null -eq $latestForecast[0].qualityScore -or [string]::IsNullOrWhiteSpace([string]$latestForecast[0].qualityLevel)) {
-                throw "forecast should include quality score and level for $source $game"
-            }
-        }
-    }
-    $settledForecastThree = @($forecastData.items | Where-Object { $_.id -eq 'test-forecast-three-hit' })[0]
-    if ($settledForecastThree.status -ne 'settled' -or -not $settledForecastThree.hit) {
-        throw 'three-hit-three forecast should settle as hit when any observed group hits'
-    }
-    $settledForecastSpecial = @($forecastData.items | Where-Object { $_.id -eq 'test-forecast-special' })[0]
-    if ($settledForecastSpecial.status -ne 'settled' -or -not $settledForecastSpecial.hit) {
-        throw 'special-number forecast should settle as hit when any observed number hits'
-    }
-    foreach ($game in @('three-hit-three', 'special-number')) {
-        $settled = @($forecastData.items | Where-Object { $_.source -eq 'hk' -and $_.game -eq $game -and $_.status -eq 'settled' -and [int]$_.actualIssue -eq 55 })
-        $nextPending = @($forecastData.items | Where-Object { $_.source -eq 'hk' -and $_.game -eq $game -and $_.status -eq 'pending' -and [int]$_.issue -gt 55 } | Select-Object -First 1)
-        if ($settled.Count -eq 0 -or $nextPending.Count -eq 0) {
-            throw "forecast should settle opened issue and generate a new pending recommendation after draw for hk $game"
-        }
-    }
-    $forecastEvalFile = Join-Path $outDir 'data/forecast-evaluation.json'
-    if (-not (Test-Path -LiteralPath $forecastEvalFile)) {
-        throw 'forecast-evaluation.json was not created'
-    }
-    $forecastEval = Get-Content -LiteralPath $forecastEvalFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    if (@($forecastEval.items).Count -ne 4) {
-        throw 'forecast evaluation should summarize four source/game chains'
-    }
-    foreach ($item in @($forecastEval.items)) {
-        if ([string]::IsNullOrWhiteSpace([string]$item.selectedStrategy) -or $null -eq $item.backtest -or $null -eq $item.randomBaseline -or $null -eq $item.edgeVsRandom) {
-            throw 'forecast evaluation item should include selected strategy, backtest, random baseline, and edge'
-        }
-        if ($null -eq $item.odds -or $null -eq $item.backtest.roi -or $null -eq $item.roiVsRandom -or $null -eq $item.weekBacktest -or $null -eq $item.walkForwardBacktest -or $null -eq $item.qualityScore) {
-            throw 'forecast evaluation item should include odds, weekly profit, walk-forward, quality, and ROI metrics'
-        }
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/forecast-evaluation.json')) {
+        throw 'forecast-evaluation.json should not be generated after forecast removal'
     }
     if ($dashboard.Contains('pick-lines') -or $dashboard.Contains('pick-include') -or $dashboard.Contains('pick-exclude') -or $dashboard.Contains('pick-odd') -or $dashboard.Contains('maxAdjacentRun')) {
         throw 'picker controls should not be emitted'
