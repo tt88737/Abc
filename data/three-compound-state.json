@@ -1,0 +1,2526 @@
+{
+  "generatedAt": "2026-06-03 16:18:43",
+  "items": [
+    {
+      "source": "am",
+      "year": "2026",
+      "latestIssue": 153,
+      "computedAt": "2026-06-03 16:18:43",
+      "status": "无变更",
+      "pools": [
+        {
+          "poolSize": 5,
+          "pool": [
+            "17",
+            "20",
+            "21",
+            "39",
+            "48"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 32,
+                  "date": "2026-02-01",
+                  "matched": [
+                    "17",
+                    "20",
+                    "39"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 36,
+                  "date": "2026-02-05",
+                  "matched": [
+                    "20",
+                    "39",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 44,
+                  "date": "2026-02-13",
+                  "matched": [
+                    "17",
+                    "39",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 55,
+                  "date": "2026-02-24",
+                  "matched": [
+                    "20",
+                    "21",
+                    "39"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 61,
+              "end": 65,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 66,
+              "end": 70,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 71,
+              "end": 75,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 76,
+              "end": 80,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 80,
+                  "date": "2026-03-21",
+                  "matched": [
+                    "17",
+                    "21",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 81,
+              "end": 85,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 86,
+              "end": 90,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 90,
+                  "date": "2026-03-31",
+                  "matched": [
+                    "17",
+                    "20",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 91,
+              "end": 95,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 95,
+                  "date": "2026-04-05",
+                  "matched": [
+                    "21",
+                    "39",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 96,
+              "end": 100,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 101,
+              "end": 105,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 104,
+                  "date": "2026-04-14",
+                  "matched": [
+                    "20",
+                    "39",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 106,
+              "end": 110,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 111,
+              "end": 115,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 116,
+              "end": 120,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 121,
+              "end": 125,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 121,
+                  "date": "2026-05-01",
+                  "matched": [
+                    "20",
+                    "21",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 126,
+              "end": 130,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 131,
+              "end": 135,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 132,
+                  "date": "2026-05-12",
+                  "matched": [
+                    "20",
+                    "39",
+                    "48"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 136,
+              "end": 140,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 141,
+              "end": 145,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 146,
+              "end": 150,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 151,
+              "end": 155,
+              "count": 3,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 10,
+          "total": 30,
+          "hitDraws": 10,
+          "hitRate": 33.33,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:51:55",
+          "recentCovered": 3,
+          "recentTotal": 10,
+          "recentHitRate": 30.0,
+          "currentMiss": 3,
+          "maxMiss": 6,
+          "healthStatus": "降权观察",
+          "healthReason": "连续完整漏窗达到2个",
+          "changeHistory": []
+        },
+        {
+          "poolSize": 6,
+          "pool": [
+            "08",
+            "17",
+            "20",
+            "22",
+            "32",
+            "46"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 5,
+                  "date": "2026-01-05",
+                  "matched": [
+                    "17",
+                    "20",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 22,
+                  "date": "2026-01-22",
+                  "matched": [
+                    "08",
+                    "20",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 33,
+                  "date": "2026-02-02",
+                  "matched": [
+                    "08",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 41,
+                  "date": "2026-02-10",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-02-17",
+                  "matched": [
+                    "08",
+                    "32",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 61,
+              "end": 65,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 61,
+                  "date": "2026-03-02",
+                  "matched": [
+                    "08",
+                    "17",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 66,
+              "end": 70,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 71,
+              "end": 75,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 76,
+              "end": 80,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 81,
+              "end": 85,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 86,
+              "end": 90,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 90,
+                  "date": "2026-03-31",
+                  "matched": [
+                    "08",
+                    "17",
+                    "20"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 91,
+              "end": 95,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 91,
+                  "date": "2026-04-01",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 96,
+              "end": 100,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 99,
+                  "date": "2026-04-09",
+                  "matched": [
+                    "17",
+                    "22",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 101,
+              "end": 105,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 101,
+                  "date": "2026-04-11",
+                  "matched": [
+                    "08",
+                    "20",
+                    "22"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 106,
+              "end": 110,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 111,
+              "end": 115,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 113,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "17",
+                    "22",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 116,
+              "end": 120,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 121,
+              "end": 125,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 124,
+                  "date": "2026-05-04",
+                  "matched": [
+                    "17",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 126,
+              "end": 130,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 131,
+              "end": 135,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 136,
+              "end": 140,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 138,
+                  "date": "2026-05-18",
+                  "matched": [
+                    "20",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 141,
+              "end": 145,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 141,
+                  "date": "2026-05-21",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 146,
+              "end": 150,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 151,
+              "end": 155,
+              "count": 3,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 14,
+          "total": 30,
+          "hitDraws": 14,
+          "hitRate": 46.67,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:31:31",
+          "recentCovered": 5,
+          "recentTotal": 10,
+          "recentHitRate": 50.0,
+          "currentMiss": 1,
+          "maxMiss": 4,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        },
+        {
+          "poolSize": 7,
+          "pool": [
+            "08",
+            "17",
+            "18",
+            "20",
+            "22",
+            "32",
+            "46"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 5,
+                  "date": "2026-01-05",
+                  "matched": [
+                    "17",
+                    "20",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 9,
+                  "date": "2026-01-09",
+                  "matched": [
+                    "17",
+                    "18",
+                    "22"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 22,
+                  "date": "2026-01-22",
+                  "matched": [
+                    "08",
+                    "20",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 33,
+                  "date": "2026-02-02",
+                  "matched": [
+                    "08",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 41,
+                  "date": "2026-02-10",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                },
+                {
+                  "issue": 42,
+                  "date": "2026-02-11",
+                  "matched": [
+                    "17",
+                    "18",
+                    "22"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-02-17",
+                  "matched": [
+                    "08",
+                    "32",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 61,
+              "end": 65,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 61,
+                  "date": "2026-03-02",
+                  "matched": [
+                    "08",
+                    "17",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 66,
+              "end": 70,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 71,
+              "end": 75,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 76,
+              "end": 80,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 78,
+                  "date": "2026-03-19",
+                  "matched": [
+                    "08",
+                    "17",
+                    "18"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 81,
+              "end": 85,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 86,
+              "end": 90,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 90,
+                  "date": "2026-03-31",
+                  "matched": [
+                    "08",
+                    "17",
+                    "20"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 91,
+              "end": 95,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 91,
+                  "date": "2026-04-01",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 96,
+              "end": 100,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 99,
+                  "date": "2026-04-09",
+                  "matched": [
+                    "17",
+                    "18",
+                    "22",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 101,
+              "end": 105,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 101,
+                  "date": "2026-04-11",
+                  "matched": [
+                    "08",
+                    "20",
+                    "22"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 106,
+              "end": 110,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 111,
+              "end": 115,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 113,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "17",
+                    "22",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 116,
+              "end": 120,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 119,
+                  "date": "2026-04-29",
+                  "matched": [
+                    "18",
+                    "22",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 121,
+              "end": 125,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 124,
+                  "date": "2026-05-04",
+                  "matched": [
+                    "17",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 126,
+              "end": 130,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 131,
+              "end": 135,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 135,
+                  "date": "2026-05-15",
+                  "matched": [
+                    "08",
+                    "18",
+                    "20"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 136,
+              "end": 140,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 138,
+                  "date": "2026-05-18",
+                  "matched": [
+                    "20",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 141,
+              "end": 145,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 141,
+                  "date": "2026-05-21",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 146,
+              "end": 150,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 151,
+              "end": 155,
+              "count": 3,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 18,
+          "total": 30,
+          "hitDraws": 19,
+          "hitRate": 60.0,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:31:31",
+          "recentCovered": 7,
+          "recentTotal": 10,
+          "recentHitRate": 70.0,
+          "currentMiss": 1,
+          "maxMiss": 2,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        },
+        {
+          "poolSize": 8,
+          "pool": [
+            "08",
+            "17",
+            "20",
+            "22",
+            "30",
+            "32",
+            "46",
+            "49"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 5,
+                  "date": "2026-01-05",
+                  "matched": [
+                    "17",
+                    "20",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 9,
+                  "date": "2026-01-09",
+                  "matched": [
+                    "17",
+                    "22",
+                    "49"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 15,
+                  "date": "2026-01-15",
+                  "matched": [
+                    "08",
+                    "20",
+                    "30"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 22,
+                  "date": "2026-01-22",
+                  "matched": [
+                    "08",
+                    "20",
+                    "30",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 28,
+                  "date": "2026-01-28",
+                  "matched": [
+                    "17",
+                    "32",
+                    "49"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 33,
+                  "date": "2026-02-02",
+                  "matched": [
+                    "08",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 41,
+                  "date": "2026-02-10",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-02-17",
+                  "matched": [
+                    "08",
+                    "32",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 54,
+                  "date": "2026-02-23",
+                  "matched": [
+                    "30",
+                    "32",
+                    "49"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 61,
+              "end": 65,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 61,
+                  "date": "2026-03-02",
+                  "matched": [
+                    "08",
+                    "17",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 66,
+              "end": 70,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 71,
+              "end": 75,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 76,
+              "end": 80,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 77,
+                  "date": "2026-03-18",
+                  "matched": [
+                    "30",
+                    "32",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 81,
+              "end": 85,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 83,
+                  "date": "2026-03-24",
+                  "matched": [
+                    "08",
+                    "30",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 86,
+              "end": 90,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 90,
+                  "date": "2026-03-31",
+                  "matched": [
+                    "08",
+                    "17",
+                    "20"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 91,
+              "end": 95,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 91,
+                  "date": "2026-04-01",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 96,
+              "end": 100,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 98,
+                  "date": "2026-04-08",
+                  "matched": [
+                    "08",
+                    "32",
+                    "49"
+                  ]
+                },
+                {
+                  "issue": 99,
+                  "date": "2026-04-09",
+                  "matched": [
+                    "17",
+                    "22",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 101,
+              "end": 105,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 101,
+                  "date": "2026-04-11",
+                  "matched": [
+                    "08",
+                    "20",
+                    "22"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 106,
+              "end": 110,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 111,
+              "end": 115,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 113,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "17",
+                    "22",
+                    "32",
+                    "49"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 116,
+              "end": 120,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 118,
+                  "date": "2026-04-28",
+                  "matched": [
+                    "22",
+                    "46",
+                    "49"
+                  ]
+                },
+                {
+                  "issue": 119,
+                  "date": "2026-04-29",
+                  "matched": [
+                    "22",
+                    "30",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 121,
+              "end": 125,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 124,
+                  "date": "2026-05-04",
+                  "matched": [
+                    "17",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 126,
+              "end": 130,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 131,
+              "end": 135,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 134,
+                  "date": "2026-05-14",
+                  "matched": [
+                    "22",
+                    "46",
+                    "49"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 136,
+              "end": 140,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 138,
+                  "date": "2026-05-18",
+                  "matched": [
+                    "20",
+                    "22",
+                    "46"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 141,
+              "end": 145,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 141,
+                  "date": "2026-05-21",
+                  "matched": [
+                    "08",
+                    "17",
+                    "32"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 146,
+              "end": 150,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 151,
+              "end": 155,
+              "count": 3,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 22,
+          "total": 30,
+          "hitDraws": 24,
+          "hitRate": 73.33,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:31:31",
+          "recentCovered": 7,
+          "recentTotal": 10,
+          "recentHitRate": 70.0,
+          "currentMiss": 1,
+          "maxMiss": 2,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        }
+      ]
+    },
+    {
+      "source": "hk",
+      "year": "2026",
+      "latestIssue": 59,
+      "computedAt": "2026-06-03 16:18:43",
+      "status": "无变更",
+      "pools": [
+        {
+          "poolSize": 5,
+          "pool": [
+            "06",
+            "12",
+            "23",
+            "28",
+            "37"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 14,
+                  "date": "2026-02-03",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 16,
+                  "date": "2026-02-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 26,
+                  "date": "2026-03-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 33,
+                  "date": "2026-03-26",
+                  "matched": [
+                    "12",
+                    "23",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 41,
+                  "date": "2026-04-16",
+                  "matched": [
+                    "06",
+                    "12",
+                    "28"
+                  ]
+                },
+                {
+                  "issue": 44,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-05-07",
+                  "matched": [
+                    "06",
+                    "23",
+                    "28"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 4,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 6,
+          "total": 11,
+          "hitDraws": 7,
+          "hitRate": 54.55,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:31:31",
+          "recentCovered": 6,
+          "recentTotal": 10,
+          "recentHitRate": 60.0,
+          "currentMiss": 1,
+          "maxMiss": 2,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        },
+        {
+          "poolSize": 6,
+          "pool": [
+            "08",
+            "12",
+            "23",
+            "28",
+            "34",
+            "37"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 2,
+                  "date": "2026-01-06",
+                  "matched": [
+                    "08",
+                    "12",
+                    "28"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 14,
+                  "date": "2026-02-03",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 16,
+                  "date": "2026-02-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                },
+                {
+                  "issue": 19,
+                  "date": "2026-02-15",
+                  "matched": [
+                    "08",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 26,
+                  "date": "2026-03-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 33,
+                  "date": "2026-03-26",
+                  "matched": [
+                    "12",
+                    "23",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 37,
+                  "date": "2026-04-07",
+                  "matched": [
+                    "08",
+                    "23",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 44,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-05-07",
+                  "matched": [
+                    "23",
+                    "28",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 4,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 8,
+          "total": 11,
+          "hitDraws": 9,
+          "hitRate": 72.73,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:31:31",
+          "recentCovered": 7,
+          "recentTotal": 10,
+          "recentHitRate": 70.0,
+          "currentMiss": 1,
+          "maxMiss": 1,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        },
+        {
+          "poolSize": 7,
+          "pool": [
+            "08",
+            "12",
+            "23",
+            "27",
+            "28",
+            "34",
+            "37"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 2,
+                  "date": "2026-01-06",
+                  "matched": [
+                    "08",
+                    "12",
+                    "28"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 7,
+                  "date": "2026-01-17",
+                  "matched": [
+                    "12",
+                    "23",
+                    "27"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 14,
+                  "date": "2026-02-03",
+                  "matched": [
+                    "12",
+                    "23",
+                    "27",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 16,
+                  "date": "2026-02-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                },
+                {
+                  "issue": 19,
+                  "date": "2026-02-15",
+                  "matched": [
+                    "08",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [],
+              "covered": false
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 26,
+                  "date": "2026-03-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 33,
+                  "date": "2026-03-26",
+                  "matched": [
+                    "12",
+                    "23",
+                    "27",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 37,
+                  "date": "2026-04-07",
+                  "matched": [
+                    "08",
+                    "23",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 44,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-05-07",
+                  "matched": [
+                    "23",
+                    "28",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 51,
+                  "date": "2026-05-14",
+                  "matched": [
+                    "23",
+                    "27",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 4,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 10,
+          "total": 11,
+          "hitDraws": 11,
+          "hitRate": 90.91,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:51:55",
+          "recentCovered": 9,
+          "recentTotal": 10,
+          "recentHitRate": 90.0,
+          "currentMiss": 0,
+          "maxMiss": 1,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        },
+        {
+          "poolSize": 8,
+          "pool": [
+            "05",
+            "08",
+            "12",
+            "23",
+            "28",
+            "34",
+            "37",
+            "47"
+          ],
+          "windows": [
+            {
+              "start": 1,
+              "end": 5,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 2,
+                  "date": "2026-01-06",
+                  "matched": [
+                    "08",
+                    "12",
+                    "28"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 6,
+              "end": 10,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 7,
+                  "date": "2026-01-17",
+                  "matched": [
+                    "05",
+                    "12",
+                    "23"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 11,
+              "end": 15,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 14,
+                  "date": "2026-02-03",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 16,
+              "end": 20,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 16,
+                  "date": "2026-02-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                },
+                {
+                  "issue": 19,
+                  "date": "2026-02-15",
+                  "matched": [
+                    "08",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 21,
+              "end": 25,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 23,
+                  "date": "2026-02-28",
+                  "matched": [
+                    "05",
+                    "37",
+                    "47"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 26,
+              "end": 30,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 26,
+                  "date": "2026-03-07",
+                  "matched": [
+                    "12",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 31,
+              "end": 35,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 31,
+                  "date": "2026-03-21",
+                  "matched": [
+                    "05",
+                    "23",
+                    "47"
+                  ]
+                },
+                {
+                  "issue": 33,
+                  "date": "2026-03-26",
+                  "matched": [
+                    "12",
+                    "23",
+                    "28",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 36,
+              "end": 40,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 37,
+                  "date": "2026-04-07",
+                  "matched": [
+                    "08",
+                    "23",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 41,
+              "end": 45,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 44,
+                  "date": "2026-04-23",
+                  "matched": [
+                    "12",
+                    "23",
+                    "37"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 46,
+              "end": 50,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 48,
+                  "date": "2026-05-07",
+                  "matched": [
+                    "23",
+                    "28",
+                    "34"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 51,
+              "end": 55,
+              "count": 5,
+              "hits": [
+                {
+                  "issue": 51,
+                  "date": "2026-05-14",
+                  "matched": [
+                    "23",
+                    "34",
+                    "47"
+                  ]
+                }
+              ],
+              "covered": true
+            },
+            {
+              "start": 56,
+              "end": 60,
+              "count": 4,
+              "hits": [],
+              "covered": false
+            }
+          ],
+          "covered": 11,
+          "total": 11,
+          "hitDraws": 13,
+          "hitRate": 100.0,
+          "computedBy": "python-local-search",
+          "status": "无变更",
+          "changeTime": "2026-06-03 14:51:55",
+          "recentCovered": 10,
+          "recentTotal": 10,
+          "recentHitRate": 100.0,
+          "currentMiss": 0,
+          "maxMiss": 0,
+          "healthStatus": "正常观察",
+          "healthReason": "完整窗口覆盖表现稳定",
+          "changeHistory": []
+        }
+      ]
+    }
+  ]
+}

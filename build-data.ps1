@@ -1227,6 +1227,26 @@ function New-Window5State {
             $changeTime = if ($changed -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].changeTime)) { $GeneratedAt } else { [string]$existingItem[0].changeTime }
             $interval = if ($source -eq 'hk') { 10 } else { 20 }
             $latestIssue = [int]$latest.issue
+            $oldHistory = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].yearPoolHistory) { @($existingItem[0].yearPoolHistory) } else { @() }
+            $yearPoolHistory = @($oldHistory)
+            if ($changed) {
+                $addedPoolNumbers = @($pool | Where-Object { $oldPool -notcontains $_ })
+                $removedPoolNumbers = @($oldPool | Where-Object { $pool -notcontains $_ })
+                $yearPoolHistory = @(
+                    [pscustomobject]@{
+                        changedAt = $GeneratedAt
+                        source = $source
+                        year = $year
+                        issue = $latestIssue
+                        beforePool = @($oldPool)
+                        afterPool = @($pool)
+                        added = @($addedPoolNumbers)
+                        removed = @($removedPoolNumbers)
+                        reason = if ($oldPool.Count -eq 0) { (U @(0x9996,0x6B21,0x751F,0x6210,0x5F53,0x5E74,0x8986,0x76D6,0x6C60)) } else { (U @(0x6700,0x65B0,0x5F00,0x5956,0x540E,0x540E,0x5F53,0x5E74,0x8986,0x76D6,0x6C60,0x53D1,0x751F,0x53D8,0x5316)) }
+                    }
+                    $yearPoolHistory
+                ) | Select-Object -First 30
+            }
             $oldStablePool = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePool) { @($existingItem[0].stablePool | Where-Object { [int]$_ -ge 1 } | Select-Object -First 15 | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
             $oldStableIssue = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePoolLastIssue) { [int]$existingItem[0].stablePoolLastIssue } else { 0 }
             $nextRecalcIssue = if ($oldStableIssue -gt 0) { $oldStableIssue + $interval } else { [Math]::Ceiling($latestIssue / $interval) * $interval }
@@ -1241,6 +1261,7 @@ function New-Window5State {
                 adjustmentStatus = if ($changed) { (U @(0x6709,0x53D8,0x66F4)) } else { (U @(0x65E0,0x53D8,0x66F4)) }
                 adjustmentReason = if ($changed) { (U @(0x6700,0x65B0,0x5F00,0x5956,0x540E,0x5F53,0x5E74,0x8986,0x76D6,0x6C60,0x5DF2,0x8C03,0x6574)) } else { (U @(0x672C,0x6B21,0x91CD,0x7B97,0x4E0E,0x4E0A,0x6B21,0x4E00,0x81F4)) }
                 changeTime = $changeTime
+                yearPoolHistory = @($yearPoolHistory)
                 stablePool = @($newStablePool)
                 stablePoolStatus = if (-not $shouldRecalcStable) { (U @(0x672A,0x89E6,0x53D1)) } elseif ($stableChanged) { (U @(0x6709,0x53D8,0x66F4)) } else { (U @(0x65E0,0x53D8,0x66F4)) }
                 stablePoolReason = if (-not $shouldRecalcStable) { (U @(0x672A,0x5230,0x91CD,0x7B97,0x6761,0x4EF6,0xFF0C,0x6CBF,0x7528,0x4E0A,0x6B21,0x8DE8,0x5E74,0x7A33,0x5B9A,0x6C60)) } else { (U @(0x5DF2,0x6309,0x5468,0x671F,0x89C4,0x5219,0x91CD,0x7B97,0x8DE8,0x5E74,0x7A33,0x5B9A,0x6C60)) }
@@ -1740,6 +1761,7 @@ __EMBEDDED_JSON__
     let generatedPredictions = {next: [], sanzhong: []};
     let gamePredictions = {items: []};
     let window5State = {items: []};
+    let threeCompoundState = {items: []};
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const pct = (value, max) => max ? Math.round(value / max * 100) : 0;
     function rankHtml(items, limit = 10) {
@@ -1894,7 +1916,8 @@ __EMBEDDED_JSON__
       const stablePoolReason = stateItem?.stablePoolReason || '';
       const stablePoolChangeTime = stateItem?.stablePoolChangeTime || '';
       const stablePoolNextRecalcIssue = stateItem?.stablePoolNextRecalcIssue || '';
-      return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, stablePoolStatus, stablePoolReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
+      const yearPoolHistory = Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [];
+      return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, yearPoolHistory, stablePoolStatus, stablePoolReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
     }
     function regularNums(record) {
       return (record?.balls || []).slice(0, 6).map(ball => String(ball.numberText || ball.number || '').padStart(2, '0'));
@@ -1902,50 +1925,167 @@ __EMBEDDED_JSON__
     function comboKey(nums) {
       return nums.map(n => String(n).padStart(2, '0')).sort((a, b) => Number(a) - Number(b)).join('-');
     }
-    function buildThreeHitCombos(records) {
-      const rows = records.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
-      const numberCounts = new Map();
-      rows.forEach(row => regularNums(row).forEach(num => numberCounts.set(num, (numberCounts.get(num) || 0) + 1)));
-      const pool = [...numberCounts.entries()]
-        .sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0]))
-        .slice(0, 18)
-        .map(item => item[0])
-        .sort((a, b) => Number(a) - Number(b));
-      const comboMap = new Map();
-      rows.forEach(row => {
-        const nums = regularNums(row).filter(num => pool.includes(num)).sort((a, b) => Number(a) - Number(b));
-        for (let i = 0; i < nums.length - 2; i++) {
-          for (let j = i + 1; j < nums.length - 1; j++) {
-            for (let k = j + 1; k < nums.length; k++) {
-              const numbers = [nums[i], nums[j], nums[k]];
-              const key = comboKey(numbers);
-              if (!comboMap.has(key)) comboMap.set(key, {numbers, hits: 0, windows: new Set(), lastIssue: 0});
-              const item = comboMap.get(key);
-              item.hits++;
-              item.windows.add(Math.floor((Number(row.issue || 0) - 1) / 5));
-              item.lastIssue = Math.max(item.lastIssue, Number(row.issue || 0));
+    function threeHitCompoundWindowCoverage(rows, pool) {
+      if (!rows.length) return [];
+      const poolSet = new Set(pool);
+      const maxIssue = Math.max(...rows.map(row => Number(row.issue || 0)));
+      const windows = [];
+      for (let start = 1; start <= maxIssue; start += 5) {
+        const end = start + 4;
+        const chunk = rows.filter(row => Number(row.issue || 0) >= start && Number(row.issue || 0) <= end);
+        if (!chunk.length) continue;
+        const hits = [];
+        chunk.forEach(row => {
+          const matched = regularNums(row).filter(num => poolSet.has(num)).sort((a, b) => Number(a) - Number(b));
+          if (matched.length >= 3) hits.push({issue: row.issue, date: row.date, matched});
+        });
+        windows.push({start, end, count: chunk.length, hits, covered: hits.length > 0});
+      }
+      return windows;
+    }
+    function threeHitPoolStats(rows, pool) {
+      const windows = threeHitCompoundWindowCoverage(rows, pool);
+      const completed = windows.filter(item => Number(item.count || 0) >= 5);
+      const covered = completed.filter(item => item.covered).length;
+      const hitDraws = completed.reduce((sum, item) => sum + item.hits.length, 0);
+      const recent = completed.slice(-10).reduce((sum, item, index) => sum + (item.covered ? index + 1 : 0), 0);
+      return {windows, completed, covered, hitDraws, recent, hitRate: completed.length ? Math.round(covered / completed.length * 10000) / 100 : 0};
+    }
+    function threeHitScoreVector(rows, pool) {
+      const stats = threeHitPoolStats(rows, pool);
+      return [stats.covered, stats.hitDraws, stats.recent, -pool.reduce((sum, num) => sum + Number(num), 0)];
+    }
+    function betterThreeHitScore(a, b) {
+      if (!b) return true;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return a[i] > b[i];
+      }
+      return false;
+    }
+    function allLotteryNumbers() {
+      return Array.from({length: 49}, (_, i) => String(i + 1).padStart(2, '0'));
+    }
+    function seededShuffleNumbers(seed) {
+      const nums = allLotteryNumbers();
+      let state = 2166136261;
+      String(seed).split('').forEach(ch => {
+        state ^= ch.charCodeAt(0);
+        state = Math.imul(state, 16777619) >>> 0;
+      });
+      for (let i = nums.length - 1; i > 0; i--) {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        const j = state % (i + 1);
+        [nums[i], nums[j]] = [nums[j], nums[i]];
+      }
+      return nums;
+    }
+    function topThreeHitFrequencyNumbers(rows) {
+      const counts = new Map();
+      rows.forEach(row => regularNums(row).forEach(num => counts.set(num, (counts.get(num) || 0) + 1)));
+      return allLotteryNumbers().sort((a, b) => (counts.get(b) || 0) - (counts.get(a) || 0) || Number(a) - Number(b));
+    }
+    function greedyThreeHitCompoundSeed(rows, poolSize, order) {
+      let selected = [];
+      while (selected.length < poolSize) {
+        let bestNum = null;
+        let bestScore = null;
+        order.forEach(num => {
+          if (selected.includes(num)) return;
+          const candidate = selected.concat(num).sort((a, b) => Number(a) - Number(b));
+          const score = threeHitScoreVector(rows, candidate);
+          if (betterThreeHitScore(score, bestScore)) {
+            bestScore = score;
+            bestNum = num;
+          }
+        });
+        selected = selected.concat(bestNum).sort((a, b) => Number(a) - Number(b));
+      }
+      return selected;
+    }
+    function improveThreeHitCompoundPool(rows, startPool) {
+      const allNums = allLotteryNumbers();
+      let selected = startPool.slice().sort((a, b) => Number(a) - Number(b));
+      let bestScore = threeHitScoreVector(rows, selected);
+      let improved = true;
+      let rounds = 0;
+      while (improved && rounds < 80) {
+        improved = false;
+        rounds++;
+        const current = selected.slice();
+        const outside = allNums.filter(num => !selected.includes(num));
+        for (const outNum of current) {
+          for (const inNum of outside) {
+            const candidate = selected.filter(num => num !== outNum).concat(inNum).sort((a, b) => Number(a) - Number(b));
+            const score = threeHitScoreVector(rows, candidate);
+            if (betterThreeHitScore(score, bestScore)) {
+              selected = candidate;
+              bestScore = score;
+              improved = true;
+              break;
             }
           }
+          if (improved) break;
         }
+      }
+      return {pool: selected, score: bestScore};
+    }
+    function buildThreeHitCompoundPool(records, poolSize) {
+      const rows = records.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      const frequencyOrder = topThreeHitFrequencyNumbers(rows);
+      const randomSeeds = ['three-compound-local-search-a', 'three-compound-local-search-b', 'three-compound-local-search-c', 'three-compound-local-search-d'];
+      const seeds = [
+        greedyThreeHitCompoundSeed(rows, poolSize, allLotteryNumbers()),
+        greedyThreeHitCompoundSeed(rows, poolSize, frequencyOrder),
+        frequencyOrder.slice(0, poolSize).sort((a, b) => Number(a) - Number(b))
+      ];
+      randomSeeds.forEach(seed => {
+        const shuffled = seededShuffleNumbers(`${seed}|${poolSize}|${rows.length}`);
+        seeds.push(shuffled.slice(0, poolSize).sort((a, b) => Number(a) - Number(b)));
+        seeds.push(greedyThreeHitCompoundSeed(rows, poolSize, shuffled));
       });
-      const ranked = [...comboMap.values()].map(item => ({
+      let best = null;
+      seeds.forEach(seed => {
+        const improved = improveThreeHitCompoundPool(rows, seed);
+        if (!best || betterThreeHitScore(improved.score, best.score)) best = improved;
+      });
+      const selected = best ? best.pool : [];
+      const stats = threeHitPoolStats(rows, selected);
+      return {poolSize, pool: selected, windows: stats.windows, covered: stats.covered, total: stats.completed.length, hitDraws: stats.hitDraws, hitRate: stats.hitRate};
+    }
+    function buildThreeHitCompoundPools(records) {
+      const compoundPools = [{poolSize: 5}, {poolSize: 6}, {poolSize: 7}, {poolSize: 8}];
+      return compoundPools.map(item => buildThreeHitCompoundPool(records, item.poolSize));
+    }
+    function buildThreeHitCombos(records) {
+      const compound = buildThreeHitCompoundPool(records, 8);
+      const comboMap = new Map();
+      const rows = records.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      for (let i = 0; i < compound.pool.length - 2; i++) {
+        for (let j = i + 1; j < compound.pool.length - 1; j++) {
+          for (let k = j + 1; k < compound.pool.length; k++) {
+            const numbers = [compound.pool[i], compound.pool[j], compound.pool[k]];
+            comboMap.set(comboKey(numbers), {numbers, hits: 0, windows: new Set(), lastIssue: 0});
+          }
+        }
+      }
+      rows.forEach(row => {
+        const regular = regularNums(row);
+        comboMap.forEach(item => {
+          if (item.numbers.every(num => regular.includes(num))) {
+            item.hits++;
+            item.windows.add(Math.floor((Number(row.issue || 0) - 1) / 5));
+            item.lastIssue = Math.max(item.lastIssue, Number(row.issue || 0));
+          }
+        });
+      });
+      const combos = [...comboMap.values()].map(item => ({
         numbers: item.numbers,
         hits: item.hits,
         windowHits: item.windows.size,
         lastIssue: item.lastIssue,
         score: item.windows.size * 10 + item.hits + item.lastIssue / 1000
       })).sort((a, b) => b.score - a.score || comboKey(a.numbers).localeCompare(comboKey(b.numbers)));
-      const selected = [];
-      ranked.forEach(item => {
-        if (selected.length >= 12) return;
-        const overlapTooHigh = selected.filter(existing => item.numbers.filter(num => existing.numbers.includes(num)).length >= 2).length >= 3;
-        if (!overlapTooHigh) selected.push(item);
-      });
-      ranked.forEach(item => {
-        if (selected.length >= 12) return;
-        if (!selected.some(existing => comboKey(existing.numbers) === comboKey(item.numbers))) selected.push(item);
-      });
-      return {numberPool: pool, combos: selected};
+      return {numberPool: compound.pool, combos: combos.slice(0, 12)};
     }
     function threeHitWindowCoverage(rows, combos) {
       if (!rows.length) return [];
@@ -1971,16 +2111,19 @@ __EMBEDDED_JSON__
       const latest = sourceRows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0];
       const currentYear = displayYear(latest);
       const yearRows = sourceRows.filter(row => displayYear(row) === currentYear).sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
-      const built = buildThreeHitCombos(yearRows.length ? yearRows : sourceRows);
-      const yearWindows = threeHitWindowCoverage(yearRows, built.combos);
+      const stateItem = (threeCompoundState.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
+      const compoundPools = Array.isArray(stateItem?.pools) && stateItem.pools.length ? stateItem.pools : buildThreeHitCompoundPools(yearRows.length ? yearRows : sourceRows);
+      const primary = compoundPools.find(item => item.poolSize === 8) || compoundPools[compoundPools.length - 1];
+      const yearWindows = primary ? primary.windows : [];
       const latestIssue = Number(latest?.issue || 0);
       const currentStart = Math.floor((latestIssue - 1) / 5) * 5 + 1;
       const currentWindow = yearWindows.find(item => item.start === currentStart) || {start: currentStart, end: currentStart + 4, count: 0, hits: [], covered: false};
+      const completedWindows = yearWindows.filter(item => Number(item.count || 0) >= 5);
       let maxMiss = 0;
       let currentMiss = 0;
       let run = 0;
       let hitWindows = 0;
-      yearWindows.forEach(item => {
+      completedWindows.forEach(item => {
         if (item.covered) {
           hitWindows++;
           maxMiss = Math.max(maxMiss, run);
@@ -1990,11 +2133,12 @@ __EMBEDDED_JSON__
         }
       });
       maxMiss = Math.max(maxMiss, run);
-      for (let i = yearWindows.length - 1; i >= 0; i--) {
-        if (yearWindows[i].covered) break;
+      for (let i = completedWindows.length - 1; i >= 0; i--) {
+        if (completedWindows[i].covered) break;
         currentMiss++;
       }
-      return {source, latest, currentYear, numberPool: built.numberPool, combos: built.combos, currentWindow, yearWindows, stats: {total: yearWindows.length, hits: hitWindows, misses: yearWindows.length - hitWindows, hitRate: yearWindows.length ? Math.round(hitWindows / yearWindows.length * 100) : 0, currentMiss, maxMiss}};
+      const comboCompat = buildThreeHitCombos(yearRows.length ? yearRows : sourceRows);
+      return {source, latest, currentYear, numberPool: primary?.pool || [], compoundPools, combos: comboCompat.combos, currentWindow, yearWindows, stats: {total: completedWindows.length, hits: hitWindows, misses: completedWindows.length - hitWindows, hitRate: completedWindows.length ? Math.round(hitWindows / completedWindows.length * 100) : 0, currentMiss, maxMiss}};
     }
     function randomWindowBaseline(pickCount, totalCount, drawsPerWindow) {
       if (!pickCount || !totalCount || !drawsPerWindow) return 0;
@@ -2624,6 +2768,11 @@ __EMBEDDED_JSON__
       </div>`;
       document.getElementById('game-source').addEventListener('change', renderGames);
     }
+    function yearPoolHistoryTable(history) {
+      const rows = (Array.isArray(history) ? history : []).slice(0, 10);
+      if (!rows.length) return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;</p></section>`;
+      return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#35302;&#21457;&#26399;&#21495;</th><th>&#21464;&#26356;&#21069;</th><th>&#21464;&#26356;&#21518;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#21407;&#22240;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.reason || '-')}</td></tr>`).join('')}</tbody></table></section>`;
+    }
     function renderWindow5() {
       const selected = document.getElementById('window5-source')?.value || 'am';
       const analysis = fiveWindowAnalysis(selected);
@@ -2635,6 +2784,7 @@ __EMBEDDED_JSON__
         <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${analysis.adjustmentStatus}</p><p class="muted">${analysis.adjustmentReason}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
         <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${analysis.stablePoolStatus}</p><p class="muted">${analysis.stablePoolReason}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
+        ${yearPoolHistoryTable(analysis.yearPoolHistory)}
         <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
         <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></section>
       </div>`;
@@ -2644,16 +2794,19 @@ __EMBEDDED_JSON__
       const selected = document.getElementById('three-window5-source')?.value || 'am';
       const analysis = threeWindowAnalysis(selected);
       const win = analysis.currentWindow;
-      const copyText = analysis.combos.map(item => `\uFF08${item.numbers.join('-')}\uFF09`).join(',');
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(copyText)}`;
-      const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.combo.join('-'))}`).join(' / ') : '&#35266;&#23519;&#20013;';
+      const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.matched.join('-'))}`).join(' / ') : '&#35266;&#23519;&#20013;';
+      const poolRows = analysis.compoundPools.map(item => {
+        const misses = item.windows.filter(win => Number(win.count || 0) >= 5 && !win.covered);
+        const current = item.windows.find(win => win.start === analysis.currentWindow.start) || {hits: [], covered: false, count: 0};
+        const currentHits = current.hits.map(hit => `${esc(hit.issue)}:${esc(hit.matched.join('-'))}`).join(', ') || '-';
+        return `<tr><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool)}</td><td>${esc(item.covered)} / ${esc(item.total)}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.recentCovered ?? '-')} / ${esc(item.recentTotal ?? '-')}<br>${esc(item.recentHitRate ?? '-')}%</td><td>${esc(item.currentMiss ?? 0)} / ${esc(item.maxMiss ?? 0)}</td><td>${esc(item.healthStatus || '-')}<br><span class="muted">${esc(item.healthReason || '')}</span></td><td>${esc(item.hitDraws)}</td><td>${esc(misses.slice(0, 8).map(win => `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`).join(', ') || '-')}</td><td>${current.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${currentHits}</td></tr>`;
+      }).join('');
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="three-window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
-        <section class="panel"><h2>&#24403;&#24180;&#21495;&#30721;&#27744;</h2>${numberChips(analysis.numberPool)}<p class="muted">&#22522;&#20110;&#24403;&#24180;&#21069;6&#20010;&#24179;&#30721;&#39057;&#27425;&#29983;&#25104;</p></section>
-        <section class="panel full"><h2>&#24403;&#21069;&#25512;&#33616;&#32452;&#21512;</h2><div class="copy-qr"><div><strong>&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;</strong><code>${esc(copyText)}</code></div><img alt="QR" src="${qrUrl}"></div><table class="compact-table"><thead><tr><th>&#32452;&#21512;</th><th>&#21382;&#21490;&#21629;&#20013;</th><th>&#21629;&#20013;&#31383;&#21475;</th><th>&#26368;&#36817;&#21629;&#20013;&#26399;</th></tr></thead><tbody>${analysis.combos.map(item => `<tr><td>${numberChips(item.numbers)}</td><td>${esc(item.hits)}</td><td>${esc(item.windowHits)}</td><td>${esc(item.lastIssue)}</td></tr>`).join('')}</tbody></table></section>
-        <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#32452;&#21512;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hit.combo.join('-'))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
+        <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></section>
+        <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hit.matched.join('-'))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
       </div>`;
       document.getElementById('three-window5-source').addEventListener('change', renderThreeWindow5);
     }
@@ -2784,7 +2937,22 @@ __EMBEDDED_JSON__
       manualFetch: renderManualFetch,
       daily: renderDaily
     };
-    tabs.forEach(btn => btn.addEventListener('click', () => { tabs.forEach(item => item.classList.remove('active')); btn.classList.add('active'); renderers[btn.dataset.tab](); }));
+    function showLoading(tab) {
+      const label = document.querySelector(`.tabs button[data-tab="${tab}"]`)?.textContent || '';
+      app.innerHTML = `<section class="panel"><h2>${esc(label)}</h2><p class="muted">&#21152;&#36733;&#20013;...</p></section>`;
+    }
+    function switchTab(tab) {
+      tabs.forEach(item => item.classList.toggle('active', item.dataset.tab === tab));
+      showLoading(tab);
+      setTimeout(() => {
+        try {
+          (renderers[tab] || renderOverview)();
+        } catch (err) {
+          app.innerHTML = `<section class="panel"><h2>&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
+        }
+      }, 20);
+    }
+    tabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     try {
       const data = JSON.parse(document.getElementById('embedded-records').textContent);
       records = data.records || [];
@@ -2792,6 +2960,7 @@ __EMBEDDED_JSON__
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
       gamePredictions = data.games || {items: []};
       window5State = data.window5 || {items: []};
+      threeCompoundState = data.threeCompound || {items: []};
       renderOverview();
     } catch (err) {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
@@ -2922,9 +3091,21 @@ if (Test-Path -LiteralPath $window5Path) {
 }
 $window5 = New-Window5State -Records $deduped -Existing $existingWindow5 -GeneratedAt $summary.generatedAt
 [IO.File]::WriteAllText($window5Path, ($window5 | ConvertTo-Json -Depth 8), $Utf8NoBom)
-$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; forecasts = $forecasts; window5 = $window5 }
+$threeCompoundPath = Join-Path $dataDir 'three-compound-state.json'
+$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; forecasts = $forecasts; window5 = $window5; threeCompound = @{ items = @() } }
 $jsonPath = Join-Path $dataDir 'records.json'
 $json = $payload | ConvertTo-Json -Depth 10
+[IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)
+$threeCompoundScript = Join-Path $PSScriptRoot 'build-three-compound.py'
+if (Test-Path -LiteralPath $threeCompoundScript) {
+    & python $threeCompoundScript $RootDir $summary.generatedAt | Out-Null
+}
+$threeCompound = [pscustomobject]@{ items = @() }
+if (Test-Path -LiteralPath $threeCompoundPath) {
+    try { $threeCompound = Get-Content -LiteralPath $threeCompoundPath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $threeCompound = [pscustomobject]@{ items = @() } }
+}
+$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; forecasts = $forecasts; window5 = $window5; threeCompound = $threeCompound }
+$json = $payload | ConvertTo-Json -Depth 12
 [IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)
 $dashboardPath = Join-Path $RootDir 'index.html'
 [IO.File]::WriteAllText($dashboardPath, (New-DashboardHtml -EmbeddedJson $json), $Utf8NoBom)

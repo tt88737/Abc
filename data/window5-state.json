@@ -1,5 +1,5 @@
 {
-    "generatedAt":  "2026-06-02 18:11:34",
+    "generatedAt":  "2026-06-03 16:18:43",
     "items":  [
                   {
                       "source":  "am",
@@ -17,6 +17,9 @@
                       "adjustmentStatus":  "无变更",
                       "adjustmentReason":  "本次重算与上次一致",
                       "changeTime":  "2026-05-31 21:45:59",
+                      "yearPoolHistory":  [
+
+                                          ],
                       "stablePool":  [
                                          "03",
                                          "05",
@@ -39,7 +42,7 @@
                       "stablePoolChangeTime":  "2026-06-01 15:07:23",
                       "stablePoolLastIssue":  151,
                       "stablePoolNextRecalcIssue":  171,
-                      "computedAt":  "2026-06-02 18:11:34"
+                      "computedAt":  "2026-06-03 16:18:43"
                   },
                   {
                       "source":  "hk",
@@ -54,6 +57,9 @@
                       "adjustmentStatus":  "无变更",
                       "adjustmentReason":  "本次重算与上次一致",
                       "changeTime":  "2026-05-31 00:30:19",
+                      "yearPoolHistory":  [
+
+                                          ],
                       "stablePool":  [
                                          "02",
                                          "01",
@@ -76,7 +82,7 @@
                       "stablePoolChangeTime":  "2026-06-01 15:07:23",
                       "stablePoolLastIssue":  58,
                       "stablePoolNextRecalcIssue":  68,
-                      "computedAt":  "2026-06-02 18:11:34"
+                      "computedAt":  "2026-06-03 16:18:43"
                   }
               ]
 }

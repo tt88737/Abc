@@ -302,6 +302,9 @@ try {
     if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
         throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, pattern watch, manual fetch, and daily tabs'
     }
+    if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(() =>') -or -not $dashboard.Contains('showLoading(tab)')) {
+        throw 'dashboard tab switches should show loading before expensive renders'
+    }
     if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
         throw 'dashboard should not expose trend, picker, sandbox, or forecast modules'
     }
@@ -737,11 +740,32 @@ try {
     if (-not $dashboard.Contains('function threeWindowAnalysis(source)')) {
         throw 'dashboard should calculate three-hit five-issue window analysis'
     }
-    if (-not $dashboard.Contains('function buildThreeHitCombos(records)')) {
-        throw 'dashboard should build ranked three-hit combination pools'
+    if (-not $dashboard.Contains('function buildThreeHitCompoundPools(records)')) {
+        throw 'dashboard should build three-hit compound pools'
     }
-    if (-not $dashboard.Contains('function threeHitWindowCoverage(rows, combos)')) {
-        throw 'dashboard should evaluate three-hit combination hits by five-issue window'
+    if (-not $dashboard.Contains('function threeHitCompoundWindowCoverage(rows, pool)')) {
+        throw 'dashboard should evaluate three-hit compound pools by five-issue window'
+    }
+    if (-not $dashboard.Contains('function seededShuffleNumbers(seed)') -or -not $dashboard.Contains('function improveThreeHitCompoundPool(rows, startPool)')) {
+        throw 'three-hit compound pools should use seeded multi-start local search instead of plain greedy only'
+    }
+    if (-not $dashboard.Contains('three-compound-local-search') -or -not $dashboard.Contains('randomSeeds.forEach')) {
+        throw 'three-hit compound pool search should include deterministic random seeds'
+    }
+    if (-not $dashboard.Contains('const completedWindows = yearWindows.filter(item => Number(item.count || 0) >= 5)')) {
+        throw 'three-hit five-issue stats should only count completed five-issue windows'
+    }
+    if (-not $dashboard.Contains('compoundPools') -or -not $dashboard.Contains('{poolSize: 5}') -or -not $dashboard.Contains('{poolSize: 6}') -or -not $dashboard.Contains('{poolSize: 7}') -or -not $dashboard.Contains('{poolSize: 8}')) {
+        throw 'three-hit five-issue window should compare 5/6/7/8 number compound pools'
+    }
+    if (-not $dashboard.Contains('threeCompoundState') -or -not $dashboard.Contains('stateItem?.pools')) {
+        throw 'three-hit compound pools should be loaded from persisted state'
+    }
+    if (-not (Test-Path -LiteralPath (Join-Path $root 'build-three-compound.py'))) {
+        throw 'three-hit compound pool builder script should exist'
+    }
+    if (-not $dashboard.Contains('&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;')) {
+        throw 'three-hit five-issue window page should show compound pool comparison'
     }
     if (-not $dashboard.Contains('function fiveWindowAnalysis(source)')) {
         throw 'dashboard should calculate five-issue window coverage analysis'
@@ -764,6 +788,12 @@ try {
     if (-not $dashboard.Contains('changeTime')) {
         throw 'five-issue window page should show coverage pool change time'
     }
+    if (-not $dashboard.Contains('yearPoolHistory') -or -not $dashboard.Contains('function yearPoolHistoryTable')) {
+        throw 'five-issue window page should expose current-year coverage pool change history'
+    }
+    if (-not $dashboard.Contains('&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;')) {
+        throw 'five-issue window page should show coverage pool change log'
+    }
     if ($dashboard.Contains('&#24050;&#37325;&#26032;&#35745;&#31639;')) {
         throw 'five-issue window status should use no-change/changed wording instead of recalculated'
     }
@@ -775,12 +805,35 @@ try {
         throw 'window5-state.json was not created'
     }
     $windowState = Get-Content -LiteralPath $windowStateFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    $threeCompoundFile = Join-Path $outDir 'data/three-compound-state.json'
+    if (-not (Test-Path -LiteralPath $threeCompoundFile)) {
+        throw 'three-compound-state.json was not created'
+    }
+    $threeCompoundState = Get-Content -LiteralPath $threeCompoundFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($item in @($threeCompoundState.items)) {
+        if (@($item.pools).Count -ne 4) {
+            throw 'three-compound-state should include 5/6/7/8 pools for each source'
+        }
+        foreach ($poolItem in @($item.pools)) {
+            if ($null -eq $poolItem.poolSize -or $null -eq $poolItem.pool -or $null -eq $poolItem.covered -or $null -eq $poolItem.total -or $null -eq $poolItem.hitRate -or $null -eq $poolItem.status -or $null -eq $poolItem.recentHitRate -or $null -eq $poolItem.currentMiss -or $null -eq $poolItem.maxMiss -or $null -eq $poolItem.healthStatus -or $null -eq $poolItem.changeHistory) {
+                throw 'three-compound pool state should include size, pool, coverage, total, hit rate, status, health metrics, and change history'
+            }
+        }
+    }
     foreach ($item in @($windowState.items)) {
         if ($null -eq $item.stablePool -or $null -eq $item.stablePoolStatus -or $null -eq $item.stablePoolChangeTime -or $null -eq $item.stablePoolNextRecalcIssue) {
             throw 'window5-state item should include stable pool state fields'
         }
         if (@($item.yearPool).Count -gt 8) {
             throw 'window5 current-year pool should be capped at eight numbers'
+        }
+        if ($null -eq $item.yearPoolHistory) {
+            throw 'window5 current-year pool should include change history'
+        }
+        foreach ($historyItem in @($item.yearPoolHistory)) {
+            if ($null -eq $historyItem.changedAt -or $null -eq $historyItem.beforePool -or $null -eq $historyItem.afterPool -or $null -eq $historyItem.added -or $null -eq $historyItem.removed -or $null -eq $historyItem.issue) {
+                throw 'window5 current-year pool history should include time, before/after pools, added/removed numbers, and trigger issue'
+            }
         }
         if (@($item.stablePool).Count -gt 15) {
             throw 'window5 stable pool should be capped at fifteen numbers'
@@ -791,6 +844,9 @@ try {
     }
     if (-not $buildScript.Contains('$oldStablePool.Count -lt 15')) {
         throw 'window5 stable pool should recalculate when an old pool has fewer than fifteen numbers'
+    }
+    if (-not $buildScript.Contains('yearPoolHistory') -or -not $buildScript.Contains('$addedPoolNumbers') -or -not $buildScript.Contains('$removedPoolNumbers')) {
+        throw 'window5 state should append current-year coverage pool change history'
     }
     if ($dashboard.Contains('<h2>&#35206;&#30422;&#27744;&#29366;&#24577;</h2>')) {
         throw 'five-issue window status should be displayed under current-year pool, not as a separate card'
