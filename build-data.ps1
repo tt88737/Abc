@@ -46,7 +46,7 @@ function Write-DataJsonAndJs {
         [int]$Depth
     )
 
-    $json = ($Data | ConvertTo-Json -Depth $Depth) -join [Environment]::NewLine
+    $json = ($Data | ConvertTo-Json -Depth $Depth -Compress) -join [Environment]::NewLine
     [IO.File]::WriteAllText($JsonPath, $json, $Utf8NoBom)
     $safeJson = $json -replace '</script', '<\/script'
     $js = "window.$GlobalName = $safeJson;"
@@ -226,7 +226,7 @@ function Get-ParsedPageRecords {
 
     $cacheDir = Split-Path -Parent $CachePath
     if (-not (Test-Path -LiteralPath $cacheDir)) { New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null }
-    $cacheJson = ([pscustomobject]@{ files = $cacheFiles.ToArray() } | ConvertTo-Json -Depth 10) -join [Environment]::NewLine
+    $cacheJson = ([pscustomobject]@{ files = $cacheFiles.ToArray() } | ConvertTo-Json -Depth 10 -Compress) -join [Environment]::NewLine
     [IO.File]::WriteAllText($CachePath, $cacheJson, $Utf8NoBom)
     return $allRecords
 }
@@ -2735,7 +2735,7 @@ $predictions = Invoke-Profiled 'generated-predictions' {
     return New-GeneratedPredictions -Records $deduped -Existing $existingPredictionPairs
 }
 Invoke-Profiled 'write-predictions-json' {
-    [IO.File]::WriteAllText($predictionsPath, ($predictions | ConvertTo-Json -Depth 10), $Utf8NoBom)
+    [IO.File]::WriteAllText($predictionsPath, ($predictions | ConvertTo-Json -Depth 10 -Compress), $Utf8NoBom)
 } | Out-Null
 $gamePredictionsPath = Join-Path $dataDir 'game-predictions.json'
 $existingGameItems = @()
@@ -2776,7 +2776,7 @@ $threeCompoundPath = Join-Path $dataDir 'three-compound-state.json'
 $payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; window5 = $window5; threeCompound = @{ items = @() } }
 $jsonPath = Join-Path $dataDir 'records.json'
 $json = Invoke-Profiled 'records-json-serialize' {
-    return $payload | ConvertTo-Json -Depth 10
+    return $payload | ConvertTo-Json -Depth 10 -Compress
 }
 Invoke-Profiled 'write-records-json' {
     Write-DataJsonTextAndJs -JsonPath $jsonPath -Json $json -GlobalName '__RECORDS_DATA__'

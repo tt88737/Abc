@@ -8,6 +8,14 @@ if ($text.Contains('ConvertTo-Json -Depth 12')) {
     throw 'build-data.ps1 should not perform unused full payload ConvertTo-Json -Depth 12'
 }
 
+if (-not $text.Contains('ConvertTo-Json -Depth $Depth -Compress')) {
+    throw 'external data json/js should be serialized in compact form'
+}
+
+if (-not $text.Contains('ConvertTo-Json -Depth 10 -Compress')) {
+    throw 'large generated json payloads should use compact serialization'
+}
+
 if (-not $text.Contains("loadJsonOrScript('data/dashboard-summary.json'")) {
     throw 'dashboard should start from dashboard-summary.json'
 }
