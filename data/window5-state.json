@@ -1,5 +1,5 @@
 {
-    "generatedAt":  "2026-06-03 16:18:43",
+    "generatedAt":  "2026-06-03 18:15:49",
     "items":  [
                   {
                       "source":  "am",
@@ -14,8 +14,8 @@
                                        "12",
                                        "10"
                                    ],
-                      "adjustmentStatus":  "无变更",
-                      "adjustmentReason":  "本次重算与上次一致",
+                      "adjustmentStatus":  "no-change",
+                      "adjustmentReason":  "year-pool-same-as-previous",
                       "changeTime":  "2026-05-31 21:45:59",
                       "yearPoolHistory":  [
 
@@ -37,12 +37,14 @@
                                          "46",
                                          "02"
                                      ],
-                      "stablePoolStatus":  "未触发",
-                      "stablePoolReason":  "未到重算条件，沿用上次跨年稳定池",
+                      "stablePoolStatus":  "not-triggered",
+                      "stablePoolReason":  "stable-pool-recalc-not-triggered",
+                      "stablePoolOptimizationStatus":  "not-triggered",
+                      "stablePoolOptimizationReason":  "stable-pool-recalc-not-triggered",
                       "stablePoolChangeTime":  "2026-06-01 15:07:23",
                       "stablePoolLastIssue":  151,
                       "stablePoolNextRecalcIssue":  171,
-                      "computedAt":  "2026-06-03 16:18:43"
+                      "computedAt":  "2026-06-03 18:15:49"
                   },
                   {
                       "source":  "hk",
@@ -54,8 +56,8 @@
                                        "34",
                                        "27"
                                    ],
-                      "adjustmentStatus":  "无变更",
-                      "adjustmentReason":  "本次重算与上次一致",
+                      "adjustmentStatus":  "no-change",
+                      "adjustmentReason":  "year-pool-same-as-previous",
                       "changeTime":  "2026-05-31 00:30:19",
                       "yearPoolHistory":  [
 
@@ -77,12 +79,14 @@
                                          "14",
                                          "15"
                                      ],
-                      "stablePoolStatus":  "未触发",
-                      "stablePoolReason":  "未到重算条件，沿用上次跨年稳定池",
+                      "stablePoolStatus":  "not-triggered",
+                      "stablePoolReason":  "stable-pool-recalc-not-triggered",
+                      "stablePoolOptimizationStatus":  "not-triggered",
+                      "stablePoolOptimizationReason":  "stable-pool-recalc-not-triggered",
                       "stablePoolChangeTime":  "2026-06-01 15:07:23",
                       "stablePoolLastIssue":  58,
                       "stablePoolNextRecalcIssue":  68,
-                      "computedAt":  "2026-06-03 16:18:43"
+                      "computedAt":  "2026-06-03 18:15:49"
                   }
               ]
 }

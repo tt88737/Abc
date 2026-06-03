@@ -204,6 +204,32 @@ def item_better(new_item, old_item):
     )
 
 
+def pool_diff(before_pool, after_pool):
+    before = sorted([str(num).zfill(2) for num in before_pool], key=int)
+    after = sorted([str(num).zfill(2) for num in after_pool], key=int)
+    before_set = set(before)
+    after_set = set(after)
+    kept = [num for num in after if num in before_set]
+    added = [num for num in after if num not in before_set]
+    removed = [num for num in before if num not in after_set]
+    change_count = len(added) + len(removed)
+    if not before:
+        change_level = "首次生成"
+    elif change_count <= 2:
+        change_level = "稳定"
+    elif change_count <= 4:
+        change_level = "中等变化"
+    else:
+        change_level = "重构"
+    return {
+        "kept": kept,
+        "added": added,
+        "removed": removed,
+        "changeCount": change_count,
+        "changeLevel": change_level,
+    }
+
+
 def main():
     root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
     records_path = root / "data" / "records.json"
@@ -237,6 +263,7 @@ def main():
                 before_pool = old_pool.get("pool", []) if old_pool else []
                 before_covered = old_pool.get("covered") if old_pool else None
                 before_hit_rate = old_pool.get("hitRate") if old_pool else None
+                diff = pool_diff(before_pool, candidate["pool"])
                 old_history = list((old_pool or {}).get("changeHistory", []))
                 candidate["status"] = "有变更" if old_pool else "首次生成"
                 candidate["changeTime"] = generated_at
@@ -249,6 +276,7 @@ def main():
                     "afterCovered": candidate["covered"],
                     "beforeHitRate": before_hit_rate,
                     "afterHitRate": candidate["hitRate"],
+                    **diff,
                     "reason": "发现更优完整窗口覆盖池" if old_pool else "首次生成三中三复式池",
                 }] + old_history[:29]
                 changed = True

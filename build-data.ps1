@@ -1210,6 +1210,102 @@ function Get-StableWindow5Pool {
     return @($freq.GetEnumerator() | Sort-Object @{ Expression = 'Value'; Descending = $true }, @{ Expression = { [int]$_.Key }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.Key })
 }
 
+function Get-Window5CoverageScore {
+    param([object[]]$Rows, [string[]]$Pool)
+
+    $windows = @(Get-Window5RawWindows -Rows $Rows)
+    $completed = @($windows | Where-Object { [int]$_.count -ge 5 })
+    $covered = 0
+    $hitDraws = 0
+    foreach ($win in $completed) {
+        $hit = $false
+        foreach ($num in @($win.nums)) {
+            if ($Pool -contains ([int]$num).ToString('00')) {
+                $hit = $true
+                $hitDraws++
+            }
+        }
+        if ($hit) { $covered++ }
+    }
+    $recent = @($completed | Select-Object -Last 10)
+    $recentCovered = 0
+    foreach ($win in $recent) {
+        foreach ($num in @($win.nums)) {
+            if ($Pool -contains ([int]$num).ToString('00')) {
+                $recentCovered++
+                break
+            }
+        }
+    }
+    [pscustomobject]@{
+        covered = $covered
+        hitDraws = $hitDraws
+        recentCovered = $recentCovered
+        total = $completed.Count
+    }
+}
+
+function Compare-Window5PoolScore {
+    param([object]$A, [object]$B)
+
+    if ($null -eq $B) { return 1 }
+    $aTuple = @([int]$A.covered, [int]$A.hitDraws, [int]$A.recentCovered)
+    $bTuple = @([int]$B.covered, [int]$B.hitDraws, [int]$B.recentCovered)
+    for ($i = 0; $i -lt $aTuple.Count; $i++) {
+        if ($aTuple[$i] -gt $bTuple[$i]) { return 1 }
+        if ($aTuple[$i] -lt $bTuple[$i]) { return -1 }
+    }
+    return 0
+}
+
+function Get-OptimizedStableWindow5Pool {
+    param([object[]]$YearRows, [string[]]$BasePool, [int]$Size = 15)
+
+    $freq = @{}
+    $colorRank = @{}
+    $tailRank = @{}
+    foreach ($row in @($YearRows)) {
+        if ($null -eq $row.balls -or @($row.balls).Count -lt 7) { continue }
+        $ball = $row.balls[6]
+        $num = ([int]$ball.numberText).ToString('00')
+        if (-not $freq.ContainsKey($num)) { $freq[$num] = @{ num = $num; color = [string]$ball.color; count = 0 } }
+        $freq[$num].count++
+        $tail = $num.Substring($num.Length - 1, 1)
+        if (-not $tailRank.ContainsKey($tail)) { $tailRank[$tail] = 0 }
+        $tailRank[$tail]++
+        $color = [string]$ball.color
+        if (-not $colorRank.ContainsKey($color)) { $colorRank[$color] = 0 }
+        $colorRank[$color]++
+    }
+    $baseSet = @{}
+    foreach ($num in @($BasePool)) { $baseSet[([int]$num).ToString('00')] = $true }
+    $scored = foreach ($n in 1..49) {
+        $num = $n.ToString('00')
+        $item = if ($freq.ContainsKey($num)) { $freq[$num] } else { @{ num = $num; color = ''; count = 0 } }
+        $tail = $num.Substring($num.Length - 1, 1)
+        $tailScore = if ($tailRank.ContainsKey($tail)) { [double]$tailRank[$tail] } else { 0 }
+        $colorKey = [string]$item.color
+        $colorScore = if ($colorRank.ContainsKey($colorKey)) { [double]$colorRank[$colorKey] } else { 0 }
+        $score = [double]$item.count * 8 + $tailScore * 3 + $colorScore * 2
+        if ($baseSet.ContainsKey($num)) { $score += 20 }
+        [pscustomobject]@{ num = $num; score = $score; tail = $tail }
+    }
+    $selected = New-Object 'System.Collections.Generic.List[string]'
+    $tailCounts = @{}
+    foreach ($item in @($scored | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { [int]$_.num }; Descending = $false })) {
+        if ($selected.Count -ge $Size) { break }
+        $currentTailCount = if ($tailCounts.ContainsKey($item.tail)) { [int]$tailCounts[$item.tail] } else { 0 }
+        if ($currentTailCount -ge 2) { continue }
+        $selected.Add($item.num) | Out-Null
+        $tailCounts[$item.tail] = $currentTailCount + 1
+    }
+    foreach ($item in @($scored | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { [int]$_.num }; Descending = $false })) {
+        if ($selected.Count -ge $Size) { break }
+        if (-not $selected.Contains($item.num)) { $selected.Add($item.num) | Out-Null }
+    }
+    return @($selected | Select-Object -First $Size)
+}
+
 function New-Window5State {
     param([object[]]$Records, [object]$Existing = $null, [string]$GeneratedAt = '')
 
@@ -1242,7 +1338,7 @@ function New-Window5State {
                         afterPool = @($pool)
                         added = @($addedPoolNumbers)
                         removed = @($removedPoolNumbers)
-                        reason = if ($oldPool.Count -eq 0) { (U @(0x9996,0x6B21,0x751F,0x6210,0x5F53,0x5E74,0x8986,0x76D6,0x6C60)) } else { (U @(0x6700,0x65B0,0x5F00,0x5956,0x540E,0x540E,0x5F53,0x5E74,0x8986,0x76D6,0x6C60,0x53D1,0x751F,0x53D8,0x5316)) }
+                        reason = if ($oldPool.Count -eq 0) { 'initial-year-pool' } else { 'year-pool-changed-after-draw' }
                     }
                     $yearPoolHistory
                 ) | Select-Object -First 30
@@ -1251,20 +1347,40 @@ function New-Window5State {
             $oldStableIssue = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePoolLastIssue) { [int]$existingItem[0].stablePoolLastIssue } else { 0 }
             $nextRecalcIssue = if ($oldStableIssue -gt 0) { $oldStableIssue + $interval } else { [Math]::Ceiling($latestIssue / $interval) * $interval }
             $shouldRecalcStable = $existingItem.Count -eq 0 -or $oldStablePool.Count -lt 15 -or $latestIssue -ge $nextRecalcIssue -or [string]$existingItem[0].year -ne $year
-            $newStablePool = @(if ($shouldRecalcStable) { @(Get-StableWindow5Pool -SourceRows $sourceRows -CurrentYear $year | Select-Object -First 15) } else { @($oldStablePool | Select-Object -First 15) })
+            $stableOptimizationStatus = 'not-triggered'
+            $stableOptimizationReason = 'stable-pool-recalc-not-triggered'
+            if ($shouldRecalcStable) {
+                $baseStablePool = @(Get-StableWindow5Pool -SourceRows $sourceRows -CurrentYear $year | Select-Object -First 15)
+                $optimizedStablePool = @(Get-OptimizedStableWindow5Pool -YearRows $yearRows -BasePool $baseStablePool -Size 15)
+                $baseScore = Get-Window5CoverageScore -Rows $yearRows -Pool $baseStablePool
+                $optimizedScore = Get-Window5CoverageScore -Rows $yearRows -Pool $optimizedStablePool
+                if ((Compare-Window5PoolScore -A $optimizedScore -B $baseScore) -gt 0) {
+                    $newStablePool = @($optimizedStablePool)
+                    $stableOptimizationStatus = 'optimized'
+                    $stableOptimizationReason = 'optimized-pool-better'
+                } else {
+                    $newStablePool = @($baseStablePool)
+                    $stableOptimizationStatus = 'original-better'
+                    $stableOptimizationReason = 'original-pool-better'
+                }
+            } else {
+                $newStablePool = @($oldStablePool | Select-Object -First 15)
+            }
             $stableChanged = ($newStablePool -join ',') -ne ($oldStablePool -join ',')
             $stableChangeTime = if ($stableChanged -or $existingItem.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$existingItem[0].stablePoolChangeTime)) { $GeneratedAt } else { [string]$existingItem[0].stablePoolChangeTime }
             [pscustomobject]@{
                 source = $source
                 year = $year
                 yearPool = $pool
-                adjustmentStatus = if ($changed) { (U @(0x6709,0x53D8,0x66F4)) } else { (U @(0x65E0,0x53D8,0x66F4)) }
-                adjustmentReason = if ($changed) { (U @(0x6700,0x65B0,0x5F00,0x5956,0x540E,0x5F53,0x5E74,0x8986,0x76D6,0x6C60,0x5DF2,0x8C03,0x6574)) } else { (U @(0x672C,0x6B21,0x91CD,0x7B97,0x4E0E,0x4E0A,0x6B21,0x4E00,0x81F4)) }
+                adjustmentStatus = if ($changed) { 'changed' } else { 'no-change' }
+                adjustmentReason = if ($changed) { 'year-pool-adjusted-after-latest-draw' } else { 'year-pool-same-as-previous' }
                 changeTime = $changeTime
                 yearPoolHistory = @($yearPoolHistory)
                 stablePool = @($newStablePool)
-                stablePoolStatus = if (-not $shouldRecalcStable) { (U @(0x672A,0x89E6,0x53D1)) } elseif ($stableChanged) { (U @(0x6709,0x53D8,0x66F4)) } else { (U @(0x65E0,0x53D8,0x66F4)) }
-                stablePoolReason = if (-not $shouldRecalcStable) { (U @(0x672A,0x5230,0x91CD,0x7B97,0x6761,0x4EF6,0xFF0C,0x6CBF,0x7528,0x4E0A,0x6B21,0x8DE8,0x5E74,0x7A33,0x5B9A,0x6C60)) } else { (U @(0x5DF2,0x6309,0x5468,0x671F,0x89C4,0x5219,0x91CD,0x7B97,0x8DE8,0x5E74,0x7A33,0x5B9A,0x6C60)) }
+                stablePoolStatus = if (-not $shouldRecalcStable) { 'not-triggered' } elseif ($stableChanged) { 'changed' } else { 'no-change' }
+                stablePoolReason = if (-not $shouldRecalcStable) { 'stable-pool-recalc-not-triggered' } else { 'stable-pool-recalculated-by-interval' }
+                stablePoolOptimizationStatus = $stableOptimizationStatus
+                stablePoolOptimizationReason = $stableOptimizationReason
                 stablePoolChangeTime = $stableChangeTime
                 stablePoolLastIssue = if ($shouldRecalcStable) { $latestIssue } else { $oldStableIssue }
                 stablePoolNextRecalcIssue = if ($shouldRecalcStable) { $latestIssue + $interval } else { $nextRecalcIssue }
@@ -1794,6 +1910,24 @@ __EMBEDDED_JSON__
     function sourceOptions(selected = 'am') {
       return `<option value="am" ${selected === 'am' ? 'selected' : ''}>&#28595;&#38376;</option><option value="hk" ${selected === 'hk' ? 'selected' : ''}>&#39321;&#28207;</option>`;
     }
+    const statusTextMap = {
+      'changed': '&#26377;&#21464;&#26356;',
+      'no-change': '&#26080;&#21464;&#26356;',
+      'not-triggered': '&#26410;&#35302;&#21457;',
+      'optimized': '&#24050;&#20248;&#21270;',
+      'original-better': '&#21407;&#27744;&#26356;&#20248;',
+      'initial-year-pool': '&#39318;&#27425;&#29983;&#25104;&#24403;&#24180;&#35206;&#30422;&#27744;',
+      'year-pool-changed-after-draw': '&#26368;&#26032;&#24320;&#22870;&#21518;&#24403;&#24180;&#35206;&#30422;&#27744;&#21457;&#29983;&#21464;&#21270;',
+      'year-pool-adjusted-after-latest-draw': '&#26368;&#26032;&#24320;&#22870;&#21518;&#24403;&#24180;&#35206;&#30422;&#27744;&#24050;&#35843;&#25972;',
+      'year-pool-same-as-previous': '&#26412;&#27425;&#37325;&#31639;&#19982;&#19978;&#27425;&#19968;&#33268;',
+      'stable-pool-recalc-not-triggered': '&#26410;&#21040;&#37325;&#31639;&#26465;&#20214;&#65292;&#27839;&#29992;&#19978;&#27425;&#36328;&#24180;&#31283;&#23450;&#27744;',
+      'stable-pool-recalculated-by-interval': '&#24050;&#25353;&#21608;&#26399;&#35268;&#21017;&#37325;&#31639;&#36328;&#24180;&#31283;&#23450;&#27744;',
+      'optimized-pool-better': '&#20248;&#21270;&#27744;&#26356;&#20248;',
+      'original-pool-better': '&#21407;&#27744;&#26356;&#20248;'
+    };
+    function statusText(value) {
+      return statusTextMap[value] || esc(value || '-');
+    }
     function renderOverview() {
       const selected = document.getElementById('overview-source')?.value || 'am';
       const selectedSummary = sourceSummary(selected);
@@ -1909,15 +2043,17 @@ __EMBEDDED_JSON__
         const misses = windows.filter(item => !item.covered);
         yearly.push({year, total: windows.length, covered: windows.length - misses.length, misses});
       });
-      const adjustmentStatus = stateItem?.adjustmentStatus || (yearPool.length > 0 ? '&#26080;&#21464;&#26356;' : '&#26080;&#25968;&#25454;');
-      const adjustmentReason = stateItem?.adjustmentReason || (yearPool.length > 0 ? '&#26412;&#27425;&#37325;&#31639;&#19982;&#19978;&#27425;&#19968;&#33268;' : '&#24403;&#24180;&#26242;&#26080;&#24320;&#22870;&#31383;&#21475;');
+      const adjustmentStatus = stateItem?.adjustmentStatus || (yearPool.length > 0 ? 'no-change' : '&#26080;&#25968;&#25454;');
+      const adjustmentReason = stateItem?.adjustmentReason || (yearPool.length > 0 ? 'year-pool-same-as-previous' : '&#24403;&#24180;&#26242;&#26080;&#24320;&#22870;&#31383;&#21475;');
       const changeTime = stateItem?.changeTime || summary.generatedAt || '';
-      const stablePoolStatus = stateItem?.stablePoolStatus || '&#26410;&#35302;&#21457;';
+      const stablePoolStatus = stateItem?.stablePoolStatus || 'not-triggered';
       const stablePoolReason = stateItem?.stablePoolReason || '';
+      const stablePoolOptimizationStatus = stateItem?.stablePoolOptimizationStatus || '';
+      const stablePoolOptimizationReason = stateItem?.stablePoolOptimizationReason || '';
       const stablePoolChangeTime = stateItem?.stablePoolChangeTime || '';
       const stablePoolNextRecalcIssue = stateItem?.stablePoolNextRecalcIssue || '';
       const yearPoolHistory = Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [];
-      return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, yearPoolHistory, stablePoolStatus, stablePoolReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
+      return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, yearPoolHistory, stablePoolStatus, stablePoolReason, stablePoolOptimizationStatus, stablePoolOptimizationReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
     }
     function regularNums(record) {
       return (record?.balls || []).slice(0, 6).map(ball => String(ball.numberText || ball.number || '').padStart(2, '0'));
@@ -2219,53 +2355,6 @@ __EMBEDDED_JSON__
       });
       return selected;
     }
-    function threeComboStructureStats(combos) {
-      const spans = new Map();
-      const parity = new Map();
-      combos.forEach(item => {
-        const nums = item.numbers.map(n => Number(n)).sort((a, b) => a - b);
-        const span = nums[2] - nums[0];
-        const spanName = span <= 12 ? '0-12' : span <= 24 ? '13-24' : '25+';
-        spans.set(spanName, (spans.get(spanName) || 0) + 1);
-        const odd = nums.filter(n => n % 2 === 1).length;
-        const key = `${odd}\u5947${3 - odd}\u5076`;
-        parity.set(key, (parity.get(key) || 0) + 1);
-      });
-      const toRows = (map) => [...map.entries()].map(([name, count]) => ({name, count})).sort((a, b) => b.count - a.count || String(a.name).localeCompare(String(b.name)));
-      return {spans: toRows(spans), parity: toRows(parity)};
-    }
-    function optimizedThreeCombos(rows, baseCombos, size) {
-      const built = buildThreeHitCombos(rows);
-      const candidates = [...baseCombos, ...built.combos];
-      const seen = new Set();
-      const ranked = candidates.filter(item => {
-        const key = comboKey(item.numbers);
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      }).map(item => ({...item, key: comboKey(item.numbers)})).sort((a, b) => (b.windowHits || 0) - (a.windowHits || 0) || (b.hits || 0) - (a.hits || 0) || a.key.localeCompare(b.key));
-      const selected = [];
-      const parityCounts = new Map();
-      const spanCounts = new Map();
-      ranked.forEach(item => {
-        if (selected.length >= size) return;
-        const nums = item.numbers.map(n => Number(n)).sort((a, b) => a - b);
-        const odd = nums.filter(n => n % 2 === 1).length;
-        const parity = `${odd}\u5947${3 - odd}\u5076`;
-        const span = nums[2] - nums[0];
-        const spanName = span <= 12 ? '0-12' : span <= 24 ? '13-24' : '25+';
-        const overlapTooHigh = selected.filter(existing => item.numbers.filter(num => existing.numbers.includes(num)).length >= 2).length >= 3;
-        if (overlapTooHigh || (parityCounts.get(parity) || 0) >= 5 || (spanCounts.get(spanName) || 0) >= 7) return;
-        selected.push(item);
-        parityCounts.set(parity, (parityCounts.get(parity) || 0) + 1);
-        spanCounts.set(spanName, (spanCounts.get(spanName) || 0) + 1);
-      });
-      ranked.forEach(item => {
-        if (selected.length >= size) return;
-        if (!selected.some(existing => existing.key === item.key)) selected.push(item);
-      });
-      return selected.slice(0, size);
-    }
     function optimizationCompareRow(name, original, optimized, baseline) {
       const originalEdge = Math.round((original.hitRate - baseline) * 100) / 100;
       const optimizedEdge = Math.round((optimized.hitRate - baseline) * 100) / 100;
@@ -2301,8 +2390,7 @@ __EMBEDDED_JSON__
     function patternScoreTable(analysis) {
       const rows = [
         patternScoreItem('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, analysis.optimized.special.stats, analysis.special.baseline, `${analysis.special.poolSize}\u7801`),
-        patternScoreItem('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, analysis.optimized.stable.stats, analysis.stable.baseline, `${analysis.stable.poolSize}\u7801`),
-        patternScoreItem('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, analysis.optimized.three.stats, analysis.three.baseline, `${analysis.three.comboSize}\u7EC4`)
+        patternScoreItem('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, analysis.optimized.stable.stats, analysis.stable.baseline, `${analysis.stable.poolSize}\u7801`)
       ];
       return `<section class="panel full"><h2>&#35268;&#24459;&#35780;&#20998;&#24635;&#34920;</h2><p class="muted">&#35780;&#20998;&#21482;&#29992;&#20110;&#35266;&#23519;&#65292;&#20197;&#23436;&#25104;&#30340;5&#26399;&#31383;&#21475;&#22238;&#27979;&#20026;&#20934;&#65292;&#19981;&#35745;&#20837;&#26410;&#32467;&#26463;&#31383;&#21475;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35268;&#27169;</th><th>&#35780;&#20998;</th><th>&#31561;&#32423;</th><th>&#21407;&#27744;&#23454;&#38469;</th><th>&#20248;&#21270;&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${item.name}</td><td>${esc(item.sizeLabel)}</td><td>${esc(item.score)}</td><td>${item.grade}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.optimizedHitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.recentHitRate)}%</td><td>${esc(item.currentMiss)} / ${esc(item.maxMiss)}</td><td>${item.action}</td></tr>`).join('')}</tbody></table></section>`;
     }
@@ -2365,7 +2453,6 @@ __EMBEDDED_JSON__
       return `<section class="panel full"><h2>&#35268;&#24459;&#35786;&#26029;</h2><p class="muted">&#29992;&#32467;&#26500;&#20581;&#24247;&#12289;&#36817;10&#31383;&#21475;&#32988;&#29575;&#21644;&#28431;&#31383;&#24674;&#22797;&#21028;&#26029;&#24403;&#21069;&#35268;&#24459;&#26159;&#21542;&#36824;&#20540;&#24471;&#36319;&#36394;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#32467;&#26500;&#20581;&#24247;</th><th>&#36817;10&#31383;&#21475;&#32988;&#29575;</th><th>&#28431;&#31383;&#24674;&#22797;</th><th>&#20248;&#21270;&#24046;&#20540;</th><th>&#35786;&#26029;&#24314;&#35758;</th></tr></thead><tbody>
         ${patternDiagnosticRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', 'special', analysis.special, analysis.specialWindows, analysis.optimized.special.windows, analysis.optimized.special.stats)}
         ${patternDiagnosticRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stable, analysis.stableWindows, analysis.optimized.stable.windows, analysis.optimized.stable.stats)}
-        ${patternDiagnosticRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.three, analysis.threeWindows, analysis.optimized.three.windows, analysis.optimized.three.stats)}
       </tbody></table></section>`;
     }
     function windowRhythmStats(windows) {
@@ -2419,7 +2506,6 @@ __EMBEDDED_JSON__
       return `<section class="panel full"><h2>&#31383;&#21475;&#33410;&#22863;&#35266;&#23519;</h2><p class="muted">&#35266;&#23519;5&#26399;&#31383;&#21475;&#20869;&#30340;&#21629;&#20013;&#20301;&#32622;&#12289;&#28431;&#31383;&#21518;&#21453;&#24377;&#21644;&#36830;&#32493;&#35206;&#30422;&#34928;&#20943;&#65292;&#29992;&#20110;&#21028;&#26029;&#24403;&#21069;&#27809;&#20013;&#26159;&#31561;&#24453;&#36824;&#26159;&#21464;&#24369;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#39318;&#23614;&#26399;&#33410;&#22863;</th><th>&#28431;&#31383;&#21518;&#21453;&#24377;</th><th>&#36830;&#32493;&#35206;&#30422;&#34928;&#20943;</th><th>&#24403;&#21069;&#38454;&#27573;</th><th>&#33410;&#22863;&#24314;&#35758;</th></tr></thead><tbody>
         ${windowRhythmRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.specialWindows)}
         ${windowRhythmRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stableWindows)}
-        ${windowRhythmRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.threeWindows)}
       </tbody></table></section>`;
     }
     function failureProfileForWindow(item, context) {
@@ -2462,8 +2548,7 @@ __EMBEDDED_JSON__
     function failureProfileTable(analysis) {
       const rows = [
         failureProfileSummary('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', 'special', analysis.specialWindows, analysis.optimized.special.windows, analysis.special),
-        failureProfileSummary('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stableWindows, analysis.optimized.stable.windows, analysis.stable),
-        failureProfileSummary('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.threeWindows, analysis.optimized.three.windows, analysis.three)
+        failureProfileSummary('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stableWindows, analysis.optimized.stable.windows, analysis.stable)
       ];
       return `<section class="panel full"><h2>&#22833;&#36133;&#30011;&#20687;&#35266;&#23519;</h2><p class="muted">&#25226;&#26368;&#36817;&#28431;&#31383;&#25353;&#22833;&#36133;&#26631;&#31614;&#24402;&#22240;&#65292;&#35266;&#23519;&#28431;&#31383;&#20027;&#35201;&#30001;&#32467;&#26500;&#12289;&#33410;&#22863;&#36824;&#26159;&#21407;&#27744;/&#20248;&#21270;&#27744;&#24046;&#24322;&#24341;&#36215;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#26368;&#36817;&#28431;&#31383; / &#22833;&#36133;&#26631;&#31614;</th><th>&#26368;&#22823;&#39118;&#38505;&#26631;&#31614;</th><th>&#28431;&#31383;&#25968;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(failureProfileRow).join('')}</tbody></table></section>`;
     }
@@ -2483,33 +2568,20 @@ __EMBEDDED_JSON__
         {name: '&#31283;&#23450;&#29420;&#26377;', pool: stableOnly, stats: poolRelationStats(fiveWindowCoverage(yearRows, stableOnly))}
       ];
     }
-    function threeResonanceRelationRows(yearRows, combos, strongPool) {
-      const strong = new Set(strongPool);
-      const high = combos.filter(item => item.numbers.filter(num => strong.has(num)).length >= 2);
-      const low = combos.filter(item => item.numbers.filter(num => strong.has(num)).length < 2);
-      return [
-        {name: '&#39640;&#20849;&#25391;', combos: high, stats: poolRelationStats(threeHitWindowCoverage(yearRows, high))},
-        {name: '&#20302;&#20849;&#25391;', combos: low, stats: poolRelationStats(threeHitWindowCoverage(yearRows, low))}
-      ];
-    }
     function relationVerdict(rows) {
       const best = rows.slice().sort((a, b) => Number(b.stats.hitRate || 0) - Number(a.stats.hitRate || 0) || Number(a.stats.currentMiss || 0) - Number(b.stats.currentMiss || 0))[0];
       if (!best || Number(best.stats.total || 0) === 0) return '&#26679;&#26412;&#19981;&#36275;';
       return `${best.name} &#21344;&#20248;`;
     }
     function poolRelationRow(group, item) {
-      const content = item.pool ? numberChips(item.pool) : comboListHtml(item.combos || []);
-      return `<tr><td>${group}</td><td>${item.name}</td><td>${content}</td><td>${esc(item.stats.label)}</td><td>${esc(item.stats.recentHitRate)}%</td><td>${esc(item.stats.missLabel)}</td></tr>`;
+      return `<tr><td>${group}</td><td>${item.name}</td><td>${numberChips(item.pool || [])}</td><td>${esc(item.stats.label)}</td><td>${esc(item.stats.recentHitRate)}%</td><td>${esc(item.stats.missLabel)}</td></tr>`;
     }
     function poolRelationTable(analysis) {
       const specialRows = specialPoolRelationRows(analysis.yearRows, analysis);
-      const resonanceRows = threeResonanceRelationRows(analysis.yearRows, analysis.threeCombos, analysis.special.yearPool || []);
       const specialVerdict = relationVerdict(specialRows);
-      const threeVerdict = relationVerdict(resonanceRows);
-      return `<section class="panel full"><h2>&#27744;&#23376;&#20851;&#31995;&#35266;&#23519;</h2><p class="muted">&#25226;&#27744;&#23376;&#25353;&#20132;&#38598;&#12289;&#29420;&#26377;&#21644;&#20849;&#25391;&#25386;&#24320;&#22238;&#27979;&#65292;&#35266;&#23519;&#24403;&#21069;&#21629;&#20013;&#26159;&#30001;&#32769;&#21495;&#31283;&#23450;&#12289;&#24403;&#24180;&#28909;&#27744;&#36824;&#26159;&#32452;&#21512;&#20849;&#25391;&#36129;&#29486;&#12290;</p><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#20851;&#31995;</th><th>&#27744;&#23376;</th><th>&#31383;&#21475;&#21629;&#20013;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th></tr></thead><tbody>
+      return `<section class="panel full"><h2>&#27744;&#23376;&#20851;&#31995;&#35266;&#23519;</h2><p class="muted">&#25226;&#29305;&#21035;&#21495;&#27744;&#23376;&#25353;&#20132;&#38598;&#21644;&#29420;&#26377;&#21495;&#25386;&#24320;&#22238;&#27979;&#65292;&#35266;&#23519;&#24403;&#21069;&#21629;&#20013;&#26159;&#30001;&#32769;&#21495;&#31283;&#23450;&#36824;&#26159;&#24403;&#24180;&#28909;&#27744;&#36129;&#29486;&#12290;</p><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#20851;&#31995;</th><th>&#27744;&#23376;</th><th>&#31383;&#21475;&#21629;&#20013;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th></tr></thead><tbody>
         ${specialRows.map(item => poolRelationRow('\u7279\u522B\u53F7', item)).join('')}
-        ${resonanceRows.map(item => poolRelationRow('\u4E09\u4E2D\u4E09', item)).join('')}
-      </tbody></table><p class="muted">&#29305;&#21035;&#21495;&#20851;&#31995;&#32467;&#35770;&#65306;${specialVerdict}&#65307;&#19977;&#20013;&#19977;&#20849;&#25391;&#32467;&#35770;&#65306;${threeVerdict}</p></section>`;
+      </tbody></table><p class="muted">&#29305;&#21035;&#21495;&#20851;&#31995;&#32467;&#35770;&#65306;${specialVerdict}</p></section>`;
     }
     function triggerDecisionItem(name, item, context) {
       const plus = [];
@@ -2545,11 +2617,9 @@ __EMBEDDED_JSON__
     }
     function triggerDecisionTable(analysis) {
       const specialRows = specialPoolRelationRows(analysis.yearRows, analysis);
-      const resonanceRows = threeResonanceRelationRows(analysis.yearRows, analysis.threeCombos, analysis.special.yearPool || []);
       const rows = [
         triggerDecisionItem('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, {rhythm: windowRhythmStats(analysis.specialWindows), failure: failureProfileSummary('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', 'special', analysis.specialWindows, analysis.optimized.special.windows, analysis.special), relationVerdict: relationVerdict(specialRows)}),
-        triggerDecisionItem('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, {rhythm: windowRhythmStats(analysis.stableWindows), failure: failureProfileSummary('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stableWindows, analysis.optimized.stable.windows, analysis.stable), relationVerdict: relationVerdict(specialRows)}),
-        triggerDecisionItem('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, {rhythm: windowRhythmStats(analysis.threeWindows), failure: failureProfileSummary('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', 'three', analysis.threeWindows, analysis.optimized.three.windows, analysis.three), relationVerdict: relationVerdict(resonanceRows)})
+        triggerDecisionItem('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, {rhythm: windowRhythmStats(analysis.stableWindows), failure: failureProfileSummary('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', 'special', analysis.stableWindows, analysis.optimized.stable.windows, analysis.stable), relationVerdict: relationVerdict(specialRows)})
       ];
       return `<section class="panel full"><h2>&#26465;&#20214;&#35302;&#21457;&#24635;&#34920;</h2><p class="muted">&#27719;&#24635;&#21629;&#20013;&#36229;&#39069;&#12289;&#36817;&#26399;&#36235;&#21183;&#12289;&#28431;&#31383;&#12289;&#33410;&#22863;&#12289;&#22833;&#36133;&#30011;&#20687;&#21644;&#27744;&#23376;&#20851;&#31995;&#65292;&#29992;&#20110;&#21028;&#26029;&#24403;&#21069;&#31383;&#21475;&#35813;&#24378;&#36319;&#36394;&#12289;&#35266;&#23519;&#36824;&#26159;&#38477;&#26435;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35302;&#21457;&#35780;&#20998;</th><th>&#24403;&#21069;&#29366;&#24577;</th><th>&#20027;&#35201;&#21152;&#20998;</th><th>&#20027;&#35201;&#25187;&#20998;</th><th>&#24314;&#35758;&#21160;&#20316;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${item.name}</td><td>${esc(item.score)}</td><td>${item.phase}</td><td>${item.plus.join('<br>') || '-'}</td><td>${item.minus.join('<br>') || '-'}</td><td>${item.action}</td></tr>`).join('')}</tbody></table></section>`;
     }
@@ -2558,34 +2628,28 @@ __EMBEDDED_JSON__
       const three = threeWindowAnalysis(source);
       const specialStats = patternStats(special.yearWindows);
       const stableStats = patternStats(special.stableWindows);
-      const threeStats = patternStats(three.yearWindows);
       const specialBaseline = randomWindowBaseline(special.yearPool.length, 49, 5);
       const stableBaseline = randomWindowBaseline(special.stablePool.length, 49, 5);
-      const threeBaseline = randomWindowBaseline(three.combos.length * 20, 18424, 5);
       const yearRows = cachedSourceRecords(source).filter(row => displayYear(row) === special.currentYear);
       const optimizedSpecial = optimizedSpecialPool(yearRows, special.yearPool, 8);
       const optimizedStable = optimizedSpecialPool(yearRows, special.stablePool, 15);
-      const optimizedThree = optimizedThreeCombos(yearRows, three.combos, 12);
       const optimizedSpecialWindows = fiveWindowCoverage(yearRows, optimizedSpecial);
       const optimizedStableWindows = fiveWindowCoverage(yearRows, optimizedStable);
-      const optimizedThreeWindows = threeHitWindowCoverage(yearRows, optimizedThree);
       const optimizedSpecialStats = patternStats(optimizedSpecialWindows);
       const optimizedStableStats = patternStats(optimizedStableWindows);
-      const optimizedThreeStats = patternStats(optimizedThreeWindows);
+      const compoundPools = (three.compoundPools || []).map(item => ({...item, baseline: randomWindowBaseline(Number(item.poolSize || 0), 49, 5)}));
       return {
         source,
         currentYear: special.currentYear,
         yearRows,
         yearPool: special.yearPool,
         stablePool: special.stablePool,
-        threeCombos: three.combos,
+        threeCompoundPools: compoundPools,
         specialWindows: special.yearWindows,
         stableWindows: special.stableWindows,
-        threeWindows: three.yearWindows,
         special: {...specialStats, baseline: specialBaseline, edge: Math.round((specialStats.hitRate - specialBaseline) * 100) / 100, level: patternLevel(specialStats.hitRate - specialBaseline, specialStats.currentMiss, specialStats.maxMiss), poolSize: special.yearPool.length, structure: specialStructureStats(yearRows)},
         stable: {...stableStats, baseline: stableBaseline, edge: Math.round((stableStats.hitRate - stableBaseline) * 100) / 100, level: patternLevel(stableStats.hitRate - stableBaseline, stableStats.currentMiss, stableStats.maxMiss), poolSize: special.stablePool.length, structure: specialStructureStats(yearRows)},
-        three: {...threeStats, baseline: threeBaseline, edge: Math.round((threeStats.hitRate - threeBaseline) * 100) / 100, level: patternLevel(threeStats.hitRate - threeBaseline, threeStats.currentMiss, threeStats.maxMiss), comboSize: three.combos.length, structure: threeComboStructureStats(three.combos)},
-        optimized: {special: {pool: optimizedSpecial, stats: optimizedSpecialStats, windows: optimizedSpecialWindows}, stable: {pool: optimizedStable, stats: optimizedStableStats, windows: optimizedStableWindows}, three: {combos: optimizedThree, stats: optimizedThreeStats, windows: optimizedThreeWindows}}
+        optimized: {special: {pool: optimizedSpecial, stats: optimizedSpecialStats, windows: optimizedSpecialWindows}, stable: {pool: optimizedStable, stats: optimizedStableStats, windows: optimizedStableWindows}}
       };
     }
     function recommendationSummary(rows) {
@@ -2771,7 +2835,7 @@ __EMBEDDED_JSON__
     function yearPoolHistoryTable(history) {
       const rows = (Array.isArray(history) ? history : []).slice(0, 10);
       if (!rows.length) return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;</p></section>`;
-      return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#35302;&#21457;&#26399;&#21495;</th><th>&#21464;&#26356;&#21069;</th><th>&#21464;&#26356;&#21518;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#21407;&#22240;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.reason || '-')}</td></tr>`).join('')}</tbody></table></section>`;
+      return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#35302;&#21457;&#26399;&#21495;</th><th>&#21464;&#26356;&#21069;</th><th>&#21464;&#26356;&#21518;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#21407;&#22240;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${statusText(item.reason)}</td></tr>`).join('')}</tbody></table></section>`;
     }
     function renderWindow5() {
       const selected = document.getElementById('window5-source')?.value || 'am';
@@ -2782,13 +2846,26 @@ __EMBEDDED_JSON__
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
-        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${analysis.adjustmentStatus}</p><p class="muted">${analysis.adjustmentReason}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
-        <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${analysis.stablePoolStatus}</p><p class="muted">${analysis.stablePoolReason}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
+        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${statusText(analysis.adjustmentStatus)}</p><p class="muted">${statusText(analysis.adjustmentReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
+        <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${statusText(analysis.stablePoolStatus)}</p><p class="muted">${statusText(analysis.stablePoolReason)}</p><p>&#20248;&#21270;&#65306;${statusText(analysis.stablePoolOptimizationStatus)}</p><p class="muted">${statusText(analysis.stablePoolOptimizationReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
         ${yearPoolHistoryTable(analysis.yearPoolHistory)}
         <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
         <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></section>
       </div>`;
       document.getElementById('window5-source').addEventListener('change', renderWindow5);
+    }
+    function threeCompoundHistoryTable(pools) {
+      const rows = [];
+      (pools || []).forEach(pool => {
+        (pool.changeHistory || []).slice(0, 8).forEach(item => {
+          rows.push({poolSize: pool.poolSize, ...item});
+        });
+      });
+      if (!rows.length) {
+        return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;&#65292;&#24403;&#21069;&#27744;&#23376;&#27839;&#29992;&#19978;&#27425;&#32467;&#26524;&#12290;</p></section>`;
+      }
+      rows.sort((a, b) => String(b.changedAt || '').localeCompare(String(a.changedAt || '')) || Number(b.poolSize || 0) - Number(a.poolSize || 0));
+      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#35760;&#24405;&#27599;&#27425;&#26356;&#20248;&#27744;&#26367;&#25442;&#26102;&#30340;&#26087;&#27744;/&#26032;&#27744;&#24046;&#24322;&#65292;&#29992;&#20110;&#35266;&#23519;&#26159;&#31283;&#23450;&#28436;&#21270;&#36824;&#26159;&#37325;&#26032;&#25311;&#21512;&#12290;</p><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#26399;&#21495;</th><th>&#35268;&#27169;</th><th>&#26087;&#27744;</th><th>&#26032;&#27744;</th><th>&#20445;&#30041;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#35206;&#30422;&#21464;&#21270;</th><th>&#21464;&#21270;&#24133;&#24230;</th></tr></thead><tbody>${rows.slice(0, 24).map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.kept || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.beforeCovered ?? '-')} / ${esc(item.afterCovered ?? '-')}<br>${esc(item.beforeHitRate ?? '-')}% -> ${esc(item.afterHitRate ?? '-')}%</td><td>${esc(item.changeLevel || '-')}<br><span class="muted">${esc(item.changeCount ?? 0)}&#20010;&#21464;&#21270;</span></td></tr>`).join('')}</tbody></table></section>`;
     }
     function renderThreeWindow5() {
       const selected = document.getElementById('three-window5-source')?.value || 'am';
@@ -2806,6 +2883,7 @@ __EMBEDDED_JSON__
         <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
         <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></section>
+        ${threeCompoundHistoryTable(analysis.compoundPools)}
         <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hit.matched.join('-'))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
       </div>`;
       document.getElementById('three-window5-source').addEventListener('change', renderThreeWindow5);
@@ -2813,11 +2891,18 @@ __EMBEDDED_JSON__
     function patternMetricRow(name, item, sizeLabel) {
       return `<tr><td>${name}</td><td>${esc(sizeLabel)}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.edge)}%</td><td>${esc(item.currentMiss)}</td><td>${esc(item.maxMiss)}</td><td>${esc(item.recentHitRate)}%</td><td>${item.level}</td></tr>`;
     }
+    function threeCompoundPatternTable(analysis) {
+      const rows = (analysis.threeCompoundPools || []).map(item => {
+        const hitRate = Number(item.hitRate || 0);
+        const baseline = Number(item.baseline || 0);
+        const edge = Math.round((hitRate - baseline) * 100) / 100;
+        const level = patternLevel(edge, Number(item.currentMiss || 0), Number(item.maxMiss || 0));
+        return `<tr><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool || [])}</td><td>${esc(item.covered || 0)} / ${esc(item.total || 0)}</td><td>${esc(hitRate)}%</td><td>${esc(baseline)}%</td><td>${esc(edge)}%</td><td>${esc(item.recentCovered ?? '-')} / ${esc(item.recentTotal ?? '-')}<br>${esc(item.recentHitRate ?? '-')}%</td><td>${esc(item.currentMiss ?? 0)} / ${esc(item.maxMiss ?? 0)}</td><td>${level}</td><td>${esc(item.healthStatus || '-')}<br><span class="muted">${esc(item.healthReason || '')}</span></td></tr>`;
+      }).join('');
+      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#34920;&#29616;</h2><p class="muted">&#19977;&#20013;&#19977;&#29616;&#22312;&#21482;&#35266;&#23519;5/6/7/8&#30721;&#22797;&#24335;&#27744;&#65292;&#20197;&#23436;&#25104;&#30340;5&#26399;&#31383;&#21475;&#26159;&#21542;&#33267;&#23569;&#19968;&#26399;&#21629;&#20013;3&#20010;&#24179;&#30721;&#20026;&#20934;&#12290;</p><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#23436;&#25972;&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36229;&#39069;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#31561;&#32423;</th><th>&#20581;&#24247;&#29366;&#24577;</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+    }
     function simpleRankList(items) {
       return `<table class="compact-table"><thead><tr><th>&#32467;&#26500;</th><th>&#27425;&#25968;</th></tr></thead><tbody>${items.map(item => `<tr><td>${esc(item.name)}</td><td>${esc(item.count)}</td></tr>`).join('')}</tbody></table>`;
-    }
-    function comboListHtml(combos) {
-      return `<div class="history-list">${combos.map(item => `<div>${numberChips(item.numbers)}</div>`).join('')}</div>`;
     }
     function renderPatternWatch() {
       const selected = document.getElementById('pattern-source')?.value || 'am';
@@ -2827,8 +2912,8 @@ __EMBEDDED_JSON__
         <section class="panel full"><h2>&#35268;&#24459;&#35266;&#23519;</h2><p class="muted">${esc(analysis.currentYear)}&#24180;&#65292;&#23545;&#27604;&#23454;&#38469;5&#26399;&#31383;&#21475;&#21629;&#20013;&#29575;&#19982;&#38543;&#26426;&#22522;&#20934;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35268;&#27169;</th><th>&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36229;&#39069;</th><th>&#24403;&#21069;&#28431;&#31383;</th><th>&#26368;&#22823;&#28431;&#31383;</th><th>&#36817;10&#31383;&#21475;</th><th>&#31561;&#32423;</th></tr></thead><tbody>
           ${patternMetricRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, `${analysis.special.poolSize}\u7801`)}
           ${patternMetricRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, `${analysis.stable.poolSize}\u7801`)}
-          ${patternMetricRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, `${analysis.three.comboSize}\u7EC4`)}
         </tbody></table></section>
+        ${threeCompoundPatternTable(analysis)}
         ${triggerDecisionTable(analysis)}
         ${patternScoreTable(analysis)}
         ${patternDiagnosticsTable(analysis)}
@@ -2838,17 +2923,13 @@ __EMBEDDED_JSON__
         <section class="panel full"><h2>&#35268;&#24459;&#20248;&#21270;&#27744;</h2><p class="muted">&#21407;&#27744;&#19981;&#21160;&#65292;&#27492;&#22788;&#20165;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#32467;&#26500;&#20248;&#21270;&#21518;&#30340;&#22238;&#27979;&#34920;&#29616;&#12290;</p><div class="grid">
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;&#20248;&#21270;</h2>${numberChips(analysis.optimized.special.pool)}<p class="muted">&#20445;&#30041;&#21407;&#27744;&#26680;&#24515;&#65292;&#25353;&#24403;&#24180;&#39057;&#27425;&#12289;&#39068;&#33394;&#12289;&#23614;&#25968;&#20998;&#25955;&#20248;&#21270;&#12290;</p></section>
           <section class="panel"><h2>&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;&#20248;&#21270;</h2>${numberChips(analysis.optimized.stable.pool)}<p class="muted">&#20445;&#30041;&#36328;&#24180;&#31283;&#23450;&#27744;&#26435;&#37325;&#65292;&#25353;&#24403;&#24180;&#32467;&#26500;&#20570;&#36731;&#37327;&#35843;&#25972;&#12290;</p></section>
-          <section class="panel wide"><h2>&#19977;&#20013;&#19977;12&#32452;&#20248;&#21270;</h2>${comboListHtml(analysis.optimized.three.combos)}<p class="muted">&#25353;&#21382;&#21490;&#31383;&#21475;&#21629;&#20013;&#12289;&#36328;&#24230;&#12289;&#22855;&#20598;&#21644;&#37325;&#22797;&#21495;&#25511;&#21046;&#20248;&#21270;&#12290;</p></section>
         </div></section>
         <section class="panel full"><h2>&#20248;&#21270;&#34920;&#29616;&#23545;&#27604;</h2><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#21407;&#22987;&#23454;&#38469;</th><th>&#20248;&#21270;&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#21407;&#22987;&#36229;&#39069;</th><th>&#20248;&#21270;&#36229;&#39069;</th><th>&#21464;&#21270;</th><th>&#32467;&#35770;</th></tr></thead><tbody>
           ${optimizationCompareRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, analysis.optimized.special.stats, analysis.special.baseline)}
           ${optimizationCompareRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, analysis.optimized.stable.stats, analysis.stable.baseline)}
-          ${optimizationCompareRow('\u4E09\u4E2D\u4E09\u7EC4\u5408\u6C60', analysis.three, analysis.optimized.three.stats, analysis.three.baseline)}
         </tbody></table></section>
         <section class="panel wide"><h2>&#29305;&#21035;&#21495;&#39068;&#33394;&#32467;&#26500;</h2>${simpleRankList(analysis.special.structure.colors)}</section>
         <section class="panel wide"><h2>&#29305;&#21035;&#21495;&#23614;&#25968;&#32467;&#26500;</h2>${simpleRankList(analysis.special.structure.tails.slice(0, 10))}</section>
-        <section class="panel wide"><h2>&#19977;&#20013;&#19977;&#36328;&#24230;&#32467;&#26500;</h2>${simpleRankList(analysis.three.structure.spans)}</section>
-        <section class="panel wide"><h2>&#19977;&#20013;&#19977;&#22855;&#20598;&#32467;&#26500;</h2>${simpleRankList(analysis.three.structure.parity)}</section>
       </div>`;
       document.getElementById('pattern-source').addEventListener('change', renderPatternWatch);
     }

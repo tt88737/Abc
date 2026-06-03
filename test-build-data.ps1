@@ -632,8 +632,11 @@ try {
     if (-not $dashboard.Contains('function optimizedSpecialPool(rows, basePool, size)')) {
         throw 'pattern watch should calculate optimized special-number pools'
     }
-    if (-not $dashboard.Contains('function optimizedThreeCombos(rows, baseCombos, size)')) {
-        throw 'pattern watch should calculate optimized three-hit combo pools'
+    if (-not $buildScript.Contains('function Get-OptimizedStableWindow5Pool') -or -not $buildScript.Contains('function Compare-Window5PoolScore')) {
+        throw 'build-data.ps1 should optimize stable five-window pools using the same server-side scoring direction'
+    }
+    if ($dashboard.Contains('&#19977;&#20013;&#19977;&#32452;&#21512;&#27744;') -or $dashboard.Contains('&#19977;&#20013;&#19977;12&#32452;&#20248;&#21270;')) {
+        throw 'pattern watch should not render obsolete three-hit combo pool sections'
     }
     if (-not $dashboard.Contains('function optimizationCompareRow(name, original, optimized, baseline)')) {
         throw 'pattern watch should compare original and optimized pool performance'
@@ -680,8 +683,8 @@ try {
     if (-not $dashboard.Contains('&#27744;&#23376;&#20851;&#31995;&#35266;&#23519;')) {
         throw 'pattern watch should render pool relation section'
     }
-    if (-not $dashboard.Contains('&#20132;&#38598;&#21306;') -or -not $dashboard.Contains('&#24403;&#24180;&#29420;&#26377;') -or -not $dashboard.Contains('&#31283;&#23450;&#29420;&#26377;') -or -not $dashboard.Contains('&#39640;&#20849;&#25391;') -or -not $dashboard.Contains('&#20302;&#20849;&#25391;')) {
-        throw 'pool relation should include intersection, unique pools, and resonance groups'
+    if (-not $dashboard.Contains('&#20132;&#38598;&#21306;') -or -not $dashboard.Contains('&#24403;&#24180;&#29420;&#26377;') -or -not $dashboard.Contains('&#31283;&#23450;&#29420;&#26377;')) {
+        throw 'pool relation should include special-number intersection and unique pools'
     }
     if (-not $dashboard.Contains('&#22833;&#36133;&#30011;&#20687;&#35266;&#23519;')) {
         throw 'pattern watch should render failure profile section'
@@ -724,6 +727,15 @@ try {
     }
     if (-not $dashboard.Contains('&#21407;&#27744;&#19981;&#21160;')) {
         throw 'pattern watch should state original pools remain unchanged'
+    }
+    if (-not $dashboard.Contains('&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#34920;&#29616;') -or -not $dashboard.Contains('&#22797;&#24335;&#27744;')) {
+        throw 'pattern watch should render three-hit compound pool performance instead of combo pools'
+    }
+    if (-not $dashboard.Contains('function threeCompoundHistoryTable(pools)') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;')) {
+        throw 'three-hit five-issue window should render compound pool change history'
+    }
+    if (-not $dashboard.Contains('&#20445;&#30041;') -or -not $dashboard.Contains('&#26032;&#22686;') -or -not $dashboard.Contains('&#31227;&#38500;') -or -not $dashboard.Contains('&#21464;&#21270;&#24133;&#24230;')) {
+        throw 'three-hit compound change history should show kept, added, removed, and change level'
     }
     if (-not $dashboard.Contains('function randomWindowBaseline(pickCount, totalCount, drawsPerWindow)')) {
         throw 'dashboard should calculate random window baselines'
@@ -820,9 +832,13 @@ try {
             }
         }
     }
+    $threeCompoundScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'build-three-compound.py'), [Text.Encoding]::UTF8)
+    if (-not $threeCompoundScript.Contains('"kept"') -or -not $threeCompoundScript.Contains('"added"') -or -not $threeCompoundScript.Contains('"removed"') -or -not $threeCompoundScript.Contains('"changeLevel"')) {
+        throw 'three-compound builder should persist kept, added, removed, and change level for pool changes'
+    }
     foreach ($item in @($windowState.items)) {
-        if ($null -eq $item.stablePool -or $null -eq $item.stablePoolStatus -or $null -eq $item.stablePoolChangeTime -or $null -eq $item.stablePoolNextRecalcIssue) {
-            throw 'window5-state item should include stable pool state fields'
+        if ($null -eq $item.stablePool -or $null -eq $item.stablePoolStatus -or $null -eq $item.stablePoolChangeTime -or $null -eq $item.stablePoolNextRecalcIssue -or $null -eq $item.stablePoolOptimizationStatus -or $null -eq $item.stablePoolOptimizationReason) {
+            throw 'window5-state item should include stable pool state and optimization fields'
         }
         if (@($item.yearPool).Count -gt 8) {
             throw 'window5 current-year pool should be capped at eight numbers'
