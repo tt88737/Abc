@@ -164,17 +164,17 @@ def pool_metrics(wins):
         else:
             run += 1
     max_miss = max(max_miss, run)
-    health_status = "正常观察"
-    health_reason = "完整窗口覆盖表现稳定"
+    health_status = "normal-observe"
+    health_reason = "compound-window-stable"
     if total >= 2 and current_miss >= 2:
-        health_status = "降权观察"
-        health_reason = "连续完整漏窗达到2个"
+        health_status = "downrank-observe"
+        health_reason = "two-completed-window-misses"
     if total >= 3 and max_miss > 0 and current_miss > max_miss:
-        health_status = "触发重算"
-        health_reason = "当前完整漏窗超过历史最大漏窗"
+        health_status = "trigger-recalc"
+        health_reason = "current-miss-exceeds-historical-max"
     if recent and recent_hit_rate + 20 < hit_rate:
-        health_status = "降权观察"
-        health_reason = "近10完整窗口覆盖率明显低于全年"
+        health_status = "downrank-observe"
+        health_reason = "recent-coverage-below-year"
     return {
         "covered": covered,
         "total": total,
@@ -214,13 +214,13 @@ def pool_diff(before_pool, after_pool):
     removed = [num for num in before if num not in after_set]
     change_count = len(added) + len(removed)
     if not before:
-        change_level = "首次生成"
+        change_level = "initial"
     elif change_count <= 2:
-        change_level = "稳定"
+        change_level = "stable"
     elif change_count <= 4:
-        change_level = "中等变化"
+        change_level = "medium-change"
     else:
-        change_level = "重构"
+        change_level = "rebuild"
     return {
         "kept": kept,
         "added": added,
@@ -265,7 +265,7 @@ def main():
                 before_hit_rate = old_pool.get("hitRate") if old_pool else None
                 diff = pool_diff(before_pool, candidate["pool"])
                 old_history = list((old_pool or {}).get("changeHistory", []))
-                candidate["status"] = "有变更" if old_pool else "首次生成"
+                candidate["status"] = "changed" if old_pool else "initial"
                 candidate["changeTime"] = generated_at
                 candidate["changeHistory"] = [{
                     "changedAt": generated_at,
@@ -277,12 +277,12 @@ def main():
                     "beforeHitRate": before_hit_rate,
                     "afterHitRate": candidate["hitRate"],
                     **diff,
-                    "reason": "发现更优完整窗口覆盖池" if old_pool else "首次生成三中三复式池",
+                    "reason": "better-completed-window-coverage-pool" if old_pool else "initial-three-compound-pool",
                 }] + old_history[:29]
                 changed = True
                 pools.append(candidate)
             else:
-                old_pool["status"] = "无变更"
+                old_pool["status"] = "no-change"
                 refreshed = coverage(year_rows, old_pool.get("pool", []))
                 old_pool.update(pool_metrics(refreshed))
                 old_pool["windows"] = refreshed
@@ -293,7 +293,7 @@ def main():
             "year": year,
             "latestIssue": int(latest.get("issue") or 0),
             "computedAt": generated_at,
-            "status": "有变更" if changed else "无变更",
+            "status": "changed" if changed else "no-change",
             "pools": pools,
         })
     state_path.write_text(json.dumps({"generatedAt": generated_at, "items": items}, ensure_ascii=False, indent=2), encoding="utf-8")

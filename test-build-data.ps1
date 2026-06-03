@@ -836,6 +836,9 @@ try {
     if (-not $threeCompoundScript.Contains('"kept"') -or -not $threeCompoundScript.Contains('"added"') -or -not $threeCompoundScript.Contains('"removed"') -or -not $threeCompoundScript.Contains('"changeLevel"')) {
         throw 'three-compound builder should persist kept, added, removed, and change level for pool changes'
     }
+    if (-not $threeCompoundScript.Contains('"normal-observe"') -or -not $threeCompoundScript.Contains('"no-change"') -or $threeCompoundScript.Contains('"正常观察"') -or $threeCompoundScript.Contains('"无变更"')) {
+        throw 'three-compound builder should store ASCII status codes instead of localized text'
+    }
     foreach ($item in @($windowState.items)) {
         if ($null -eq $item.stablePool -or $null -eq $item.stablePoolStatus -or $null -eq $item.stablePoolChangeTime -or $null -eq $item.stablePoolNextRecalcIssue -or $null -eq $item.stablePoolOptimizationStatus -or $null -eq $item.stablePoolOptimizationReason) {
             throw 'window5-state item should include stable pool state and optimization fields'

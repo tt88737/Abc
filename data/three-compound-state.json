@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-03 18:15:49",
+  "generatedAt": "2026-06-03 18:41:18",
   "items": [
     {
       "source": "am",
       "year": "2026",
       "latestIssue": 153,
-      "computedAt": "2026-06-03 18:15:49",
-      "status": "无变更",
+      "computedAt": "2026-06-03 18:41:18",
+      "status": "no-change",
       "pools": [
         {
           "poolSize": 5,
@@ -341,15 +341,15 @@
           "hitDraws": 10,
           "hitRate": 33.33,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:51:55",
           "recentCovered": 3,
           "recentTotal": 10,
           "recentHitRate": 30.0,
           "currentMiss": 3,
           "maxMiss": 6,
-          "healthStatus": "降权观察",
-          "healthReason": "连续完整漏窗达到2个",
+          "healthStatus": "downrank-observe",
+          "healthReason": "two-completed-window-misses",
           "changeHistory": []
         },
         {
@@ -726,15 +726,15 @@
           "hitDraws": 14,
           "hitRate": 46.67,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:31:31",
           "recentCovered": 5,
           "recentTotal": 10,
           "recentHitRate": 50.0,
           "currentMiss": 1,
           "maxMiss": 4,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         },
         {
@@ -1162,15 +1162,15 @@
           "hitDraws": 19,
           "hitRate": 60.0,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:31:31",
           "recentCovered": 7,
           "recentTotal": 10,
           "recentHitRate": 70.0,
           "currentMiss": 1,
           "maxMiss": 2,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         },
         {
@@ -1649,15 +1649,15 @@
           "hitDraws": 24,
           "hitRate": 73.33,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:31:31",
           "recentCovered": 7,
           "recentTotal": 10,
           "recentHitRate": 70.0,
           "currentMiss": 1,
           "maxMiss": 2,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         }
       ]
@@ -1666,8 +1666,8 @@
       "source": "hk",
       "year": "2026",
       "latestIssue": 59,
-      "computedAt": "2026-06-03 18:15:49",
-      "status": "无变更",
+      "computedAt": "2026-06-03 18:41:18",
+      "status": "no-change",
       "pools": [
         {
           "poolSize": 5,
@@ -1839,15 +1839,15 @@
           "hitDraws": 7,
           "hitRate": 54.55,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:31:31",
           "recentCovered": 6,
           "recentTotal": 10,
           "recentHitRate": 60.0,
           "currentMiss": 1,
           "maxMiss": 2,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         },
         {
@@ -2041,15 +2041,15 @@
           "hitDraws": 9,
           "hitRate": 72.73,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:31:31",
           "recentCovered": 7,
           "recentTotal": 10,
           "recentHitRate": 70.0,
           "currentMiss": 1,
           "maxMiss": 1,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         },
         {
@@ -2266,15 +2266,15 @@
           "hitDraws": 11,
           "hitRate": 90.91,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:51:55",
           "recentCovered": 9,
           "recentTotal": 10,
           "recentHitRate": 90.0,
           "currentMiss": 0,
           "maxMiss": 1,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         },
         {
@@ -2509,15 +2509,15 @@
           "hitDraws": 13,
           "hitRate": 100.0,
           "computedBy": "python-local-search",
-          "status": "无变更",
+          "status": "no-change",
           "changeTime": "2026-06-03 14:51:55",
           "recentCovered": 10,
           "recentTotal": 10,
           "recentHitRate": 100.0,
           "currentMiss": 0,
           "maxMiss": 0,
-          "healthStatus": "正常观察",
-          "healthReason": "完整窗口覆盖表现稳定",
+          "healthStatus": "normal-observe",
+          "healthReason": "compound-window-stable",
           "changeHistory": []
         }
       ]
