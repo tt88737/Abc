@@ -1,9 +1,42 @@
 param(
-    [string]$RootDir = $PSScriptRoot
+    [string]$RootDir = $PSScriptRoot,
+    [switch]$Profile
 )
 
 $ErrorActionPreference = 'Stop'
 $Utf8NoBom = [Text.UTF8Encoding]::new($false)
+$BuildProfileRows = New-Object 'System.Collections.Generic.List[object]'
+
+function Invoke-Profiled {
+    param(
+        [string]$Name,
+        [scriptblock]$Script
+    )
+
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        return & $Script
+    }
+    finally {
+        $sw.Stop()
+        if ($Profile) {
+            $BuildProfileRows.Add([pscustomobject]@{
+                stage = $Name
+                seconds = [Math]::Round($sw.Elapsed.TotalSeconds, 3)
+            }) | Out-Null
+        }
+    }
+}
+
+function Add-ProfileRow {
+    param([string]$Name, [double]$Seconds)
+    if ($Profile) {
+        $BuildProfileRows.Add([pscustomobject]@{
+            stage = $Name
+            seconds = [Math]::Round($Seconds, 3)
+        }) | Out-Null
+    }
+}
 
 function U {
     param([int[]]$Codes)
@@ -104,6 +137,57 @@ function Parse-RecordBlocks {
     }
 
     return $records
+}
+
+function Get-ParsedPageRecords {
+    param(
+        [string]$PagesDir,
+        [string]$CachePath
+    )
+
+    $cachedFiles = @{}
+    if (Test-Path -LiteralPath $CachePath) {
+        try {
+            $cache = Get-Content -LiteralPath $CachePath -Raw -Encoding UTF8 | ConvertFrom-Json
+            foreach ($item in @($cache.files)) {
+                if ($item.name) { $cachedFiles[[string]$item.name] = $item }
+            }
+        }
+        catch {
+            $cachedFiles = @{}
+        }
+    }
+
+    $allRecords = New-Object 'System.Collections.Generic.List[object]'
+    $cacheFiles = New-Object 'System.Collections.Generic.List[object]'
+    foreach ($file in (Get-ChildItem -LiteralPath $PagesDir -Filter '*.html' -File)) {
+        $length = [int64]$file.Length
+        $mtimeUtc = $file.LastWriteTimeUtc.ToString('o')
+        $cached = $cachedFiles[[string]$file.Name]
+        $records = $null
+        if ($cached -and [int64]$cached.length -eq $length -and [string]$cached.mtimeUtc -eq $mtimeUtc) {
+            $records = @($cached.records)
+        }
+        else {
+            $html = [IO.File]::ReadAllText($file.FullName, [Text.Encoding]::UTF8)
+            $source = Get-SourceKind $file.Name
+            $year = Get-YearFromFile -FileName $file.Name -Html $html
+            $records = @(Parse-RecordBlocks -Html $html -Source $source -Year $year -FileName $file.Name)
+        }
+        foreach ($record in @($records)) { $allRecords.Add($record) | Out-Null }
+        $cacheFiles.Add([pscustomobject]@{
+            name = $file.Name
+            length = $length
+            mtimeUtc = $mtimeUtc
+            records = @($records)
+        }) | Out-Null
+    }
+
+    $cacheDir = Split-Path -Parent $CachePath
+    if (-not (Test-Path -LiteralPath $cacheDir)) { New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null }
+    $cacheJson = ([pscustomobject]@{ files = $cacheFiles.ToArray() } | ConvertTo-Json -Depth 10) -join [Environment]::NewLine
+    [IO.File]::WriteAllText($CachePath, $cacheJson, $Utf8NoBom)
+    return $allRecords
 }
 
 function Get-Counts {
@@ -701,10 +785,20 @@ function New-GamePredictions {
 
     $createdAt = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $items = New-Object 'System.Collections.Generic.List[object]'
+    $sw = [Diagnostics.Stopwatch]::StartNew()
     foreach ($old in @($Existing)) {
-        $items.Add((Settle-GameItem -Item $old -Records $Records)) | Out-Null
+        $actualNumbers = @($old.actualNumbers)
+        if ($old.status -eq 'settled' -and -not [string]::IsNullOrWhiteSpace([string]$old.actualDate) -and $null -ne $old.actualIssue -and $actualNumbers.Count -gt 0) {
+            $items.Add($old) | Out-Null
+        }
+        else {
+            $items.Add((Settle-GameItem -Item $old -Records $Records)) | Out-Null
+        }
     }
+    $sw.Stop()
+    Add-ProfileRow 'game-settle-existing' $sw.Elapsed.TotalSeconds
 
+    $sw = [Diagnostics.Stopwatch]::StartNew()
     foreach ($source in @('am', 'hk')) {
         $sourceRecords = @($Records | Where-Object { $_.source -eq $source } | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true })
         if ($sourceRecords.Count -eq 0) { continue }
@@ -778,10 +872,16 @@ function New-GamePredictions {
             }
         }
     }
+    $sw.Stop()
+    Add-ProfileRow 'game-current-targets' $sw.Elapsed.TotalSeconds
 
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+    $sortedItems = @($items | Sort-Object @{ Expression = 'createdAt'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'game'; Descending = $false }, @{ Expression = 'algorithmId'; Descending = $false } | Select-Object -First 500)
+    $sw.Stop()
+    Add-ProfileRow 'game-sort-output' $sw.Elapsed.TotalSeconds
     return [pscustomobject]@{
         generatedAt = $createdAt
-        items = @($items | Sort-Object @{ Expression = 'createdAt'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'game'; Descending = $false }, @{ Expression = 'algorithmId'; Descending = $false } | Select-Object -First 500)
+        items = $sortedItems
     }
 }
 
@@ -1024,6 +1124,18 @@ function New-GeneratedPredictions {
     $createdAt = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $next = @()
     $sanzhong = @()
+    $oldNext = @($Existing | Where-Object { $_.type -eq 'next' } | ForEach-Object { $_.item })
+    $oldSanZhong = @($Existing | Where-Object { $_.type -eq 'sanzhong' } | ForEach-Object { $_.item })
+    $oldNextByTarget = @{}
+    foreach ($item in $oldNext) {
+        $key = '{0}|{1}|{2}|{3}' -f $item.source, $item.displayYear, $item.issue, $item.targetDate
+        if (-not $oldNextByTarget.ContainsKey($key)) { $oldNextByTarget[$key] = $item }
+    }
+    $oldSanZhongByTarget = @{}
+    foreach ($item in $oldSanZhong) {
+        $key = '{0}|{1}|{2}|{3}' -f $item.source, $item.displayYear, $item.issue, $item.targetDate
+        if (-not $oldSanZhongByTarget.ContainsKey($key)) { $oldSanZhongByTarget[$key] = $item }
+    }
     foreach ($source in @('am', 'hk')) {
         $latest = Get-LatestRecord -Records $Records -Source $source
         if ($null -eq $latest) { continue }
@@ -1031,36 +1143,45 @@ function New-GeneratedPredictions {
         $targetDate = Get-NextDrawDate -SourceRecords $sourceRecords -Source $source
         $issue = [int]$latest.issue + 1
         $displayYear = Get-DisplayYearForTarget -TargetDate $targetDate -Latest $latest
-        $numbers = @(Get-BestPredictionNumbers -SourceRecords $sourceRecords)
-        if ($numbers.Count -eq 7) {
-            $next += [pscustomobject]@{ id = ('{0}-{1}-{2}-next' -f $source, $displayYear, $issue); source = $source; sourceName = Get-SourceName $source; year = $latest.year; displayYear = $displayYear; issue = $issue; targetDate = $targetDate; numbers = $numbers; createdAt = $createdAt; savedBy = 'fetch' }
+        $targetKey = '{0}|{1}|{2}|{3}' -f $source, $displayYear, $issue, $targetDate
+        if ($oldNextByTarget.ContainsKey($targetKey)) {
+            $next += $oldNextByTarget[$targetKey]
         }
-        $seedIdentity = Get-TargetIdentity -Source $source -Latest $latest -Issue $issue -TargetDate $targetDate -DisplayYear $displayYear
-        $sanZhongResult = Get-SanZhongRecommendations -SourceRecords $sourceRecords -Source $source -SeedIdentity $seedIdentity
-        $combos = @($sanZhongResult.combos)
-        if ($combos.Count -gt 0) {
-            $sanzhong += [pscustomobject]@{
-                id = ('{0}-{1}-{2}-sanzhong' -f $source, $displayYear, $issue)
-                source = $source
-                sourceName = Get-SourceName $source
-                year = $latest.year
-                displayYear = $displayYear
-                issue = $issue
-                targetDate = $targetDate
-                combos = $combos
-                rows = $sanZhongResult.rows
-                portfolio = $sanZhongResult.portfolio
-                backtest = $sanZhongResult.backtest
-                verifiedCandidates = $sanZhongResult.verifiedCandidates
-                method = $sanZhongResult.method
-                createdAt = $createdAt
-                savedBy = 'fetch'
+        else {
+            $numbers = @(Get-BestPredictionNumbers -SourceRecords $sourceRecords)
+            if ($numbers.Count -eq 7) {
+                $next += [pscustomobject]@{ id = ('{0}-{1}-{2}-next' -f $source, $displayYear, $issue); source = $source; sourceName = Get-SourceName $source; year = $latest.year; displayYear = $displayYear; issue = $issue; targetDate = $targetDate; numbers = $numbers; createdAt = $createdAt; savedBy = 'fetch' }
+            }
+        }
+        if ($oldSanZhongByTarget.ContainsKey($targetKey)) {
+            $sanzhong += $oldSanZhongByTarget[$targetKey]
+        }
+        else {
+            $seedIdentity = Get-TargetIdentity -Source $source -Latest $latest -Issue $issue -TargetDate $targetDate -DisplayYear $displayYear
+            $sanZhongResult = Get-SanZhongRecommendations -SourceRecords $sourceRecords -Source $source -SeedIdentity $seedIdentity
+            $combos = @($sanZhongResult.combos)
+            if ($combos.Count -gt 0) {
+                $sanzhong += [pscustomobject]@{
+                    id = ('{0}-{1}-{2}-sanzhong' -f $source, $displayYear, $issue)
+                    source = $source
+                    sourceName = Get-SourceName $source
+                    year = $latest.year
+                    displayYear = $displayYear
+                    issue = $issue
+                    targetDate = $targetDate
+                    combos = $combos
+                    rows = $sanZhongResult.rows
+                    portfolio = $sanZhongResult.portfolio
+                    backtest = $sanZhongResult.backtest
+                    verifiedCandidates = $sanZhongResult.verifiedCandidates
+                    method = $sanZhongResult.method
+                    createdAt = $createdAt
+                    savedBy = 'fetch'
+                }
             }
         }
     }
 
-    $oldNext = @($Existing | Where-Object { $_.type -eq 'next' } | ForEach-Object { $_.item })
-    $oldSanZhong = @($Existing | Where-Object { $_.type -eq 'sanzhong' } | ForEach-Object { $_.item })
     $merge = {
         param([object[]]$OldItems, [object[]]$NewItems)
         $seen = @{}
@@ -1080,10 +1201,30 @@ function New-GeneratedPredictions {
     }
 }
 
-function New-DashboardHtml {
-    param([string]$EmbeddedJson)
+function New-DashboardSummary {
+    param(
+        [object]$Summary,
+        [object[]]$Records,
+        [object]$Predictions
+    )
 
-    $safeJson = $EmbeddedJson -replace '</script', '<\/script'
+    $recentRecords = @(
+        foreach ($source in @('am', 'hk')) {
+            [pscustomobject]@{
+                source = $source
+                records = @($Records | Where-Object { $_.source -eq $source } | Select-Object -First 20)
+            }
+        }
+    )
+
+    return [pscustomobject]@{
+        summary = $Summary
+        recentRecords = $recentRecords
+        predictions = $Predictions
+    }
+}
+
+function New-DashboardHtml {
     $html = @'
 <!doctype html>
 <html lang="zh-CN">
@@ -1170,13 +1311,11 @@ function New-DashboardHtml {
     </nav>
     <section id="app"></section>
   </main>
-  <script id="embedded-records" type="application/json">
-__EMBEDDED_JSON__
-  </script>
   <script>
     const app = document.getElementById('app');
     const tabs = document.querySelectorAll('.tabs button');
     let records = [];
+    let recentRecords = [];
     let summary = null;
     let generatedPredictions = {next: [], sanzhong: []};
     let gamePredictions = {items: []};
@@ -1198,7 +1337,10 @@ __EMBEDDED_JSON__
     }
     function uniq(values) { return [...new Set(values.filter(v => v !== null && v !== undefined && v !== ''))].sort(); }
     function flattenBalls(list) { return list.flatMap((record, order) => record.balls.map(ball => ({...ball, record, order}))); }
-    function sourceRecords(source) { return records.filter(r => r.source === source); }
+    function sourceRecords(source) {
+      const sourceRows = records.length ? records : recentRecords;
+      return sourceRows.filter(r => r.source === source);
+    }
     function sourceSummary(source) { return summary.bySource?.[source] || {}; }
     function displayYear(record) {
       const dateText = String(record?.date || '');
@@ -2360,6 +2502,32 @@ __EMBEDDED_JSON__
       document.getElementById('manual-fetch-source').addEventListener('change', renderManualFetch);
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
+    const fullDataTabs = new Set(['games', 'window5', 'threeWindow5', 'patternWatch', 'daily']);
+    let fullDataPromise = null;
+    async function ensureFullData() {
+      if (records.length && window5State?.items && threeCompoundState?.items) return;
+      if (!fullDataPromise) {
+        fullDataPromise = Promise.all([
+          fetch('data/records.json', {cache: 'no-store'}),
+          fetch('data/game-predictions.json', {cache: 'no-store'}),
+          fetch('data/window5-state.json', {cache: 'no-store'}),
+          fetch('data/three-compound-state.json', {cache: 'no-store'})
+        ]).then(async ([recordsResponse, gamesResponse, window5Response, threeResponse]) => {
+          if (!recordsResponse.ok) throw new Error(`records HTTP ${recordsResponse.status}`);
+          if (!gamesResponse.ok) throw new Error(`games HTTP ${gamesResponse.status}`);
+          if (!window5Response.ok) throw new Error(`window5 HTTP ${window5Response.status}`);
+          if (!threeResponse.ok) throw new Error(`three-compound HTTP ${threeResponse.status}`);
+          const data = await recordsResponse.json();
+          records = data.records || [];
+          summary = data.summary || summary || {};
+          generatedPredictions = data.predictions || generatedPredictions;
+          gamePredictions = await gamesResponse.json();
+          window5State = await window5Response.json();
+          threeCompoundState = await threeResponse.json();
+        });
+      }
+      return fullDataPromise;
+    }
     const renderers = {
       overview: renderOverview,
       games: renderGames,
@@ -2376,8 +2544,9 @@ __EMBEDDED_JSON__
     function switchTab(tab) {
       tabs.forEach(item => item.classList.toggle('active', item.dataset.tab === tab));
       showLoading(tab);
-      setTimeout(() => {
+      setTimeout(async () => {
         try {
+          if (fullDataTabs.has(tab)) await ensureFullData();
           (renderers[tab] || renderOverview)();
         } catch (err) {
           app.innerHTML = `<section class="panel"><h2>&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
@@ -2385,23 +2554,25 @@ __EMBEDDED_JSON__
       }, 20);
     }
     tabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
-    try {
-      const data = JSON.parse(document.getElementById('embedded-records').textContent);
-      records = data.records || [];
+    async function loadDashboardData() {
+      app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;</h2><p class="muted">&#27491;&#22312;&#21152;&#36733;&#26368;&#26032;&#25968;&#25454;...</p></section>`;
+      const response = await fetch('data/dashboard-summary.json', {cache: 'no-store'});
+      if (!response.ok) throw new Error(`dashboard-summary HTTP ${response.status}`);
+      return await response.json();
+    }
+    loadDashboardData().then(data => {
+      recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
-      gamePredictions = data.games || {items: []};
-      window5State = data.window5 || {items: []};
-      threeCompoundState = data.threeCompound || {items: []};
       renderOverview();
-    } catch (err) {
+    }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
-    }
+    });
   </script>
 </body>
 </html>
 '@
-    return $html.Replace('__EMBEDDED_JSON__', $safeJson)
+    return $html
 }
 
 function New-ReportHtml {
@@ -2455,24 +2626,22 @@ function New-ReportHtml {
 
 $pagesDir = Join-Path $RootDir 'pages'
 if (-not (Test-Path -LiteralPath $pagesDir)) { throw "Pages directory not found: $pagesDir" }
-
-$records = New-Object 'System.Collections.Generic.List[object]'
-foreach ($file in (Get-ChildItem -LiteralPath $pagesDir -Filter '*.html' -File)) {
-    $html = [IO.File]::ReadAllText($file.FullName, [Text.Encoding]::UTF8)
-    $source = Get-SourceKind $file.Name
-    $year = Get-YearFromFile -FileName $file.Name -Html $html
-    foreach ($record in (Parse-RecordBlocks -Html $html -Source $source -Year $year -FileName $file.Name)) {
-        $records.Add($record) | Out-Null
-    }
-}
-
-$unique = @{}
-foreach ($record in $records) { $unique[$record.id] = $record }
-$deduped = @($unique.Values | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'issue'; Descending = $true })
-$summary = Get-Summary $deduped
-
 $dataDir = Join-Path $RootDir 'data'
 if (-not (Test-Path -LiteralPath $dataDir)) { New-Item -ItemType Directory -Path $dataDir -Force | Out-Null }
+$pageParseCachePath = Join-Path $dataDir 'page-parse-cache.json'
+
+$records = Invoke-Profiled 'parse-pages' {
+    return Get-ParsedPageRecords -PagesDir $pagesDir -CachePath $pageParseCachePath
+}
+
+$deduped = Invoke-Profiled 'dedupe-sort-summary' {
+    $unique = @{}
+    foreach ($record in $records) { $unique[$record.id] = $record }
+    $rows = @($unique.Values | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'issue'; Descending = $true })
+    $script:summary = Get-Summary $rows
+    return $rows
+}
+
 $predictionsPath = Join-Path $dataDir 'predictions.json'
 $existingPredictionPairs = @()
 if (Test-Path -LiteralPath $predictionsPath) {
@@ -2485,8 +2654,12 @@ if (Test-Path -LiteralPath $predictionsPath) {
         $existingPredictionPairs = @()
     }
 }
-$predictions = New-GeneratedPredictions -Records $deduped -Existing $existingPredictionPairs
-[IO.File]::WriteAllText($predictionsPath, ($predictions | ConvertTo-Json -Depth 10), $Utf8NoBom)
+$predictions = Invoke-Profiled 'generated-predictions' {
+    return New-GeneratedPredictions -Records $deduped -Existing $existingPredictionPairs
+}
+Invoke-Profiled 'write-predictions-json' {
+    [IO.File]::WriteAllText($predictionsPath, ($predictions | ConvertTo-Json -Depth 10), $Utf8NoBom)
+} | Out-Null
 $gamePredictionsPath = Join-Path $dataDir 'game-predictions.json'
 $existingGameItems = @()
 if (Test-Path -LiteralPath $gamePredictionsPath) {
@@ -2498,36 +2671,60 @@ if (Test-Path -LiteralPath $gamePredictionsPath) {
         $existingGameItems = @()
     }
 }
-$gamePredictions = New-GamePredictions -Records $deduped -Existing $existingGameItems
-[IO.File]::WriteAllText($gamePredictionsPath, ($gamePredictions | ConvertTo-Json -Depth 10), $Utf8NoBom)
+$gamePredictions = Invoke-Profiled 'game-predictions' {
+    return New-GamePredictions -Records $deduped -Existing $existingGameItems
+}
+Invoke-Profiled 'write-game-predictions-json' {
+    [IO.File]::WriteAllText($gamePredictionsPath, ($gamePredictions | ConvertTo-Json -Depth 10), $Utf8NoBom)
+} | Out-Null
+$dashboardSummaryPath = Join-Path $dataDir 'dashboard-summary.json'
+$dashboardSummary = Invoke-Profiled 'dashboard-summary' {
+    return New-DashboardSummary -Summary $summary -Records $deduped -Predictions $predictions
+}
+Invoke-Profiled 'write-dashboard-summary-json' {
+    [IO.File]::WriteAllText($dashboardSummaryPath, ($dashboardSummary | ConvertTo-Json -Depth 10), $Utf8NoBom)
+} | Out-Null
 $window5Path = Join-Path $dataDir 'window5-state.json'
 $existingWindow5 = $null
 if (Test-Path -LiteralPath $window5Path) {
     try { $existingWindow5 = Get-Content -LiteralPath $window5Path -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $existingWindow5 = $null }
 }
-$window5 = New-Window5State -Records $deduped -Existing $existingWindow5 -GeneratedAt $summary.generatedAt
-[IO.File]::WriteAllText($window5Path, ($window5 | ConvertTo-Json -Depth 8), $Utf8NoBom)
+$window5 = Invoke-Profiled 'window5-state' {
+    return New-Window5State -Records $deduped -Existing $existingWindow5 -GeneratedAt $summary.generatedAt
+}
+Invoke-Profiled 'write-window5-json' {
+    [IO.File]::WriteAllText($window5Path, ($window5 | ConvertTo-Json -Depth 8), $Utf8NoBom)
+} | Out-Null
 $threeCompoundPath = Join-Path $dataDir 'three-compound-state.json'
 $payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; window5 = $window5; threeCompound = @{ items = @() } }
 $jsonPath = Join-Path $dataDir 'records.json'
-$json = $payload | ConvertTo-Json -Depth 10
-[IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)
+$json = Invoke-Profiled 'records-json-serialize' {
+    return $payload | ConvertTo-Json -Depth 10
+}
+Invoke-Profiled 'write-records-json' {
+    [IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)
+} | Out-Null
 $threeCompoundScript = Join-Path $PSScriptRoot 'build-three-compound.py'
 if (Test-Path -LiteralPath $threeCompoundScript) {
-    & python $threeCompoundScript $RootDir $summary.generatedAt | Out-Null
+    Invoke-Profiled 'three-compound-python' {
+        & python $threeCompoundScript $RootDir $summary.generatedAt | Out-Null
+    } | Out-Null
 }
-$threeCompound = [pscustomobject]@{ items = @() }
-if (Test-Path -LiteralPath $threeCompoundPath) {
-    try { $threeCompound = Get-Content -LiteralPath $threeCompoundPath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $threeCompound = [pscustomobject]@{ items = @() } }
-}
-$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; window5 = $window5; threeCompound = $threeCompound }
-$json = $payload | ConvertTo-Json -Depth 12
-[IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)
 $dashboardPath = Join-Path $RootDir 'index.html'
-[IO.File]::WriteAllText($dashboardPath, (New-DashboardHtml -EmbeddedJson $json), $Utf8NoBom)
+Invoke-Profiled 'write-dashboard-html' {
+    [IO.File]::WriteAllText($dashboardPath, (New-DashboardHtml), $Utf8NoBom)
+} | Out-Null
 $reportPath = Join-Path $RootDir 'report.html'
-[IO.File]::WriteAllText($reportPath, (New-ReportHtml -Summary $summary), $Utf8NoBom)
+Invoke-Profiled 'write-report-html' {
+    [IO.File]::WriteAllText($reportPath, (New-ReportHtml -Summary $summary), $Utf8NoBom)
+} | Out-Null
 Write-Host "Records: $($deduped.Count)"
 Write-Host "Saved: $jsonPath"
 Write-Host "Saved: $dashboardPath"
 Write-Host "Saved: $reportPath"
+if ($Profile) {
+    Write-Host 'Profile:'
+    $BuildProfileRows | Sort-Object seconds -Descending | ForEach-Object {
+        Write-Host ('  {0}: {1}s' -f $_.stage, $_.seconds)
+    }
+}

@@ -331,6 +331,25 @@ def cross_year_pool(source_rows, year_rows, size, year_pool=None):
     }
 
 
+def has_complete_pools(item):
+    pools = item.get("pools") or []
+    cross_year_pools = item.get("crossYearPools") or []
+    pool_sizes = sorted(int(pool.get("poolSize") or 0) for pool in pools)
+    cross_year_sizes = sorted(int(pool.get("poolSize") or 0) for pool in cross_year_pools)
+    return pool_sizes == [5, 6, 7, 8] and cross_year_sizes == [5, 6, 7, 8]
+
+
+def cached_item(old_item, generated_at):
+    item = json.loads(json.dumps(old_item))
+    item["computedAt"] = generated_at
+    item["status"] = "cached"
+    for pool in item.get("pools") or []:
+        pool["status"] = "cached"
+    for pool in item.get("crossYearPools") or []:
+        pool["status"] = "cached"
+    return item
+
+
 def main():
     root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
     records_path = root / "data" / "records.json"
@@ -354,6 +373,14 @@ def main():
         year = display_year(latest)
         year_rows = sorted([row for row in source_rows if display_year(row) == year], key=lambda row: int(row.get("issue") or 0))
         old_item = previous.get((source, year), {})
+        latest_issue = int(latest.get("issue") or 0)
+        if (
+            old_item
+            and int(old_item.get("latestIssue") or 0) == latest_issue
+            and has_complete_pools(old_item)
+        ):
+            items.append(cached_item(old_item, generated_at))
+            continue
         old_pools = {int(item.get("poolSize")): item for item in old_item.get("pools", []) if item.get("poolSize")}
         old_cross_year_pools = {int(item.get("poolSize")): item for item in old_item.get("crossYearPools", []) if item.get("poolSize")}
         pools = []
@@ -471,7 +498,7 @@ def main():
         items.append({
             "source": source,
             "year": year,
-            "latestIssue": int(latest.get("issue") or 0),
+            "latestIssue": latest_issue,
             "computedAt": generated_at,
             "status": "changed" if changed or cross_year_changed else "no-change",
             "pools": pools,
