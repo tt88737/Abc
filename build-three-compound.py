@@ -24,13 +24,43 @@ def windows(rows):
     if not rows:
         return []
     max_issue = max(int(row.get("issue") or 0) for row in rows)
+    sorted_rows = sorted(rows, key=lambda row: int(row.get("issue") or 0))
     out = []
     for start in range(1, max_issue + 1, 5):
         end = start + 4
-        chunk = [row for row in rows if start <= int(row.get("issue") or 0) <= end]
+        chunk = [row for row in sorted_rows if start <= int(row.get("issue") or 0) <= end]
         if chunk:
             out.append({"start": start, "end": end, "count": len(chunk), "rows": chunk})
     return out
+
+
+def num_mask(nums):
+    mask = 0
+    for num in nums:
+        value = int(num)
+        if 1 <= value <= 49:
+            mask |= 1 << (value - 1)
+    return mask
+
+
+def pool_mask(pool):
+    return num_mask(pool)
+
+
+def window_specs(rows):
+    specs = []
+    for item in windows(rows):
+        row_items = []
+        for row in item["rows"]:
+            nums = regular_nums(row)
+            row_items.append({"row": row, "nums": nums, "mask": num_mask(nums)})
+        specs.append({
+            "start": item["start"],
+            "end": item["end"],
+            "count": item["count"],
+            "rows": row_items,
+        })
+    return specs
 
 
 def draw_hit(row, pool):
@@ -38,14 +68,20 @@ def draw_hit(row, pool):
 
 
 def coverage(rows, pool):
+    return coverage_from_specs(window_specs(rows), pool)
+
+
+def coverage_from_specs(specs, pool):
     result = []
-    pool_set = set(pool)
-    for item in windows(rows):
+    mask = pool_mask(pool)
+    for item in specs:
         hits = []
         for row in item["rows"]:
-            matched = sorted(set(regular_nums(row)) & pool_set, key=int)
+            if (row["mask"] & mask).bit_count() < 3:
+                continue
+            matched = sorted([num for num in row["nums"] if mask & (1 << (int(num) - 1))], key=int)
             if len(matched) >= 3:
-                hits.append({"issue": int(row.get("issue") or 0), "date": row.get("date"), "matched": matched})
+                hits.append({"issue": int(row["row"].get("issue") or 0), "date": row["row"].get("date"), "matched": matched})
         result.append({
             "start": item["start"],
             "end": item["end"],
@@ -57,11 +93,27 @@ def coverage(rows, pool):
 
 
 def score_pool(rows, pool):
-    wins = coverage(rows, pool)
-    completed = [item for item in wins if item["count"] >= 5]
-    covered = sum(1 for item in completed if item["covered"])
-    hit_draws = sum(len(item["hits"]) for item in completed)
-    recent = sum(idx for idx, item in enumerate(completed[-10:], 1) if item["covered"])
+    return score_pool_from_specs(window_specs(rows), pool)
+
+
+def score_pool_from_specs(specs, pool):
+    mask = pool_mask(pool)
+    completed = [item for item in specs if item["count"] >= 5]
+    covered = 0
+    hit_draws = 0
+    recent_flags = []
+    for item in completed:
+        item_hit_draws = 0
+        for row in item["rows"]:
+            if (row["mask"] & mask).bit_count() >= 3:
+                item_hit_draws += 1
+        if item_hit_draws:
+            covered += 1
+            recent_flags.append(True)
+        else:
+            recent_flags.append(False)
+        hit_draws += item_hit_draws
+    recent = sum(idx for idx, covered_item in enumerate(recent_flags[-10:], 1) if covered_item)
     return covered, hit_draws, recent, -sum(int(num) for num in pool)
 
 
@@ -73,7 +125,8 @@ def frequency_order(rows):
     return sorted(NUMS_ALL, key=lambda num: (-counts[num], int(num)))
 
 
-def greedy_seed(rows, size, order):
+def greedy_seed(rows, size, order, specs=None):
+    specs = specs or window_specs(rows)
     selected = []
     while len(selected) < size:
         best_num = None
@@ -82,7 +135,7 @@ def greedy_seed(rows, size, order):
             if num in selected:
                 continue
             candidate = sorted(selected + [num], key=int)
-            score = score_pool(rows, candidate)
+            score = score_pool_from_specs(specs, candidate)
             if best_score is None or score > best_score:
                 best_score = score
                 best_num = num
@@ -90,9 +143,10 @@ def greedy_seed(rows, size, order):
     return selected
 
 
-def improve(rows, start_pool):
+def improve(rows, start_pool, specs=None):
+    specs = specs or window_specs(rows)
     selected = sorted(start_pool, key=int)
-    best_score = score_pool(rows, selected)
+    best_score = score_pool_from_specs(specs, selected)
     improved = True
     rounds = 0
     while improved and rounds < 80:
@@ -102,7 +156,7 @@ def improve(rows, start_pool):
             outside = [num for num in NUMS_ALL if num not in selected]
             for in_num in outside:
                 candidate = sorted([num for num in selected if num != out_num] + [in_num], key=int)
-                score = score_pool(rows, candidate)
+                score = score_pool_from_specs(specs, candidate)
                 if score > best_score:
                     selected = candidate
                     best_score = score
@@ -114,10 +168,11 @@ def improve(rows, start_pool):
 
 
 def best_pool(rows, size):
+    specs = window_specs(rows)
     freq = frequency_order(rows)
     seeds = [
-        greedy_seed(rows, size, NUMS_ALL),
-        greedy_seed(rows, size, freq),
+        greedy_seed(rows, size, NUMS_ALL, specs),
+        greedy_seed(rows, size, freq, specs),
         sorted(freq[:size], key=int),
     ]
     rng = random.Random(20260602 + size + len(rows))
@@ -126,11 +181,11 @@ def best_pool(rows, size):
     best = None
     best_score = None
     for seed_pool in seeds:
-        pool, score = improve(rows, seed_pool)
+        pool, score = improve(rows, seed_pool, specs)
         if best_score is None or score > best_score:
             best = pool
             best_score = score
-    wins = coverage(rows, best)
+    wins = coverage_from_specs(specs, best)
     metrics = pool_metrics(wins)
     return {
         "poolSize": size,
@@ -230,6 +285,52 @@ def pool_diff(before_pool, after_pool):
     }
 
 
+def cross_year_pool(source_rows, year_rows, size, year_pool=None):
+    candidate = best_pool(source_rows, size)
+    pool = candidate.get("pool", [])
+    history_windows = candidate.get("windows", [])
+    history_metrics = pool_metrics(history_windows)
+    year_windows = coverage(year_rows, pool)
+    year_metrics = pool_metrics(year_windows)
+    year_pool = sorted([str(num).zfill(2) for num in (year_pool or [])], key=int)
+    pool_set = set(pool)
+    year_pool_set = set(year_pool)
+    intersection = [num for num in pool if num in year_pool_set]
+    cross_year_only = [num for num in pool if num not in year_pool_set]
+    year_only = [num for num in year_pool if num not in pool_set]
+    return {
+        "poolSize": size,
+        "scope": "all-history",
+        "pool": pool,
+        "windows": year_windows,
+        **year_metrics,
+        "yearWindows": year_windows,
+        "yearCovered": year_metrics["covered"],
+        "yearTotal": year_metrics["total"],
+        "yearHitRate": year_metrics["hitRate"],
+        "yearRecentCovered": year_metrics["recentCovered"],
+        "yearRecentTotal": year_metrics["recentTotal"],
+        "yearRecentHitRate": year_metrics["recentHitRate"],
+        "yearCurrentMiss": year_metrics["currentMiss"],
+        "yearMaxMiss": year_metrics["maxMiss"],
+        "historyWindows": history_windows,
+        "historyCovered": history_metrics["covered"],
+        "historyTotal": history_metrics["total"],
+        "historyHitRate": history_metrics["hitRate"],
+        "historyRecentCovered": history_metrics["recentCovered"],
+        "historyRecentTotal": history_metrics["recentTotal"],
+        "historyRecentHitRate": history_metrics["recentHitRate"],
+        "historyCurrentMiss": history_metrics["currentMiss"],
+        "historyMaxMiss": history_metrics["maxMiss"],
+        "historyHitDraws": history_metrics["hitDraws"],
+        "intersection": intersection,
+        "intersectionCount": len(intersection),
+        "crossYearOnly": cross_year_only,
+        "yearOnly": year_only,
+        "computedBy": candidate.get("computedBy", "python-local-search"),
+    }
+
+
 def main():
     root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
     records_path = root / "data" / "records.json"
@@ -254,8 +355,11 @@ def main():
         year_rows = sorted([row for row in source_rows if display_year(row) == year], key=lambda row: int(row.get("issue") or 0))
         old_item = previous.get((source, year), {})
         old_pools = {int(item.get("poolSize")): item for item in old_item.get("pools", []) if item.get("poolSize")}
+        old_cross_year_pools = {int(item.get("poolSize")): item for item in old_item.get("crossYearPools", []) if item.get("poolSize")}
         pools = []
+        cross_year_pools = []
         changed = False
+        cross_year_changed = False
         for size in (5, 6, 7, 8):
             candidate = best_pool(year_rows, size)
             old_pool = old_pools.get(size)
@@ -288,13 +392,90 @@ def main():
                 old_pool["windows"] = refreshed
                 old_pool["changeHistory"] = list(old_pool.get("changeHistory", []))
                 pools.append(old_pool)
+        year_pools_by_size = {int(item.get("poolSize")): item for item in pools if item.get("poolSize")}
+        for size in (5, 6, 7, 8):
+            year_pool = (year_pools_by_size.get(size) or {}).get("pool", [])
+            candidate = cross_year_pool(source_rows, year_rows, size, year_pool)
+            old_pool = old_cross_year_pools.get(size)
+            if item_better(
+                {
+                    "covered": candidate["historyCovered"],
+                    "hitDraws": candidate["historyHitDraws"],
+                    "hitRate": candidate["historyHitRate"],
+                },
+                {
+                    "covered": old_pool.get("historyCovered") if old_pool else None,
+                    "hitDraws": old_pool.get("historyHitDraws") if old_pool else None,
+                    "hitRate": old_pool.get("historyHitRate") if old_pool else None,
+                } if old_pool else None,
+            ):
+                before_pool = old_pool.get("pool", []) if old_pool else []
+                before_covered = old_pool.get("historyCovered") if old_pool else None
+                before_hit_rate = old_pool.get("historyHitRate") if old_pool else None
+                diff = pool_diff(before_pool, candidate["pool"])
+                old_history = list((old_pool or {}).get("changeHistory", []))
+                candidate["status"] = "changed" if old_pool else "initial"
+                candidate["changeTime"] = generated_at
+                candidate["changeHistory"] = [{
+                    "changedAt": generated_at,
+                    "issue": int(latest.get("issue") or 0),
+                    "beforePool": before_pool,
+                    "afterPool": candidate["pool"],
+                    "beforeCovered": before_covered,
+                    "afterCovered": candidate["historyCovered"],
+                    "beforeHitRate": before_hit_rate,
+                    "afterHitRate": candidate["historyHitRate"],
+                    **diff,
+                    "reason": "better-all-history-compound-pool" if old_pool else "initial-cross-year-compound-pool",
+                }] + old_history[:29]
+                cross_year_changed = True
+                cross_year_pools.append(candidate)
+            else:
+                old_pool["status"] = "no-change"
+                old_pool["scope"] = "all-history"
+                pool = old_pool.get("pool", [])
+                history_windows = coverage(source_rows, pool)
+                history_metrics = pool_metrics(history_windows)
+                year_windows = coverage(year_rows, pool)
+                year_metrics = pool_metrics(year_windows)
+                old_pool.update(year_metrics)
+                old_pool["windows"] = year_windows
+                old_pool["yearWindows"] = year_windows
+                old_pool["yearCovered"] = year_metrics["covered"]
+                old_pool["yearTotal"] = year_metrics["total"]
+                old_pool["yearHitRate"] = year_metrics["hitRate"]
+                old_pool["yearRecentCovered"] = year_metrics["recentCovered"]
+                old_pool["yearRecentTotal"] = year_metrics["recentTotal"]
+                old_pool["yearRecentHitRate"] = year_metrics["recentHitRate"]
+                old_pool["yearCurrentMiss"] = year_metrics["currentMiss"]
+                old_pool["yearMaxMiss"] = year_metrics["maxMiss"]
+                old_pool["historyWindows"] = history_windows
+                old_pool["historyCovered"] = history_metrics["covered"]
+                old_pool["historyTotal"] = history_metrics["total"]
+                old_pool["historyHitRate"] = history_metrics["hitRate"]
+                old_pool["historyRecentCovered"] = history_metrics["recentCovered"]
+                old_pool["historyRecentTotal"] = history_metrics["recentTotal"]
+                old_pool["historyRecentHitRate"] = history_metrics["recentHitRate"]
+                old_pool["historyCurrentMiss"] = history_metrics["currentMiss"]
+                old_pool["historyMaxMiss"] = history_metrics["maxMiss"]
+                old_pool["historyHitDraws"] = history_metrics["hitDraws"]
+                year_pool = sorted([str(num).zfill(2) for num in year_pool], key=int)
+                pool_set = set(pool)
+                year_pool_set = set(year_pool)
+                old_pool["intersection"] = [num for num in pool if num in year_pool_set]
+                old_pool["intersectionCount"] = len(old_pool["intersection"])
+                old_pool["crossYearOnly"] = [num for num in pool if num not in year_pool_set]
+                old_pool["yearOnly"] = [num for num in year_pool if num not in pool_set]
+                old_pool["changeHistory"] = list(old_pool.get("changeHistory", []))
+                cross_year_pools.append(old_pool)
         items.append({
             "source": source,
             "year": year,
             "latestIssue": int(latest.get("issue") or 0),
             "computedAt": generated_at,
-            "status": "changed" if changed else "no-change",
+            "status": "changed" if changed or cross_year_changed else "no-change",
             "pools": pools,
+            "crossYearPools": cross_year_pools,
         })
     state_path.write_text(json.dumps({"generatedAt": generated_at, "items": items}, ensure_ascii=False, indent=2), encoding="utf-8")
 

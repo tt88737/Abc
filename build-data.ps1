@@ -1240,6 +1240,8 @@ __EMBEDDED_JSON__
       ,'rebuild': '&#37325;&#26500;'
       ,'better-completed-window-coverage-pool': '&#21457;&#29616;&#26356;&#20248;&#23436;&#25972;&#31383;&#21475;&#35206;&#30422;&#27744;'
       ,'initial-three-compound-pool': '&#39318;&#27425;&#29983;&#25104;&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;'
+      ,'better-all-history-compound-pool': '&#21457;&#29616;&#26356;&#20248;&#20840;&#37096;&#21382;&#21490;&#36328;&#24180;&#22797;&#24335;&#27744;'
+      ,'initial-cross-year-compound-pool': '&#39318;&#27425;&#29983;&#25104;&#36328;&#24180;&#22797;&#24335;&#27744;'
     };
     function statusText(value) {
       return statusTextMap[value] || esc(value || '-');
@@ -1565,6 +1567,22 @@ __EMBEDDED_JSON__
       const yearRows = sourceRows.filter(row => displayYear(row) === currentYear).sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
       const stateItem = (threeCompoundState.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
       const compoundPools = Array.isArray(stateItem?.pools) && stateItem.pools.length ? stateItem.pools : buildThreeHitCompoundPools(yearRows.length ? yearRows : sourceRows);
+      const savedCrossYearPools = Array.isArray(stateItem?.crossYearPools) && stateItem.crossYearPools.length ? stateItem.crossYearPools : [];
+      const crossYearPools = savedCrossYearPools.length ? savedCrossYearPools : buildThreeHitCompoundPools(sourceRows).map(item => {
+        const yearStats = threeHitPoolStats(yearRows, item.pool || []);
+        return {...item, scope: 'all-history', windows: yearStats.windows, covered: yearStats.covered, total: yearStats.completed.length, hitRate: yearStats.hitRate, hitDraws: yearStats.hitDraws, yearWindows: yearStats.windows, yearCovered: yearStats.covered, yearTotal: yearStats.completed.length, yearHitRate: yearStats.hitRate, historyWindows: item.windows, historyCovered: item.covered, historyTotal: item.total, historyHitRate: item.hitRate};
+      });
+      const yearPoolsBySize = new Map(compoundPools.map(item => [Number(item.poolSize || 0), item]));
+      crossYearPools.forEach(item => {
+        const yearPool = yearPoolsBySize.get(Number(item.poolSize || 0))?.pool || [];
+        const crossPool = item.pool || [];
+        const yearSet = new Set(yearPool);
+        const crossSet = new Set(crossPool);
+        if (!Array.isArray(item.intersection)) item.intersection = crossPool.filter(num => yearSet.has(num));
+        item.intersectionCount = item.intersection.length;
+        if (!Array.isArray(item.crossYearOnly)) item.crossYearOnly = crossPool.filter(num => !yearSet.has(num));
+        if (!Array.isArray(item.yearOnly)) item.yearOnly = yearPool.filter(num => !crossSet.has(num));
+      });
       const primary = compoundPools.find(item => item.poolSize === 8) || compoundPools[compoundPools.length - 1];
       const yearWindows = primary ? primary.windows : [];
       const latestIssue = Number(latest?.issue || 0);
@@ -1590,7 +1608,7 @@ __EMBEDDED_JSON__
         currentMiss++;
       }
       const comboCompat = buildThreeHitCombos(yearRows.length ? yearRows : sourceRows);
-      return {source, latest, currentYear, numberPool: primary?.pool || [], compoundPools, combos: comboCompat.combos, currentWindow, yearWindows, stats: {total: completedWindows.length, hits: hitWindows, misses: completedWindows.length - hitWindows, hitRate: completedWindows.length ? Math.round(hitWindows / completedWindows.length * 100) : 0, currentMiss, maxMiss}};
+      return {source, latest, currentYear, numberPool: primary?.pool || [], compoundPools, crossYearPools, combos: comboCompat.combos, currentWindow, yearWindows, stats: {total: completedWindows.length, hits: hitWindows, misses: completedWindows.length - hitWindows, hitRate: completedWindows.length ? Math.round(hitWindows / completedWindows.length * 100) : 0, currentMiss, maxMiss}};
     }
     function randomWindowBaseline(pickCount, totalCount, drawsPerWindow) {
       if (!pickCount || !totalCount || !drawsPerWindow) return 0;
@@ -1954,6 +1972,7 @@ __EMBEDDED_JSON__
       const optimizedSpecialStats = patternStats(optimizedSpecialWindows);
       const optimizedStableStats = patternStats(optimizedStableWindows);
       const compoundPools = (three.compoundPools || []).map(item => ({...item, baseline: randomWindowBaseline(Number(item.poolSize || 0), 49, 5)}));
+      const crossYearCompoundPools = (three.crossYearPools || []).map(item => ({...item, baseline: randomWindowBaseline(Number(item.poolSize || 0), 49, 5)}));
       return {
         source,
         currentYear: special.currentYear,
@@ -1961,6 +1980,7 @@ __EMBEDDED_JSON__
         yearPool: special.yearPool,
         stablePool: special.stablePool,
         threeCompoundPools: compoundPools,
+        crossYearThreeCompoundPools: crossYearCompoundPools,
         specialWindows: special.yearWindows,
         stableWindows: special.stableWindows,
         special: {...specialStats, baseline: specialBaseline, edge: Math.round((specialStats.hitRate - specialBaseline) * 100) / 100, level: patternLevel(specialStats.hitRate - specialBaseline, specialStats.currentMiss, specialStats.maxMiss), poolSize: special.yearPool.length, structure: specialStructureStats(yearRows)},
@@ -2183,6 +2203,19 @@ __EMBEDDED_JSON__
       rows.sort((a, b) => String(b.changedAt || '').localeCompare(String(a.changedAt || '')) || Number(b.poolSize || 0) - Number(a.poolSize || 0));
       return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#35760;&#24405;&#27599;&#27425;&#26356;&#20248;&#27744;&#26367;&#25442;&#26102;&#30340;&#26087;&#27744;/&#26032;&#27744;&#24046;&#24322;&#65292;&#29992;&#20110;&#35266;&#23519;&#26159;&#31283;&#23450;&#28436;&#21270;&#36824;&#26159;&#37325;&#26032;&#25311;&#21512;&#12290;</p><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#26399;&#21495;</th><th>&#35268;&#27169;</th><th>&#26087;&#27744;</th><th>&#26032;&#27744;</th><th>&#20445;&#30041;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#35206;&#30422;&#21464;&#21270;</th><th>&#21464;&#21270;&#24133;&#24230;</th></tr></thead><tbody>${rows.slice(0, 24).map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.kept || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.beforeCovered ?? '-')} / ${esc(item.afterCovered ?? '-')}<br>${esc(item.beforeHitRate ?? '-')}% -> ${esc(item.afterHitRate ?? '-')}%</td><td>${statusText(item.changeLevel)}<br><span class="muted">${esc(item.changeCount ?? 0)}&#20010;&#21464;&#21270;</span></td></tr>`).join('')}</tbody></table></section>`;
     }
+    function threeCrossYearPoolTable(analysis) {
+      const rows = (analysis.crossYearPools || []).map(item => {
+        const winRows = item.yearWindows || item.windows || [];
+        const misses = winRows.filter(win => Number(win.count || 0) >= 5 && !win.covered);
+        const current = winRows.find(win => win.start === analysis.currentWindow.start) || {hits: [], covered: false, count: 0};
+        const currentHits = (current.hits || []).map(hit => `${esc(hit.issue)}:${esc((hit.matched || []).join('-'))}`).join(', ') || '-';
+        const yearCovered = item.yearCovered ?? item.covered ?? 0;
+        const yearTotal = item.yearTotal ?? item.total ?? 0;
+        const yearHitRate = item.yearHitRate ?? item.hitRate ?? 0;
+        return `<tr><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool || [])}</td><td>${esc(yearCovered)} / ${esc(yearTotal)}<br>${esc(yearHitRate)}%</td><td>${esc(item.historyCovered ?? '-')} / ${esc(item.historyTotal ?? '-')}<br>${esc(item.historyHitRate ?? '-')}%</td><td>${numberChips(item.intersection || [])}<br><span class="muted">${esc(item.intersectionCount ?? 0)}&#20010;</span></td><td>${numberChips(item.crossYearOnly || [])}</td><td>${numberChips(item.yearOnly || [])}</td><td>${esc(item.yearCurrentMiss ?? item.currentMiss ?? 0)} / ${esc(item.yearMaxMiss ?? item.maxMiss ?? 0)}</td><td>${esc(misses.slice(0, 8).map(win => `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`).join(', ') || '-')}</td><td>${current.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${currentHits}</td></tr>`;
+      }).join('');
+      return `<section class="panel full"><h2>&#36328;&#24180;&#22797;&#24335;&#27744;&#65288;&#20840;&#37096;&#21382;&#21490;&#65289;</h2><p class="muted">&#29992;&#35813;&#26469;&#28304;&#20840;&#37096;&#21382;&#21490;&#24320;&#22870;&#29983;&#25104;5/6/7/8&#30721;&#27744;&#65292;&#20877;&#22238;&#25918;&#21040;&#24403;&#24180;5&#26399;&#31383;&#21475;&#35266;&#23519;&#24403;&#21069;&#26377;&#25928;&#24615;&#12290;</p><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#36328;&#24180;&#27744;</th><th>&#24403;&#24180;&#35206;&#30422;</th><th>&#20840;&#21382;&#21490;&#35206;&#30422;</th><th>&#19982;&#24403;&#24180;&#20132;&#38598;</th><th>&#36328;&#24180;&#29420;&#26377;</th><th>&#24403;&#24180;&#29420;&#26377;</th><th>&#28431;&#31383;</th><th>&#24403;&#24180;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+    }
     function renderThreeWindow5() {
       const selected = document.getElementById('three-window5-source')?.value || 'am';
       const analysis = threeWindowAnalysis(selected);
@@ -2199,6 +2232,7 @@ __EMBEDDED_JSON__
         <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
         <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></section>
+        ${threeCrossYearPoolTable(analysis)}
         ${threeCompoundHistoryTable(analysis.compoundPools)}
         <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hit.matched.join('-'))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
       </div>`;
@@ -2208,14 +2242,15 @@ __EMBEDDED_JSON__
       return `<tr><td>${name}</td><td>${esc(sizeLabel)}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.edge)}%</td><td>${esc(item.currentMiss)}</td><td>${esc(item.maxMiss)}</td><td>${esc(item.recentHitRate)}%</td><td>${item.level}</td></tr>`;
     }
     function threeCompoundPatternTable(analysis) {
-      const rows = (analysis.threeCompoundPools || []).map(item => {
+      const buildRows = (items, groupName) => (items || []).map(item => {
         const hitRate = Number(item.hitRate || 0);
         const baseline = Number(item.baseline || 0);
         const edge = Math.round((hitRate - baseline) * 100) / 100;
         const level = patternLevel(edge, Number(item.currentMiss || 0), Number(item.maxMiss || 0));
-        return `<tr><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool || [])}</td><td>${esc(item.covered || 0)} / ${esc(item.total || 0)}</td><td>${esc(hitRate)}%</td><td>${esc(baseline)}%</td><td>${esc(edge)}%</td><td>${esc(item.recentCovered ?? '-')} / ${esc(item.recentTotal ?? '-')}<br>${esc(item.recentHitRate ?? '-')}%</td><td>${esc(item.currentMiss ?? 0)} / ${esc(item.maxMiss ?? 0)}</td><td>${level}</td><td>${statusText(item.healthStatus)}<br><span class="muted">${statusText(item.healthReason)}</span></td></tr>`;
-      }).join('');
-      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#34920;&#29616;</h2><p class="muted">&#19977;&#20013;&#19977;&#29616;&#22312;&#21482;&#35266;&#23519;5/6/7/8&#30721;&#22797;&#24335;&#27744;&#65292;&#20197;&#23436;&#25104;&#30340;5&#26399;&#31383;&#21475;&#26159;&#21542;&#33267;&#23569;&#19968;&#26399;&#21629;&#20013;3&#20010;&#24179;&#30721;&#20026;&#20934;&#12290;</p><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#23436;&#25972;&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36229;&#39069;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#31561;&#32423;</th><th>&#20581;&#24247;&#29366;&#24577;</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+        return `<tr><td>${groupName}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool || [])}</td><td>${esc(item.covered || 0)} / ${esc(item.total || 0)}</td><td>${esc(hitRate)}%</td><td>${esc(baseline)}%</td><td>${esc(edge)}%</td><td>${esc(item.recentCovered ?? '-')} / ${esc(item.recentTotal ?? '-')}<br>${esc(item.recentHitRate ?? '-')}%</td><td>${esc(item.currentMiss ?? 0)} / ${esc(item.maxMiss ?? 0)}</td><td>${level}</td><td>${statusText(item.healthStatus)}<br><span class="muted">${statusText(item.healthReason)}</span></td></tr>`;
+      });
+      const rows = buildRows(analysis.threeCompoundPools, '&#24403;&#24180;&#27744;').concat(buildRows(analysis.crossYearThreeCompoundPools, '&#36328;&#24180;&#27744;')).join('');
+      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#34920;&#29616;</h2><p class="muted">&#19977;&#20013;&#19977;&#35266;&#23519;5/6/7/8&#30721;&#22797;&#24335;&#27744;&#12290;&#24403;&#24180;&#27744;&#29992;&#24403;&#24180;&#25968;&#25454;&#29983;&#25104;&#65292;&#36328;&#24180;&#27744;&#29992;&#20840;&#37096;&#21382;&#21490;&#29983;&#25104;&#24182;&#22238;&#25918;&#24403;&#24180;&#31383;&#21475;&#12290;</p><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#23436;&#25972;&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36229;&#39069;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#31561;&#32423;</th><th>&#20581;&#24247;&#29366;&#24577;</th></tr></thead><tbody>${rows}</tbody></table></section>`;
     }
     function simpleRankList(items) {
       return `<table class="compact-table"><thead><tr><th>&#32467;&#26500;</th><th>&#27425;&#25968;</th></tr></thead><tbody>${items.map(item => `<tr><td>${esc(item.name)}</td><td>${esc(item.count)}</td></tr>`).join('')}</tbody></table>`;
