@@ -1276,26 +1276,49 @@
     }
     const fullDataTabs = new Set(['games', 'window5', 'threeWindow5', 'patternWatch', 'daily']);
     let fullDataPromise = null;
+    function loadScriptData(src, globalName) {
+      return new Promise((resolve, reject) => {
+        if (window[globalName]) {
+          resolve(window[globalName]);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          if (window[globalName]) resolve(window[globalName]);
+          else reject(new Error(`${globalName} missing`));
+        };
+        script.onerror = () => reject(new Error(`script ${src} failed`));
+        document.head.appendChild(script);
+      });
+    }
+    async function loadJsonOrScript(jsonUrl, jsUrl, globalName) {
+      if (location.protocol === 'file:') {
+        return await loadScriptData(jsUrl, globalName);
+      }
+      try {
+        const response = await fetch(jsonUrl, {cache: 'no-store'});
+        if (!response.ok) throw new Error(`${jsonUrl} HTTP ${response.status}`);
+        return await response.json();
+      } catch (err) {
+        return await loadScriptData(jsUrl, globalName);
+      }
+    }
     async function ensureFullData() {
       if (records.length && window5State?.items && threeCompoundState?.items) return;
       if (!fullDataPromise) {
         fullDataPromise = Promise.all([
-          fetch('data/records.json', {cache: 'no-store'}),
-          fetch('data/game-predictions.json', {cache: 'no-store'}),
-          fetch('data/window5-state.json', {cache: 'no-store'}),
-          fetch('data/three-compound-state.json', {cache: 'no-store'})
-        ]).then(async ([recordsResponse, gamesResponse, window5Response, threeResponse]) => {
-          if (!recordsResponse.ok) throw new Error(`records HTTP ${recordsResponse.status}`);
-          if (!gamesResponse.ok) throw new Error(`games HTTP ${gamesResponse.status}`);
-          if (!window5Response.ok) throw new Error(`window5 HTTP ${window5Response.status}`);
-          if (!threeResponse.ok) throw new Error(`three-compound HTTP ${threeResponse.status}`);
-          const data = await recordsResponse.json();
+          loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__'),
+          loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__'),
+          loadJsonOrScript('data/window5-state.json', 'data/window5-state.js', '__WINDOW5_STATE__'),
+          loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__')
+        ]).then(([data, gamesData, window5Data, threeData]) => {
           records = data.records || [];
           summary = data.summary || summary || {};
           generatedPredictions = data.predictions || generatedPredictions;
-          gamePredictions = await gamesResponse.json();
-          window5State = await window5Response.json();
-          threeCompoundState = await threeResponse.json();
+          gamePredictions = gamesData;
+          window5State = window5Data;
+          threeCompoundState = threeData;
         });
       }
       return fullDataPromise;
@@ -1328,9 +1351,7 @@
     tabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     async function loadDashboardData() {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;</h2><p class="muted">&#27491;&#22312;&#21152;&#36733;&#26368;&#26032;&#25968;&#25454;...</p></section>`;
-      const response = await fetch('data/dashboard-summary.json', {cache: 'no-store'});
-      if (!response.ok) throw new Error(`dashboard-summary HTTP ${response.status}`);
-      return await response.json();
+      return await loadJsonOrScript('data/dashboard-summary.json', 'data/dashboard-summary.js', '__DASHBOARD_SUMMARY__');
     }
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);

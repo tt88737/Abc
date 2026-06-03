@@ -264,7 +264,7 @@ try {
     if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
         throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, pattern watch, manual fetch, and daily tabs'
     }
-    if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(() =>') -or -not $dashboard.Contains('showLoading(tab)')) {
+    if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
     }
     if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
@@ -291,8 +291,21 @@ try {
     if ($dashboard.Contains('sanzhong-pred-save') -or $dashboard.Contains('pred-save')) {
         throw 'manual prediction save buttons should not be emitted'
     }
-    if (-not $dashboard.Contains('"predictions":')) {
-        throw 'collection-time predictions were not embedded'
+    $dashboardSummaryFile = Join-Path $outDir 'data/dashboard-summary.json'
+    $dashboardSummaryScript = Join-Path $outDir 'data/dashboard-summary.js'
+    if (-not (Test-Path -LiteralPath $dashboardSummaryFile)) {
+        throw 'dashboard-summary.json was not created'
+    }
+    if (-not (Test-Path -LiteralPath $dashboardSummaryScript)) {
+        throw 'dashboard-summary.js was not created'
+    }
+    $dashboardSummaryText = Get-Content -LiteralPath $dashboardSummaryFile -Raw
+    if (-not $dashboardSummaryText.Contains('"predictions"')) {
+        throw 'collection-time predictions were not included in dashboard summary'
+    }
+    $dashboardSummaryScriptText = Get-Content -LiteralPath $dashboardSummaryScript -Raw
+    if (-not $dashboardSummaryScriptText.Contains('window.__DASHBOARD_SUMMARY__ = ')) {
+        throw 'dashboard summary script fallback was not generated'
     }
     if ($dashboard.Contains('"forecasts":')) {
         throw 'prediction observation data should not be embedded'
@@ -795,11 +808,11 @@ try {
     $runtimeCheck = @'
 const fs = require('fs');
 const html = fs.readFileSync(process.argv[2], 'utf8');
-const json = JSON.parse(html.match(/<script id="embedded-records" type="application\/json">\s*([\s\S]*?)\s*<\/script>/)[1]);
+const json = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
   .replace(/const app = document.getElementById\('app'\);/, "const app = {innerHTML:''};")
   .replace(/const tabs = document.querySelectorAll\('\.tabs button'\);/, "const tabs = [];")
-  .replace(/document.getElementById\('embedded-records'\)\.textContent/, "JSON.stringify(__DATA__)")
+  .replace(/loadDashboardData\(\)\.then\([\s\S]*?\.catch\(err => \{\s*app\.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;<\/h2><p>\$\{esc\(err\.message\)\}<\/p><\/section>`;\s*\}\);/, "recentRecords = (__DATA__.records || []); summary = __DATA__.summary || {}; generatedPredictions = __DATA__.predictions || {next: [], sanzhong: []};")
   .replace(/document.getElementById\('overview-source'\)\.addEventListener\('change', renderOverview\);/g, '')
   .replace(/document.getElementById\('window5-source'\)\.addEventListener\('change', renderWindow5\);/g, '')
   .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
@@ -808,11 +821,12 @@ const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
   .replace(/document.getElementById\('game-source'\)\.addEventListener\('change', renderGames\);/g, '')
   .replace(/renderOverview\(\);/, "renderOverview(); fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
 global.__DATA__ = json;
+global.location = { protocol: 'file:' };
 global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
 new Function(script)();
 console.log('RUNTIME_OK');
 '@
-    $runtimeOutput = $runtimeCheck | node - (Join-Path $outDir 'index.html')
+    $runtimeOutput = $runtimeCheck | node - (Join-Path $outDir 'index.html') (Join-Path $outDir 'data/records.json')
     if ($LASTEXITCODE -ne 0 -or ($runtimeOutput -join "`n") -notmatch 'RUNTIME_OK') {
         throw "dashboard runtime check failed: $($runtimeOutput -join ' ')"
     }

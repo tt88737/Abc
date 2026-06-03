@@ -46,13 +46,23 @@ try {
     & $scriptPath -RootDir $outDir | Out-Null
 
     $recordsPath = Join-Path $outDir 'data\records.json'
+    $recordsScriptPath = Join-Path $outDir 'data\records.js'
     $summaryPath = Join-Path $outDir 'data\dashboard-summary.json'
+    $summaryScriptPath = Join-Path $outDir 'data\dashboard-summary.js'
+    $gamesScriptPath = Join-Path $outDir 'data\game-predictions.js'
+    $window5ScriptPath = Join-Path $outDir 'data\window5-state.js'
     $statePath = Join-Path $outDir 'data\three-compound-state.json'
+    $stateScriptPath = Join-Path $outDir 'data\three-compound-state.js'
     $indexPath = Join-Path $outDir 'index.html'
 
     if (-not (Test-Path -LiteralPath $recordsPath)) { throw 'records.json was not created' }
+    if (-not (Test-Path -LiteralPath $recordsScriptPath)) { throw 'records.js was not created' }
     if (-not (Test-Path -LiteralPath $summaryPath)) { throw 'dashboard-summary.json was not created' }
+    if (-not (Test-Path -LiteralPath $summaryScriptPath)) { throw 'dashboard-summary.js was not created' }
+    if (-not (Test-Path -LiteralPath $gamesScriptPath)) { throw 'game-predictions.js was not created' }
+    if (-not (Test-Path -LiteralPath $window5ScriptPath)) { throw 'window5-state.js was not created' }
     if (-not (Test-Path -LiteralPath $statePath)) { throw 'three-compound-state.json was not created' }
+    if (-not (Test-Path -LiteralPath $stateScriptPath)) { throw 'three-compound-state.js was not created' }
     if (-not (Test-Path -LiteralPath $indexPath)) { throw 'index.html was not created' }
 
     $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
@@ -64,22 +74,34 @@ try {
     if ($html.Contains('embedded-records')) {
         throw 'dashboard should not embed records json'
     }
-    if (-not $html.Contains("fetch('data/dashboard-summary.json'")) {
+    if (-not $html.Contains("loadJsonOrScript('data/dashboard-summary.json'")) {
         throw 'dashboard should load dashboard summary first'
     }
-    if (-not $html.Contains("fetch('data/records.json'")) {
+    if (-not $html.Contains("loadJsonOrScript('data/dashboard-summary.json', 'data/dashboard-summary.js', '__DASHBOARD_SUMMARY__')")) {
+        throw 'dashboard should use local script fallback for dashboard summary'
+    }
+    if (-not $html.Contains("loadJsonOrScript('data/records.json'")) {
         throw 'dashboard should still be able to load records json externally'
     }
-    if (-not $html.Contains("fetch('data/game-predictions.json'")) {
+    if (-not $html.Contains("loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__')")) {
+        throw 'dashboard should use local script fallback for records data'
+    }
+    if (-not $html.Contains("loadJsonOrScript('data/game-predictions.json'")) {
         throw 'dashboard should be able to load game predictions externally'
     }
-    if (-not $html.Contains("fetch('data/three-compound-state.json'")) {
+    if (-not $html.Contains("loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__')")) {
+        throw 'dashboard should use local script fallback for game predictions'
+    }
+    if (-not $html.Contains("loadJsonOrScript('data/three-compound-state.json'")) {
         throw 'dashboard should be able to load three-compound state externally'
+    }
+    if (-not $html.Contains("loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__')")) {
+        throw 'dashboard should use local script fallback for three-compound state'
     }
     if (-not $html.Contains('fullDataTabs')) {
         throw 'dashboard should lazy load full data by tab'
     }
-    if (-not $html.Contains('threeCompoundState = await threeResponse.json()')) {
+    if (-not $html.Contains('threeCompoundState = threeData')) {
         throw 'dashboard should read lazy-loaded threeCompound state'
     }
     if (-not $html.Contains('threeCrossYearPoolTable')) {
@@ -91,6 +113,11 @@ try {
     if (-not $summaryText.Contains('"recentRecords"')) { throw 'dashboard summary should include recentRecords' }
     if ($summaryText.Contains('"threeCompound"')) { throw 'dashboard summary should not include threeCompound state' }
     if ($summaryText.Contains('"games"')) { throw 'dashboard summary should not include game predictions' }
+
+    $summaryScriptText = Get-Content -LiteralPath $summaryScriptPath -Raw
+    if (-not $summaryScriptText.Contains('window.__DASHBOARD_SUMMARY__ = ')) {
+        throw 'dashboard summary script should assign expected global'
+    }
 
     Write-Host 'build three-compound embed ok'
 }

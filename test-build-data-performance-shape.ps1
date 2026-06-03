@@ -8,8 +8,20 @@ if ($text.Contains('ConvertTo-Json -Depth 12')) {
     throw 'build-data.ps1 should not perform unused full payload ConvertTo-Json -Depth 12'
 }
 
-if (-not $text.Contains("fetch('data/dashboard-summary.json'")) {
+if (-not $text.Contains("loadJsonOrScript('data/dashboard-summary.json'")) {
     throw 'dashboard should start from dashboard-summary.json'
+}
+
+if (-not $text.Contains('function loadScriptData')) {
+    throw 'dashboard should define local script data fallback'
+}
+
+if (-not $text.Contains('function loadJsonOrScript')) {
+    throw 'dashboard should load json with script fallback for file URLs'
+}
+
+if (-not $text.Contains('data/dashboard-summary.js')) {
+    throw 'dashboard should reference dashboard-summary.js fallback'
 }
 
 if (-not $text.Contains('New-DashboardSummary')) {

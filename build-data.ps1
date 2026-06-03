@@ -38,6 +38,47 @@ function Add-ProfileRow {
     }
 }
 
+function Write-DataJsonAndJs {
+    param(
+        [string]$JsonPath,
+        [object]$Data,
+        [string]$GlobalName,
+        [int]$Depth
+    )
+
+    $json = ($Data | ConvertTo-Json -Depth $Depth) -join [Environment]::NewLine
+    [IO.File]::WriteAllText($JsonPath, $json, $Utf8NoBom)
+    $safeJson = $json -replace '</script', '<\/script'
+    $js = "window.$GlobalName = $safeJson;"
+    [IO.File]::WriteAllText([IO.Path]::ChangeExtension($JsonPath, '.js'), $js, $Utf8NoBom)
+}
+
+function Write-DataJsonTextAndJs {
+    param(
+        [string]$JsonPath,
+        [string]$Json,
+        [string]$GlobalName
+    )
+
+    [IO.File]::WriteAllText($JsonPath, $Json, $Utf8NoBom)
+    $safeJson = $Json -replace '</script', '<\/script'
+    $js = "window.$GlobalName = $safeJson;"
+    [IO.File]::WriteAllText([IO.Path]::ChangeExtension($JsonPath, '.js'), $js, $Utf8NoBom)
+}
+
+function Write-DataJsFromJsonFile {
+    param(
+        [string]$JsonPath,
+        [string]$GlobalName
+    )
+
+    if (-not (Test-Path -LiteralPath $JsonPath)) { return }
+    $json = [IO.File]::ReadAllText($JsonPath, [Text.Encoding]::UTF8)
+    $safeJson = $json -replace '</script', '<\/script'
+    $js = "window.$GlobalName = $safeJson;"
+    [IO.File]::WriteAllText([IO.Path]::ChangeExtension($JsonPath, '.js'), $js, $Utf8NoBom)
+}
+
 function U {
     param([int[]]$Codes)
     return [string]::Concat(($Codes | ForEach-Object { [char]$_ }))
@@ -527,6 +568,21 @@ function Settle-GameItem {
     return $Item
 }
 
+function Update-SettledGameItemHit {
+    param([object]$Item)
+
+    $actual = @($Item.actualNumbers | ForEach-Object { ([int]$_).ToString('00') })
+    $recommended = @($Item.numbers | ForEach-Object { ([int]$_).ToString('00') })
+    if ($actual.Count -eq 0) { return $Item }
+    $hit = if ($Item.game -eq 'three-hit-three') {
+        @($recommended | Where-Object { $actual -contains $_ }).Count -eq 3
+    } else {
+        @($recommended).Count -gt 0 -and [string]$actual[0] -eq [string]$recommended[0]
+    }
+    $Item | Add-Member -NotePropertyName hit -NotePropertyValue $hit -Force
+    return $Item
+}
+
 function Get-Window5RawWindows {
     param([object[]]$Rows)
 
@@ -789,7 +845,7 @@ function New-GamePredictions {
     foreach ($old in @($Existing)) {
         $actualNumbers = @($old.actualNumbers)
         if ($old.status -eq 'settled' -and -not [string]::IsNullOrWhiteSpace([string]$old.actualDate) -and $null -ne $old.actualIssue -and $actualNumbers.Count -gt 0) {
-            $items.Add($old) | Out-Null
+            $items.Add((Update-SettledGameItemHit -Item $old)) | Out-Null
         }
         else {
             $items.Add((Settle-GameItem -Item $old -Records $Records)) | Out-Null
@@ -2504,26 +2560,49 @@ function New-DashboardHtml {
     }
     const fullDataTabs = new Set(['games', 'window5', 'threeWindow5', 'patternWatch', 'daily']);
     let fullDataPromise = null;
+    function loadScriptData(src, globalName) {
+      return new Promise((resolve, reject) => {
+        if (window[globalName]) {
+          resolve(window[globalName]);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          if (window[globalName]) resolve(window[globalName]);
+          else reject(new Error(`${globalName} missing`));
+        };
+        script.onerror = () => reject(new Error(`script ${src} failed`));
+        document.head.appendChild(script);
+      });
+    }
+    async function loadJsonOrScript(jsonUrl, jsUrl, globalName) {
+      if (location.protocol === 'file:') {
+        return await loadScriptData(jsUrl, globalName);
+      }
+      try {
+        const response = await fetch(jsonUrl, {cache: 'no-store'});
+        if (!response.ok) throw new Error(`${jsonUrl} HTTP ${response.status}`);
+        return await response.json();
+      } catch (err) {
+        return await loadScriptData(jsUrl, globalName);
+      }
+    }
     async function ensureFullData() {
       if (records.length && window5State?.items && threeCompoundState?.items) return;
       if (!fullDataPromise) {
         fullDataPromise = Promise.all([
-          fetch('data/records.json', {cache: 'no-store'}),
-          fetch('data/game-predictions.json', {cache: 'no-store'}),
-          fetch('data/window5-state.json', {cache: 'no-store'}),
-          fetch('data/three-compound-state.json', {cache: 'no-store'})
-        ]).then(async ([recordsResponse, gamesResponse, window5Response, threeResponse]) => {
-          if (!recordsResponse.ok) throw new Error(`records HTTP ${recordsResponse.status}`);
-          if (!gamesResponse.ok) throw new Error(`games HTTP ${gamesResponse.status}`);
-          if (!window5Response.ok) throw new Error(`window5 HTTP ${window5Response.status}`);
-          if (!threeResponse.ok) throw new Error(`three-compound HTTP ${threeResponse.status}`);
-          const data = await recordsResponse.json();
+          loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__'),
+          loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__'),
+          loadJsonOrScript('data/window5-state.json', 'data/window5-state.js', '__WINDOW5_STATE__'),
+          loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__')
+        ]).then(([data, gamesData, window5Data, threeData]) => {
           records = data.records || [];
           summary = data.summary || summary || {};
           generatedPredictions = data.predictions || generatedPredictions;
-          gamePredictions = await gamesResponse.json();
-          window5State = await window5Response.json();
-          threeCompoundState = await threeResponse.json();
+          gamePredictions = gamesData;
+          window5State = window5Data;
+          threeCompoundState = threeData;
         });
       }
       return fullDataPromise;
@@ -2556,9 +2635,7 @@ function New-DashboardHtml {
     tabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     async function loadDashboardData() {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;</h2><p class="muted">&#27491;&#22312;&#21152;&#36733;&#26368;&#26032;&#25968;&#25454;...</p></section>`;
-      const response = await fetch('data/dashboard-summary.json', {cache: 'no-store'});
-      if (!response.ok) throw new Error(`dashboard-summary HTTP ${response.status}`);
-      return await response.json();
+      return await loadJsonOrScript('data/dashboard-summary.json', 'data/dashboard-summary.js', '__DASHBOARD_SUMMARY__');
     }
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
@@ -2675,14 +2752,14 @@ $gamePredictions = Invoke-Profiled 'game-predictions' {
     return New-GamePredictions -Records $deduped -Existing $existingGameItems
 }
 Invoke-Profiled 'write-game-predictions-json' {
-    [IO.File]::WriteAllText($gamePredictionsPath, ($gamePredictions | ConvertTo-Json -Depth 10), $Utf8NoBom)
+    Write-DataJsonAndJs -JsonPath $gamePredictionsPath -Data $gamePredictions -GlobalName '__GAME_PREDICTIONS__' -Depth 10
 } | Out-Null
 $dashboardSummaryPath = Join-Path $dataDir 'dashboard-summary.json'
 $dashboardSummary = Invoke-Profiled 'dashboard-summary' {
     return New-DashboardSummary -Summary $summary -Records $deduped -Predictions $predictions
 }
 Invoke-Profiled 'write-dashboard-summary-json' {
-    [IO.File]::WriteAllText($dashboardSummaryPath, ($dashboardSummary | ConvertTo-Json -Depth 10), $Utf8NoBom)
+    Write-DataJsonAndJs -JsonPath $dashboardSummaryPath -Data $dashboardSummary -GlobalName '__DASHBOARD_SUMMARY__' -Depth 10
 } | Out-Null
 $window5Path = Join-Path $dataDir 'window5-state.json'
 $existingWindow5 = $null
@@ -2693,7 +2770,7 @@ $window5 = Invoke-Profiled 'window5-state' {
     return New-Window5State -Records $deduped -Existing $existingWindow5 -GeneratedAt $summary.generatedAt
 }
 Invoke-Profiled 'write-window5-json' {
-    [IO.File]::WriteAllText($window5Path, ($window5 | ConvertTo-Json -Depth 8), $Utf8NoBom)
+    Write-DataJsonAndJs -JsonPath $window5Path -Data $window5 -GlobalName '__WINDOW5_STATE__' -Depth 8
 } | Out-Null
 $threeCompoundPath = Join-Path $dataDir 'three-compound-state.json'
 $payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; window5 = $window5; threeCompound = @{ items = @() } }
@@ -2702,12 +2779,15 @@ $json = Invoke-Profiled 'records-json-serialize' {
     return $payload | ConvertTo-Json -Depth 10
 }
 Invoke-Profiled 'write-records-json' {
-    [IO.File]::WriteAllText($jsonPath, $json, $Utf8NoBom)
+    Write-DataJsonTextAndJs -JsonPath $jsonPath -Json $json -GlobalName '__RECORDS_DATA__'
 } | Out-Null
 $threeCompoundScript = Join-Path $PSScriptRoot 'build-three-compound.py'
 if (Test-Path -LiteralPath $threeCompoundScript) {
     Invoke-Profiled 'three-compound-python' {
         & python $threeCompoundScript $RootDir $summary.generatedAt | Out-Null
+    } | Out-Null
+    Invoke-Profiled 'write-three-compound-js' {
+        Write-DataJsFromJsonFile -JsonPath $threeCompoundPath -GlobalName '__THREE_COMPOUND_STATE__'
     } | Out-Null
 }
 $dashboardPath = Join-Path $RootDir 'index.html'
