@@ -1229,12 +1229,22 @@
         ${threeCompoundHistoryTable(analysis.compoundPools)}
         <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hitMatchedText(hit))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
     }
+    function bindThreeWindowControls(analysis) {
+      document.getElementById('three-window5-source')?.addEventListener('change', renderThreeWindow5);
+      document.querySelector('.three-window-detail-toggle')?.addEventListener('click', () => {
+        const detail = document.getElementById('three-window-details');
+        if (!detail || detail.dataset.loaded === '1') return;
+        detail.innerHTML = threeWindowDetailHtml(analysis);
+        detail.dataset.loaded = '1';
+      });
+    }
     function renderThreeWindow5() {
       const selected = document.getElementById('three-window5-source')?.value || 'am';
       const htmlCacheKey = `${selected}|${threeCompoundState?.generatedAt || ''}|${records.length}`;
+      const cachedAnalysis = threeWindowAnalysisCache.get(`${selected}|${threeCompoundState?.generatedAt || ''}|${records.length}`);
       if (threeWindowHtmlCache.has(htmlCacheKey)) {
         app.innerHTML = threeWindowHtmlCache.get(htmlCacheKey);
-        document.getElementById('three-window5-source').addEventListener('change', renderThreeWindow5);
+        bindThreeWindowControls(cachedAnalysis || threeWindowAnalysis(selected));
         return;
       }
       const analysis = threeWindowAnalysis(selected);
@@ -1256,13 +1266,7 @@
       </div>`;
       threeWindowHtmlCache.set(htmlCacheKey, html);
       app.innerHTML = html;
-      document.getElementById('three-window5-source').addEventListener('change', renderThreeWindow5);
-      document.querySelector('.three-window-detail-toggle')?.addEventListener('click', () => {
-        const detail = document.getElementById('three-window-details');
-        if (!detail || detail.dataset.loaded === '1') return;
-        detail.innerHTML = threeWindowDetailHtml(analysis);
-        detail.dataset.loaded = '1';
-      });
+      bindThreeWindowControls(analysis);
     }
     function patternMetricRow(name, item, sizeLabel) {
       return `<tr><td>${name}</td><td>${esc(sizeLabel)}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.edge)}%</td><td>${esc(item.currentMiss)}</td><td>${esc(item.maxMiss)}</td><td>${esc(item.recentHitRate)}%</td><td>${item.level}</td></tr>`;

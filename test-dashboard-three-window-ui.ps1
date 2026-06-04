@@ -67,4 +67,15 @@ if ($html -match 'if \(threeCompoundState\?\.items\) return threeCompoundState')
     throw 'expected three-compound state loader to load real data when initial items array is empty'
 }
 
+if ($html -notmatch 'function bindThreeWindowControls') {
+    throw 'expected three-window cached html to re-bind detail button controls'
+}
+
+if ($html -match "threeWindowHtmlCache\.has\(htmlCacheKey\)[\s\S]{0,220}return;") {
+    $cacheBranch = [regex]::Match($html, "threeWindowHtmlCache\.has\(htmlCacheKey\)[\s\S]{0,220}return;").Value
+    if ($cacheBranch -notmatch 'bindThreeWindowControls') {
+        throw 'expected cached three-window render path to bind detail button controls before returning'
+    }
+}
+
 Write-Host 'dashboard three-window ui shape ok'
