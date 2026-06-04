@@ -47,4 +47,16 @@ if ($html -notmatch 'three-window-detail-toggle') {
     throw 'expected heavy three-window detail tables to render behind explicit toggles'
 }
 
+if ($html -notmatch 'cacheBustUrl') {
+    throw 'expected local script data loads to include cache-busting urls'
+}
+
+if ($html -match 'dashboardCacheVersion = ''\$GeneratedAt''') {
+    throw 'expected dashboard cache version to be a runtime value, not a literal template token'
+}
+
+if ($html -notmatch 'delete window\[globalName\]') {
+    throw 'expected script data loads to clear stale global data before appending script tags'
+}
+
 Write-Host 'dashboard three-window ui shape ok'

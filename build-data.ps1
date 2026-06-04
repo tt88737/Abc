@@ -1417,6 +1417,7 @@ function New-DashboardHtml {
     let threeCompoundState = {items: []};
     const threeWindowAnalysisCache = new Map();
     const threeWindowHtmlCache = new Map();
+    const dashboardCacheVersion = String(Date.now());
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const pct = (value, max) => max ? Math.round(value / max * 100) : 0;
     function rankHtml(items, limit = 10) {
@@ -2708,14 +2709,15 @@ function New-DashboardHtml {
     let gamePredictionsPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
+    function cacheBustUrl(src) {
+      const separator = src.includes('?') ? '&' : '?';
+      return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
+    }
     function loadScriptData(src, globalName) {
       return new Promise((resolve, reject) => {
-        if (window[globalName]) {
-          resolve(window[globalName]);
-          return;
-        }
+        delete window[globalName];
         const script = document.createElement('script');
-        script.src = src;
+        script.src = cacheBustUrl(src);
         script.onload = () => {
           if (window[globalName]) resolve(window[globalName]);
           else reject(new Error(`${globalName} missing`));
