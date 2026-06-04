@@ -51,11 +51,21 @@ try {
     if (-not $cacheText.Contains('"files"')) {
         throw 'page parse cache should contain files'
     }
-    if (-not $cacheText.Contains('"records"')) {
-        throw 'page parse cache should store parsed records'
+    if ($cacheText.Contains('"records"')) {
+        throw 'page parse cache index should not inline parsed records'
+    }
+    if (-not $cacheText.Contains('"cacheFile"')) {
+        throw 'page parse cache index should reference per-page cache files'
     }
     if (-not $cacheText.Contains('"am.html"')) {
         throw 'page parse cache should include am.html entry'
+    }
+    $cacheDir = Join-Path $outDir 'data\page-parse-cache'
+    if (-not (Test-Path -LiteralPath $cacheDir)) {
+        throw 'page parse cache directory was not created'
+    }
+    if (-not (Test-Path -LiteralPath (Join-Path $cacheDir 'am.html.json'))) {
+        throw 'page parse cache should write per-page records cache'
     }
 
     $recordsPath = Join-Path $outDir 'data\records.json'

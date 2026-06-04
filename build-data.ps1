@@ -187,6 +187,7 @@ function Get-ParsedPageRecords {
     )
 
     $cachedFiles = @{}
+    $cacheRoot = Join-Path (Split-Path -Parent $CachePath) 'page-parse-cache'
     if (Test-Path -LiteralPath $CachePath) {
         try {
             $cache = Get-Content -LiteralPath $CachePath -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -201,26 +202,39 @@ function Get-ParsedPageRecords {
 
     $allRecords = New-Object 'System.Collections.Generic.List[object]'
     $cacheFiles = New-Object 'System.Collections.Generic.List[object]'
+    if (-not (Test-Path -LiteralPath $cacheRoot)) { New-Item -ItemType Directory -Path $cacheRoot -Force | Out-Null }
     foreach ($file in (Get-ChildItem -LiteralPath $PagesDir -Filter '*.html' -File)) {
         $length = [int64]$file.Length
         $mtimeUtc = $file.LastWriteTimeUtc.ToString('o')
         $cached = $cachedFiles[[string]$file.Name]
         $records = $null
-        if ($cached -and [int64]$cached.length -eq $length -and [string]$cached.mtimeUtc -eq $mtimeUtc) {
-            $records = @($cached.records)
+        $cacheFileName = "$($file.Name).json"
+        $cacheFilePath = Join-Path $cacheRoot $cacheFileName
+        if ($cached -and [int64]$cached.length -eq $length -and [string]$cached.mtimeUtc -eq $mtimeUtc -and $cached.cacheFile) {
+            $candidatePath = Join-Path $cacheRoot ([string]$cached.cacheFile)
+            if (Test-Path -LiteralPath $candidatePath) {
+                try {
+                    $records = @((Get-Content -LiteralPath $candidatePath -Raw -Encoding UTF8 | ConvertFrom-Json).records)
+                }
+                catch {
+                    $records = $null
+                }
+            }
         }
-        else {
+        if ($null -eq $records) {
             $html = [IO.File]::ReadAllText($file.FullName, [Text.Encoding]::UTF8)
             $source = Get-SourceKind $file.Name
             $year = Get-YearFromFile -FileName $file.Name -Html $html
             $records = @(Parse-RecordBlocks -Html $html -Source $source -Year $year -FileName $file.Name)
+            $recordJson = ([pscustomobject]@{ records = @($records) } | ConvertTo-Json -Depth 10 -Compress) -join [Environment]::NewLine
+            [IO.File]::WriteAllText($cacheFilePath, $recordJson, $Utf8NoBom)
         }
         foreach ($record in @($records)) { $allRecords.Add($record) | Out-Null }
         $cacheFiles.Add([pscustomobject]@{
             name = $file.Name
             length = $length
             mtimeUtc = $mtimeUtc
-            records = @($records)
+            cacheFile = $cacheFileName
         }) | Out-Null
     }
 
