@@ -61,6 +61,15 @@ if ($html -notmatch 'threeCompoundWindowPoolSnapshot' -or $html -notmatch 'snaps
     throw 'expected three-compound windows to use effective pool snapshots instead of latest-pool backfills'
 }
 
+if ($html -notmatch 'threeCompoundChangeSummary' -or $html -notmatch '<details class="change-detail"' -or $html -notmatch '&#21464;&#21270;&#25688;&#35201;' -or $html -notmatch '&#26174;&#31034;&#20840;&#37096;&#35760;&#24405;') {
+    throw 'expected three-compound change history to render compact summaries with expandable details'
+}
+
+$historyHeaderMatch = [regex]::Match($html, '&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;[\s\S]{0,900}</thead>')
+if ($historyHeaderMatch.Success -and ($historyHeaderMatch.Value -match '&#26087;&#27744;|&#26032;&#27744;|&#20445;&#30041;')) {
+    throw 'expected three-compound change history table to avoid wide old/new/kept columns by default'
+}
+
 if ($html -notmatch 'class="table-scroll"') {
     throw 'expected wide three-window tables to render inside a horizontal scroll container'
 }

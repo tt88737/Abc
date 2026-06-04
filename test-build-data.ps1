@@ -603,8 +603,8 @@ try {
     if (-not $dashboard.Contains('function threeCompoundHistoryTable(pools)') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;')) {
         throw 'three-hit five-issue window should render compound pool change history'
     }
-    if (-not $dashboard.Contains('&#20445;&#30041;') -or -not $dashboard.Contains('&#26032;&#22686;') -or -not $dashboard.Contains('&#31227;&#38500;') -or -not $dashboard.Contains('&#21464;&#21270;&#24133;&#24230;')) {
-        throw 'three-hit compound change history should show kept, added, removed, and change level'
+    if (-not $dashboard.Contains('&#21464;&#21270;&#25688;&#35201;') -or -not $dashboard.Contains('<details class="change-detail"') -or -not $dashboard.Contains('&#20445;&#30041;') -or -not $dashboard.Contains('&#26032;&#22686;') -or -not $dashboard.Contains('&#31227;&#38500;') -or -not $dashboard.Contains('&#26174;&#31034;&#20840;&#37096;&#35760;&#24405;')) {
+        throw 'three-hit compound change history should show compact summaries with expandable kept, added, and removed details'
     }
     if (-not $dashboard.Contains('function randomWindowBaseline(pickCount, totalCount, drawsPerWindow)')) {
         throw 'dashboard should calculate random window baselines'

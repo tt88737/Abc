@@ -45,6 +45,14 @@
     .history-group table { margin: 0; }
     .table-scroll { width: 100%; overflow-x: auto; }
     .table-scroll table { min-width: 1040px; }
+    .change-summary { display: grid; gap: 6px; }
+    .change-summary-row { display: grid; grid-template-columns: 42px 1fr; gap: 6px; align-items: start; }
+    .change-summary-label { color: #667085; font-size: 12px; line-height: 22px; }
+    .change-detail summary, .change-history-all summary { cursor: pointer; color: #0b42d8; font-weight: 700; }
+    .change-detail[open] summary, .change-history-all[open] summary { margin-bottom: 8px; }
+    .change-detail .mini-grid { grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 10px; min-width: 680px; }
+    .change-detail .muted { margin: 0 0 4px; }
+    .change-history-all { margin-top: 10px; }
     .trail{display:flex;flex-wrap:wrap;gap:3px;max-width:220px}
     .trail i{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;font-style:normal;font-size:12px;color:#fff}
     .trail .hit{background:#078a16}
@@ -66,7 +74,7 @@
     .primary { border:1px solid #0b42d8; background:#0b42d8; color:#fff; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .secondary { border:1px solid #cbd5e1; background:#fff; color:#1f2933; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .detail-placeholder { padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; }
-    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } }
+    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -1336,7 +1344,21 @@
         return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;&#65292;&#24403;&#21069;&#27744;&#23376;&#27839;&#29992;&#19978;&#27425;&#32467;&#26524;&#12290;</p></section>`;
       }
       rows.sort((a, b) => String(b.changedAt || '').localeCompare(String(a.changedAt || '')) || Number(b.poolSize || 0) - Number(a.poolSize || 0));
-      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#35760;&#24405;&#27599;&#27425;&#26356;&#20248;&#27744;&#26367;&#25442;&#26102;&#30340;&#26087;&#27744;/&#26032;&#27744;&#24046;&#24322;&#65292;&#29992;&#20110;&#35266;&#23519;&#26159;&#31283;&#23450;&#28436;&#21270;&#36824;&#26159;&#37325;&#26032;&#25311;&#21512;&#12290;</p><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#26399;&#21495;</th><th>&#35268;&#27169;</th><th>&#26087;&#27744;</th><th>&#26032;&#27744;</th><th>&#20445;&#30041;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#35206;&#30422;&#21464;&#21270;</th><th>&#21464;&#21270;&#24133;&#24230;</th></tr></thead><tbody>${rows.slice(0, 24).map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.kept || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.beforeCovered ?? '-')} / ${esc(item.afterCovered ?? '-')}<br>${esc(item.beforeHitRate ?? '-')}% -> ${esc(item.afterHitRate ?? '-')}%</td><td>${statusText(item.changeLevel)}<br><span class="muted">${esc(item.changeCount ?? 0)}&#20010;&#21464;&#21270;</span></td></tr>`).join('')}</tbody></table></div></section>`;
+      const changedRows = rows.filter(item => Number(item.changeCount || 0) > 0);
+      const visibleRows = (changedRows.length ? changedRows : rows).slice(0, 12);
+      const hiddenCount = Math.max(0, rows.length - visibleRows.length);
+      const threeCompoundChangeSummary = item => {
+        const added = asArray(item.added);
+        const removed = asArray(item.removed);
+        if (!added.length && !removed.length) return '&#26080;&#21464;&#21270;';
+        return `<div class="change-summary"><div class="change-summary-row"><span class="change-summary-label">&#26032;&#22686;</span>${added.length ? numberChips(added) : '<span class="muted">-</span>'}</div><div class="change-summary-row"><span class="change-summary-label">&#31227;&#38500;</span>${removed.length ? numberChips(removed) : '<span class="muted">-</span>'}</div></div>`;
+      };
+      const coverageChangeText = item => `${esc(item.beforeCovered ?? '-')} / ${esc(item.afterCovered ?? '-')}<br>${esc(item.beforeHitRate ?? '-')}% -> ${esc(item.afterHitRate ?? '-')}%`;
+      const detailBlock = item => `<details class="change-detail"><summary>&#23637;&#24320;</summary><div class="grid mini-grid"><div><p class="muted">&#26087;&#27744;</p>${numberChips(item.beforePool || [])}</div><div><p class="muted">&#26032;&#27744;</p>${numberChips(item.afterPool || [])}</div><div><p class="muted">&#20445;&#30041;</p>${numberChips(item.kept || [])}</div><div><p class="muted">&#26032;&#22686;</p>${numberChips(item.added || [])}</div><div><p class="muted">&#31227;&#38500;</p>${numberChips(item.removed || [])}</div></div></details>`;
+      const historyRows = items => items.map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${esc(item.poolSize)}&#30721;</td><td>${threeCompoundChangeSummary(item)}</td><td>${coverageChangeText(item)}</td><td>${statusText(item.changeLevel)}<br><span class="muted">${esc(item.changeCount ?? 0)}&#20010;&#21464;&#21270;</span></td><td>${detailBlock(item)}</td></tr>`).join('');
+      const tableHead = `<thead><tr><th>&#26102;&#38388;</th><th>&#26399;&#21495;</th><th>&#35268;&#27169;</th><th>&#21464;&#21270;&#25688;&#35201;</th><th>&#35206;&#30422;&#21464;&#21270;</th><th>&#24133;&#24230;</th><th>&#35814;&#24773;</th></tr></thead>`;
+      const allHistory = hiddenCount ? `<details class="change-history-all"><summary>&#26174;&#31034;&#20840;&#37096;&#35760;&#24405;&#65288;&#21547;0&#20010;&#21464;&#21270;/&#31283;&#23450;&#35760;&#24405;&#65289;</summary><div class="table-scroll"><table class="compact-table">${tableHead}<tbody>${historyRows(rows)}</tbody></table></div></details>` : `<p class="muted">&#26174;&#31034;&#20840;&#37096;&#35760;&#24405;</p>`;
+      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#40664;&#35748;&#21482;&#26174;&#31034;&#26377;&#26032;&#22686;/&#31227;&#38500;&#30340;&#35760;&#24405;&#65292;&#23436;&#25972;&#27744;&#23376;&#28857;&#20987;&#23637;&#24320;&#26597;&#30475;&#12290;</p><div class="table-scroll"><table class="compact-table">${tableHead}<tbody>${historyRows(visibleRows)}</tbody></table></div>${hiddenCount ? `<p class="muted">&#24050;&#38544;&#34255; ${esc(hiddenCount)} &#26465;&#31283;&#23450;/&#36739;&#26087;&#35760;&#24405;&#12290;</p>` : ''}${allHistory}</section>`;
     }
     function threeCrossYearPoolTable(analysis) {
       const rows = (analysis.crossYearPools || []).map(item => {
