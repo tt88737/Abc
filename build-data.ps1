@@ -2761,7 +2761,7 @@ function New-DashboardHtml {
       return gamePredictionsPromise;
     }
     async function ensureWindow5Data() {
-      if (window5State?.items) return window5State;
+      if (window5State?.items?.length) return window5State;
       if (!window5Promise) {
         window5Promise = loadJsonOrScript('data/window5-state.json', 'data/window5-state.js', '__WINDOW5_STATE__').then(data => {
           window5State = data || {items: []};
@@ -2771,7 +2771,7 @@ function New-DashboardHtml {
       return window5Promise;
     }
     async function ensureThreeCompoundData() {
-      if (threeCompoundState?.items) return threeCompoundState;
+      if (threeCompoundState?.items?.length) return threeCompoundState;
       if (!threeCompoundPromise) {
         threeCompoundPromise = loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__').then(data => {
           threeCompoundState = data || {items: []};

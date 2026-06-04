@@ -59,4 +59,12 @@ if ($html -notmatch 'delete window\[globalName\]') {
     throw 'expected script data loads to clear stale global data before appending script tags'
 }
 
+if ($html -match 'if \(window5State\?\.items\) return window5State') {
+    throw 'expected window5 state loader to load real data when initial items array is empty'
+}
+
+if ($html -match 'if \(threeCompoundState\?\.items\) return threeCompoundState') {
+    throw 'expected three-compound state loader to load real data when initial items array is empty'
+}
+
 Write-Host 'dashboard three-window ui shape ok'
