@@ -39,4 +39,12 @@ if ($html -notmatch 'class="table-scroll"') {
     throw 'expected wide three-window tables to render inside a horizontal scroll container'
 }
 
+if ($html -notmatch 'isFileDashboard') {
+    throw 'expected local file dashboard to skip failing json fetch attempts'
+}
+
+if ($html -notmatch 'three-window-detail-toggle') {
+    throw 'expected heavy three-window detail tables to render behind explicit toggles'
+}
+
 Write-Host 'dashboard three-window ui shape ok'

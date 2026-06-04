@@ -1383,6 +1383,7 @@ function New-DashboardHtml {
     .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
     .primary { border:1px solid #0b42d8; background:#0b42d8; color:#fff; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .secondary { border:1px solid #cbd5e1; background:#fff; color:#1f2933; padding:9px 14px; border-radius:6px; cursor:pointer; }
+    .detail-placeholder { padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -1406,6 +1407,7 @@ function New-DashboardHtml {
   <script>
     const app = document.getElementById('app');
     const tabs = document.querySelectorAll('.tabs button');
+    const isFileDashboard = location.protocol === 'file:';
     let records = [];
     let recentRecords = [];
     let summary = null;
@@ -2538,6 +2540,12 @@ function New-DashboardHtml {
       }).join('');
       return `<section class="panel full"><h2>&#36328;&#24180;&#22797;&#24335;&#27744;&#65288;&#20840;&#37096;&#21382;&#21490;&#65289;</h2><p class="muted">&#29992;&#35813;&#26469;&#28304;&#20840;&#37096;&#21382;&#21490;&#24320;&#22870;&#29983;&#25104;5/6/7/8&#30721;&#27744;&#65292;&#20877;&#22238;&#25918;&#21040;&#24403;&#24180;5&#26399;&#31383;&#21475;&#35266;&#23519;&#24403;&#21069;&#26377;&#25928;&#24615;&#12290;</p><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#36328;&#24180;&#27744;</th><th>&#24403;&#24180;&#35206;&#30422;</th><th>&#20840;&#21382;&#21490;&#35206;&#30422;</th><th>&#19982;&#24403;&#24180;&#20132;&#38598;</th><th>&#36328;&#24180;&#29420;&#26377;</th><th>&#24403;&#24180;&#29420;&#26377;</th><th>&#28431;&#31383;</th><th>&#24403;&#24180;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
     }
+    function threeWindowDetailHtml(analysis) {
+      return `
+        ${threeCrossYearPoolTable(analysis)}
+        ${threeCompoundHistoryTable(analysis.compoundPools)}
+        <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hitMatchedText(hit))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
+    }
     function renderThreeWindow5() {
       const selected = document.getElementById('three-window5-source')?.value || 'am';
       const htmlCacheKey = `${selected}|${threeCompoundState?.generatedAt || ''}|${records.length}`;
@@ -2561,13 +2569,17 @@ function New-DashboardHtml {
         <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
         <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></div></section>
-        ${threeCrossYearPoolTable(analysis)}
-        ${threeCompoundHistoryTable(analysis.compoundPools)}
-        <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hitMatchedText(hit))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></div></section>
+        <section class="panel full"><h2>&#26126;&#32454;&#25968;&#25454;</h2><div class="detail-placeholder"><button class="secondary three-window-detail-toggle" type="button">&#23637;&#24320;&#36328;&#24180;&#27744;&#12289;&#21464;&#26356;&#35760;&#24405;&#21644;8&#30721;&#31383;&#21475;&#26126;&#32454;</button></div><div id="three-window-details"></div></section>
       </div>`;
       threeWindowHtmlCache.set(htmlCacheKey, html);
       app.innerHTML = html;
       document.getElementById('three-window5-source').addEventListener('change', renderThreeWindow5);
+      document.querySelector('.three-window-detail-toggle')?.addEventListener('click', () => {
+        const detail = document.getElementById('three-window-details');
+        if (!detail || detail.dataset.loaded === '1') return;
+        detail.innerHTML = threeWindowDetailHtml(analysis);
+        detail.dataset.loaded = '1';
+      });
     }
     function patternMetricRow(name, item, sizeLabel) {
       return `<tr><td>${name}</td><td>${esc(sizeLabel)}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.baseline)}%</td><td>${esc(item.edge)}%</td><td>${esc(item.currentMiss)}</td><td>${esc(item.maxMiss)}</td><td>${esc(item.recentHitRate)}%</td><td>${item.level}</td></tr>`;
@@ -2713,7 +2725,7 @@ function New-DashboardHtml {
       });
     }
     async function loadJsonOrScript(jsonUrl, jsUrl, globalName) {
-      if (location.protocol === 'file:') {
+      if (isFileDashboard) {
         return await loadScriptData(jsUrl, globalName);
       }
       try {
