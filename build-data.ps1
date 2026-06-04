@@ -2702,6 +2702,9 @@ function New-DashboardHtml {
     function manualFetchSourceOptions(selected = 'am') {
       return `<option value="am" ${selected === 'am' ? 'selected' : ''}>&#28595;&#38376;</option><option value="hk" ${selected === 'hk' ? 'selected' : ''}>&#39321;&#28207;</option>`;
     }
+    function localFetchCommand(amSourceUrl, amBaseUrl, hkSourceUrl, hkBaseUrl) {
+      return `cd C:\\codex\\test\\am; powershell -NoProfile -ExecutionPolicy Bypass -File .\\fetch-all.ps1 -AmSourceUrl "${amSourceUrl}" -AmBaseUrl "${amBaseUrl}" -HkSourceUrl "${hkSourceUrl}" -HkBaseUrl "${hkBaseUrl}" -SkipSnapshot`;
+    }
     async function triggerManualFetch() {
       const btn = document.getElementById('manual-fetch-submit');
       const result = document.getElementById('manual-fetch-result');
@@ -2717,6 +2720,12 @@ function New-DashboardHtml {
         return;
       }
       btn.disabled = true;
+      if (isFileDashboard) {
+        const command = localFetchCommand(amSourceUrl, amBaseUrl, hkSourceUrl, hkBaseUrl);
+        result.innerHTML = `<strong>&#26412;&#22320;&#25163;&#21160;&#37319;&#38598;</strong><p class="muted">&#26412;&#22320; file:// &#39029;&#38754;&#27809;&#26377; Vercel API&#65292;&#35831;&#22312; PowerShell &#36816;&#34892;&#19979;&#38754;&#21629;&#20196;&#12290;</p><code style="display:block;white-space:normal;word-break:break-all;padding:10px;border:1px solid #e5e7eb;border-radius:6px;background:#f8fafc">${esc(command)}</code><p class="muted">&#36816;&#34892;&#21518;&#37325;&#26032;&#25171;&#24320;&#26412;&#22320; index.html &#26597;&#30475;&#26368;&#26032;&#25968;&#25454;&#12290;</p>`;
+        btn.disabled = false;
+        return;
+      }
       result.innerHTML = '<span class="muted">&#24050;&#25552;&#20132;&#65292;&#31561;&#24453; GitHub Actions &#24320;&#22987;&#36816;&#34892;...</span>';
       try {
         const response = await fetch('/api/manual-fetch', {
@@ -2736,17 +2745,20 @@ function New-DashboardHtml {
     function renderManualFetch() {
       const selected = document.getElementById('manual-fetch-source')?.value || 'am';
       const defaultUrl = defaultFetchUrls[selected] || defaultFetchUrls.am;
+      const manualFetchIntro = isFileDashboard
+        ? '&#26412;&#22320;&#39029;&#38754;&#19981;&#33021;&#30452;&#25509;&#35843;&#29992; Vercel API&#65292;&#28857;&#20987;&#21518;&#20250;&#29983;&#25104; PowerShell &#37319;&#38598;&#21629;&#20196;&#12290;'
+        : '&#22312; Vercel &#39029;&#38754;&#30452;&#25509;&#35302;&#21457; GitHub Actions &#37319;&#38598;&#65292;&#28857;&#20987;&#19968;&#27425;&#20250;&#21516;&#26102;&#37319;&#38598;&#28595;&#38376;&#21644;&#39321;&#28207;&#12290;&#19979;&#26041;&#19979;&#25289;&#26694;&#29992;&#20110;&#20462;&#25913;&#26576;&#19968;&#20010;&#26469;&#28304;&#30340;&#37319;&#38598;&#32593;&#22336;&#12290;';
       app.innerHTML = `<div class="grid">
         <section class="panel full">
           <h2>&#25163;&#21160;&#37319;&#38598;</h2>
-          <p class="muted">&#22312; Vercel &#39029;&#38754;&#30452;&#25509;&#35302;&#21457; GitHub Actions &#37319;&#38598;&#65292;&#28857;&#20987;&#19968;&#27425;&#20250;&#21516;&#26102;&#37319;&#38598;&#28595;&#38376;&#21644;&#39321;&#28207;&#12290;&#19979;&#26041;&#19979;&#25289;&#26694;&#29992;&#20110;&#20462;&#25913;&#26576;&#19968;&#20010;&#26469;&#28304;&#30340;&#37319;&#38598;&#32593;&#22336;&#12290;</p>
+          <p class="muted">${manualFetchIntro}</p>
           <div class="filters">
             <label>&#26469;&#28304;<select id="manual-fetch-source">${manualFetchSourceOptions(selected)}</select></label>
             <label>&#37319;&#38598;&#32593;&#22336;<input id="manual-fetch-url" style="min-width:360px" value="${esc(defaultUrl)}"></label>
             <label>Base URL<input id="manual-fetch-base" style="min-width:360px" value="${esc(defaultUrl)}"></label>
           </div>
           <div class="actions"><button id="manual-fetch-submit" class="primary">&#31435;&#21363;&#37319;&#38598;</button><a class="secondary" href="https://github.com/tt88737/Abc/actions/workflows/manual-fetch.yml" target="_blank" rel="noreferrer">GitHub Actions</a></div>
-          <div id="manual-fetch-result" class="mini">&#38656;&#35201;&#22312; Vercel &#37197;&#32622; GITHUB_TOKEN&#65292;&#25165;&#33021;&#20174;&#39029;&#38754;&#35302;&#21457;&#12290;</div>
+          <div id="manual-fetch-result" class="mini">${isFileDashboard ? '&#28857;&#20987;&#31435;&#21363;&#37319;&#38598;&#21518;&#65292;&#22797;&#21046;&#29983;&#25104;&#30340; PowerShell &#21629;&#20196;&#21040;&#26412;&#26426;&#36816;&#34892;&#12290;' : '&#38656;&#35201;&#22312; Vercel &#37197;&#32622; GITHUB_TOKEN&#65292;&#25165;&#33021;&#20174;&#39029;&#38754;&#35302;&#21457;&#12290;'}</div>
         </section>
       </div>`;
       document.getElementById('manual-fetch-source').addEventListener('change', renderManualFetch);

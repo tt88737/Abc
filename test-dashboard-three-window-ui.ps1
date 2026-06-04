@@ -92,4 +92,12 @@ if ($html -match "threeWindowHtmlCache\.has\(htmlCacheKey\)[\s\S]{0,220}return;"
     }
 }
 
+if ($html -notmatch 'localFetchCommand') {
+    throw 'expected local manual fetch to provide a PowerShell fallback command'
+}
+
+if ($html -notmatch 'isFileDashboard[\s\S]*localFetchCommand') {
+    throw 'expected manual fetch trigger to handle local file dashboard before calling Vercel API'
+}
+
 Write-Host 'dashboard three-window ui shape ok'
