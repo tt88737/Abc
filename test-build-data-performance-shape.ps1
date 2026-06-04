@@ -56,6 +56,12 @@ foreach ($stage in @('game-settle-existing', 'game-current-targets', 'game-sort-
     }
 }
 
+foreach ($stage in @('dedupe-build-map', 'dedupe-sort-records', 'summary-counts')) {
+    if (-not $text.Contains("'$stage'")) {
+        throw "build profile should include dedupe sub-stage $stage"
+    }
+}
+
 if (-not $text.Contains('function New-RecordLookup')) {
     throw 'build-data.ps1 should define indexed record lookup for repeated settlement'
 }

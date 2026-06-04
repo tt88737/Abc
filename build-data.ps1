@@ -2792,9 +2792,18 @@ $records = Invoke-Profiled 'parse-pages' {
 
 $deduped = Invoke-Profiled 'dedupe-sort-summary' {
     $unique = @{}
+    $swDedupe = [Diagnostics.Stopwatch]::StartNew()
     foreach ($record in $records) { $unique[$record.id] = $record }
+    $swDedupe.Stop()
+    Add-ProfileRow 'dedupe-build-map' $swDedupe.Elapsed.TotalSeconds
+    $swSort = [Diagnostics.Stopwatch]::StartNew()
     $rows = @($unique.Values | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'issue'; Descending = $true })
+    $swSort.Stop()
+    Add-ProfileRow 'dedupe-sort-records' $swSort.Elapsed.TotalSeconds
+    $swSummary = [Diagnostics.Stopwatch]::StartNew()
     $script:summary = Get-Summary $rows
+    $swSummary.Stop()
+    Add-ProfileRow 'summary-counts' $swSummary.Elapsed.TotalSeconds
     return $rows
 }
 

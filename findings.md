@@ -20,3 +20,4 @@
 - Candidate fix: split page parse cache into a small index plus one compact records JSON file per page.
 - After implementing split cache, second cache-hit build measured `parse-pages` at about 1.5s.
 - Added `source|issue` record lookup for game settlement. `game-settle-existing` dropped from about 2.0s to about 0.46s, and `game-predictions` from about 2.16s to about 1.28s.
+- Tried single-pass PowerShell summary counters. It increased `summary-counts` from about 2.9s to about 4.0s, likely due to function-call and nested hashtable overhead, so it was reverted.

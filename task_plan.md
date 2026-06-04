@@ -22,6 +22,9 @@ Status: complete
 ## Phase 3: Verification And Push
 Status: in_progress
 
+## Phase 4: Remaining Optimization Scan
+Status: in_progress
+
 - Run relevant regression tests.
 - Run `build-data.ps1 -Profile`.
 - Commit and push each completed optimization.

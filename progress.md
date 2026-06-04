@@ -8,3 +8,4 @@
 - Measured `page-parse-cache.json`: raw read is fast, but `ConvertFrom-Json` exceeds 60 seconds. Planning split-cache optimization.
 - Implemented split page parse cache and measured cache-hit `parse-pages` around 1.5s after migration build.
 - Implemented record lookup for game prediction settlement and measured `game-settle-existing` around 0.46s.
+- Added dedupe sub-stage profiling. Tried and reverted single-pass summary counters because measured performance was worse.
