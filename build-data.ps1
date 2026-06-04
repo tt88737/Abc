@@ -820,6 +820,8 @@ function New-Window5State {
                     $yearPoolHistory
                 ) | Select-Object -First 30
             }
+            $latestHistoryIssue = if ($yearPoolHistory.Count -gt 0 -and $null -ne $yearPoolHistory[0].issue) { [int]$yearPoolHistory[0].issue } else { 0 }
+            $hasLatestIssueChange = -not $changed -and $latestHistoryIssue -eq $latestIssue
             $oldStablePool = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePool) { @($existingItem[0].stablePool | Where-Object { [int]$_ -ge 1 } | Select-Object -First 15 | ForEach-Object { ([int]$_).ToString('00') }) } else { @() }
             $oldStableIssue = if ($existingItem.Count -gt 0 -and $null -ne $existingItem[0].stablePoolLastIssue) { [int]$existingItem[0].stablePoolLastIssue } else { 0 }
             $nextRecalcIssue = if ($oldStableIssue -gt 0) { $oldStableIssue + $interval } else { [Math]::Ceiling($latestIssue / $interval) * $interval }
@@ -849,8 +851,8 @@ function New-Window5State {
                 source = $source
                 year = $year
                 yearPool = $pool
-                adjustmentStatus = if ($changed) { 'changed' } else { 'no-change' }
-                adjustmentReason = if ($changed) { 'year-pool-adjusted-after-latest-draw' } else { 'year-pool-same-as-previous' }
+                adjustmentStatus = if ($changed -or $hasLatestIssueChange) { 'changed' } else { 'no-change' }
+                adjustmentReason = if ($changed -or $hasLatestIssueChange) { 'year-pool-adjusted-after-latest-draw' } else { 'year-pool-same-as-previous' }
                 changeTime = $changeTime
                 yearPoolHistory = @($yearPoolHistory)
                 stablePool = @($newStablePool)
@@ -2528,6 +2530,14 @@ function New-DashboardHtml {
       if (!rows.length) return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;</p></section>`;
       return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#35302;&#21457;&#26399;&#21495;</th><th>&#21464;&#26356;&#21069;</th><th>&#21464;&#26356;&#21518;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#21407;&#22240;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${statusText(item.reason)}</td></tr>`).join('')}</tbody></table></section>`;
     }
+    function latestYearPoolChangeHtml(history) {
+      const latestYearPoolChange = Array.isArray(history) && history.length ? history[0] : null;
+      if (!latestYearPoolChange) return '';
+      const added = Array.isArray(latestYearPoolChange.added) ? latestYearPoolChange.added : [];
+      const removed = Array.isArray(latestYearPoolChange.removed) ? latestYearPoolChange.removed : [];
+      if (!added.length && !removed.length) return '';
+      return `<div class="change-summary"><p>&#26368;&#26032;&#21464;&#26356;&#65306;${esc(latestYearPoolChange.issue || '-')}&#26399;</p><p>&#26032;&#22686;&#65306;${added.length ? numberChips(added) : '-'}</p><p>&#31227;&#38500;&#65306;${removed.length ? numberChips(removed) : '-'}</p></div>`;
+    }
     async function renderWindow5Details(source) {
       await ensureRecordsData();
       const analysis = fiveWindowAnalysis(source);
@@ -2545,7 +2555,7 @@ function New-DashboardHtml {
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
-        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${statusText(analysis.adjustmentStatus)}</p><p class="muted">${statusText(analysis.adjustmentReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
+        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${statusText(analysis.adjustmentStatus)}</p><p class="muted">${statusText(analysis.adjustmentReason)}</p>${latestYearPoolChangeHtml(analysis.yearPoolHistory)}<p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
         <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${statusText(analysis.stablePoolStatus)}</p><p class="muted">${statusText(analysis.stablePoolReason)}</p><p>&#20248;&#21270;&#65306;${statusText(analysis.stablePoolOptimizationStatus)}</p><p class="muted">${statusText(analysis.stablePoolOptimizationReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
         <section class="panel full"><h2>&#26126;&#32454;&#25968;&#25454;</h2><div class="detail-placeholder"><button class="secondary window5-detail-toggle" type="button">&#23637;&#24320;&#21464;&#26356;&#35760;&#24405;&#12289;&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;&#21644;&#24180;&#24230;&#22238;&#27979;</button></div><div id="window5-details"></div></section>
       </div>`;

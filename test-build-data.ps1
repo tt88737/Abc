@@ -215,6 +215,15 @@ $existingGame = [pscustomobject]@{
 
 try {
     & $scriptPath -RootDir $outDir | Out-Null
+    $firstWindowStatePath = Join-Path $dataDir 'window5-state.json'
+    $firstWindowState = Get-Content -LiteralPath $firstWindowStatePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $firstAmWindowState = @($firstWindowState.items | Where-Object { $_.source -eq 'am' } | Select-Object -First 1)[0]
+    & $scriptPath -RootDir $outDir | Out-Null
+    $secondWindowState = Get-Content -LiteralPath $firstWindowStatePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $secondAmWindowState = @($secondWindowState.items | Where-Object { $_.source -eq 'am' } | Select-Object -First 1)[0]
+    if ($firstAmWindowState.adjustmentStatus -eq 'changed' -and @($firstAmWindowState.yearPoolHistory).Count -gt 0 -and [int]$firstAmWindowState.yearPoolHistory[0].issue -eq 134 -and $secondAmWindowState.adjustmentStatus -ne 'changed') {
+        throw 'window5 current-year pool should keep latest-issue changed status across repeated builds'
+    }
 
     $jsonPath = Join-Path $outDir 'data/records.json'
     if (-not (Test-Path -LiteralPath $jsonPath)) {

@@ -49,6 +49,10 @@ if ($html -notmatch 'window5-detail-toggle') {
     throw 'expected heavy window5 detail tables to render behind explicit toggles'
 }
 
+if ($html -notmatch 'latestYearPoolChange' -or $html -notmatch '&#26032;&#22686;&#65306;' -or $html -notmatch '&#31227;&#38500;&#65306;') {
+    throw 'expected window5 current-year pool card to show latest added and removed numbers'
+}
+
 if ($html -notmatch 'class="table-scroll"') {
     throw 'expected wide three-window tables to render inside a horizontal scroll container'
 }
