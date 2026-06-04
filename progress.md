@@ -9,3 +9,4 @@
 - Implemented split page parse cache and measured cache-hit `parse-pages` around 1.5s after migration build.
 - Implemented record lookup for game prediction settlement and measured `game-settle-existing` around 0.46s.
 - Added dedupe sub-stage profiling. Tried and reverted single-pass summary counters because measured performance was worse.
+- Removed obsolete cron function and tightened cron shape test to prevent reintroducing the unused endpoint.

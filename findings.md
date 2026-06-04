@@ -21,3 +21,4 @@
 - After implementing split cache, second cache-hit build measured `parse-pages` at about 1.5s.
 - Added `source|issue` record lookup for game settlement. `game-settle-existing` dropped from about 2.0s to about 0.46s, and `game-predictions` from about 2.16s to about 1.28s.
 - Tried single-pass PowerShell summary counters. It increased `summary-counts` from about 2.9s to about 4.0s, likely due to function-call and nested hashtable overhead, so it was reverted.
+- Removed obsolete `api/cron-fetch.js`; Vercel Cron is intentionally routed through `api/manual-fetch.js?cron=1` because that function is known to deploy.

@@ -3,6 +3,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $vercelPath = Join-Path $root 'vercel.json'
 $cronPath = Join-Path $root 'api/manual-fetch.js'
+$obsoleteCronPath = Join-Path $root 'api/cron-fetch.js'
 
 if (-not (Test-Path -LiteralPath $vercelPath)) {
     throw 'vercel.json should configure Vercel cron jobs'
@@ -20,6 +21,10 @@ if ([string]::IsNullOrWhiteSpace([string]$cron[0].schedule)) {
 
 if (-not (Test-Path -LiteralPath $cronPath)) {
     throw 'api/manual-fetch.js should exist'
+}
+
+if (Test-Path -LiteralPath $obsoleteCronPath) {
+    throw 'api/cron-fetch.js should not remain after cron was routed through manual-fetch'
 }
 
 $script = [IO.File]::ReadAllText($cronPath, [Text.Encoding]::UTF8)

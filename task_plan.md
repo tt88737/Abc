@@ -23,7 +23,7 @@ Status: complete
 Status: in_progress
 
 ## Phase 4: Remaining Optimization Scan
-Status: in_progress
+Status: complete
 
 - Run relevant regression tests.
 - Run `build-data.ps1 -Profile`.
