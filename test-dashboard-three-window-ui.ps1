@@ -9,6 +9,18 @@ if (-not (Test-Path -LiteralPath $htmlPath)) {
 
 $html = Get-Content -LiteralPath $htmlPath -Raw
 
+if ($html -notmatch 'data-tab="betting"' -or $html -notmatch '&#19979;&#27880;&#25512;&#33616;') {
+    throw 'expected dashboard to expose betting recommendation as the first tab'
+}
+
+if ($html -notmatch 'function bettingRecommendationAnalysis' -or $html -notmatch 'function renderBetting' -or $html -notmatch '&#29305;&#21035;&#21495;8&#30721;&#27744;' -or $html -notmatch '&#19977;&#20013;&#19977;8&#30721;&#27744;') {
+    throw 'expected dashboard to render simplified betting recommendations for special and three-hit 8-number pools'
+}
+
+if ($html -notmatch '&#19979;&#27880;' -or $html -notmatch '&#23567;&#27880;' -or $html -notmatch '&#35266;&#26395;' -or $html -notmatch '&#26242;&#20572;') {
+    throw 'expected betting recommendations to include bet, small bet, observe, and pause levels'
+}
+
 if ($html -notmatch 'function recentWindowStats') {
     throw 'expected dashboard to compute recent window stats when persisted recent fields are missing'
 }

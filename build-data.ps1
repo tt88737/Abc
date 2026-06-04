@@ -1394,6 +1394,21 @@ function New-DashboardHtml {
     .primary { border:1px solid #0b42d8; background:#0b42d8; color:#fff; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .secondary { border:1px solid #cbd5e1; background:#fff; color:#1f2933; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .detail-placeholder { padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; }
+    .betting-card { display: grid; gap: 10px; border-left: 4px solid #cbd5e1; }
+    .betting-card.bet { border-left-color: #07860a; }
+    .betting-card.small { border-left-color: #0b42d8; }
+    .betting-card.watch { border-left-color: #f59e0b; }
+    .betting-card.pause { border-left-color: #dc2626; }
+    .betting-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .betting-level { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 10px; font-weight: 800; color: #fff; background: #667085; white-space: nowrap; }
+    .betting-level.bet { background: #07860a; }
+    .betting-level.small { background: #0b42d8; }
+    .betting-level.watch { background: #f59e0b; color: #111827; }
+    .betting-level.pause { background: #dc2626; }
+    .betting-reasons { margin: 0; padding-left: 18px; color: #344054; font-size: 13px; }
+    .betting-reasons li { margin: 3px 0; }
+    .result-hit { color: #07860a; font-weight: 800; }
+    .result-miss { color: #dc2626; font-weight: 800; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -1404,11 +1419,12 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="overview">&#30475;&#26495;</button>
-      <button data-tab="games">&#28216;&#25103;</button>
+      <button class="active" data-tab="betting">&#19979;&#27880;&#25512;&#33616;</button>
+      <button data-tab="games">&#25512;&#33616;&#22797;&#30424;</button>
+      <button data-tab="overview">&#30475;&#26495;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
-      <button data-tab="patternWatch">&#35268;&#24459;&#35266;&#23519;</button>
+      <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
       <button data-tab="daily">&#26085;&#25253;</button>
     </nav>
@@ -2600,6 +2616,99 @@ function New-DashboardHtml {
         ${recommendationHistoryHtml(rows)}
       </section>`;
     }
+    function recentRecommendationGroups(source, game, limit = 10) {
+      const map = new Map();
+      gameRows(source, game).filter(row => row.status === 'settled').forEach(row => {
+        const key = [row.actualDate || row.targetDate || '', row.displayYear || '', row.actualIssue || row.issue || ''].join('|');
+        if (!map.has(key)) {
+          map.set(key, {
+            date: row.actualDate || row.targetDate || '',
+            issue: row.actualIssue || row.issue || '',
+            hit: false,
+            actualNumbers: row.actualNumbers || []
+          });
+        }
+        const item = map.get(key);
+        item.hit = item.hit || !!row.hit;
+        if (!item.actualNumbers?.length && row.actualNumbers?.length) item.actualNumbers = row.actualNumbers;
+      });
+      return [...map.values()].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit);
+    }
+    function bettingReviewStats(source, game) {
+      const groups = recentRecommendationGroups(source, game, 10);
+      const hits = groups.filter(item => item.hit).length;
+      let currentMiss = 0;
+      for (const item of groups) {
+        if (item.hit) break;
+        currentMiss++;
+      }
+      return {groups, hits, total: groups.length, hitRate: groups.length ? Math.round(hits / groups.length * 100) : 0, currentMiss};
+    }
+    function bettingLevel(score, currentMiss, maxMiss, recentHitRate, review) {
+      if (maxMiss > 0 && currentMiss > maxMiss) return {code: 'pause', label: '&#26242;&#20572;'};
+      if (review.total >= 6 && review.currentMiss >= 3) return {code: 'pause', label: '&#26242;&#20572;'};
+      if (score >= 76 && currentMiss <= 1 && recentHitRate >= 60 && review.hitRate >= 35) return {code: 'bet', label: '&#19979;&#27880;'};
+      if (score >= 62 && currentMiss <= Math.max(2, maxMiss) && recentHitRate >= 40) return {code: 'small', label: '&#23567;&#27880;'};
+      return {code: 'watch', label: '&#35266;&#26395;'};
+    }
+    function bettingRecommendationItem(name, game, pool, stats, baseline, review) {
+      const recent = Number(stats.recentHitRate || 0);
+      const hitRate = Number(stats.hitRate || 0);
+      const edge = Math.round((hitRate - Number(baseline || 0)) * 100) / 100;
+      const currentMiss = Number(stats.currentMiss || 0);
+      const maxMiss = Number(stats.maxMiss || 0);
+      let score = 50 + edge * 0.7 + Math.max(-12, Math.min(12, (recent - hitRate) * 0.4)) - currentMiss * 8;
+      if (review.total >= 6) score += Math.max(-18, Math.min(14, (review.hitRate - 30) * 0.45));
+      if (maxMiss > 0 && currentMiss >= maxMiss) score -= 18;
+      score = Math.max(0, Math.min(100, Math.round(score)));
+      const level = bettingLevel(score, currentMiss, maxMiss, recent, review);
+      const reasons = [
+        `&#24471;&#20998; ${score} / &#36817;10&#31383;&#21475; ${recent}%`,
+        `&#28431;&#31383; ${currentMiss} / ${maxMiss || '-'}`,
+        review.total ? `&#36817;${review.total}&#27425;&#30495;&#23454;&#25512;&#33616; ${review.hits}/${review.total}` : '&#26242;&#26080;&#30495;&#23454;&#22797;&#30424;'
+      ];
+      return {name, game, pool, stats, baseline, review, score, level, reasons};
+    }
+    function bettingRecommendationAnalysis(source) {
+      const special = fiveWindowAnalysis(source);
+      const three = threeWindowAnalysis(source);
+      const specialStats = patternStats(special.yearWindows);
+      const specialBaseline = randomWindowBaseline(special.yearPool.length, 49, 5);
+      const threePool = (three.compoundPools || []).find(item => Number(item.poolSize || 0) === 8) || {};
+      const threeRecent = recentWindowStats(threePool);
+      const threeStats = {
+        hitRate: Number(threePool.hitRate || 0),
+        recentHitRate: Number(threeRecent.hitRate || 0),
+        currentMiss: Number(threePool.currentMiss ?? three.stats?.currentMiss ?? 0),
+        maxMiss: Number(threePool.maxMiss ?? three.stats?.maxMiss ?? 0)
+      };
+      return {
+        source,
+        latest: sourceSummary(source).latest || special.latest || three.latest || {},
+        items: [
+          bettingRecommendationItem('&#29305;&#21035;&#21495;8&#30721;&#27744;', 'special-number', special.yearPool, specialStats, specialBaseline, bettingReviewStats(source, 'special-number')),
+          bettingRecommendationItem('&#19977;&#20013;&#19977;8&#30721;&#27744;', 'three-hit-three', threePool.pool || three.numberPool || [], threeStats, randomWindowBaseline(8, 49, 5), bettingReviewStats(source, 'three-hit-three'))
+        ]
+      };
+    }
+    function bettingCard(item) {
+      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div>${numberChips(item.pool || [])}<p>&#24471;&#20998;&#65306;${esc(item.score)}&#12288;&#21382;&#21490;&#65306;${esc(item.stats.hitRate || 0)}%&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
+    }
+    function bettingReviewTable(analysis) {
+      const rows = analysis.items.flatMap(item => item.review.groups.map(group => ({name: item.name, ...group})));
+      return `<section class="panel full"><h2>&#26368;&#36817;&#30495;&#23454;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#32467;&#26524;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
+    }
+    function renderBetting() {
+      const selected = document.getElementById('betting-source')?.value || 'am';
+      const analysis = bettingRecommendationAnalysis(selected);
+      app.innerHTML = `<div class="grid">
+        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="betting-source">${sourceOptions(selected)}</select></label></div></section>
+        <section class="panel full"><h2>&#20170;&#26085;&#19979;&#27880;&#25512;&#33616;</h2><p class="muted">${esc(analysis.latest?.date || '')} ${esc(analysis.latest?.issue || '')}&#26399;&#65292;&#31561;&#32423;&#21482;&#20381;&#25454;&#21382;&#21490;&#28378;&#21160;&#34920;&#29616;&#12289;&#36817;&#26399;&#22797;&#30424;&#21644;&#24403;&#21069;&#28431;&#31383;&#35745;&#31639;&#12290;</p></section>
+        ${analysis.items.map(bettingCard).join('')}
+        ${bettingReviewTable(analysis)}
+      </div>`;
+      document.getElementById('betting-source').addEventListener('change', renderBetting);
+    }
     function renderGames() {
       const selected = document.getElementById('game-source')?.value || 'am';
       app.innerHTML = `<div class="grid">
@@ -2949,6 +3058,12 @@ function New-DashboardHtml {
       return threeCompoundPromise;
     }
     const tabDataLoaders = {
+      betting: async () => {
+        await ensureRecordsData();
+        gamePredictions = await ensureGamePredictionsData();
+        window5State = await ensureWindow5Data();
+        threeCompoundState = await ensureThreeCompoundData();
+      },
       games: async () => {
         await ensureRecordsData();
         gamePredictions = await ensureGamePredictionsData();
@@ -2967,6 +3082,7 @@ function New-DashboardHtml {
       }
     };
     const renderers = {
+      betting: renderBetting,
       overview: renderOverview,
       games: renderGames,
       window5: renderWindow5,
@@ -3000,7 +3116,7 @@ function New-DashboardHtml {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
-      renderOverview();
+      switchTab('betting');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });

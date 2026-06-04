@@ -270,8 +270,8 @@ try {
     if ($buildScript.Contains('C:\codex\test\am')) {
         throw 'build-data.ps1 should not use a machine-specific default path'
     }
-    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose overview, games, 5-window, three-hit 5-window, pattern watch, manual fetch, and daily tabs'
+    if (-not $dashboard.Contains('data-tab="betting"') -or -not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose betting, overview, review, 5-window, three-hit 5-window, advanced analysis, manual fetch, and daily tabs'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
