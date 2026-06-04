@@ -1361,6 +1361,8 @@ function New-DashboardHtml {
     .history-group summary { display: grid; grid-template-columns: 1fr 150px 110px; gap: 12px; align-items: center; padding: 10px 12px; cursor: pointer; font-size: 13px; font-weight: 700; list-style-position: inside; }
     .history-group[open] summary { border-bottom: 1px solid #e5e7eb; background: #f8fafc; }
     .history-group table { margin: 0; }
+    .table-scroll { width: 100%; overflow-x: auto; }
+    .table-scroll table { min-width: 1040px; }
     .trail{display:flex;flex-wrap:wrap;gap:3px;max-width:220px}
     .trail i{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;font-style:normal;font-size:12px;color:#fff}
     .trail .hit{background:#078a16}
@@ -1797,9 +1799,76 @@ function New-DashboardHtml {
     function hitMatchedText(hit) {
       return asArray(hit?.matched || hit?.combo).join('-');
     }
+    function stateWindowAnalysis(source) {
+      const stateItems = asArray(threeCompoundState?.items).filter(item => item.source === source);
+      const stateItem = stateItems.slice().sort((a, b) => Number(b.latestIssue || 0) - Number(a.latestIssue || 0))[0];
+      if (!stateItem) return null;
+      const compoundPools = asArray(stateItem.pools);
+      const crossYearPools = asArray(stateItem.crossYearPools);
+      const primary = compoundPools.find(item => Number(item.poolSize || 0) === 8) || compoundPools[compoundPools.length - 1];
+      const yearWindows = asArray(primary?.windows);
+      const latestIssue = Number(stateItem.latestIssue || yearWindows.reduce((max, win) => Math.max(max, Number(win.end || 0)), 0));
+      const currentStart = latestIssue ? Math.floor((latestIssue - 1) / 5) * 5 + 1 : 1;
+      const currentWindow = yearWindows.find(item => Number(item.start || 0) === currentStart) || {start: currentStart, end: currentStart + 4, count: 0, hits: [], covered: false};
+      const completedWindows = yearWindows.filter(item => Number(item.count || 0) >= 5);
+      const hitWindows = completedWindows.filter(item => item.covered).length;
+      let maxMiss = 0;
+      let currentMiss = 0;
+      let run = 0;
+      completedWindows.forEach(item => {
+        if (item.covered) {
+          maxMiss = Math.max(maxMiss, run);
+          run = 0;
+        } else {
+          run++;
+        }
+      });
+      maxMiss = Math.max(maxMiss, run);
+      for (let i = completedWindows.length - 1; i >= 0; i--) {
+        if (completedWindows[i].covered) break;
+        currentMiss++;
+      }
+      const yearPoolsBySize = new Map(compoundPools.map(item => [Number(item.poolSize || 0), item]));
+      crossYearPools.forEach(item => {
+        const yearPool = asArray(yearPoolsBySize.get(Number(item.poolSize || 0))?.pool);
+        const crossPool = asArray(item.pool);
+        const yearSet = new Set(yearPool);
+        const crossSet = new Set(crossPool);
+        if (!Array.isArray(item.intersection)) item.intersection = crossPool.filter(num => yearSet.has(num));
+        item.intersectionCount = item.intersection.length;
+        if (!Array.isArray(item.crossYearOnly)) item.crossYearOnly = crossPool.filter(num => !yearSet.has(num));
+        if (!Array.isArray(item.yearOnly)) item.yearOnly = yearPool.filter(num => !crossSet.has(num));
+      });
+      return {
+        source,
+        latest: {issue: latestIssue},
+        currentYear: stateItem.year || '',
+        numberPool: primary?.pool || [],
+        compoundPools,
+        crossYearPools,
+        combos: [],
+        currentWindow,
+        yearWindows,
+        stats: {
+          total: completedWindows.length,
+          hits: hitWindows,
+          misses: completedWindows.length - hitWindows,
+          hitRate: completedWindows.length ? Math.round(hitWindows / completedWindows.length * 100) : 0,
+          currentMiss,
+          maxMiss
+        }
+      };
+    }
     function threeWindowAnalysis(source) {
       const cacheKey = `${source}|${threeCompoundState?.generatedAt || ''}|${records.length}`;
       if (threeWindowAnalysisCache.has(cacheKey)) return threeWindowAnalysisCache.get(cacheKey);
+      if (!records.length) {
+        const stateAnalysis = stateWindowAnalysis(source);
+        if (stateAnalysis) {
+          threeWindowAnalysisCache.set(cacheKey, stateAnalysis);
+          return stateAnalysis;
+        }
+      }
       const sourceRows = cachedSourceRecords(source).slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
       const latest = sourceRows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0];
       const currentYear = displayYear(latest);
@@ -2454,7 +2523,7 @@ function New-DashboardHtml {
         return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;&#65292;&#24403;&#21069;&#27744;&#23376;&#27839;&#29992;&#19978;&#27425;&#32467;&#26524;&#12290;</p></section>`;
       }
       rows.sort((a, b) => String(b.changedAt || '').localeCompare(String(a.changedAt || '')) || Number(b.poolSize || 0) - Number(a.poolSize || 0));
-      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#35760;&#24405;&#27599;&#27425;&#26356;&#20248;&#27744;&#26367;&#25442;&#26102;&#30340;&#26087;&#27744;/&#26032;&#27744;&#24046;&#24322;&#65292;&#29992;&#20110;&#35266;&#23519;&#26159;&#31283;&#23450;&#28436;&#21270;&#36824;&#26159;&#37325;&#26032;&#25311;&#21512;&#12290;</p><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#26399;&#21495;</th><th>&#35268;&#27169;</th><th>&#26087;&#27744;</th><th>&#26032;&#27744;</th><th>&#20445;&#30041;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#35206;&#30422;&#21464;&#21270;</th><th>&#21464;&#21270;&#24133;&#24230;</th></tr></thead><tbody>${rows.slice(0, 24).map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.kept || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.beforeCovered ?? '-')} / ${esc(item.afterCovered ?? '-')}<br>${esc(item.beforeHitRate ?? '-')}% -> ${esc(item.afterHitRate ?? '-')}%</td><td>${statusText(item.changeLevel)}<br><span class="muted">${esc(item.changeCount ?? 0)}&#20010;&#21464;&#21270;</span></td></tr>`).join('')}</tbody></table></section>`;
+      return `<section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#21464;&#26356;&#35760;&#24405;</h2><p class="muted">&#35760;&#24405;&#27599;&#27425;&#26356;&#20248;&#27744;&#26367;&#25442;&#26102;&#30340;&#26087;&#27744;/&#26032;&#27744;&#24046;&#24322;&#65292;&#29992;&#20110;&#35266;&#23519;&#26159;&#31283;&#23450;&#28436;&#21270;&#36824;&#26159;&#37325;&#26032;&#25311;&#21512;&#12290;</p><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#26399;&#21495;</th><th>&#35268;&#27169;</th><th>&#26087;&#27744;</th><th>&#26032;&#27744;</th><th>&#20445;&#30041;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#35206;&#30422;&#21464;&#21270;</th><th>&#21464;&#21270;&#24133;&#24230;</th></tr></thead><tbody>${rows.slice(0, 24).map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.kept || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${esc(item.beforeCovered ?? '-')} / ${esc(item.afterCovered ?? '-')}<br>${esc(item.beforeHitRate ?? '-')}% -> ${esc(item.afterHitRate ?? '-')}%</td><td>${statusText(item.changeLevel)}<br><span class="muted">${esc(item.changeCount ?? 0)}&#20010;&#21464;&#21270;</span></td></tr>`).join('')}</tbody></table></div></section>`;
     }
     function threeCrossYearPoolTable(analysis) {
       const rows = (analysis.crossYearPools || []).map(item => {
@@ -2467,7 +2536,7 @@ function New-DashboardHtml {
         const yearHitRate = item.yearHitRate ?? item.hitRate ?? 0;
         return `<tr><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool || [])}</td><td>${esc(yearCovered)} / ${esc(yearTotal)}<br>${esc(yearHitRate)}%</td><td>${esc(item.historyCovered ?? '-')} / ${esc(item.historyTotal ?? '-')}<br>${esc(item.historyHitRate ?? '-')}%</td><td>${numberChips(item.intersection || [])}<br><span class="muted">${esc(item.intersectionCount ?? 0)}&#20010;</span></td><td>${numberChips(item.crossYearOnly || [])}</td><td>${numberChips(item.yearOnly || [])}</td><td>${esc(item.yearCurrentMiss ?? item.currentMiss ?? 0)} / ${esc(item.yearMaxMiss ?? item.maxMiss ?? 0)}</td><td>${esc(misses.slice(0, 8).map(win => `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`).join(', ') || '-')}</td><td>${current.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${currentHits}</td></tr>`;
       }).join('');
-      return `<section class="panel full"><h2>&#36328;&#24180;&#22797;&#24335;&#27744;&#65288;&#20840;&#37096;&#21382;&#21490;&#65289;</h2><p class="muted">&#29992;&#35813;&#26469;&#28304;&#20840;&#37096;&#21382;&#21490;&#24320;&#22870;&#29983;&#25104;5/6/7/8&#30721;&#27744;&#65292;&#20877;&#22238;&#25918;&#21040;&#24403;&#24180;5&#26399;&#31383;&#21475;&#35266;&#23519;&#24403;&#21069;&#26377;&#25928;&#24615;&#12290;</p><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#36328;&#24180;&#27744;</th><th>&#24403;&#24180;&#35206;&#30422;</th><th>&#20840;&#21382;&#21490;&#35206;&#30422;</th><th>&#19982;&#24403;&#24180;&#20132;&#38598;</th><th>&#36328;&#24180;&#29420;&#26377;</th><th>&#24403;&#24180;&#29420;&#26377;</th><th>&#28431;&#31383;</th><th>&#24403;&#24180;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+      return `<section class="panel full"><h2>&#36328;&#24180;&#22797;&#24335;&#27744;&#65288;&#20840;&#37096;&#21382;&#21490;&#65289;</h2><p class="muted">&#29992;&#35813;&#26469;&#28304;&#20840;&#37096;&#21382;&#21490;&#24320;&#22870;&#29983;&#25104;5/6/7/8&#30721;&#27744;&#65292;&#20877;&#22238;&#25918;&#21040;&#24403;&#24180;5&#26399;&#31383;&#21475;&#35266;&#23519;&#24403;&#21069;&#26377;&#25928;&#24615;&#12290;</p><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#36328;&#24180;&#27744;</th><th>&#24403;&#24180;&#35206;&#30422;</th><th>&#20840;&#21382;&#21490;&#35206;&#30422;</th><th>&#19982;&#24403;&#24180;&#20132;&#38598;</th><th>&#36328;&#24180;&#29420;&#26377;</th><th>&#24403;&#24180;&#29420;&#26377;</th><th>&#28431;&#31383;</th><th>&#24403;&#24180;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
     }
     function renderThreeWindow5() {
       const selected = document.getElementById('three-window5-source')?.value || 'am';
@@ -2491,10 +2560,10 @@ function New-DashboardHtml {
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="three-window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
-        <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></section>
+        <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></div></section>
         ${threeCrossYearPoolTable(analysis)}
         ${threeCompoundHistoryTable(analysis.compoundPools)}
-        <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hitMatchedText(hit))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
+        <section class="panel full"><h2>8&#30721;&#22797;&#24335;&#27744;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;&#21495;&#30721;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.slice(0, 8).map(hit => `${esc(hit.issue)}:${esc(hitMatchedText(hit))}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></div></section>
       </div>`;
       threeWindowHtmlCache.set(htmlCacheKey, html);
       app.innerHTML = html;
@@ -2707,7 +2776,6 @@ function New-DashboardHtml {
         window5State = await ensureWindow5Data();
       },
       threeWindow5: async () => {
-        await ensureRecordsData();
         threeCompoundState = await ensureThreeCompoundData();
       },
       patternWatch: async () => {

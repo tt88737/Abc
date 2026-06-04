@@ -25,4 +25,18 @@ if ($html -match "recentCovered \?\? '-'") {
     throw 'expected dashboard to avoid placeholder recent window stats in three-compound tables'
 }
 
+$threeLoaderPattern = 'threeWindow5:\s*async\s*\(\)\s*=>\s*\{(?<body>[\s\S]*?)\n\s*\}'
+$threeLoader = [regex]::Match($html, $threeLoaderPattern)
+if (-not $threeLoader.Success) {
+    throw 'expected dashboard to define a threeWindow5 tab loader'
+}
+
+if ($threeLoader.Groups['body'].Value -match 'ensureRecordsData') {
+    throw 'expected threeWindow5 tab to avoid loading full records data before first render'
+}
+
+if ($html -notmatch 'class="table-scroll"') {
+    throw 'expected wide three-window tables to render inside a horizontal scroll container'
+}
+
 Write-Host 'dashboard three-window ui shape ok'
