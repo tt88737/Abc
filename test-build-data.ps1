@@ -699,6 +699,18 @@ try {
             if ($null -eq $poolItem.poolSize -or $null -eq $poolItem.pool -or $null -eq $poolItem.covered -or $null -eq $poolItem.total -or $null -eq $poolItem.hitRate -or $null -eq $poolItem.status -or $null -eq $poolItem.recentHitRate -or $null -eq $poolItem.currentMiss -or $null -eq $poolItem.maxMiss -or $null -eq $poolItem.healthStatus -or $null -eq $poolItem.changeHistory) {
                 throw 'three-compound pool state should include size, pool, coverage, total, hit rate, status, health metrics, and change history'
             }
+            foreach ($win in @($poolItem.windows)) {
+                if ($null -eq $win.poolSnapshot) {
+                    throw 'three-compound pool windows should include the effective pool snapshot'
+                }
+            }
+        }
+        foreach ($poolItem in @($item.crossYearPools)) {
+            foreach ($win in @($poolItem.yearWindows)) {
+                if ($null -eq $win.poolSnapshot) {
+                    throw 'three-compound cross-year windows should include the effective pool snapshot'
+                }
+            }
         }
     }
     $threeCompoundScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'build-three-compound.py'), [Text.Encoding]::UTF8)

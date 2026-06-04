@@ -92,6 +92,39 @@ def coverage_from_specs(specs, pool):
     return result
 
 
+def normalized_pool(nums):
+    return sorted([str(num).zfill(2) for num in (nums or []) if str(num).strip()], key=int)
+
+
+def pool_snapshot_for_window(current_pool, history, window_start):
+    snapshot = normalized_pool(current_pool)
+    changes = sorted(history or [], key=lambda item: int(item.get("issue") or 0), reverse=True)
+    for change in changes:
+        if int(window_start or 0) <= int(change.get("issue") or 0) and change.get("beforePool"):
+            snapshot = normalized_pool(change.get("beforePool") or [])
+    return snapshot
+
+
+def snapshot_windows(rows, current_pool, history):
+    specs = window_specs(rows)
+    result = []
+    for item in specs:
+        pool_snapshot = pool_snapshot_for_window(current_pool, history, item["start"])
+        wins = coverage_from_specs([item], pool_snapshot)
+        if wins:
+            wins[0]["poolSnapshot"] = pool_snapshot
+            result.append(wins[0])
+    return result
+
+
+def refresh_pool_with_snapshots(pool_item, rows, history_key="changeHistory"):
+    history = list(pool_item.get(history_key, []))
+    wins = snapshot_windows(rows, pool_item.get("pool", []), history)
+    pool_item["windows"] = wins
+    pool_item.update(pool_metrics(wins))
+    return pool_item
+
+
 def score_pool(rows, pool):
     return score_pool_from_specs(window_specs(rows), pool)
 
@@ -336,7 +369,12 @@ def has_complete_pools(item):
     cross_year_pools = item.get("crossYearPools") or []
     pool_sizes = sorted(int(pool.get("poolSize") or 0) for pool in pools)
     cross_year_sizes = sorted(int(pool.get("poolSize") or 0) for pool in cross_year_pools)
-    return pool_sizes == [5, 6, 7, 8] and cross_year_sizes == [5, 6, 7, 8]
+    all_pools = list(pools) + list(cross_year_pools)
+    has_snapshots = all(
+        any(win.get("poolSnapshot") for win in (pool.get("windows") or pool.get("yearWindows") or []))
+        for pool in all_pools
+    )
+    return pool_sizes == [5, 6, 7, 8] and cross_year_sizes == [5, 6, 7, 8] and has_snapshots
 
 
 def cached_item(old_item, generated_at):
@@ -410,13 +448,12 @@ def main():
                     **diff,
                     "reason": "better-completed-window-coverage-pool" if old_pool else "initial-three-compound-pool",
                 }] + old_history[:29]
+                candidate = refresh_pool_with_snapshots(candidate, year_rows)
                 changed = True
                 pools.append(candidate)
             else:
                 old_pool["status"] = "no-change"
-                refreshed = coverage(year_rows, old_pool.get("pool", []))
-                old_pool.update(pool_metrics(refreshed))
-                old_pool["windows"] = refreshed
+                refresh_pool_with_snapshots(old_pool, year_rows)
                 old_pool["changeHistory"] = list(old_pool.get("changeHistory", []))
                 pools.append(old_pool)
         year_pools_by_size = {int(item.get("poolSize")): item for item in pools if item.get("poolSize")}
@@ -455,15 +492,40 @@ def main():
                     **diff,
                     "reason": "better-all-history-compound-pool" if old_pool else "initial-cross-year-compound-pool",
                 }] + old_history[:29]
+                history_windows = snapshot_windows(source_rows, candidate.get("pool", []), candidate.get("changeHistory", []))
+                history_metrics = pool_metrics(history_windows)
+                year_windows = snapshot_windows(year_rows, candidate.get("pool", []), candidate.get("changeHistory", []))
+                year_metrics = pool_metrics(year_windows)
+                candidate.update(year_metrics)
+                candidate["windows"] = year_windows
+                candidate["yearWindows"] = year_windows
+                candidate["yearCovered"] = year_metrics["covered"]
+                candidate["yearTotal"] = year_metrics["total"]
+                candidate["yearHitRate"] = year_metrics["hitRate"]
+                candidate["yearRecentCovered"] = year_metrics["recentCovered"]
+                candidate["yearRecentTotal"] = year_metrics["recentTotal"]
+                candidate["yearRecentHitRate"] = year_metrics["recentHitRate"]
+                candidate["yearCurrentMiss"] = year_metrics["currentMiss"]
+                candidate["yearMaxMiss"] = year_metrics["maxMiss"]
+                candidate["historyWindows"] = history_windows
+                candidate["historyCovered"] = history_metrics["covered"]
+                candidate["historyTotal"] = history_metrics["total"]
+                candidate["historyHitRate"] = history_metrics["hitRate"]
+                candidate["historyRecentCovered"] = history_metrics["recentCovered"]
+                candidate["historyRecentTotal"] = history_metrics["recentTotal"]
+                candidate["historyRecentHitRate"] = history_metrics["recentHitRate"]
+                candidate["historyCurrentMiss"] = history_metrics["currentMiss"]
+                candidate["historyMaxMiss"] = history_metrics["maxMiss"]
+                candidate["historyHitDraws"] = history_metrics["hitDraws"]
                 cross_year_changed = True
                 cross_year_pools.append(candidate)
             else:
                 old_pool["status"] = "no-change"
                 old_pool["scope"] = "all-history"
                 pool = old_pool.get("pool", [])
-                history_windows = coverage(source_rows, pool)
+                history_windows = snapshot_windows(source_rows, pool, old_pool.get("changeHistory", []))
                 history_metrics = pool_metrics(history_windows)
-                year_windows = coverage(year_rows, pool)
+                year_windows = snapshot_windows(year_rows, pool, old_pool.get("changeHistory", []))
                 year_metrics = pool_metrics(year_windows)
                 old_pool.update(year_metrics)
                 old_pool["windows"] = year_windows
