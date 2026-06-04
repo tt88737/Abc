@@ -10,14 +10,17 @@ Status: complete
 - Add targeted tests before changing build behavior.
 
 ## Phase 2: Implement Highest-Value Optimization
-Status: in_progress
+Status: complete
+
+## Phase 2b: Game Prediction Settlement Index
+Status: complete
 
 - Prefer changes that reduce build time, page load work, data size, or operational risk.
 - Keep each change narrow and independently verified.
 - Rebuild generated files after modifying generators.
 
 ## Phase 3: Verification And Push
-Status: pending
+Status: in_progress
 
 - Run relevant regression tests.
 - Run `build-data.ps1 -Profile`.

@@ -423,6 +423,20 @@ function Test-RecordMatchesGameItemYear {
     return $false
 }
 
+function New-RecordLookup {
+    param([object[]]$Records)
+
+    $lookup = @{}
+    foreach ($record in @($Records)) {
+        $key = '{0}|{1}' -f $record.source, [int]$record.issue
+        if (-not $lookup.ContainsKey($key)) {
+            $lookup[$key] = New-Object 'System.Collections.Generic.List[object]'
+        }
+        $lookup[$key].Add($record) | Out-Null
+    }
+    return $lookup
+}
+
 function Get-ModelPickFromHistory {
     param([object[]]$History, [hashtable]$Model, [int]$Limit = 7)
 
@@ -534,7 +548,7 @@ function Get-AlgorithmNumbers {
 }
 
 function Settle-GameItem {
-    param([object]$Item, [object[]]$Records)
+    param([object]$Item, [object[]]$Records, [hashtable]$RecordLookup = $null)
 
     if ($Item.status -eq 'settled' -and -not [string]::IsNullOrWhiteSpace([string]$Item.targetDate) -and -not [string]::IsNullOrWhiteSpace([string]$Item.actualDate) -and [string]$Item.targetDate -ne [string]$Item.actualDate) {
         $Item | Add-Member -NotePropertyName status -NotePropertyValue 'pending' -Force
@@ -543,10 +557,15 @@ function Settle-GameItem {
         $Item.PSObject.Properties.Remove('actualIssue')
         $Item.PSObject.Properties.Remove('actualNumbers')
     }
-    $baseMatches = @($Records | Where-Object {
-        $_.source -eq $Item.source -and
-        [int]$_.issue -eq [int]$Item.issue
-    })
+    $lookupKey = '{0}|{1}' -f $Item.source, [int]$Item.issue
+    $baseMatches = if ($RecordLookup -and $RecordLookup.ContainsKey($lookupKey)) {
+        @($RecordLookup[$lookupKey].ToArray())
+    } else {
+        @($Records | Where-Object {
+            $_.source -eq $Item.source -and
+            [int]$_.issue -eq [int]$Item.issue
+        })
+    }
     $draw = @()
     if (-not [string]::IsNullOrWhiteSpace([string]$Item.targetDate)) {
         $draw = @($baseMatches | Where-Object { [string]$_.date -eq [string]$Item.targetDate } | Select-Object -First 1)
@@ -855,6 +874,7 @@ function New-GamePredictions {
 
     $createdAt = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $items = New-Object 'System.Collections.Generic.List[object]'
+    $recordLookup = New-RecordLookup -Records $Records
     $sw = [Diagnostics.Stopwatch]::StartNew()
     foreach ($old in @($Existing)) {
         $actualNumbers = @($old.actualNumbers)
@@ -862,7 +882,7 @@ function New-GamePredictions {
             $items.Add((Update-SettledGameItemHit -Item $old)) | Out-Null
         }
         else {
-            $items.Add((Settle-GameItem -Item $old -Records $Records)) | Out-Null
+            $items.Add((Settle-GameItem -Item $old -Records $Records -RecordLookup $recordLookup)) | Out-Null
         }
     }
     $sw.Stop()

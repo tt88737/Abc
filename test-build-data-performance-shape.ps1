@@ -56,4 +56,12 @@ foreach ($stage in @('game-settle-existing', 'game-current-targets', 'game-sort-
     }
 }
 
+if (-not $text.Contains('function New-RecordLookup')) {
+    throw 'build-data.ps1 should define indexed record lookup for repeated settlement'
+}
+
+if (-not $text.Contains('RecordLookup')) {
+    throw 'game settlement should use record lookup instead of repeated full scans'
+}
+
 Write-Host 'build-data performance shape ok'
