@@ -2558,8 +2558,10 @@ function New-DashboardHtml {
       document.getElementById('manual-fetch-source').addEventListener('change', renderManualFetch);
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
-    const fullDataTabs = new Set(['games', 'window5', 'threeWindow5', 'patternWatch', 'daily']);
-    let fullDataPromise = null;
+    let recordsDataPromise = null;
+    let gamePredictionsPromise = null;
+    let window5Promise = null;
+    let threeCompoundPromise = null;
     function loadScriptData(src, globalName) {
       return new Promise((resolve, reject) => {
         if (window[globalName]) {
@@ -2588,25 +2590,68 @@ function New-DashboardHtml {
         return await loadScriptData(jsUrl, globalName);
       }
     }
-    async function ensureFullData() {
-      if (records.length && window5State?.items && threeCompoundState?.items) return;
-      if (!fullDataPromise) {
-        fullDataPromise = Promise.all([
-          loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__'),
-          loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__'),
-          loadJsonOrScript('data/window5-state.json', 'data/window5-state.js', '__WINDOW5_STATE__'),
-          loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__')
-        ]).then(([data, gamesData, window5Data, threeData]) => {
+    async function ensureRecordsData() {
+      if (records.length) return records;
+      if (!recordsDataPromise) {
+        recordsDataPromise = loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__').then(data => {
           records = data.records || [];
           summary = data.summary || summary || {};
           generatedPredictions = data.predictions || generatedPredictions;
-          gamePredictions = gamesData;
-          window5State = window5Data;
-          threeCompoundState = threeData;
+          return records;
         });
       }
-      return fullDataPromise;
+      return recordsDataPromise;
     }
+    async function ensureGamePredictionsData() {
+      if (gamePredictions?.items?.length) return gamePredictions;
+      if (!gamePredictionsPromise) {
+        gamePredictionsPromise = loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__').then(data => {
+          gamePredictions = data || {items: []};
+          return gamePredictions;
+        });
+      }
+      return gamePredictionsPromise;
+    }
+    async function ensureWindow5Data() {
+      if (window5State?.items) return window5State;
+      if (!window5Promise) {
+        window5Promise = loadJsonOrScript('data/window5-state.json', 'data/window5-state.js', '__WINDOW5_STATE__').then(data => {
+          window5State = data || {items: []};
+          return window5State;
+        });
+      }
+      return window5Promise;
+    }
+    async function ensureThreeCompoundData() {
+      if (threeCompoundState?.items) return threeCompoundState;
+      if (!threeCompoundPromise) {
+        threeCompoundPromise = loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__').then(data => {
+          threeCompoundState = data || {items: []};
+          return threeCompoundState;
+        });
+      }
+      return threeCompoundPromise;
+    }
+    const tabDataLoaders = {
+      games: async () => {
+        await ensureRecordsData();
+        gamePredictions = await ensureGamePredictionsData();
+      },
+      window5: async () => {
+        await ensureRecordsData();
+        window5State = await ensureWindow5Data();
+      },
+      threeWindow5: async () => {
+        await ensureRecordsData();
+        threeCompoundState = await ensureThreeCompoundData();
+      },
+      patternWatch: async () => {
+        await ensureRecordsData();
+      },
+      daily: async () => {
+        await ensureRecordsData();
+      }
+    };
     const renderers = {
       overview: renderOverview,
       games: renderGames,
@@ -2625,7 +2670,7 @@ function New-DashboardHtml {
       showLoading(tab);
       setTimeout(async () => {
         try {
-          if (fullDataTabs.has(tab)) await ensureFullData();
+          if (tabDataLoaders[tab]) await tabDataLoaders[tab]();
           (renderers[tab] || renderOverview)();
         } catch (err) {
           app.innerHTML = `<section class="panel"><h2>&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;

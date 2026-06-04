@@ -98,10 +98,25 @@ try {
     if (-not $html.Contains("loadJsonOrScript('data/three-compound-state.json', 'data/three-compound-state.js', '__THREE_COMPOUND_STATE__')")) {
         throw 'dashboard should use local script fallback for three-compound state'
     }
-    if (-not $html.Contains('fullDataTabs')) {
-        throw 'dashboard should lazy load full data by tab'
+    if (-not $html.Contains('async function ensureRecordsData()')) {
+        throw 'dashboard should lazy load records data independently'
     }
-    if (-not $html.Contains('threeCompoundState = threeData')) {
+    if (-not $html.Contains('async function ensureGamePredictionsData()')) {
+        throw 'dashboard should lazy load game predictions independently'
+    }
+    if (-not $html.Contains('async function ensureWindow5Data()')) {
+        throw 'dashboard should lazy load window5 state independently'
+    }
+    if (-not $html.Contains('async function ensureThreeCompoundData()')) {
+        throw 'dashboard should lazy load three-compound state independently'
+    }
+    if (-not $html.Contains('const tabDataLoaders = {')) {
+        throw 'dashboard should map tabs to minimal data loaders'
+    }
+    if ($html.Contains('fullDataPromise')) {
+        throw 'dashboard should not load every full data file with one shared promise'
+    }
+    if (-not $html.Contains('threeCompoundState = await ensureThreeCompoundData()')) {
         throw 'dashboard should read lazy-loaded threeCompound state'
     }
     if (-not $html.Contains('threeCrossYearPoolTable')) {
