@@ -53,6 +53,10 @@ if ($html -notmatch 'latestYearPoolChange' -or $html -notmatch '&#26032;&#22686;
     throw 'expected window5 current-year pool card to show latest added and removed numbers'
 }
 
+if ($html -notmatch 'applyYearPoolChangeContext' -or $html -notmatch 'post-adjustment-hit' -or $html -notmatch '&#24320;&#22870;&#21518;&#34917;&#20837;') {
+    throw 'expected window5 detail coverage to separate post-draw pool additions from real coverage'
+}
+
 if ($html -notmatch 'class="table-scroll"') {
     throw 'expected wide three-window tables to render inside a horizontal scroll container'
 }

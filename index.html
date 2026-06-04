@@ -221,6 +221,21 @@
       }
       return windows;
     }
+    function applyYearPoolChangeContext(windows, history) {
+      const latestChange = Array.isArray(history) && history.length ? history[0] : null;
+      if (!latestChange || !Array.isArray(latestChange.beforePool) || !Array.isArray(latestChange.added)) return windows;
+      const issue = Number(latestChange.issue || 0);
+      if (!issue) return windows;
+      const beforeSet = new Set(latestChange.beforePool.map(num => String(Number(num)).padStart(2, '0')));
+      const addedSet = new Set(latestChange.added.map(num => String(Number(num)).padStart(2, '0')));
+      return windows.map(item => {
+        if (issue < Number(item.start || 0) || issue > Number(item.end || 0)) return item;
+        const realHits = (item.hits || []).filter(hit => beforeSet.has(String(hit.num).padStart(2, '0')));
+        const postAdjustmentHits = (item.hits || []).filter(hit => addedSet.has(String(hit.num).padStart(2, '0'))).map(hit => ({...hit, status: 'post-adjustment-hit'}));
+        if (!postAdjustmentHits.length) return item;
+        return {...item, hits: realHits, postAdjustmentHits, covered: realHits.length > 0, adjustedAfterDraw: true};
+      });
+    }
     const maxWindow5PoolSize = 8;
     const maxStableWindow5PoolSize = 15;
     function greedyFiveWindowPool(windows) {
@@ -296,9 +311,10 @@
       const pools = window5Pools[source] || window5Pools.am;
       const rawYearWindows = fiveWindowRawWindows(yearRows);
       const stateItem = (window5State.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
+      const yearPoolHistory = Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [];
       const yearPool = (stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows)).slice(0, 8);
       const stablePool = (stateItem?.stablePool?.length ? stateItem.stablePool : pools.stablePool).slice(0, maxStableWindow5PoolSize);
-      const yearWindows = fiveWindowCoverage(yearRows, yearPool);
+      const yearWindows = applyYearPoolChangeContext(fiveWindowCoverage(yearRows, yearPool), yearPoolHistory);
       const stableWindows = fiveWindowCoverage(yearRows, stablePool);
       const latestIssue = Number(latest?.issue || 0);
       const currentStart = Math.floor((latestIssue - 1) / 5) * 5 + 1;
@@ -308,7 +324,7 @@
       years.forEach(year => {
         const rows = sourceRows.filter(row => displayYear(row) === year).sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
         const pool = year === currentYear ? yearPool : stablePool;
-        const windows = fiveWindowCoverage(rows, pool);
+        const windows = year === currentYear ? applyYearPoolChangeContext(fiveWindowCoverage(rows, pool), yearPoolHistory) : fiveWindowCoverage(rows, pool);
         const misses = windows.filter(item => !item.covered);
         yearly.push({year, total: windows.length, covered: windows.length - misses.length, misses});
       });
@@ -321,7 +337,6 @@
       const stablePoolOptimizationReason = stateItem?.stablePoolOptimizationReason || '';
       const stablePoolChangeTime = stateItem?.stablePoolChangeTime || '';
       const stablePoolNextRecalcIssue = stateItem?.stablePoolNextRecalcIssue || '';
-      const yearPoolHistory = Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [];
       return {source, latest, currentYear, currentWindow, yearPool, stablePool, yearWindows, stableWindows, yearly, adjustmentStatus, adjustmentReason, changeTime, yearPoolHistory, stablePoolStatus, stablePoolReason, stablePoolOptimizationStatus, stablePoolOptimizationReason, stablePoolChangeTime, stablePoolNextRecalcIssue};
     }
     function regularNums(record) {
@@ -1222,16 +1237,21 @@
       await ensureRecordsData();
       const analysis = fiveWindowAnalysis(source);
       const missRows = analysis.yearly.map(row => `<tr><td>${esc(row.year)}</td><td>${esc(row.covered)} / ${esc(row.total)}</td><td>${esc(row.total - row.covered)}</td><td>${row.misses.slice(0, 12).map(item => `${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}`).join(', ') || '-'}</td></tr>`).join('');
+      const window5HitText = item => {
+        const realHits = (item.hits || []).map(hit => `${esc(hit.issue)}:${esc(hit.num)}`);
+        const postHits = (item.postAdjustmentHits || []).map(hit => `${esc(hit.issue)}:${esc(hit.num)} &#24320;&#22870;&#21518;&#34917;&#20837;`);
+        return realHits.concat(postHits).join(', ') || '-';
+      };
       return `
         ${yearPoolHistoryTable(analysis.yearPoolHistory)}
-        <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></div></section>
+        <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${window5HitText(item)}</td></tr>`).join('')}</tbody></table></div></section>
         <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></div></section>`;
     }
     function renderWindow5() {
       const selected = document.getElementById('window5-source')?.value || 'am';
       const analysis = fiveWindowAnalysis(selected);
       const win = analysis.currentWindow;
-      const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.num)}`).join(' / ') : '&#35266;&#23519;&#20013;';
+      const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.num)}`).join(' / ') : ((win.postAdjustmentHits || []).length ? win.postAdjustmentHits.map(item => `${esc(item.issue)}&#26399; ${esc(item.num)} &#24320;&#22870;&#21518;&#34917;&#20837;`).join(' / ') : '&#35266;&#23519;&#20013;');
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
