@@ -1577,6 +1577,36 @@ function New-DashboardHtml {
       return windows;
     }
     function fiveWindowAnalysis(source) {
+      if (!records.length && window5State?.items?.length) {
+        const stateItems = (window5State.items || []).filter(item => item.source === source);
+        const stateItem = stateItems.slice().sort((a, b) => Number(b.stablePoolLastIssue || 0) - Number(a.stablePoolLastIssue || 0))[0];
+        const latest = sourceSummary(source).latest || {};
+        const latestIssue = Number(latest.issue || stateItem?.stablePoolLastIssue || 0);
+        const currentYear = String(stateItem?.year || displayYear(latest) || '');
+        const currentStart = latestIssue ? Math.floor((latestIssue - 1) / 5) * 5 + 1 : 1;
+        const currentWindow = {start: currentStart, end: currentStart + 4, count: latestIssue ? Math.min(5, latestIssue - currentStart + 1) : 0, hits: [], covered: false};
+        return {
+          source,
+          latest,
+          currentYear,
+          currentWindow,
+          yearPool: (stateItem?.yearPool || []).slice(0, 8),
+          stablePool: (stateItem?.stablePool || (window5Pools[source] || window5Pools.am).stablePool || []).slice(0, maxStableWindow5PoolSize),
+          yearWindows: [],
+          stableWindows: [],
+          yearly: [],
+          adjustmentStatus: stateItem?.adjustmentStatus || 'not-triggered',
+          adjustmentReason: stateItem?.adjustmentReason || '',
+          changeTime: stateItem?.changeTime || '',
+          yearPoolHistory: Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [],
+          stablePoolStatus: stateItem?.stablePoolStatus || 'not-triggered',
+          stablePoolReason: stateItem?.stablePoolReason || '',
+          stablePoolOptimizationStatus: stateItem?.stablePoolOptimizationStatus || '',
+          stablePoolOptimizationReason: stateItem?.stablePoolOptimizationReason || '',
+          stablePoolChangeTime: stateItem?.stablePoolChangeTime || '',
+          stablePoolNextRecalcIssue: stateItem?.stablePoolNextRecalcIssue || ''
+        };
+      }
       const sourceRows = cachedSourceRecords(source).slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
       const latest = sourceRows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0];
       const currentYear = displayYear(latest);
@@ -2498,22 +2528,35 @@ function New-DashboardHtml {
       if (!rows.length) return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><p class="muted">&#26242;&#26080;&#21464;&#26356;&#35760;&#24405;</p></section>`;
       return `<section class="panel full"><h2>&#35206;&#30422;&#27744;&#21464;&#26356;&#26085;&#24535;</h2><table class="compact-table"><thead><tr><th>&#26102;&#38388;</th><th>&#35302;&#21457;&#26399;&#21495;</th><th>&#21464;&#26356;&#21069;</th><th>&#21464;&#26356;&#21518;</th><th>&#26032;&#22686;</th><th>&#31227;&#38500;</th><th>&#21407;&#22240;</th></tr></thead><tbody>${rows.map(item => `<tr><td>${esc(item.changedAt || '-')}</td><td>${esc(item.issue || '-')}</td><td>${numberChips(item.beforePool || [])}</td><td>${numberChips(item.afterPool || [])}</td><td>${numberChips(item.added || [])}</td><td>${numberChips(item.removed || [])}</td><td>${statusText(item.reason)}</td></tr>`).join('')}</tbody></table></section>`;
     }
+    async function renderWindow5Details(source) {
+      await ensureRecordsData();
+      const analysis = fiveWindowAnalysis(source);
+      const missRows = analysis.yearly.map(row => `<tr><td>${esc(row.year)}</td><td>${esc(row.covered)} / ${esc(row.total)}</td><td>${esc(row.total - row.covered)}</td><td>${row.misses.slice(0, 12).map(item => `${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}`).join(', ') || '-'}</td></tr>`).join('');
+      return `
+        ${yearPoolHistoryTable(analysis.yearPoolHistory)}
+        <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></div></section>
+        <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></div></section>`;
+    }
     function renderWindow5() {
       const selected = document.getElementById('window5-source')?.value || 'am';
       const analysis = fiveWindowAnalysis(selected);
       const win = analysis.currentWindow;
-      const missRows = analysis.yearly.map(row => `<tr><td>${esc(row.year)}</td><td>${esc(row.covered)} / ${esc(row.total)}</td><td>${esc(row.total - row.covered)}</td><td>${row.misses.slice(0, 12).map(item => `${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}`).join(', ') || '-'}</td></tr>`).join('');
       const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.num)}`).join(' / ') : '&#35266;&#23519;&#20013;';
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${statusText(analysis.adjustmentStatus)}</p><p class="muted">${statusText(analysis.adjustmentReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
         <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${statusText(analysis.stablePoolStatus)}</p><p class="muted">${statusText(analysis.stablePoolReason)}</p><p>&#20248;&#21270;&#65306;${statusText(analysis.stablePoolOptimizationStatus)}</p><p class="muted">${statusText(analysis.stablePoolOptimizationReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
-        ${yearPoolHistoryTable(analysis.yearPoolHistory)}
-        <section class="panel full"><h2>&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;</h2><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24050;&#24320;</th><th>&#29366;&#24577;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${analysis.yearWindows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)}</td><td>${item.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</td><td>${item.hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join(', ') || '-'}</td></tr>`).join('')}</tbody></table></section>
-        <section class="panel full"><h2>&#24180;&#24230;&#22238;&#27979;</h2><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#35206;&#30422;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;</th><th>&#28431;&#31383;&#21475;&#21015;&#34920;</th></tr></thead><tbody>${missRows}</tbody></table></section>
+        <section class="panel full"><h2>&#26126;&#32454;&#25968;&#25454;</h2><div class="detail-placeholder"><button class="secondary window5-detail-toggle" type="button">&#23637;&#24320;&#21464;&#26356;&#35760;&#24405;&#12289;&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;&#21644;&#24180;&#24230;&#22238;&#27979;</button></div><div id="window5-details"></div></section>
       </div>`;
       document.getElementById('window5-source').addEventListener('change', renderWindow5);
+      document.querySelector('.window5-detail-toggle')?.addEventListener('click', async () => {
+        const detail = document.getElementById('window5-details');
+        if (!detail || detail.dataset.loaded === '1') return;
+        detail.innerHTML = '<p class="muted">&#21152;&#36733;&#26126;&#32454;&#20013;...</p>';
+        detail.innerHTML = await renderWindow5Details(selected);
+        detail.dataset.loaded = '1';
+      });
     }
     function threeCompoundHistoryTable(pools) {
       const rows = [];
@@ -2790,7 +2833,6 @@ function New-DashboardHtml {
         gamePredictions = await ensureGamePredictionsData();
       },
       window5: async () => {
-        await ensureRecordsData();
         window5State = await ensureWindow5Data();
       },
       threeWindow5: async () => {

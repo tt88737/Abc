@@ -35,6 +35,20 @@ if ($threeLoader.Groups['body'].Value -match 'ensureRecordsData') {
     throw 'expected threeWindow5 tab to avoid loading full records data before first render'
 }
 
+$windowLoaderPattern = 'window5:\s*async\s*\(\)\s*=>\s*\{(?<body>[\s\S]*?)\n\s*\}'
+$windowLoader = [regex]::Match($html, $windowLoaderPattern)
+if (-not $windowLoader.Success) {
+    throw 'expected dashboard to define a window5 tab loader'
+}
+
+if ($windowLoader.Groups['body'].Value -match 'ensureRecordsData') {
+    throw 'expected window5 tab to avoid loading full records data before first render'
+}
+
+if ($html -notmatch 'window5-detail-toggle') {
+    throw 'expected heavy window5 detail tables to render behind explicit toggles'
+}
+
 if ($html -notmatch 'class="table-scroll"') {
     throw 'expected wide three-window tables to render inside a horizontal scroll container'
 }
