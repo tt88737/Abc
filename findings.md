@@ -2,8 +2,8 @@
 
 ## Current State
 
-- Branch `main` is clean at `ed4599b perf: load dashboard data by tab`.
-- Data files are compacted; largest files are `page-parse-cache.json` 2.54 MB and `records.json/js` 2.36 MB each.
+- Branch `main` is clean at `3b131ff chore: remove unused cron fetch endpoint`.
+- Data files are compacted; largest files are `records.json/js` 2.36 MB each. `page-parse-cache.json` is now a small index, with page records split under `data/page-parse-cache/`.
 - Dashboard now loads heavy data by tab instead of loading all full data at once.
 
 ## Candidate Optimizations
@@ -22,3 +22,4 @@
 - Added `source|issue` record lookup for game settlement. `game-settle-existing` dropped from about 2.0s to about 0.46s, and `game-predictions` from about 2.16s to about 1.28s.
 - Tried single-pass PowerShell summary counters. It increased `summary-counts` from about 2.9s to about 4.0s, likely due to function-call and nested hashtable overhead, so it was reverted.
 - Removed obsolete `api/cron-fetch.js`; Vercel Cron is intentionally routed through `api/manual-fetch.js?cron=1` because that function is known to deploy.
+- Current cache-hit build profile is around 7-8s. Largest remaining item is `summary-counts` around 2.7s; a tested single-pass rewrite was slower, so no further low-risk summary optimization is recommended in this pass.

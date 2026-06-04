@@ -20,7 +20,7 @@ Status: complete
 - Rebuild generated files after modifying generators.
 
 ## Phase 3: Verification And Push
-Status: in_progress
+Status: complete
 
 ## Phase 4: Remaining Optimization Scan
 Status: complete
@@ -31,6 +31,6 @@ Status: complete
 
 ## Done Criteria
 
-- Working tree clean.
-- Latest optimization pushed.
-- No obvious high-value, low-risk optimization remains from current evidence.
+- Working tree clean: complete.
+- Latest optimization pushed: complete.
+- No obvious high-value, low-risk optimization remains from current evidence: complete.
