@@ -2,16 +2,16 @@ $ErrorActionPreference = 'Stop'
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $vercelPath = Join-Path $root 'vercel.json'
-$cronPath = Join-Path $root 'api/cron-fetch.js'
+$cronPath = Join-Path $root 'api/manual-fetch.js'
 
 if (-not (Test-Path -LiteralPath $vercelPath)) {
     throw 'vercel.json should configure Vercel cron jobs'
 }
 
 $vercel = Get-Content -LiteralPath $vercelPath -Raw | ConvertFrom-Json
-$cron = @($vercel.crons | Where-Object { $_.path -eq '/api/cron-fetch' } | Select-Object -First 1)
+$cron = @($vercel.crons | Where-Object { [string]$_.path -like '/api/manual-fetch*' } | Select-Object -First 1)
 if ($cron.Count -eq 0) {
-    throw 'vercel.json should schedule /api/cron-fetch'
+    throw 'vercel.json should schedule /api/manual-fetch'
 }
 
 if ([string]::IsNullOrWhiteSpace([string]$cron[0].schedule)) {
@@ -19,7 +19,7 @@ if ([string]::IsNullOrWhiteSpace([string]$cron[0].schedule)) {
 }
 
 if (-not (Test-Path -LiteralPath $cronPath)) {
-    throw 'api/cron-fetch.js should exist'
+    throw 'api/manual-fetch.js should exist'
 }
 
 $script = [IO.File]::ReadAllText($cronPath, [Text.Encoding]::UTF8)
@@ -29,12 +29,12 @@ foreach ($marker in @('CRON_SECRET', 'GITHUB_TOKEN', 'manual-fetch.yml', 'workfl
     }
 }
 
-if (-not $script.Contains('cronFetchVersion')) {
-    throw 'cron fetch api should expose a deployment version marker'
+if (-not $script.Contains('manualFetchVersion')) {
+    throw 'manual fetch api should expose a deployment version marker'
 }
 
 if (-not $script.Contains("req.headers['authorization']") -or -not $script.Contains('Bearer')) {
-    throw 'cron fetch api should validate bearer authorization'
+    throw 'manual fetch cron mode should validate bearer authorization'
 }
 
 if (-not $script.Contains('2025kj.zkclhb.com:2025/am.html') -or -not $script.Contains('2025kj.zkclhb.com:2025/hk.html')) {

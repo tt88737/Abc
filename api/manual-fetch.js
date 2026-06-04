@@ -1,28 +1,39 @@
 export default async function handler(req, res) {
+  const manualFetchVersion = '2026-06-04-cron-v3';
+
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
 
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST, OPTIONS');
-    return res.status(405).json({ error: 'Method not allowed' });
+  const isCron = req.method === 'GET' || req.query?.cron === '1';
+  if (req.method !== 'POST' && !isCron) {
+    res.setHeader('Allow', 'GET, POST, OPTIONS');
+    return res.status(405).json({ error: 'Method not allowed', manualFetchVersion });
   }
 
   try {
+    if (isCron) {
+      const cronSecret = process.env.CRON_SECRET;
+      const authorization = req.headers['authorization'] || '';
+      if (!cronSecret || authorization !== `Bearer ${cronSecret}`) {
+        return res.status(401).json({ error: 'Unauthorized cron request', manualFetchVersion });
+      }
+    }
+
     const token = process.env.GITHUB_TOKEN;
     const owner = process.env.GITHUB_OWNER || 'tt88737';
     const repo = process.env.GITHUB_REPO || 'Abc';
     const ref = process.env.GITHUB_REF || 'main';
 
     if (!token) {
-      return res.status(500).json({ error: 'Missing GITHUB_TOKEN environment variable' });
+      return res.status(500).json({ error: 'Missing GITHUB_TOKEN environment variable', manualFetchVersion });
     }
 
-    const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    const body = isCron ? {} : (typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {}));
     const defaultAmUrl = 'https://2025kj.zkclhb.com:2025/am.html';
     const defaultHkUrl = 'https://2025kj.zkclhb.com:2025/hk.html';
     const selectedSource = body.source === 'hk' ? 'hk' : 'am';
@@ -34,7 +45,7 @@ export default async function handler(req, res) {
     const hkBaseUrl = String(body.hkBaseUrl || (selectedSource === 'hk' ? selectedBaseUrl : hkSourceUrl) || hkSourceUrl).trim();
 
     if (!/^https?:\/\/.+/i.test(amSourceUrl) || !/^https?:\/\/.+/i.test(hkSourceUrl)) {
-      return res.status(400).json({ error: 'Invalid sourceUrl' });
+      return res.status(400).json({ error: 'Invalid sourceUrl', manualFetchVersion });
     }
 
     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/manual-fetch.yml/dispatches`, {
@@ -58,13 +69,14 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const text = await response.text();
-      return res.status(response.status).json({ error: 'workflow_dispatch failed', detail: text });
+      return res.status(response.status).json({ error: 'workflow_dispatch failed', detail: text, manualFetchVersion });
     }
 
-    return res.status(202).json({ ok: true, workflow: 'manual-fetch.yml', ref, amSourceUrl, amBaseUrl, hkSourceUrl, hkBaseUrl });
+    return res.status(202).json({ ok: true, manualFetchVersion, workflow: 'manual-fetch.yml', trigger: isCron ? 'vercel-cron' : 'manual-ui', ref, amSourceUrl, amBaseUrl, hkSourceUrl, hkBaseUrl });
   } catch (error) {
     return res.status(500).json({
       error: 'manual-fetch handler failed',
+      manualFetchVersion,
       detail: error && error.message ? error.message : String(error)
     });
   }
