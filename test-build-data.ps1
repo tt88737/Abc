@@ -809,6 +809,11 @@ try {
     if (-not $dailyWorkflow.Contains('VERCEL_DEPLOY_HOOK_URL') -or -not $dailyWorkflow.Contains('Invoke-RestMethod -Method Post')) {
         throw 'daily fetch workflow should trigger a Vercel deploy hook after pushing generated data'
     }
+    $vercelConfigPath = Join-Path $PSScriptRoot 'vercel.json'
+    $vercelConfig = Get-Content -LiteralPath $vercelConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if (@($vercelConfig.crons).Count -gt 1) {
+        throw 'vercel.json should keep at most one cron schedule for Vercel Hobby deployments'
+    }
     $fetchAllPath = Join-Path $PSScriptRoot 'fetch-all.ps1'
     if (-not (Test-Path -LiteralPath $fetchAllPath)) {
         throw 'unified fetch-all.ps1 script should exist'
