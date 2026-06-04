@@ -63,3 +63,16 @@ jobs:
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
+
+      - name: Trigger Vercel deployment
+        if: steps.commit.outputs.has_changes == 'true'
+        shell: pwsh
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:VERCEL_DEPLOY_HOOK_URL)) {
+            Write-Host "VERCEL_DEPLOY_HOOK_URL is not configured; skipping Vercel deploy hook."
+            exit 0
+          }
+          Invoke-RestMethod -Method Post -Uri $env:VERCEL_DEPLOY_HOOK_URL | Out-Null
+          Write-Host "Triggered Vercel deployment."

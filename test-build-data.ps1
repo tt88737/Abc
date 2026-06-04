@@ -798,10 +798,16 @@ try {
     if (-not $manualWorkflow.Contains('workflow_dispatch') -or -not $manualWorkflow.Contains('am_source_url') -or -not $manualWorkflow.Contains('hk_source_url') -or -not $manualWorkflow.Contains('fetch-all.ps1')) {
         throw 'manual fetch workflow should accept Macau/Hong Kong URLs and run the unified fetch script'
     }
+    if (-not $manualWorkflow.Contains('VERCEL_DEPLOY_HOOK_URL') -or -not $manualWorkflow.Contains('Invoke-RestMethod -Method Post')) {
+        throw 'manual fetch workflow should trigger a Vercel deploy hook after pushing generated data'
+    }
     $dailyWorkflowPath = Join-Path $PSScriptRoot '.github/workflows/daily-fetch.yml'
     $dailyWorkflow = [IO.File]::ReadAllText($dailyWorkflowPath, [Text.Encoding]::UTF8)
     if (-not $dailyWorkflow.Contains('fetch-all.ps1') -or $dailyWorkflow.Contains('-File .\build-data.ps1')) {
         throw 'daily fetch workflow should fetch both sources before rebuilding data'
+    }
+    if (-not $dailyWorkflow.Contains('VERCEL_DEPLOY_HOOK_URL') -or -not $dailyWorkflow.Contains('Invoke-RestMethod -Method Post')) {
+        throw 'daily fetch workflow should trigger a Vercel deploy hook after pushing generated data'
     }
     $fetchAllPath = Join-Path $PSScriptRoot 'fetch-all.ps1'
     if (-not (Test-Path -LiteralPath $fetchAllPath)) {
