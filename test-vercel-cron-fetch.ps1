@@ -29,6 +29,10 @@ foreach ($marker in @('CRON_SECRET', 'GITHUB_TOKEN', 'manual-fetch.yml', 'workfl
     }
 }
 
+if (-not $script.Contains('cronFetchVersion')) {
+    throw 'cron fetch api should expose a deployment version marker'
+}
+
 if (-not $script.Contains("req.headers['authorization']") -or -not $script.Contains('Bearer')) {
     throw 'cron fetch api should validate bearer authorization'
 }

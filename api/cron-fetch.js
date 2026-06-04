@@ -1,14 +1,16 @@
 export default async function handler(req, res) {
+  const cronFetchVersion = '2026-06-04-v2';
+
   if (req.method !== 'GET' && req.method !== 'POST') {
     res.setHeader('Allow', 'GET, POST');
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed', cronFetchVersion });
   }
 
   try {
     const cronSecret = process.env.CRON_SECRET;
     const authorization = req.headers['authorization'] || '';
     if (!cronSecret || authorization !== `Bearer ${cronSecret}`) {
-      return res.status(401).json({ error: 'Unauthorized cron request' });
+      return res.status(401).json({ error: 'Unauthorized cron request', cronFetchVersion });
     }
 
     const token = process.env.GITHUB_TOKEN;
@@ -17,7 +19,7 @@ export default async function handler(req, res) {
     const ref = process.env.GITHUB_REF || 'main';
 
     if (!token) {
-      return res.status(500).json({ error: 'Missing GITHUB_TOKEN environment variable' });
+      return res.status(500).json({ error: 'Missing GITHUB_TOKEN environment variable', cronFetchVersion });
     }
 
     const amSourceUrl = process.env.AM_SOURCE_URL || 'https://2025kj.zkclhb.com:2025/am.html';
@@ -46,11 +48,12 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const text = await response.text();
-      return res.status(response.status).json({ error: 'workflow_dispatch failed', detail: text });
+      return res.status(response.status).json({ error: 'workflow_dispatch failed', detail: text, cronFetchVersion });
     }
 
     return res.status(202).json({
       ok: true,
+      cronFetchVersion,
       workflow: 'manual-fetch.yml',
       trigger: 'vercel-cron',
       ref,
@@ -60,6 +63,7 @@ export default async function handler(req, res) {
   } catch (error) {
     return res.status(500).json({
       error: 'cron-fetch handler failed',
+      cronFetchVersion,
       detail: error && error.message ? error.message : String(error)
     });
   }
