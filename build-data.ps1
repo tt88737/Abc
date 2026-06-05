@@ -1929,7 +1929,7 @@ function New-DashboardHtml {
         </section>
         <section class="panel full">
           <h2>&#26410;&#35206;&#30422;&#31383;&#21475;</h2>
-          ${historyMissWindowsTable(analysis.misses)}
+          ${historyMissWindowsTable(analysis.misses, analysis.yearPools)}
         </section>
       </div>`;
       document.getElementById('history-pattern-source').addEventListener('change', renderHistoryPattern);
@@ -1938,16 +1938,17 @@ function New-DashboardHtml {
     function historyWindowLabel(win) {
       return `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`;
     }
-    function historyMissWindowsTable(windows) {
+    function historyMissWindowsTable(windows, yearPools) {
       const rows = asArray(windows).slice(0, 80);
       if (!rows.length) return '<p class="muted">&#26242;&#26080;&#26410;&#35206;&#30422;&#30340;&#23436;&#25972;&#31383;&#21475;&#12290;</p>';
+      const historyYearPoolMap = new Map(asArray(yearPools).map(item => [String(item.year), item.pool || []]));
       const historyYearGroups = new Map();
       rows.forEach(win => {
         const year = String(win.year || '-');
         if (!historyYearGroups.has(year)) historyYearGroups.set(year, []);
         historyYearGroups.get(year).push(win);
       });
-      return [...historyYearGroups.entries()].map(([year, items]) => `<details class="history-year-group" open><summary>${esc(year)} &#24180;&#65306;${esc(items.length)} &#20010;&#26410;&#35206;&#30422;&#31383;&#21475;</summary><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24320;&#22870;&#25968;</th><th>&#31383;&#21475;&#29305;&#21035;&#21495;</th></tr></thead><tbody>${items.map(win => `<tr><td>${historyWindowLabel(win)}</td><td>${esc(win.count)}</td><td>${numberChips(win.nums)}</td></tr>`).join('')}</tbody></table></div></details>`).join('');
+      return [...historyYearGroups.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([year, items]) => `<details class="history-year-group" open><summary>${esc(year)} &#24180;&#65306;${esc(items.length)} &#20010;&#26410;&#35206;&#30422;&#31383;&#21475; <span class="muted">&#22266;&#23450;8&#30721;</span> ${numberChips(historyYearPoolMap.get(year) || [])}</summary><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24320;&#22870;&#25968;</th><th>&#31383;&#21475;&#29305;&#21035;&#21495;</th></tr></thead><tbody>${items.map(win => `<tr><td>${historyWindowLabel(win)}</td><td>${esc(win.count)}</td><td>${numberChips(win.nums)}</td></tr>`).join('')}</tbody></table></div></details>`).join('');
     }
     function historyFixedFiveWindows(rows) {
       const groups = new Map();
@@ -2024,7 +2025,13 @@ function New-DashboardHtml {
       const windows = historyFixedFiveWindows(rows);
       const pool = bestFixed8PoolForWindows(windows);
       const stats = historyCoverageStats(windows, pool);
-      return {...stats, source, pool, currentYear, range, rangeLabel: range === 'all' ? '&#20840;&#37096;&#21382;&#21490;' : `${currentYear}&#24180;`, method: '&#25353;&#23436;&#25972;5&#26399;&#31383;&#21475;&#35206;&#30422;&#25968;&#36138;&#24515;&#36873;&#21462;&#35206;&#30422;&#29575;&#26368;&#39640;8&#30721;'};
+      const yearPools = [...new Set(asArray(windows).map(win => String(win.year || '')).filter(Boolean))]
+        .sort((a, b) => b.localeCompare(a))
+        .map(year => {
+          const yearWindows = windows.filter(win => String(win.year) === year);
+          return {year, pool: bestFixed8PoolForWindows(yearWindows)};
+        });
+      return {...stats, source, pool, yearPools, currentYear, range, rangeLabel: range === 'all' ? '&#20840;&#37096;&#21382;&#21490;' : `${currentYear}&#24180;`, method: '&#25353;&#23436;&#25972;5&#26399;&#31383;&#21475;&#35206;&#30422;&#25968;&#36138;&#24515;&#36873;&#21462;&#35206;&#30422;&#29575;&#26368;&#39640;8&#30721;'};
     }
     const defaultFetchUrls = {
       am: 'https://2025kj.zkclhb.com:2025/am.html',
