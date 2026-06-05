@@ -287,6 +287,9 @@ try {
     if (-not $dashboard.Contains('001-005') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;')) {
         throw 'history pattern should render the fixed 8-code five-window observation'
     }
+    if (-not $dashboard.Contains('historyYearGroups') -or -not $dashboard.Contains('class="history-year-group"')) {
+        throw 'history pattern missed windows should be grouped by year'
+    }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
         throw 'dashboard should expose a manual fetch renderer'
     }

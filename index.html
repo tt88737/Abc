@@ -1353,7 +1353,13 @@
     function historyMissWindowsTable(windows) {
       const rows = asArray(windows).slice(0, 80);
       if (!rows.length) return '<p class="muted">&#26242;&#26080;&#26410;&#35206;&#30422;&#30340;&#23436;&#25972;&#31383;&#21475;&#12290;</p>';
-      return `<div class="table-scroll"><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#31383;&#21475;</th><th>&#24320;&#22870;&#25968;</th><th>&#31383;&#21475;&#29305;&#21035;&#21495;</th></tr></thead><tbody>${rows.map(win => `<tr><td>${esc(win.year)}</td><td>${historyWindowLabel(win)}</td><td>${esc(win.count)}</td><td>${numberChips(win.nums)}</td></tr>`).join('')}</tbody></table></div>`;
+      const historyYearGroups = new Map();
+      rows.forEach(win => {
+        const year = String(win.year || '-');
+        if (!historyYearGroups.has(year)) historyYearGroups.set(year, []);
+        historyYearGroups.get(year).push(win);
+      });
+      return [...historyYearGroups.entries()].map(([year, items]) => `<details class="history-year-group" open><summary>${esc(year)} &#24180;&#65306;${esc(items.length)} &#20010;&#26410;&#35206;&#30422;&#31383;&#21475;</summary><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24320;&#22870;&#25968;</th><th>&#31383;&#21475;&#29305;&#21035;&#21495;</th></tr></thead><tbody>${items.map(win => `<tr><td>${historyWindowLabel(win)}</td><td>${esc(win.count)}</td><td>${numberChips(win.nums)}</td></tr>`).join('')}</tbody></table></div></details>`).join('');
     }
     function historyFixedFiveWindows(rows) {
       const groups = new Map();
