@@ -287,6 +287,15 @@ try {
     if (-not $dashboard.Contains('function patternWatchAnalysis(source)')) {
         throw 'dashboard should calculate pattern watch metrics'
     }
+    if (-not $dashboard.Contains('function specialPatternDimensions(sourceRows, yearRows)') -or -not $dashboard.Contains('function categoryMissStats(rows, categories, valueFn)')) {
+        throw 'pattern watch should calculate zodiac and tail observation metrics'
+    }
+    if (-not $dashboard.Contains('function fiveWindowStructureRows(rows, limit = 14)') -or -not $dashboard.Contains('function fiveWindowStructureTable(rows)')) {
+        throw 'pattern watch should render five-issue window structure observations'
+    }
+    if (-not $dashboard.Contains('function dimensionObservationTable(analysis)') -or -not $dashboard.Contains('categoryPatternTable(')) {
+        throw 'pattern watch should render dimension overview, zodiac, and tail tables'
+    }
     if (-not $dashboard.Contains('function optimizedSpecialPool(rows, basePool, size)')) {
         throw 'pattern watch should calculate optimized special-number pools'
     }

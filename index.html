@@ -1098,10 +1098,15 @@
       const optimizedStableStats = patternStats(optimizedStableWindows);
       const compoundPools = (three.compoundPools || []).map(item => ({...item, baseline: randomWindowBaseline(Number(item.poolSize || 0), 49, 5)}));
       const crossYearCompoundPools = (three.crossYearPools || []).map(item => ({...item, baseline: randomWindowBaseline(Number(item.poolSize || 0), 49, 5)}));
+      const sourceRows = cachedSourceRecords(source);
+      const dimensions = specialPatternDimensions(sourceRows, yearRows);
+      const dimensionWindows = fiveWindowStructureRows(yearRows);
       return {
         source,
         currentYear: special.currentYear,
         yearRows,
+        dimensions,
+        dimensionWindows,
         yearPool: special.yearPool,
         stablePool: special.stablePool,
         threeCompoundPools: compoundPools,
@@ -1286,11 +1291,101 @@
     function simpleRankList(items) {
       return `<table class="compact-table"><thead><tr><th>&#32467;&#26500;</th><th>&#27425;&#25968;</th></tr></thead><tbody>${items.map(item => `<tr><td>${esc(item.name)}</td><td>${esc(item.count)}</td></tr>`).join('')}</tbody></table>`;
     }
+    function categoryMissStats(rows, categories, valueFn) {
+      const sorted = rows.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      const recent = sorted.slice(-20);
+      return categories.map(name => {
+        let count = 0;
+        let recentCount = 0;
+        let currentMiss = 0;
+        let maxMiss = 0;
+        let run = 0;
+        let lastIssue = '';
+        sorted.forEach(row => {
+          const hit = valueFn(row) === name;
+          if (hit) {
+            count++;
+            lastIssue = row.issue || '';
+            maxMiss = Math.max(maxMiss, run);
+            run = 0;
+          } else {
+            run++;
+          }
+        });
+        maxMiss = Math.max(maxMiss, run);
+        for (let i = sorted.length - 1; i >= 0; i--) {
+          if (valueFn(sorted[i]) === name) break;
+          currentMiss++;
+        }
+        recent.forEach(row => {
+          if (valueFn(row) === name) recentCount++;
+        });
+        const hitRate = sorted.length ? Math.round(count / sorted.length * 10000) / 100 : 0;
+        let level = '&#24179;&#31283;';
+        if (currentMiss >= Math.max(8, Math.round(maxMiss * 0.8))) level = '&#38271;&#28431;';
+        else if (recentCount >= 3) level = '&#36817;&#26399;&#27963;&#36291;';
+        else if (recentCount === 0) level = '&#36817;&#26399;&#20919;';
+        return {name, count, hitRate, recentCount, currentMiss, maxMiss, lastIssue, level};
+      }).sort((a, b) => b.currentMiss - a.currentMiss || b.recentCount - a.recentCount || a.name.localeCompare(b.name));
+    }
+    function specialPatternDimensions(sourceRows, yearRows) {
+      const tailList = Array.from({length: 10}, (_, idx) => String(idx));
+      const zodiacStats = categoryMissStats(yearRows, zodiacList, row => row.balls?.[6]?.zodiac || '');
+      const tailStats = categoryMissStats(yearRows, tailList, row => String(row.balls?.[6]?.numberText || '').slice(-1));
+      return {
+        allHistoryRecords: sourceRows.length,
+        yearRecords: yearRows.length,
+        zodiac: zodiacStats,
+        tails: tailStats,
+        allHistoryZodiac: categoryMissStats(sourceRows, zodiacList, row => row.balls?.[6]?.zodiac || ''),
+        allHistoryTails: categoryMissStats(sourceRows, tailList, row => String(row.balls?.[6]?.numberText || '').slice(-1))
+      };
+    }
+    function fiveWindowStructureRows(rows, limit = 14) {
+      const sorted = rows.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+      if (!sorted.length) return [];
+      const maxIssue = Math.max(...sorted.map(row => Number(row.issue || 0)));
+      const windows = [];
+      for (let start = 1; start <= maxIssue; start += 5) {
+        const end = start + 4;
+        const chunk = sorted.filter(row => Number(row.issue || 0) >= start && Number(row.issue || 0) <= end);
+        if (!chunk.length) continue;
+        const nums = chunk.map(row => specialNum(row));
+        const zodiacs = uniq(chunk.map(row => row.balls?.[6]?.zodiac || '').filter(Boolean));
+        const tails = uniq(nums.map(num => String(num).slice(-1)).filter(Boolean));
+        const completed = chunk.length >= 5;
+        let status = '&#24179;&#31283;';
+        if (completed && (zodiacs.length <= 2 || tails.length <= 2)) status = '&#32467;&#26500;&#38598;&#20013;';
+        else if (completed && zodiacs.length >= 5 && tails.length >= 5) status = '&#32467;&#26500;&#20998;&#25955;';
+        else if (!completed) status = '&#26410;&#23436;&#25104;';
+        windows.push({start, end, count: chunk.length, nums, zodiacs, tails, completed, status});
+      }
+      return windows.slice(-limit).reverse();
+    }
+    function categoryPatternTable(title, rows, historyRows, label) {
+      const body = rows.slice(0, 12).map(item => {
+        const history = historyRows.find(row => row.name === item.name) || {};
+        return `<tr><td>${esc(item.name)}</td><td>${esc(item.count)}</td><td>${esc(item.hitRate)}%</td><td>${esc(history.hitRate ?? 0)}%</td><td>${esc(item.recentCount)}</td><td>${esc(item.currentMiss)}</td><td>${esc(item.maxMiss)}</td><td>${esc(item.lastIssue || '-')}</td><td>${item.level}</td></tr>`;
+      }).join('');
+      return `<section class="panel full"><h2>${title}</h2><p class="muted">&#24403;&#24180;${esc(label)}&#20998;&#24067;&#12289;&#36817;20&#26399;&#27963;&#36291;&#24230;&#21644;&#24403;&#21069;&#36951;&#28431;&#65292;&#24182;&#23545;&#27604;&#20840;&#21382;&#21490;&#21629;&#20013;&#29575;&#12290;</p><table class="compact-table"><thead><tr><th>${esc(label)}</th><th>&#24403;&#24180;&#27425;&#25968;</th><th>&#24403;&#24180;&#21344;&#27604;</th><th>&#20840;&#21382;&#21490;&#21344;&#27604;</th><th>&#36817;20&#26399;</th><th>&#24403;&#21069;&#36951;&#28431;</th><th>&#26368;&#22823;&#36951;&#28431;</th><th>&#26368;&#36817;&#26399;&#21495;</th><th>&#29366;&#24577;</th></tr></thead><tbody>${body}</tbody></table></section>`;
+    }
+    function fiveWindowStructureTable(rows) {
+      const body = rows.map(item => `<tr><td>${String(item.start).padStart(3, '0')}-${String(item.end).padStart(3, '0')}</td><td>${esc(item.count)} / 5</td><td>${numberChips(item.nums)}</td><td>${esc(item.zodiacs.join(' / ') || '-')}</td><td>${esc(item.tails.join(' / ') || '-')}</td><td>${esc(item.zodiacs.length)}</td><td>${esc(item.tails.length)}</td><td>${item.status}</td></tr>`).join('');
+      return `<section class="panel full"><h2>5&#26399;&#31383;&#21475;&#32467;&#26500;</h2><p class="muted">&#25353;001-005&#12289;006-010&#12289;011-015...&#20998;&#31383;&#65292;&#35266;&#23519;&#29305;&#21035;&#21495;&#30340;&#21495;&#30721;&#12289;&#29983;&#32918;&#21644;&#23614;&#25968;&#26159;&#38598;&#20013;&#36824;&#26159;&#20998;&#25955;&#12290;</p><table class="compact-table"><thead><tr><th>&#31383;&#21475;</th><th>&#24320;&#22870;&#25968;</th><th>&#29305;&#21035;&#21495;</th><th>&#29983;&#32918;</th><th>&#23614;&#25968;</th><th>&#29983;&#32918;&#25968;</th><th>&#23614;&#25968;&#25968;</th><th>&#32467;&#26500;</th></tr></thead><tbody>${body}</tbody></table></section>`;
+    }
+    function dimensionObservationTable(analysis) {
+      const d = analysis.dimensions;
+      return `<section class="panel full"><h2>&#35266;&#23519;&#32500;&#24230;&#27010;&#35272;</h2><table class="compact-table"><thead><tr><th>&#32500;&#24230;</th><th>&#24403;&#24180;&#26679;&#26412;</th><th>&#20840;&#21382;&#21490;&#26679;&#26412;</th><th>&#35266;&#23519;&#26041;&#27861;</th></tr></thead><tbody><tr><td>&#29983;&#32918;</td><td>${esc(d.yearRecords)}</td><td>${esc(d.allHistoryRecords)}</td><td>&#39057;&#27425; + &#36817;20&#26399; + &#36951;&#28431;</td></tr><tr><td>&#23614;&#25968;</td><td>${esc(d.yearRecords)}</td><td>${esc(d.allHistoryRecords)}</td><td>&#23614;&#25968;&#38598;&#20013;&#24230; + &#20919;&#28909; + &#36951;&#28431;</td></tr><tr><td>5&#26399;&#31383;&#21475;</td><td>${esc(d.yearRecords)}</td><td>${esc(d.allHistoryRecords)}</td><td>001-005 / 006-010 / 011-015 &#32467;&#26500;&#23545;&#27604;</td></tr></tbody></table></section>`;
+    }
     function renderPatternWatch() {
       const selected = document.getElementById('pattern-source')?.value || 'am';
       const analysis = patternWatchAnalysis(selected);
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="pattern-source">${sourceOptions(selected)}</select></label></div></section>
+        ${dimensionObservationTable(analysis)}
+        ${categoryPatternTable('&#29305;&#21035;&#21495;&#29983;&#32918;&#35266;&#23519;', analysis.dimensions.zodiac, analysis.dimensions.allHistoryZodiac, '&#29983;&#32918;')}
+        ${categoryPatternTable('&#29305;&#21035;&#21495;&#23614;&#25968;&#35266;&#23519;', analysis.dimensions.tails, analysis.dimensions.allHistoryTails, '&#23614;&#25968;')}
+        ${fiveWindowStructureTable(analysis.dimensionWindows)}
         <section class="panel full"><h2>&#35268;&#24459;&#35266;&#23519;</h2><p class="muted">${esc(analysis.currentYear)}&#24180;&#65292;&#23545;&#27604;&#23454;&#38469;5&#26399;&#31383;&#21475;&#21629;&#20013;&#29575;&#19982;&#38543;&#26426;&#22522;&#20934;&#12290;</p><table class="compact-table"><thead><tr><th>&#35266;&#23519;&#39033;</th><th>&#35268;&#27169;</th><th>&#23454;&#38469;</th><th>&#38543;&#26426;&#22522;&#20934;</th><th>&#36229;&#39069;</th><th>&#24403;&#21069;&#28431;&#31383;</th><th>&#26368;&#22823;&#28431;&#31383;</th><th>&#36817;10&#31383;&#21475;</th><th>&#31561;&#32423;</th></tr></thead><tbody>
           ${patternMetricRow('\u7279\u522B\u53F7\u5F53\u5E748\u7801\u6C60', analysis.special, `${analysis.special.poolSize}\u7801`)}
           ${patternMetricRow('\u7279\u522B\u53F7\u8DE8\u5E74\u7A33\u5B9A\u6C60', analysis.stable, `${analysis.stable.poolSize}\u7801`)}
