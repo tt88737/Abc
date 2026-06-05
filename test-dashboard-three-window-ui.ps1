@@ -21,6 +21,10 @@ if ($html -notmatch '&#19979;&#27880;' -or $html -notmatch '&#23567;&#27880;' -o
     throw 'expected betting recommendations to include bet, small bet, observe, and pause levels'
 }
 
+if ($html -notmatch 'function bettingPoolReviewStats' -or $html -notmatch 'specialPoolReviewGroups' -or $html -notmatch 'threePoolReviewGroups') {
+    throw 'expected betting review to recalculate hits from the displayed pools instead of old single-number recommendation rows'
+}
+
 if ($html -notmatch 'function recentWindowStats') {
     throw 'expected dashboard to compute recent window stats when persisted recent fields are missing'
 }

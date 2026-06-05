@@ -1296,26 +1296,22 @@
         ${recommendationHistoryHtml(rows)}
       </section>`;
     }
-    function recentRecommendationGroups(source, game, limit = 10) {
-      const map = new Map();
-      gameRows(source, game).filter(row => row.status === 'settled').forEach(row => {
-        const key = [row.actualDate || row.targetDate || '', row.displayYear || '', row.actualIssue || row.issue || ''].join('|');
-        if (!map.has(key)) {
-          map.set(key, {
-            date: row.actualDate || row.targetDate || '',
-            issue: row.actualIssue || row.issue || '',
-            hit: false,
-            actualNumbers: row.actualNumbers || []
-          });
-        }
-        const item = map.get(key);
-        item.hit = item.hit || !!row.hit;
-        if (!item.actualNumbers?.length && row.actualNumbers?.length) item.actualNumbers = row.actualNumbers;
+    function specialPoolReviewGroups(rows, pool, limit = 10) {
+      const poolSet = new Set(normalizedPool(pool));
+      return rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit).map(row => {
+        const actualNumbers = [specialNum(row)];
+        return {date: row.date || '', issue: row.issue || '', hit: poolSet.has(actualNumbers[0]), actualNumbers};
       });
-      return [...map.values()].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit);
     }
-    function bettingReviewStats(source, game) {
-      const groups = recentRecommendationGroups(source, game, 10);
+    function threePoolReviewGroups(rows, pool, limit = 10) {
+      const poolSet = new Set(normalizedPool(pool));
+      return rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit).map(row => {
+        const actualNumbers = regularNums(row);
+        const matched = actualNumbers.filter(num => poolSet.has(num));
+        return {date: row.date || '', issue: row.issue || '', hit: matched.length >= 3, actualNumbers};
+      });
+    }
+    function bettingPoolReviewStats(groups) {
       const hits = groups.filter(item => item.hit).length;
       let currentMiss = 0;
       for (const item of groups) {
@@ -1345,13 +1341,14 @@
       const reasons = [
         `&#24471;&#20998; ${score} / &#36817;10&#31383;&#21475; ${recent}%`,
         `&#28431;&#31383; ${currentMiss} / ${maxMiss || '-'}`,
-        review.total ? `&#36817;${review.total}&#27425;&#30495;&#23454;&#25512;&#33616; ${review.hits}/${review.total}` : '&#26242;&#26080;&#30495;&#23454;&#22797;&#30424;'
+        review.total ? `&#36817;${review.total}&#26399;&#24320;&#22870;&#27744;&#22797;&#30424; ${review.hits}/${review.total}` : '&#26242;&#26080;&#24320;&#22870;&#27744;&#22797;&#30424;'
       ];
       return {name, game, pool, stats, baseline, review, score, level, reasons};
     }
     function bettingRecommendationAnalysis(source) {
       const special = fiveWindowAnalysis(source);
       const three = threeWindowAnalysis(source);
+      const sourceRows = cachedSourceRecords(source);
       const specialStats = patternStats(special.yearWindows);
       const specialBaseline = randomWindowBaseline(special.yearPool.length, 49, 5);
       const threePool = (three.compoundPools || []).find(item => Number(item.poolSize || 0) === 8) || {};
@@ -1366,8 +1363,8 @@
         source,
         latest: sourceSummary(source).latest || special.latest || three.latest || {},
         items: [
-          bettingRecommendationItem('&#29305;&#21035;&#21495;8&#30721;&#27744;', 'special-number', special.yearPool, specialStats, specialBaseline, bettingReviewStats(source, 'special-number')),
-          bettingRecommendationItem('&#19977;&#20013;&#19977;8&#30721;&#27744;', 'three-hit-three', threePool.pool || three.numberPool || [], threeStats, randomWindowBaseline(8, 49, 5), bettingReviewStats(source, 'three-hit-three'))
+          bettingRecommendationItem('&#29305;&#21035;&#21495;8&#30721;&#27744;', 'special-number', special.yearPool, specialStats, specialBaseline, bettingPoolReviewStats(specialPoolReviewGroups(sourceRows, special.yearPool, 10))),
+          bettingRecommendationItem('&#19977;&#20013;&#19977;8&#30721;&#27744;', 'three-hit-three', threePool.pool || three.numberPool || [], threeStats, randomWindowBaseline(8, 49, 5), bettingPoolReviewStats(threePoolReviewGroups(sourceRows, threePool.pool || three.numberPool || [], 10)))
         ]
       };
     }
@@ -1376,14 +1373,14 @@
     }
     function bettingReviewTable(analysis) {
       const rows = analysis.items.flatMap(item => item.review.groups.map(group => ({name: item.name, ...group})));
-      return `<section class="panel full"><h2>&#26368;&#36817;&#30495;&#23454;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#32467;&#26524;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
+      return `<section class="panel full"><h2>&#26368;&#36817;&#24320;&#22870;&#27744;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#32467;&#26524;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
     }
     function renderBetting() {
       const selected = document.getElementById('betting-source')?.value || 'am';
       const analysis = bettingRecommendationAnalysis(selected);
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="betting-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel full"><h2>&#20170;&#26085;&#19979;&#27880;&#25512;&#33616;</h2><p class="muted">${esc(analysis.latest?.date || '')} ${esc(analysis.latest?.issue || '')}&#26399;&#65292;&#31561;&#32423;&#21482;&#20381;&#25454;&#21382;&#21490;&#28378;&#21160;&#34920;&#29616;&#12289;&#36817;&#26399;&#22797;&#30424;&#21644;&#24403;&#21069;&#28431;&#31383;&#35745;&#31639;&#12290;</p></section>
+        <section class="panel full"><h2>&#20170;&#26085;&#19979;&#27880;&#25512;&#33616;</h2><p class="muted">${esc(analysis.latest?.date || '')} ${esc(analysis.latest?.issue || '')}&#26399;&#65292;&#31561;&#32423;&#21482;&#20381;&#25454;&#21382;&#21490;&#28378;&#21160;&#34920;&#29616;&#12289;&#26368;&#36817;&#24320;&#22870;&#27744;&#22797;&#30424;&#21644;&#24403;&#21069;&#28431;&#31383;&#35745;&#31639;&#12290;</p></section>
         ${analysis.items.map(bettingCard).join('')}
         ${bettingReviewTable(analysis)}
       </div>`;
