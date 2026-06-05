@@ -316,6 +316,33 @@ try {
     if (-not $dashboardSummaryScriptText.Contains('window.__DASHBOARD_SUMMARY__ = ')) {
         throw 'dashboard summary script fallback was not generated'
     }
+    $bettingSnapshotsFile = Join-Path $outDir 'data/betting-snapshots.json'
+    $bettingSnapshotsScript = Join-Path $outDir 'data/betting-snapshots.js'
+    if (-not (Test-Path -LiteralPath $bettingSnapshotsFile)) {
+        throw 'betting-snapshots.json was not created'
+    }
+    if (-not (Test-Path -LiteralPath $bettingSnapshotsScript)) {
+        throw 'betting-snapshots.js script fallback was not generated'
+    }
+    $bettingSnapshotData = Get-Content -LiteralPath $bettingSnapshotsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    if (@($bettingSnapshotData.items).Count -lt 4) {
+        throw 'betting snapshots should persist at least one special and one three-hit recommendation per source'
+    }
+    foreach ($source in @('am', 'hk')) {
+        foreach ($game in @('special-number', 'three-hit-three')) {
+            $snapshot = @($bettingSnapshotData.items | Where-Object { $_.source -eq $source -and $_.game -eq $game } | Select-Object -First 1)
+            if ($snapshot.Count -eq 0 -or @($snapshot[0].pool).Count -eq 0 -or -not $snapshot[0].status) {
+                throw "expected persisted betting snapshot for $source $game"
+            }
+        }
+    }
+    $bettingSnapshotsScriptText = Get-Content -LiteralPath $bettingSnapshotsScript -Raw
+    if (-not $bettingSnapshotsScriptText.Contains('window.__BETTING_SNAPSHOTS__ = ')) {
+        throw 'betting snapshots script fallback should expose __BETTING_SNAPSHOTS__'
+    }
+    if (-not $dashboard.Contains('__BETTING_SNAPSHOTS__') -or -not $dashboard.Contains('ensureBettingSnapshots')) {
+        throw 'dashboard should load persisted betting snapshots before rendering recommendations'
+    }
     if ($dashboard.Contains('"forecasts":')) {
         throw 'prediction observation data should not be embedded'
     }

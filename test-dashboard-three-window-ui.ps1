@@ -41,6 +41,10 @@ if ($html -notmatch 'function bettingRiskGate' -or $html -notmatch 'snapshotRevi
     throw 'expected betting recommendations to apply strict snapshot-based risk gates'
 }
 
+if ($html -notmatch 'function ensureBettingSnapshots' -or $html -notmatch '__BETTING_SNAPSHOTS__' -or $html -notmatch 'persistedBettingSnapshotReviewGroups') {
+    throw 'expected betting recommendations to load persisted snapshot ledger before rendering'
+}
+
 if ($html -notmatch 'function recentWindowStats') {
     throw 'expected dashboard to compute recent window stats when persisted recent fields are missing'
 }

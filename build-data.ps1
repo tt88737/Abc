@@ -871,6 +871,108 @@ function New-Window5State {
     return [pscustomobject]@{ generatedAt = $GeneratedAt; items = $items }
 }
 
+function Normalize-PoolNumbers {
+    param([object[]]$Numbers)
+    return @($Numbers | Where-Object { $null -ne $_ -and [string]$_ -ne '' } | ForEach-Object { ([int]$_).ToString('00') } | Select-Object -Unique)
+}
+
+function Get-PoolSnapshotForIssue {
+    param([object]$PoolItem, [int]$Issue)
+
+    $pool = if ($null -ne $PoolItem.pool) { @($PoolItem.pool) } elseif ($null -ne $PoolItem.yearPool) { @($PoolItem.yearPool) } else { @() }
+    $snapshot = @(Normalize-PoolNumbers $pool)
+    $windows = @()
+    if ($null -ne $PoolItem.windows) { $windows += @($PoolItem.windows) }
+    if ($null -ne $PoolItem.yearWindows) { $windows += @($PoolItem.yearWindows) }
+    foreach ($win in $windows) {
+        if ([int]$win.start -le $Issue -and [int]$win.end -ge $Issue) {
+            if ($null -ne $win.poolSnapshot -and @($win.poolSnapshot).Count -gt 0) {
+                return @(Normalize-PoolNumbers @($win.poolSnapshot))
+            }
+        }
+    }
+    return $snapshot
+}
+
+function Get-SpecialSnapshotRows {
+    param([object[]]$SourceRows, [object]$Window5Item, [string]$GeneratedAt, [int]$Limit = 10)
+
+    $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
+    foreach ($row in $rows) {
+        $pool = @(Get-PoolSnapshotForIssue -PoolItem ([pscustomobject]@{ pool = $Window5Item.yearPool; windows = $Window5Item.windows }) -Issue ([int]$row.issue))
+        $draw = @(([int]$row.balls[6].numberText).ToString('00'))
+        $matched = @($draw | Where-Object { $pool -contains $_ })
+        [pscustomobject]@{
+            id = ('{0}|special-number|{1}|{2}' -f $row.source, $row.date, $row.issue)
+            source = $row.source
+            date = $row.date
+            issue = [int]$row.issue
+            game = 'special-number'
+            name = 'special-number-8-pool'
+            pool = $pool
+            poolSize = $pool.Count
+            generatedAt = $GeneratedAt
+            status = 'settled'
+            draw = $draw
+            matched = $matched
+            hit = $matched.Count -gt 0
+        }
+    }
+}
+
+function Get-ThreeSnapshotRows {
+    param([object[]]$SourceRows, [object]$PoolItem, [string]$GeneratedAt, [int]$Limit = 10)
+
+    $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
+    foreach ($row in $rows) {
+        $pool = @(Get-PoolSnapshotForIssue -PoolItem $PoolItem -Issue ([int]$row.issue))
+        $draw = @($row.balls | Select-Object -First 6 | ForEach-Object { ([int]$_.numberText).ToString('00') })
+        $matched = @($draw | Where-Object { $pool -contains $_ })
+        [pscustomobject]@{
+            id = ('{0}|three-hit-three|{1}|{2}' -f $row.source, $row.date, $row.issue)
+            source = $row.source
+            date = $row.date
+            issue = [int]$row.issue
+            game = 'three-hit-three'
+            name = 'three-hit-three-8-pool'
+            pool = $pool
+            poolSize = $pool.Count
+            generatedAt = $GeneratedAt
+            status = 'settled'
+            draw = $draw
+            matched = $matched
+            hit = $matched.Count -ge 3
+        }
+    }
+}
+
+function New-BettingSnapshots {
+    param(
+        [object[]]$Records,
+        [object]$Window5,
+        [object]$ThreeCompound,
+        [string]$GeneratedAt
+    )
+
+    $items = @()
+    foreach ($source in @('am', 'hk')) {
+        $sourceRows = @($Records | Where-Object { $_.source -eq $source } | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true })
+        if ($sourceRows.Count -eq 0) { continue }
+        $windowItem = @($Window5.items | Where-Object { $_.source -eq $source } | Select-Object -First 1)
+        if ($windowItem.Count -gt 0) {
+            $items += @(Get-SpecialSnapshotRows -SourceRows $sourceRows -Window5Item $windowItem[0] -GeneratedAt $GeneratedAt)
+        }
+        $threeSource = @($ThreeCompound.items | Where-Object { $_.source -eq $source } | Select-Object -First 1)
+        if ($threeSource.Count -gt 0) {
+            $threePool = @($threeSource[0].pools | Where-Object { [int]$_.poolSize -eq 8 } | Select-Object -First 1)
+            if ($threePool.Count -gt 0) {
+                $items += @(Get-ThreeSnapshotRows -SourceRows $sourceRows -PoolItem $threePool[0] -GeneratedAt $GeneratedAt)
+            }
+        }
+    }
+    return [pscustomobject]@{ generatedAt = $GeneratedAt; items = @($items | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'issue'; Descending = $true }, @{ Expression = 'game'; Descending = $false }) }
+}
+
 function New-GamePredictions {
     param([object[]]$Records, [object[]]$Existing = @())
 
@@ -1441,6 +1543,7 @@ function New-DashboardHtml {
     let gamePredictions = {items: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
+    let bettingSnapshots = {items: []};
     const threeWindowAnalysisCache = new Map();
     const threeWindowHtmlCache = new Map();
     const dashboardCacheVersion = String(Date.now());
@@ -2694,6 +2797,20 @@ function New-DashboardHtml {
         return {date: row.date || '', issue: row.issue || '', snapshot, hit: settled.hit, currentHit, actualNumbers, poolSnapshot: snapshot.pool, matched: settled.matched, currentMatched};
       });
     }
+    function persistedBettingSnapshotReviewGroups(item, limit = 10) {
+      const currentPool = normalizedPool(item?.pool || []);
+      const currentSet = new Set(currentPool);
+      return asArray(bettingSnapshots?.items)
+        .filter(row => row.source === item.source && row.game === item.game && row.status === 'settled')
+        .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))
+        .slice(0, limit)
+        .map(snapshot => {
+          const actualNumbers = normalizedPool(snapshot.draw || []);
+          const currentMatched = actualNumbers.filter(num => currentSet.has(num));
+          const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
+          return {date: snapshot.date || '', issue: snapshot.issue || '', snapshot, hit: !!snapshot.hit, currentHit, actualNumbers, poolSnapshot: normalizedPool(snapshot.pool || []), matched: normalizedPool(snapshot.matched || []), currentMatched};
+        });
+    }
     function bettingPoolReviewStats(groups) {
       const hits = groups.filter(item => item.hit).length;
       let currentMiss = 0;
@@ -2758,7 +2875,8 @@ function New-DashboardHtml {
       ];
       const items = seedItems.map(seed => {
         const draft = {...seed, score: 0, level: {code: 'watch', label: '&#35266;&#26395;'}, reasons: []};
-        const snapshotReview = bettingPoolReviewStats(bettingSnapshotReviewGroups(sourceRows, draft, 10));
+        const persistedGroups = persistedBettingSnapshotReviewGroups(draft, 10);
+        const snapshotReview = bettingPoolReviewStats(persistedGroups.length ? persistedGroups : bettingSnapshotReviewGroups(sourceRows, draft, 10));
         return bettingRecommendationItem(source, latest, seed.name, seed.game, seed.pool, seed.stats, seed.baseline, snapshotReview, seed.poolItem);
       });
       return {source, latest, items};
@@ -3058,6 +3176,7 @@ function New-DashboardHtml {
     let gamePredictionsPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
+    let bettingSnapshotsPromise = null;
     function cacheBustUrl(src) {
       const separator = src.includes('?') ? '&' : '?';
       return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
@@ -3129,12 +3248,23 @@ function New-DashboardHtml {
       }
       return threeCompoundPromise;
     }
+    async function ensureBettingSnapshots() {
+      if (bettingSnapshots?.items?.length) return bettingSnapshots;
+      if (!bettingSnapshotsPromise) {
+        bettingSnapshotsPromise = loadJsonOrScript('data/betting-snapshots.json', 'data/betting-snapshots.js', '__BETTING_SNAPSHOTS__').then(data => {
+          bettingSnapshots = data || {items: []};
+          return bettingSnapshots;
+        });
+      }
+      return bettingSnapshotsPromise;
+    }
     const tabDataLoaders = {
       betting: async () => {
         await ensureRecordsData();
         gamePredictions = await ensureGamePredictionsData();
         window5State = await ensureWindow5Data();
         threeCompoundState = await ensureThreeCompoundData();
+        bettingSnapshots = await ensureBettingSnapshots();
       },
       games: async () => {
         await ensureRecordsData();
@@ -3346,6 +3476,17 @@ if (Test-Path -LiteralPath $threeCompoundScript) {
         Write-DataJsFromJsonFile -JsonPath $threeCompoundPath -GlobalName '__THREE_COMPOUND_STATE__'
     } | Out-Null
 }
+$threeCompoundStateForSnapshots = [pscustomobject]@{ items = @() }
+if (Test-Path -LiteralPath $threeCompoundPath) {
+    try { $threeCompoundStateForSnapshots = Get-Content -LiteralPath $threeCompoundPath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $threeCompoundStateForSnapshots = [pscustomobject]@{ items = @() } }
+}
+$bettingSnapshotsPath = Join-Path $dataDir 'betting-snapshots.json'
+$bettingSnapshots = Invoke-Profiled 'betting-snapshots' {
+    return New-BettingSnapshots -Records $deduped -Window5 $window5 -ThreeCompound $threeCompoundStateForSnapshots -GeneratedAt $summary.generatedAt
+}
+Invoke-Profiled 'write-betting-snapshots-json' {
+    Write-DataJsonAndJs -JsonPath $bettingSnapshotsPath -Data $bettingSnapshots -GlobalName '__BETTING_SNAPSHOTS__' -Depth 10
+} | Out-Null
 $dashboardPath = Join-Path $RootDir 'index.html'
 Invoke-Profiled 'write-dashboard-html' {
     [IO.File]::WriteAllText($dashboardPath, (New-DashboardHtml), $Utf8NoBom)

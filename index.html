@@ -121,6 +121,7 @@
     let gamePredictions = {items: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
+    let bettingSnapshots = {items: []};
     const threeWindowAnalysisCache = new Map();
     const threeWindowHtmlCache = new Map();
     const dashboardCacheVersion = String(Date.now());
@@ -1374,6 +1375,20 @@
         return {date: row.date || '', issue: row.issue || '', snapshot, hit: settled.hit, currentHit, actualNumbers, poolSnapshot: snapshot.pool, matched: settled.matched, currentMatched};
       });
     }
+    function persistedBettingSnapshotReviewGroups(item, limit = 10) {
+      const currentPool = normalizedPool(item?.pool || []);
+      const currentSet = new Set(currentPool);
+      return asArray(bettingSnapshots?.items)
+        .filter(row => row.source === item.source && row.game === item.game && row.status === 'settled')
+        .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))
+        .slice(0, limit)
+        .map(snapshot => {
+          const actualNumbers = normalizedPool(snapshot.draw || []);
+          const currentMatched = actualNumbers.filter(num => currentSet.has(num));
+          const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
+          return {date: snapshot.date || '', issue: snapshot.issue || '', snapshot, hit: !!snapshot.hit, currentHit, actualNumbers, poolSnapshot: normalizedPool(snapshot.pool || []), matched: normalizedPool(snapshot.matched || []), currentMatched};
+        });
+    }
     function bettingPoolReviewStats(groups) {
       const hits = groups.filter(item => item.hit).length;
       let currentMiss = 0;
@@ -1438,7 +1453,8 @@
       ];
       const items = seedItems.map(seed => {
         const draft = {...seed, score: 0, level: {code: 'watch', label: '&#35266;&#26395;'}, reasons: []};
-        const snapshotReview = bettingPoolReviewStats(bettingSnapshotReviewGroups(sourceRows, draft, 10));
+        const persistedGroups = persistedBettingSnapshotReviewGroups(draft, 10);
+        const snapshotReview = bettingPoolReviewStats(persistedGroups.length ? persistedGroups : bettingSnapshotReviewGroups(sourceRows, draft, 10));
         return bettingRecommendationItem(source, latest, seed.name, seed.game, seed.pool, seed.stats, seed.baseline, snapshotReview, seed.poolItem);
       });
       return {source, latest, items};
@@ -1738,6 +1754,7 @@
     let gamePredictionsPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
+    let bettingSnapshotsPromise = null;
     function cacheBustUrl(src) {
       const separator = src.includes('?') ? '&' : '?';
       return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
@@ -1809,12 +1826,23 @@
       }
       return threeCompoundPromise;
     }
+    async function ensureBettingSnapshots() {
+      if (bettingSnapshots?.items?.length) return bettingSnapshots;
+      if (!bettingSnapshotsPromise) {
+        bettingSnapshotsPromise = loadJsonOrScript('data/betting-snapshots.json', 'data/betting-snapshots.js', '__BETTING_SNAPSHOTS__').then(data => {
+          bettingSnapshots = data || {items: []};
+          return bettingSnapshots;
+        });
+      }
+      return bettingSnapshotsPromise;
+    }
     const tabDataLoaders = {
       betting: async () => {
         await ensureRecordsData();
         gamePredictions = await ensureGamePredictionsData();
         window5State = await ensureWindow5Data();
         threeCompoundState = await ensureThreeCompoundData();
+        bettingSnapshots = await ensureBettingSnapshots();
       },
       games: async () => {
         await ensureRecordsData();
