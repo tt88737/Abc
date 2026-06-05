@@ -894,12 +894,38 @@ function Get-PoolSnapshotForIssue {
     return $snapshot
 }
 
+function Complete-SpecialPool8 {
+    param([string[]]$Pool, [object[]]$SourceRows)
+
+    $selected = New-Object 'System.Collections.Generic.List[string]'
+    foreach ($num in @(Normalize-PoolNumbers $Pool)) {
+        if ($selected.Count -ge 8) { break }
+        if (-not $selected.Contains($num)) { $selected.Add($num) | Out-Null }
+    }
+    $fallback = @($SourceRows |
+        Where-Object { $null -ne $_.balls -and @($_.balls).Count -ge 7 } |
+        ForEach-Object { ([int]$_.balls[6].numberText).ToString('00') } |
+        Group-Object |
+        Sort-Object @{ Expression = 'Count'; Descending = $true }, @{ Expression = { [int]$_.Name }; Descending = $false } |
+        ForEach-Object { $_.Name })
+    foreach ($num in $fallback) {
+        if ($selected.Count -ge 8) { break }
+        if (-not $selected.Contains($num)) { $selected.Add($num) | Out-Null }
+    }
+    foreach ($n in 1..49) {
+        if ($selected.Count -ge 8) { break }
+        $num = $n.ToString('00')
+        if (-not $selected.Contains($num)) { $selected.Add($num) | Out-Null }
+    }
+    return @($selected | Select-Object -First 8)
+}
+
 function Get-SpecialSnapshotRows {
     param([object[]]$SourceRows, [object]$Window5Item, [string]$GeneratedAt, [int]$Limit = 10)
 
     $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
     foreach ($row in $rows) {
-        $pool = @(Get-PoolSnapshotForIssue -PoolItem ([pscustomobject]@{ pool = $Window5Item.yearPool; windows = $Window5Item.windows }) -Issue ([int]$row.issue))
+        $pool = @(Complete-SpecialPool8 -Pool (Get-PoolSnapshotForIssue -PoolItem ([pscustomobject]@{ pool = $Window5Item.yearPool; windows = $Window5Item.windows }) -Issue ([int]$row.issue)) -SourceRows $SourceRows)
         $draw = @(([int]$row.balls[6].numberText).ToString('00'))
         $matched = @($draw | Where-Object { $pool -contains $_ })
         [pscustomobject]@{
@@ -1654,6 +1680,26 @@ function New-DashboardHtml {
     function specialNum(record) {
       return String(Number(record?.balls?.[6]?.numberText || 0)).padStart(2, '0');
     }
+    function completeSpecialPool8(pool, rows) {
+      const selected = [];
+      normalizedPool(pool).forEach(num => {
+        if (selected.length < 8 && !selected.includes(num)) selected.push(num);
+      });
+      const counts = new Map();
+      asArray(rows).forEach(row => {
+        const num = specialNum(row);
+        if (!num || num === '00') return;
+        counts.set(num, (counts.get(num) || 0) + 1);
+      });
+      [...counts.entries()].sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0])).forEach(([num]) => {
+        if (selected.length < 8 && !selected.includes(num)) selected.push(num);
+      });
+      for (let n = 1; selected.length < 8 && n <= 49; n++) {
+        const num = String(n).padStart(2, '0');
+        if (!selected.includes(num)) selected.push(num);
+      }
+      return selected.slice(0, 8);
+    }
     function fiveWindowCoverage(rows, pool) {
       if (!rows.length) return [];
       const maxIssue = Math.max(...rows.map(row => Number(row.issue || 0)));
@@ -1772,7 +1818,7 @@ function New-DashboardHtml {
       const rawYearWindows = fiveWindowRawWindows(yearRows);
       const stateItem = (window5State.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
       const yearPoolHistory = Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [];
-      const yearPool = (stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows)).slice(0, 8);
+      const yearPool = completeSpecialPool8((stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows)).slice(0, 8), yearRows);
       const stablePool = (stateItem?.stablePool?.length ? stateItem.stablePool : pools.stablePool).slice(0, maxStableWindow5PoolSize);
       const yearWindows = fiveWindowCoverageSnapshots(yearRows, yearPool, yearPoolHistory);
       const stableWindows = fiveWindowCoverage(yearRows, stablePool);

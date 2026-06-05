@@ -334,6 +334,9 @@ try {
             if ($snapshot.Count -eq 0 -or @($snapshot[0].pool).Count -eq 0 -or -not $snapshot[0].status) {
                 throw "expected persisted betting snapshot for $source $game"
             }
+            if ($game -eq 'special-number' -and ([int]$snapshot[0].poolSize -ne 8 -or @($snapshot[0].pool).Count -ne 8)) {
+                throw "special-number betting snapshot should always persist an 8-number pool for $source"
+            }
         }
     }
     $bettingSnapshotsScriptText = Get-Content -LiteralPath $bettingSnapshotsScript -Raw

@@ -232,6 +232,26 @@
     function specialNum(record) {
       return String(Number(record?.balls?.[6]?.numberText || 0)).padStart(2, '0');
     }
+    function completeSpecialPool8(pool, rows) {
+      const selected = [];
+      normalizedPool(pool).forEach(num => {
+        if (selected.length < 8 && !selected.includes(num)) selected.push(num);
+      });
+      const counts = new Map();
+      asArray(rows).forEach(row => {
+        const num = specialNum(row);
+        if (!num || num === '00') return;
+        counts.set(num, (counts.get(num) || 0) + 1);
+      });
+      [...counts.entries()].sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0])).forEach(([num]) => {
+        if (selected.length < 8 && !selected.includes(num)) selected.push(num);
+      });
+      for (let n = 1; selected.length < 8 && n <= 49; n++) {
+        const num = String(n).padStart(2, '0');
+        if (!selected.includes(num)) selected.push(num);
+      }
+      return selected.slice(0, 8);
+    }
     function fiveWindowCoverage(rows, pool) {
       if (!rows.length) return [];
       const maxIssue = Math.max(...rows.map(row => Number(row.issue || 0)));
@@ -350,7 +370,7 @@
       const rawYearWindows = fiveWindowRawWindows(yearRows);
       const stateItem = (window5State.items || []).find(item => item.source === source && String(item.year) === String(currentYear));
       const yearPoolHistory = Array.isArray(stateItem?.yearPoolHistory) ? stateItem.yearPoolHistory : [];
-      const yearPool = (stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows)).slice(0, 8);
+      const yearPool = completeSpecialPool8((stateItem?.yearPool?.length ? stateItem.yearPool : greedyFiveWindowPool(rawYearWindows)).slice(0, 8), yearRows);
       const stablePool = (stateItem?.stablePool?.length ? stateItem.stablePool : pools.stablePool).slice(0, maxStableWindow5PoolSize);
       const yearWindows = fiveWindowCoverageSnapshots(yearRows, yearPool, yearPoolHistory);
       const stableWindows = fiveWindowCoverage(yearRows, stablePool);
