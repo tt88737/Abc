@@ -1907,6 +1907,7 @@ function New-DashboardHtml {
     function renderHistoryPattern() {
       const selected = document.getElementById('history-pattern-source')?.value || 'am';
       const range = document.getElementById('history-pattern-range')?.value || 'year';
+      const analysis = buildHistorySpecialFixed8Analysis(selected, range);
       app.innerHTML = `<div class="grid">
         <section class="panel full">
           <div class="filters">
@@ -1916,11 +1917,108 @@ function New-DashboardHtml {
         </section>
         <section class="panel full">
           <h2>&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</h2>
-          <p class="muted">&#35831;&#36873;&#25321;&#35266;&#23519;&#26041;&#21521;&#12290;</p>
+          <p class="muted">&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;&#65292;&#25353;001-005&#12289;006-010&#12289;011-015&#12289;016-020...&#22266;&#23450;5&#26399;&#31383;&#21475;&#22238;&#27979;&#35206;&#30422;&#29575;&#12290;</p>
+        </section>
+        <section class="panel full">
+          <h2>&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;</h2>
+          <div class="grid">
+            <section class="panel"><h2>&#35206;&#30422;8&#30721;</h2>${numberChips(analysis.pool)}<p class="muted">${esc(analysis.rangeLabel)}&#65292;${esc(analysis.method)}</p></section>
+            <section class="panel"><h2>&#31383;&#21475;&#35206;&#30422;&#29575;</h2><div class="metric">${esc(analysis.hitRate)}%</div><p class="muted">${esc(analysis.covered)} / ${esc(analysis.total)} &#20010;&#23436;&#25972;&#31383;&#21475;</p></section>
+            <section class="panel"><h2>&#28431;&#31383;</h2><div class="metric">${esc(analysis.misses.length)}</div><p class="muted">&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.currentMiss)}&#65292;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.maxMiss)}</p></section>
+          </div>
+        </section>
+        <section class="panel full">
+          <h2>&#26410;&#35206;&#30422;&#31383;&#21475;</h2>
+          ${historyMissWindowsTable(analysis.misses)}
         </section>
       </div>`;
       document.getElementById('history-pattern-source').addEventListener('change', renderHistoryPattern);
       document.getElementById('history-pattern-range').addEventListener('change', renderHistoryPattern);
+    }
+    function historyWindowLabel(win) {
+      return `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`;
+    }
+    function historyMissWindowsTable(windows) {
+      const rows = asArray(windows).slice(0, 80);
+      if (!rows.length) return '<p class="muted">&#26242;&#26080;&#26410;&#35206;&#30422;&#30340;&#23436;&#25972;&#31383;&#21475;&#12290;</p>';
+      return `<div class="table-scroll"><table class="compact-table"><thead><tr><th>&#24180;&#20221;</th><th>&#31383;&#21475;</th><th>&#24320;&#22870;&#25968;</th><th>&#31383;&#21475;&#29305;&#21035;&#21495;</th></tr></thead><tbody>${rows.map(win => `<tr><td>${esc(win.year)}</td><td>${historyWindowLabel(win)}</td><td>${esc(win.count)}</td><td>${numberChips(win.nums)}</td></tr>`).join('')}</tbody></table></div>`;
+    }
+    function historyFixedFiveWindows(rows) {
+      const groups = new Map();
+      asArray(rows).forEach(row => {
+        const year = displayYear(row);
+        if (!year) return;
+        if (!groups.has(year)) groups.set(year, []);
+        groups.get(year).push(row);
+      });
+      const windows = [];
+      [...groups.entries()].sort((a, b) => String(a[0]).localeCompare(String(b[0]))).forEach(([year, yearRows]) => {
+        const sorted = yearRows.slice().sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+        const maxIssue = sorted.reduce((max, row) => Math.max(max, Number(row.issue || 0)), 0);
+        for (let start = 1; start <= maxIssue; start += 5) {
+          const end = start + 4;
+          const chunk = sorted.filter(row => Number(row.issue || 0) >= start && Number(row.issue || 0) <= end);
+          if (chunk.length < 5) continue;
+          const nums = [...new Set(chunk.map(specialNum))].sort((a, b) => Number(a) - Number(b));
+          windows.push({year, start, end, count: chunk.length, nums});
+        }
+      });
+      return windows;
+    }
+    function bestFixed8PoolForWindows(windows) {
+      const selected = [];
+      const uncovered = new Set(asArray(windows).map((_, idx) => idx));
+      const allNums = Array.from({length: 49}, (_, idx) => String(idx + 1).padStart(2, '0'));
+      while (selected.length < 8) {
+        let best = null;
+        allNums.forEach(num => {
+          if (selected.includes(num)) return;
+          let gain = 0;
+          uncovered.forEach(idx => {
+            if (windows[idx].nums.includes(num)) gain++;
+          });
+          if (!best || gain > best.gain || (gain === best.gain && Number(num) < Number(best.num))) best = {num, gain};
+        });
+        if (!best) break;
+        selected.push(best.num);
+        [...uncovered].forEach(idx => {
+          if (windows[idx].nums.includes(best.num)) uncovered.delete(idx);
+        });
+      }
+      return completeSpecialPool8(selected, []);
+    }
+    function historyCoverageStats(windows, pool) {
+      const poolSet = new Set(pool);
+      const evaluated = asArray(windows).map(win => ({...win, covered: win.nums.some(num => poolSet.has(num))}));
+      const covered = evaluated.filter(win => win.covered).length;
+      const misses = evaluated.filter(win => !win.covered);
+      let maxMiss = 0;
+      let currentMiss = 0;
+      let run = 0;
+      evaluated.forEach(win => {
+        if (win.covered) {
+          maxMiss = Math.max(maxMiss, run);
+          run = 0;
+        } else {
+          run++;
+        }
+      });
+      maxMiss = Math.max(maxMiss, run);
+      for (let i = evaluated.length - 1; i >= 0; i--) {
+        if (evaluated[i].covered) break;
+        currentMiss++;
+      }
+      return {windows: evaluated, covered, misses, total: evaluated.length, hitRate: evaluated.length ? Math.round(covered / evaluated.length * 10000) / 100 : 0, currentMiss, maxMiss};
+    }
+    function buildHistorySpecialFixed8Analysis(source, range) {
+      const sourceRows = cachedSourceRecords(source).filter(row => row.source === source);
+      const latest = sourceRows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0];
+      const currentYear = displayYear(latest);
+      const rows = range === 'all' ? sourceRows : sourceRows.filter(row => displayYear(row) === currentYear);
+      const windows = historyFixedFiveWindows(rows);
+      const pool = bestFixed8PoolForWindows(windows);
+      const stats = historyCoverageStats(windows, pool);
+      return {...stats, source, pool, currentYear, range, rangeLabel: range === 'all' ? '&#20840;&#37096;&#21382;&#21490;' : `${currentYear}&#24180;`, method: '&#25353;&#23436;&#25972;5&#26399;&#31383;&#21475;&#35206;&#30422;&#25968;&#36138;&#24515;&#36873;&#21462;&#35206;&#30422;&#29575;&#26368;&#39640;8&#30721;'};
     }
     const defaultFetchUrls = {
       am: 'https://2025kj.zkclhb.com:2025/am.html',

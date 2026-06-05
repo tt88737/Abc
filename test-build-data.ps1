@@ -273,7 +273,13 @@ try {
         throw 'dashboard should expose a pattern watch renderer'
     }
     if (-not $dashboard.Contains('function renderHistoryPattern()') -or -not $dashboard.Contains('history-pattern-source') -or -not $dashboard.Contains('history-pattern-range')) {
-        throw 'dashboard should expose a clean history pattern observation placeholder'
+        throw 'dashboard should expose a history pattern observation page'
+    }
+    if (-not $dashboard.Contains('function buildHistorySpecialFixed8Analysis(source, range)') -or -not $dashboard.Contains('function bestFixed8PoolForWindows(windows)')) {
+        throw 'history pattern should calculate special-number fixed 8-code five-window coverage'
+    }
+    if (-not $dashboard.Contains('001-005') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;')) {
+        throw 'history pattern should render the fixed 8-code five-window observation'
     }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
         throw 'dashboard should expose a manual fetch renderer'
