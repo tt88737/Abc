@@ -1922,7 +1922,7 @@ function New-DashboardHtml {
         <section class="panel full">
           <h2>&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;</h2>
           <div class="grid">
-            <section class="panel"><h2>&#35206;&#30422;8&#30721;</h2>${numberChips(analysis.pool)}<p class="muted">${esc(analysis.rangeLabel)}&#65292;${esc(analysis.method)}</p></section>
+            <section class="panel"><h2>&#35206;&#30422;8&#30721;</h2>${numberChips(analysis.pool)}<p class="muted">${analysis.rangeLabel}&#65292;${analysis.method}</p></section>
             <section class="panel"><h2>&#31383;&#21475;&#35206;&#30422;&#29575;</h2><div class="metric">${esc(analysis.hitRate)}%</div><p class="muted">${esc(analysis.covered)} / ${esc(analysis.total)} &#20010;&#23436;&#25972;&#31383;&#21475;</p></section>
             <section class="panel"><h2>&#28431;&#31383;</h2><div class="metric">${esc(analysis.misses.length)}</div><p class="muted">&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.currentMiss)}&#65292;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.maxMiss)}</p></section>
           </div>
@@ -2158,6 +2158,9 @@ function New-DashboardHtml {
       },
       threeWindow5: async () => {
         threeCompoundState = await ensureThreeCompoundData();
+      },
+      historyPattern: async () => {
+        await ensureRecordsData();
       },
       patternWatch: async () => {
         await ensureRecordsData();

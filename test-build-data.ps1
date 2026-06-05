@@ -278,6 +278,12 @@ try {
     if (-not $dashboard.Contains('function buildHistorySpecialFixed8Analysis(source, range)') -or -not $dashboard.Contains('function bestFixed8PoolForWindows(windows)')) {
         throw 'history pattern should calculate special-number fixed 8-code five-window coverage'
     }
+    if (-not $dashboard.Contains('historyPattern: async () =>') -or -not $dashboard.Contains('historyPattern: renderHistoryPattern')) {
+        throw 'history pattern should load full records before rendering'
+    }
+    if ($dashboard.Contains('esc(analysis.rangeLabel)') -or $dashboard.Contains('esc(analysis.method)')) {
+        throw 'history pattern should not double-escape html entity labels'
+    }
     if (-not $dashboard.Contains('001-005') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;')) {
         throw 'history pattern should render the fixed 8-code five-window observation'
     }
