@@ -294,6 +294,14 @@
       }
       return windows;
     }
+    function nextOpenWindowStart(latestIssue, windows, size = 5) {
+      const issue = Number(latestIssue || 0);
+      if (!issue) return 1;
+      const start = Math.floor((issue - 1) / size) * size + 1;
+      const current = asArray(windows).find(item => Number(item.start || 0) === start);
+      if (current && Number(current.count || 0) >= size) return start + size;
+      return start;
+    }
     const maxWindow5PoolSize = 8;
     const maxStableWindow5PoolSize = 15;
     function greedyFiveWindowPool(windows) {
@@ -338,7 +346,7 @@
         const latest = sourceSummary(source).latest || {};
         const latestIssue = Number(latest.issue || stateItem?.stablePoolLastIssue || 0);
         const currentYear = String(stateItem?.year || displayYear(latest) || '');
-        const currentStart = latestIssue ? Math.floor((latestIssue - 1) / 5) * 5 + 1 : 1;
+        const currentStart = nextOpenWindowStart(latestIssue, [], 5);
         const currentWindow = {start: currentStart, end: currentStart + 4, count: latestIssue ? Math.min(5, latestIssue - currentStart + 1) : 0, hits: [], covered: false};
         return {
           source,
@@ -375,7 +383,7 @@
       const yearWindows = fiveWindowCoverageSnapshots(yearRows, yearPool, yearPoolHistory);
       const stableWindows = fiveWindowCoverage(yearRows, stablePool);
       const latestIssue = Number(latest?.issue || 0);
-      const currentStart = Math.floor((latestIssue - 1) / 5) * 5 + 1;
+      const currentStart = nextOpenWindowStart(latestIssue, yearWindows);
       const currentWindow = yearWindows.find(item => item.start === currentStart) || {start: currentStart, end: currentStart + 4, count: 0, hits: [], covered: false};
       const yearly = [];
       const years = uniq(sourceRows.map(displayYear));
@@ -626,7 +634,7 @@
       const primary = compoundPools.find(item => Number(item.poolSize || 0) === 8) || compoundPools[compoundPools.length - 1];
       const yearWindows = asArray(primary?.windows);
       const latestIssue = Number(stateItem.latestIssue || yearWindows.reduce((max, win) => Math.max(max, Number(win.end || 0)), 0));
-      const currentStart = latestIssue ? Math.floor((latestIssue - 1) / 5) * 5 + 1 : 1;
+      const currentStart = nextOpenWindowStart(latestIssue, yearWindows, 5);
       const currentWindow = yearWindows.find(item => Number(item.start || 0) === currentStart) || {start: currentStart, end: currentStart + 4, count: 0, hits: [], covered: false};
       const completedWindows = yearWindows.filter(item => Number(item.count || 0) >= 5);
       const hitWindows = completedWindows.filter(item => item.covered).length;
@@ -730,7 +738,7 @@
       const primary = compoundPools.find(item => item.poolSize === 8) || compoundPools[compoundPools.length - 1];
       const yearWindows = primary ? primary.windows : [];
       const latestIssue = Number(latest?.issue || 0);
-      const currentStart = Math.floor((latestIssue - 1) / 5) * 5 + 1;
+      const currentStart = nextOpenWindowStart(latestIssue, yearWindows, 5);
       const currentWindow = yearWindows.find(item => item.start === currentStart) || {start: currentStart, end: currentStart + 4, count: 0, hits: [], covered: false};
       const completedWindows = yearWindows.filter(item => Number(item.count || 0) >= 5);
       let maxMiss = 0;

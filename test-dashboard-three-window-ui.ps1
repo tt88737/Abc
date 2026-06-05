@@ -53,6 +53,10 @@ if ($html -notmatch 'function recentWindowStats') {
     throw 'expected dashboard to compute recent window stats when persisted recent fields are missing'
 }
 
+if ($html -notmatch 'function nextOpenWindowStart' -or $html -notmatch 'nextOpenWindowStart\(latestIssue, yearWindows\)' -or $html -notmatch 'nextOpenWindowStart\(latestIssue, yearWindows, 5\)') {
+    throw 'expected five-issue windows to advance to the next open window after a completed window'
+}
+
 if ($html -notmatch 'threeWindowAnalysisCache') {
     throw 'expected dashboard to cache three-window analysis per source'
 }
