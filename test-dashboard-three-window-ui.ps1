@@ -17,8 +17,8 @@ if ($html -match 'data-tab="games"' -or $html -match 'function renderGames' -or 
     throw 'recommendation review module should be removed from the dashboard'
 }
 
-if ($html -notmatch '<button class="active" data-tab="window5">') {
-    throw 'dashboard should open on five-issue window after removing recommendation review'
+if ($html -notmatch '<button class="active" data-tab="historyPattern">') {
+    throw 'dashboard should open on history pattern observation'
 }
 
 if ($html -notmatch 'function recentWindowStats') {

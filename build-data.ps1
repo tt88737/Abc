@@ -674,9 +674,9 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="window5">5&#26399;&#31383;&#21475;</button>
+      <button class="active" data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
+      <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
-      <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
     </nav>
@@ -2203,7 +2203,7 @@ function New-DashboardHtml {
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
-      switchTab('window5');
+      switchTab('historyPattern');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });

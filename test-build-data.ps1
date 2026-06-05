@@ -636,7 +636,7 @@ const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
   .replace(/document.getElementById\('window5-source'\)\.addEventListener\('change', renderWindow5\);/g, '')
   .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
   .replace(/document.getElementById\('pattern-source'\)\.addEventListener\('change', renderPatternWatch\);/g, '')
-  .replace(/switchTab\('window5'\);/, "fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
+  .replace(/switchTab\('historyPattern'\);/, "fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
 global.__DATA__ = json;
 global.location = { protocol: 'file:' };
 global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
