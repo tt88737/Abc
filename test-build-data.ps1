@@ -293,6 +293,9 @@ try {
     if (-not $dashboard.Contains('historyYearPoolMap') -or -not $dashboard.Contains('b[0].localeCompare(a[0])')) {
         throw 'history pattern missed window year groups should be sorted descending with yearly fixed 8-code pools'
     }
+    if (-not $dashboard.Contains('historyYearGroups.set(String(item.year), [])') -or -not $dashboard.Contains('&#26242;&#26080;&#28431;&#31383;')) {
+        throw 'history pattern should show years with zero missed windows'
+    }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
         throw 'dashboard should expose a manual fetch renderer'
     }
