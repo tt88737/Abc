@@ -1319,6 +1319,61 @@
         return {date: row.date || '', issue: row.issue || '', hit: matched.length >= 3, currentHit: currentMatched.length >= 3, actualNumbers, poolSnapshot: effectivePool, matched, currentMatched};
       });
     }
+    function bettingTargetIssue(latest) {
+      const issue = Number(latest?.issue || 0);
+      return {date: latest?.date || '', issue: issue || '', displayIssue: latest?.issue || ''};
+    }
+    function bettingRecommendationSnapshot(source, latest, name, game, pool, score, level, reasons) {
+      const target = bettingTargetIssue(latest);
+      const snapshotPool = normalizedPool(pool);
+      return {
+        id: [source, game, target.date, target.issue, snapshotPool.join('-')].join('|'),
+        source,
+        date: target.date,
+        issue: target.issue,
+        displayIssue: target.displayIssue,
+        game,
+        name,
+        pool: snapshotPool,
+        poolSize: snapshotPool.length,
+        score,
+        level: level?.code || 'watch',
+        levelLabel: level?.label || '&#35266;&#26395;',
+        reasons: asArray(reasons),
+        generatedAt: dashboardCacheVersion,
+        status: 'pending',
+        draw: [],
+        matched: [],
+        hit: false
+      };
+    }
+    function settleBettingSnapshot(snapshot, rows) {
+      const record = asArray(rows).find(row => Number(row.issue || 0) === Number(snapshot?.issue || 0) && (!snapshot?.date || String(row.date || '') === String(snapshot.date || '')));
+      if (!record) return {...snapshot, status: 'pending', draw: [], matched: [], hit: false};
+      const poolSet = new Set(normalizedPool(snapshot.pool));
+      if (snapshot.game === 'three-hit-three') {
+        const actualNumbers = regularNums(record);
+        const matched = actualNumbers.filter(num => poolSet.has(num));
+        return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, hit: matched.length >= 3};
+      }
+      const actualNumbers = [specialNum(record)].filter(Boolean);
+      const matched = actualNumbers.filter(num => poolSet.has(num));
+      return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, hit: matched.length > 0};
+    }
+    function bettingSnapshotReviewGroups(rows, item, limit = 10) {
+      const sortedRows = rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit);
+      const currentPool = normalizedPool(item?.pool || item?.snapshot?.pool || []);
+      const currentSet = new Set(currentPool);
+      return sortedRows.map(row => {
+        const snapshotPool = item?.poolItem ? poolSnapshotForIssue(item.poolItem, row.issue) : normalizedPool(item?.pool || []);
+        const snapshot = bettingRecommendationSnapshot(item.source || '', row, item.name, item.game, snapshotPool, item.score || 0, item.level || {}, item.reasons || []);
+        const settled = settleBettingSnapshot(snapshot, [row]);
+        const actualNumbers = settled.draw || [];
+        const currentMatched = actualNumbers.filter(num => currentSet.has(num));
+        const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
+        return {date: row.date || '', issue: row.issue || '', snapshot, hit: settled.hit, currentHit, actualNumbers, poolSnapshot: snapshot.pool, matched: settled.matched, currentMatched};
+      });
+    }
     function bettingPoolReviewStats(groups) {
       const hits = groups.filter(item => item.hit).length;
       let currentMiss = 0;
@@ -1328,14 +1383,21 @@
       }
       return {groups, hits, total: groups.length, hitRate: groups.length ? Math.round(hits / groups.length * 100) : 0, currentMiss};
     }
-    function bettingLevel(score, currentMiss, maxMiss, recentHitRate, review) {
-      if (maxMiss > 0 && currentMiss > maxMiss) return {code: 'pause', label: '&#26242;&#20572;'};
-      if (review.total >= 6 && review.currentMiss >= 3) return {code: 'pause', label: '&#26242;&#20572;'};
-      if (score >= 76 && currentMiss <= 1 && recentHitRate >= 60 && review.hitRate >= 35) return {code: 'bet', label: '&#19979;&#27880;'};
-      if (score >= 62 && currentMiss <= Math.max(2, maxMiss) && recentHitRate >= 40) return {code: 'small', label: '&#23567;&#27880;'};
-      return {code: 'watch', label: '&#35266;&#26395;'};
+    function bettingRiskGate(score, currentMiss, maxMiss, recentHitRate, snapshotReview, baseline) {
+      const review = snapshotReview || {total: 0, hitRate: 0, currentMiss: 0};
+      if (review.total < 6) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'insufficient-sample'};
+      if (maxMiss > 0 && currentMiss > maxMiss) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'miss-overflow'};
+      if (review.currentMiss >= 3) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'snapshot-miss-streak'};
+      if (review.hitRate + 8 < Number(baseline || 0)) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'weak-snapshot-review'};
+      if (score >= 82 && currentMiss <= 1 && recentHitRate >= 60 && review.hitRate >= Number(baseline || 0)) return {blocked: false, code: 'bet', label: '&#19979;&#27880;', reason: 'strong-snapshot-review'};
+      if (score >= 68 && currentMiss <= Math.max(2, maxMiss) && recentHitRate >= 45 && review.hitRate + 4 >= Number(baseline || 0)) return {blocked: false, code: 'small', label: '&#23567;&#27880;', reason: 'controlled-risk'};
+      return {blocked: false, code: 'watch', label: '&#35266;&#26395;', reason: 'score-not-enough'};
     }
-    function bettingRecommendationItem(name, game, pool, stats, baseline, review) {
+    function bettingLevel(score, currentMiss, maxMiss, recentHitRate, review, baseline) {
+      const gate = bettingRiskGate(score, currentMiss, maxMiss, recentHitRate, review, baseline);
+      return {code: gate.code, label: gate.label, reason: gate.reason};
+    }
+    function bettingRecommendationItem(source, latest, name, game, pool, stats, baseline, review, poolItem = null) {
       const recent = Number(stats.recentHitRate || 0);
       const hitRate = Number(stats.hitRate || 0);
       const edge = Math.round((hitRate - Number(baseline || 0)) * 100) / 100;
@@ -1345,13 +1407,15 @@
       if (review.total >= 6) score += Math.max(-18, Math.min(14, (review.hitRate - 30) * 0.45));
       if (maxMiss > 0 && currentMiss >= maxMiss) score -= 18;
       score = Math.max(0, Math.min(100, Math.round(score)));
-      const level = bettingLevel(score, currentMiss, maxMiss, recent, review);
+      const level = bettingLevel(score, currentMiss, maxMiss, recent, review, baseline);
       const reasons = [
         `&#24471;&#20998; ${score} / &#36817;10&#31383;&#21475; ${recent}%`,
         `&#28431;&#31383; ${currentMiss} / ${maxMiss || '-'}`,
-        review.total ? `&#36817;${review.total}&#26399;&#24320;&#22870;&#27744;&#22797;&#30424; ${review.hits}/${review.total}` : '&#26242;&#26080;&#24320;&#22870;&#27744;&#22797;&#30424;'
+        review.total ? `&#25512;&#33616;&#24555;&#29031;&#22797;&#30424; ${review.hits}/${review.total}` : '&#25512;&#33616;&#24555;&#29031;&#26679;&#26412;&#19981;&#36275;',
+        `&#39118;&#25511;&#65306;${esc(level.reason || 'score-not-enough')}`
       ];
-      return {name, game, pool, stats, baseline, review, score, level, reasons};
+      const snapshot = settleBettingSnapshot(bettingRecommendationSnapshot(source, latest, name, game, pool, score, level, reasons), cachedSourceRecords(source));
+      return {source, name, game, pool: normalizedPool(pool), poolItem, stats, baseline, snapshotReview: review, review, score, level, reasons, snapshot};
     }
     function bettingRecommendationAnalysis(source) {
       const special = fiveWindowAnalysis(source);
@@ -1367,21 +1431,24 @@
         currentMiss: Number(threePool.currentMiss ?? three.stats?.currentMiss ?? 0),
         maxMiss: Number(threePool.maxMiss ?? three.stats?.maxMiss ?? 0)
       };
-      return {
-        source,
-        latest: sourceSummary(source).latest || special.latest || three.latest || {},
-        items: [
-          bettingRecommendationItem('&#29305;&#21035;&#21495;8&#30721;&#27744;', 'special-number', special.yearPool, specialStats, specialBaseline, bettingPoolReviewStats(specialPoolReviewGroups(sourceRows, special.yearPool, 10))),
-          bettingRecommendationItem('&#19977;&#20013;&#19977;8&#30721;&#27744;', 'three-hit-three', threePool.pool || three.numberPool || [], threeStats, randomWindowBaseline(8, 49, 5), bettingPoolReviewStats(threePoolReviewGroups(sourceRows, threePool, 10)))
-        ]
-      };
+      const latest = sourceSummary(source).latest || special.latest || three.latest || {};
+      const seedItems = [
+        {source, name: '&#29305;&#21035;&#21495;8&#30721;&#27744;', game: 'special-number', pool: special.yearPool, poolItem: {pool: special.yearPool, windows: special.yearWindows}, stats: specialStats, baseline: specialBaseline},
+        {source, name: '&#19977;&#20013;&#19977;8&#30721;&#27744;', game: 'three-hit-three', pool: threePool.pool || three.numberPool || [], poolItem: threePool, stats: threeStats, baseline: randomWindowBaseline(8, 49, 5)}
+      ];
+      const items = seedItems.map(seed => {
+        const draft = {...seed, score: 0, level: {code: 'watch', label: '&#35266;&#26395;'}, reasons: []};
+        const snapshotReview = bettingPoolReviewStats(bettingSnapshotReviewGroups(sourceRows, draft, 10));
+        return bettingRecommendationItem(source, latest, seed.name, seed.game, seed.pool, seed.stats, seed.baseline, snapshotReview, seed.poolItem);
+      });
+      return {source, latest, items};
     }
     function bettingCard(item) {
-      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div>${numberChips(item.pool || [])}<p>&#24471;&#20998;&#65306;${esc(item.score)}&#12288;&#21382;&#21490;&#65306;${esc(item.stats.hitRate || 0)}%&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
+      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div>${numberChips(item.snapshot?.pool || item.pool || [])}<p>&#30446;&#26631;&#65306;${esc(item.snapshot?.date || '')} ${esc(item.snapshot?.issue || '')}&#26399;&#12288;&#24471;&#20998;&#65306;${esc(item.score)}&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
     }
     function bettingReviewTable(analysis) {
       const rows = analysis.items.flatMap(item => item.review.groups.map(group => ({name: item.name, ...group})));
-      return `<section class="panel full"><h2>&#26368;&#36817;&#24320;&#22870;&#27744;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#24403;&#26102;&#27744;&#32467;&#26524;</th><th>&#24403;&#21069;&#27744;&#22238;&#30475;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.currentHit === undefined ? '-' : (row.currentHit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>')}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
+      return `<section class="panel full"><h2>&#26368;&#36817;&#25512;&#33616;&#24555;&#29031;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#25512;&#33616;&#24555;&#29031;&#32467;&#26524;</th><th>&#24403;&#21069;&#27744;&#22238;&#30475;</th><th>&#25512;&#33616;&#24555;&#29031;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.currentHit === undefined ? '-' : (row.currentHit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>')}</td><td>${numberChips(row.snapshot?.pool || row.poolSnapshot || [])}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
     }
     function renderBetting() {
       const selected = document.getElementById('betting-source')?.value || 'am';

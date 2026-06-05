@@ -25,8 +25,20 @@ if ($html -notmatch 'function bettingPoolReviewStats' -or $html -notmatch 'speci
     throw 'expected betting review to recalculate hits from the displayed pools instead of old single-number recommendation rows'
 }
 
-if ($html -notmatch 'poolSnapshotForIssue' -or $html -notmatch 'currentHit' -or $html -notmatch '&#24403;&#26102;&#27744;&#32467;&#26524;' -or $html -notmatch '&#24403;&#21069;&#27744;&#22238;&#30475;') {
+if ($html -notmatch 'poolSnapshotForIssue' -or $html -notmatch 'currentHit' -or $html -notmatch '&#25512;&#33616;&#24555;&#29031;&#32467;&#26524;' -or $html -notmatch '&#24403;&#21069;&#27744;&#22238;&#30475;') {
     throw 'expected betting pool review to separate effective historical pool results from current-pool hindsight'
+}
+
+if ($html -notmatch 'function bettingRecommendationSnapshot' -or $html -notmatch 'function settleBettingSnapshot' -or $html -notmatch 'bettingSnapshotReviewGroups') {
+    throw 'expected betting recommendations to use immutable recommendation snapshots'
+}
+
+if ($html -notmatch 'snapshot\.pool' -or $html -notmatch 'matched\.length >= 3' -or $html -notmatch '&#25512;&#33616;&#24555;&#29031;&#32467;&#26524;' -or $html -notmatch '&#24403;&#21069;&#27744;&#22238;&#30475;') {
+    throw 'expected betting settlement to use snapshot pools while keeping current-pool hindsight separate'
+}
+
+if ($html -notmatch 'function bettingRiskGate' -or $html -notmatch 'snapshotReview' -or $html -notmatch 'insufficient-sample' -or $html -notmatch 'weak-snapshot-review') {
+    throw 'expected betting recommendations to apply strict snapshot-based risk gates'
 }
 
 if ($html -notmatch 'function recentWindowStats') {
