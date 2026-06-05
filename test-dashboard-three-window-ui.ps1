@@ -25,6 +25,10 @@ if ($html -notmatch 'function bettingPoolReviewStats' -or $html -notmatch 'speci
     throw 'expected betting review to recalculate hits from the displayed pools instead of old single-number recommendation rows'
 }
 
+if ($html -notmatch 'poolSnapshotForIssue' -or $html -notmatch 'currentHit' -or $html -notmatch '&#24403;&#26102;&#27744;&#32467;&#26524;' -or $html -notmatch '&#24403;&#21069;&#27744;&#22238;&#30475;') {
+    throw 'expected betting pool review to separate effective historical pool results from current-pool hindsight'
+}
+
 if ($html -notmatch 'function recentWindowStats') {
     throw 'expected dashboard to compute recent window stats when persisted recent fields are missing'
 }
