@@ -2568,7 +2568,7 @@ function New-DashboardHtml {
       const three = threeWindowAnalysis(source);
       const specialStats = patternStats(special.yearWindows);
       const stableStats = patternStats(special.stableWindows);
-      const specialBaseline = randomWindowBaseline(special.yearPool.length, 49, 5);
+      const specialBaseline = singleDrawBaseline(special.yearPool.length, 49);
       const stableBaseline = randomWindowBaseline(special.stablePool.length, 49, 5);
       const yearRows = cachedSourceRecords(source).filter(row => displayYear(row) === special.currentYear);
       const optimizedSpecial = optimizedSpecialPool(yearRows, special.yearPool, 8);
@@ -2866,6 +2866,24 @@ function New-DashboardHtml {
       }
       return {groups, hits, total: groups.length, hitRate: groups.length ? Math.round(hits / groups.length * 100) : 0, currentMiss};
     }
+    function singleDrawBaseline(pickCount, totalCount = 49) {
+      return totalCount ? Math.round(Number(pickCount || 0) / totalCount * 10000) / 100 : 0;
+    }
+    function bettingDecisionScore(stats, baseline, review) {
+      const hitRate = Number(stats?.hitRate || 0);
+      const recent = Number(stats?.recentHitRate || 0);
+      const currentMiss = Number(stats?.currentMiss || 0);
+      const maxMiss = Number(stats?.maxMiss || 0);
+      const reviewHitRate = Number(review?.hitRate || 0);
+      const reviewMiss = Number(review?.currentMiss || 0);
+      const edge = hitRate - Number(baseline || 0);
+      const reviewEdge = reviewHitRate - Number(baseline || 0);
+      let score = 62 + Math.max(-18, Math.min(24, edge * 0.75)) + Math.max(-16, Math.min(26, reviewEdge * 0.9)) + Math.max(-10, Math.min(12, (recent - hitRate) * 0.35)) - Math.min(18, currentMiss * 4) - Math.min(12, reviewMiss * 5);
+      if (maxMiss > 0 && currentMiss >= maxMiss) score -= 10;
+      const strongDecisionFloor = review?.total >= 6 && reviewHitRate >= Number(baseline || 0) + 3 && reviewMiss <= 2 && currentMiss <= Math.max(2, maxMiss || 2);
+      if (strongDecisionFloor) score = Math.max(score, 90 + Math.min(6, Math.max(0, reviewEdge) * 0.2));
+      return Math.max(0, Math.min(100, Math.round(score)));
+    }
     function bettingRiskGate(score, currentMiss, maxMiss, recentHitRate, snapshotReview, baseline) {
       const review = snapshotReview || {total: 0, hitRate: 0, currentMiss: 0};
       if (review.total < 6) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'insufficient-sample'};
@@ -2886,13 +2904,10 @@ function New-DashboardHtml {
       const edge = Math.round((hitRate - Number(baseline || 0)) * 100) / 100;
       const currentMiss = Number(stats.currentMiss || 0);
       const maxMiss = Number(stats.maxMiss || 0);
-      let score = 50 + edge * 0.7 + Math.max(-12, Math.min(12, (recent - hitRate) * 0.4)) - currentMiss * 8;
-      if (review.total >= 6) score += Math.max(-18, Math.min(14, (review.hitRate - 30) * 0.45));
-      if (maxMiss > 0 && currentMiss >= maxMiss) score -= 18;
-      score = Math.max(0, Math.min(100, Math.round(score)));
+      const score = bettingDecisionScore(stats, baseline, review);
       const level = bettingLevel(score, currentMiss, maxMiss, recent, review, baseline);
       const reasons = [
-        `&#24471;&#20998; ${score} / &#36817;10&#31383;&#21475; ${recent}%`,
+        `&#20915;&#31574;&#20998; ${score} / &#36817;10&#31383;&#21475; ${recent}%`,
         `&#28431;&#31383; ${currentMiss} / ${maxMiss || '-'}`,
         review.total ? `&#25512;&#33616;&#24555;&#29031;&#22797;&#30424; ${review.hits}/${review.total}` : '&#25512;&#33616;&#24555;&#29031;&#26679;&#26412;&#19981;&#36275;',
         `&#39118;&#25511;&#65306;${esc(level.reason || 'score-not-enough')}`
@@ -2928,7 +2943,7 @@ function New-DashboardHtml {
       return {source, latest, items};
     }
     function bettingCard(item) {
-      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div>${numberChips(item.snapshot?.pool || item.pool || [])}<p>&#30446;&#26631;&#65306;${esc(item.snapshot?.date || '')} ${esc(item.snapshot?.issue || '')}&#26399;&#12288;&#24471;&#20998;&#65306;${esc(item.score)}&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
+      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div>${numberChips(item.snapshot?.pool || item.pool || [])}<p>&#30446;&#26631;&#65306;${esc(item.snapshot?.date || '')} ${esc(item.snapshot?.issue || '')}&#26399;&#12288;&#20915;&#31574;&#20998;&#65306;${esc(item.score)}&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
     }
     function bettingReviewTable(analysis) {
       const rows = analysis.items.flatMap(item => item.review.groups.map(group => ({name: item.name, ...group})));

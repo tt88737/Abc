@@ -41,6 +41,10 @@ if ($html -notmatch 'function bettingRiskGate' -or $html -notmatch 'snapshotRevi
     throw 'expected betting recommendations to apply strict snapshot-based risk gates'
 }
 
+if ($html -notmatch 'function bettingDecisionScore' -or $html -notmatch 'singleDrawBaseline' -or $html -notmatch '&#20915;&#31574;&#20998;' -or $html -notmatch 'strongDecisionFloor') {
+    throw 'expected betting recommendations to use calibrated decision scores instead of raw low observation scores'
+}
+
 if ($html -notmatch 'function ensureBettingSnapshots' -or $html -notmatch '__BETTING_SNAPSHOTS__' -or $html -notmatch 'persistedBettingSnapshotReviewGroups') {
     throw 'expected betting recommendations to load persisted snapshot ledger before rendering'
 }
