@@ -88,6 +88,7 @@
     <nav class="tabs">
       <button class="active" data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
+      <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
     </nav>
@@ -1315,6 +1316,24 @@
       </div>`;
       document.getElementById('pattern-source').addEventListener('change', renderPatternWatch);
     }
+    function renderHistoryPattern() {
+      const selected = document.getElementById('history-pattern-source')?.value || 'am';
+      const range = document.getElementById('history-pattern-range')?.value || 'year';
+      app.innerHTML = `<div class="grid">
+        <section class="panel full">
+          <div class="filters">
+            <label>&#26469;&#28304;<select id="history-pattern-source">${sourceOptions(selected)}</select></label>
+            <label>&#35266;&#23519;&#33539;&#22260;<select id="history-pattern-range"><option value="year" ${range === 'year' ? 'selected' : ''}>&#24403;&#24180;</option><option value="all" ${range === 'all' ? 'selected' : ''}>&#20840;&#37096;&#21382;&#21490;</option></select></label>
+          </div>
+        </section>
+        <section class="panel full">
+          <h2>&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</h2>
+          <p class="muted">&#35831;&#36873;&#25321;&#35266;&#23519;&#26041;&#21521;&#12290;</p>
+        </section>
+      </div>`;
+      document.getElementById('history-pattern-source').addEventListener('change', renderHistoryPattern);
+      document.getElementById('history-pattern-range').addEventListener('change', renderHistoryPattern);
+    }
     const defaultFetchUrls = {
       am: 'https://2025kj.zkclhb.com:2025/am.html',
       hk: 'https://2025kj.zkclhb.com:2025/hk.html'
@@ -1461,6 +1480,7 @@
     const renderers = {
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
+      historyPattern: renderHistoryPattern,
       patternWatch: renderPatternWatch,
       manualFetch: renderManualFetch
     };

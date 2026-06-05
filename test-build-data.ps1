@@ -157,8 +157,8 @@ try {
     if ($dashboard.Contains('data-tab="overview"') -or $dashboard.Contains('data-tab="daily"') -or $dashboard.Contains('function renderOverview') -or $dashboard.Contains('function renderDaily')) {
         throw 'dashboard should not expose overview or daily modules after cleanup'
     }
-    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose only 5-window, three-hit 5-window, advanced analysis, and manual fetch tabs'
+    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="historyPattern"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose five-window, three-hit five-window, history pattern, advanced analysis, and manual fetch tabs'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
@@ -271,6 +271,9 @@ try {
     }
     if (-not $dashboard.Contains('function renderPatternWatch()')) {
         throw 'dashboard should expose a pattern watch renderer'
+    }
+    if (-not $dashboard.Contains('function renderHistoryPattern()') -or -not $dashboard.Contains('history-pattern-source') -or -not $dashboard.Contains('history-pattern-range')) {
+        throw 'dashboard should expose a clean history pattern observation placeholder'
     }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
         throw 'dashboard should expose a manual fetch renderer'
