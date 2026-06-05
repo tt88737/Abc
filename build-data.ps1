@@ -871,150 +871,6 @@ function New-Window5State {
     return [pscustomobject]@{ generatedAt = $GeneratedAt; items = $items }
 }
 
-function Normalize-PoolNumbers {
-    param([object[]]$Numbers)
-    return @($Numbers | Where-Object { $null -ne $_ -and [string]$_ -ne '' } | ForEach-Object { ([int]$_).ToString('00') } | Select-Object -Unique)
-}
-
-function Get-PoolSnapshotForIssue {
-    param([object]$PoolItem, [int]$Issue)
-
-    $pool = if ($null -ne $PoolItem.pool) { @($PoolItem.pool) } elseif ($null -ne $PoolItem.yearPool) { @($PoolItem.yearPool) } else { @() }
-    $snapshot = @(Normalize-PoolNumbers $pool)
-    $windows = @()
-    if ($null -ne $PoolItem.windows) { $windows += @($PoolItem.windows) }
-    if ($null -ne $PoolItem.yearWindows) { $windows += @($PoolItem.yearWindows) }
-    foreach ($win in $windows) {
-        if ([int]$win.start -le $Issue -and [int]$win.end -ge $Issue) {
-            if ($null -ne $win.poolSnapshot -and @($win.poolSnapshot).Count -gt 0) {
-                return @(Normalize-PoolNumbers @($win.poolSnapshot))
-            }
-        }
-    }
-    return $snapshot
-}
-
-function Complete-SpecialPool8 {
-    param([string[]]$Pool, [object[]]$SourceRows)
-
-    $selected = New-Object 'System.Collections.Generic.List[string]'
-    foreach ($num in @(Normalize-PoolNumbers $Pool)) {
-        if ($selected.Count -ge 8) { break }
-        if (-not $selected.Contains($num)) { $selected.Add($num) | Out-Null }
-    }
-    $fallback = @($SourceRows |
-        Where-Object { $null -ne $_.balls -and @($_.balls).Count -ge 7 } |
-        ForEach-Object { ([int]$_.balls[6].numberText).ToString('00') } |
-        Group-Object |
-        Sort-Object @{ Expression = 'Count'; Descending = $true }, @{ Expression = { [int]$_.Name }; Descending = $false } |
-        ForEach-Object { $_.Name })
-    foreach ($num in $fallback) {
-        if ($selected.Count -ge 8) { break }
-        if (-not $selected.Contains($num)) { $selected.Add($num) | Out-Null }
-    }
-    foreach ($n in 1..49) {
-        if ($selected.Count -ge 8) { break }
-        $num = $n.ToString('00')
-        if (-not $selected.Contains($num)) { $selected.Add($num) | Out-Null }
-    }
-    return @($selected | Select-Object -First 8)
-}
-
-function Get-SpecialSnapshotRows {
-    param([object[]]$SourceRows, [object]$Window5Item, [string]$GeneratedAt, [int]$Limit = 10)
-
-    $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
-    foreach ($row in $rows) {
-        $pool = @(Complete-SpecialPool8 -Pool (Get-PoolSnapshotForIssue -PoolItem ([pscustomobject]@{ pool = $Window5Item.yearPool; windows = $Window5Item.windows }) -Issue ([int]$row.issue)) -SourceRows $SourceRows)
-        $primaryPool = @($pool | Select-Object -First 1)
-        $guardPool = @($pool | Select-Object -First 8)
-        $draw = @(([int]$row.balls[6].numberText).ToString('00'))
-        $matched = @($draw | Where-Object { $primaryPool -contains $_ })
-        $guardMatched = @($draw | Where-Object { $guardPool -contains $_ })
-        [pscustomobject]@{
-            id = ('{0}|special-number|{1}|{2}' -f $row.source, $row.date, $row.issue)
-            source = $row.source
-            date = $row.date
-            issue = [int]$row.issue
-            game = 'special-number'
-            name = 'special-number-8-pool'
-            pool = $pool
-            poolSize = $pool.Count
-            primaryPool = $primaryPool
-            guardPool = $guardPool
-            generatedAt = $GeneratedAt
-            status = 'settled'
-            draw = $draw
-            matched = $matched
-            guardMatched = $guardMatched
-            primaryHit = $matched.Count -gt 0
-            guardHit = $guardMatched.Count -gt 0
-            hit = $matched.Count -gt 0
-        }
-    }
-}
-
-function Get-ThreeSnapshotRows {
-    param([object[]]$SourceRows, [object]$PoolItem, [string]$GeneratedAt, [int]$Limit = 10)
-
-    $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
-    foreach ($row in $rows) {
-        $pool = @(Get-PoolSnapshotForIssue -PoolItem $PoolItem -Issue ([int]$row.issue))
-        $guardPool = @($pool | Select-Object -First 5)
-        $primaryPool = @($guardPool | Select-Object -First 3)
-        $draw = @($row.balls | Select-Object -First 6 | ForEach-Object { ([int]$_.numberText).ToString('00') })
-        $matched = @($draw | Where-Object { $primaryPool -contains $_ })
-        $guardMatched = @($draw | Where-Object { $guardPool -contains $_ })
-        [pscustomobject]@{
-            id = ('{0}|three-hit-three|{1}|{2}' -f $row.source, $row.date, $row.issue)
-            source = $row.source
-            date = $row.date
-            issue = [int]$row.issue
-            game = 'three-hit-three'
-            name = 'three-hit-three-8-pool'
-            pool = $pool
-            poolSize = $pool.Count
-            primaryPool = $primaryPool
-            guardPool = $guardPool
-            generatedAt = $GeneratedAt
-            status = 'settled'
-            draw = $draw
-            matched = $matched
-            guardMatched = $guardMatched
-            primaryHit = $matched.Count -ge 3
-            guardHit = $guardMatched.Count -ge 3
-            hit = $matched.Count -ge 3
-        }
-    }
-}
-
-function New-BettingSnapshots {
-    param(
-        [object[]]$Records,
-        [object]$Window5,
-        [object]$ThreeCompound,
-        [string]$GeneratedAt
-    )
-
-    $items = @()
-    foreach ($source in @('am', 'hk')) {
-        $sourceRows = @($Records | Where-Object { $_.source -eq $source } | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true })
-        if ($sourceRows.Count -eq 0) { continue }
-        $windowItem = @($Window5.items | Where-Object { $_.source -eq $source } | Select-Object -First 1)
-        if ($windowItem.Count -gt 0) {
-            $items += @(Get-SpecialSnapshotRows -SourceRows $sourceRows -Window5Item $windowItem[0] -GeneratedAt $GeneratedAt)
-        }
-        $threeSource = @($ThreeCompound.items | Where-Object { $_.source -eq $source } | Select-Object -First 1)
-        if ($threeSource.Count -gt 0) {
-            $threePool = @($threeSource[0].pools | Where-Object { [int]$_.poolSize -eq 8 } | Select-Object -First 1)
-            if ($threePool.Count -gt 0) {
-                $items += @(Get-ThreeSnapshotRows -SourceRows $sourceRows -PoolItem $threePool[0] -GeneratedAt $GeneratedAt)
-            }
-        }
-    }
-    return [pscustomobject]@{ generatedAt = $GeneratedAt; items = @($items | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'issue'; Descending = $true }, @{ Expression = 'game'; Descending = $false }) }
-}
-
 function New-GamePredictions {
     param([object[]]$Records, [object[]]$Existing = @())
 
@@ -1538,19 +1394,6 @@ function New-DashboardHtml {
     .primary { border:1px solid #0b42d8; background:#0b42d8; color:#fff; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .secondary { border:1px solid #cbd5e1; background:#fff; color:#1f2933; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .detail-placeholder { padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; }
-    .betting-card { display: grid; gap: 10px; border-left: 4px solid #cbd5e1; }
-    .betting-card.bet { border-left-color: #07860a; }
-    .betting-card.small { border-left-color: #0b42d8; }
-    .betting-card.watch { border-left-color: #f59e0b; }
-    .betting-card.pause { border-left-color: #dc2626; }
-    .betting-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
-    .betting-level { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 10px; font-weight: 800; color: #fff; background: #667085; white-space: nowrap; }
-    .betting-level.bet { background: #07860a; }
-    .betting-level.small { background: #0b42d8; }
-    .betting-level.watch { background: #f59e0b; color: #111827; }
-    .betting-level.pause { background: #dc2626; }
-    .betting-reasons { margin: 0; padding-left: 18px; color: #344054; font-size: 13px; }
-    .betting-reasons li { margin: 3px 0; }
     .result-hit { color: #07860a; font-weight: 800; }
     .result-miss { color: #dc2626; font-weight: 800; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
@@ -1563,8 +1406,7 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="betting">&#19979;&#27880;&#25512;&#33616;</button>
-      <button data-tab="games">&#25512;&#33616;&#22797;&#30424;</button>
+      <button class="active" data-tab="games">&#25512;&#33616;&#22797;&#30424;</button>
       <button data-tab="overview">&#30475;&#26495;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
@@ -1585,7 +1427,6 @@ function New-DashboardHtml {
     let gamePredictions = {items: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
-    let bettingSnapshots = {items: []};
     const threeWindowAnalysisCache = new Map();
     const threeWindowHtmlCache = new Map();
     const dashboardCacheVersion = String(Date.now());
@@ -2812,187 +2653,8 @@ function New-DashboardHtml {
         return {date: row.date || '', issue: row.issue || '', hit: matched.length >= 3, currentHit: currentMatched.length >= 3, actualNumbers, poolSnapshot: effectivePool, matched, currentMatched};
       });
     }
-    function bettingTargetIssue(latest) {
-      const issue = Number(latest?.issue || 0);
-      return {date: latest?.date || '', issue: issue || '', displayIssue: latest?.issue || ''};
-    }
-    function bettingRecommendationSnapshot(source, latest, name, game, pool, score, level, reasons) {
-      const target = bettingTargetIssue(latest);
-      const snapshotPool = normalizedPool(pool);
-      return {
-        id: [source, game, target.date, target.issue, snapshotPool.join('-')].join('|'),
-        source,
-        date: target.date,
-        issue: target.issue,
-        displayIssue: target.displayIssue,
-        game,
-        name,
-        pool: snapshotPool,
-        primaryPool: game === 'three-hit-three' ? snapshotPool.slice(0, 3) : snapshotPool.slice(0, 1),
-        guardPool: game === 'three-hit-three' ? snapshotPool.slice(0, 5) : snapshotPool.slice(0, 8),
-        poolSize: snapshotPool.length,
-        score,
-        level: level?.code || 'watch',
-        levelLabel: level?.label || '&#35266;&#26395;',
-        reasons: asArray(reasons),
-        generatedAt: dashboardCacheVersion,
-        status: 'pending',
-        draw: [],
-        matched: [],
-        hit: false
-      };
-    }
-    function settleBettingSnapshot(snapshot, rows) {
-      const record = asArray(rows).find(row => Number(row.issue || 0) === Number(snapshot?.issue || 0) && (!snapshot?.date || String(row.date || '') === String(snapshot.date || '')));
-      if (!record) return {...snapshot, status: 'pending', draw: [], matched: [], hit: false};
-      const poolSet = new Set(normalizedPool(snapshot.pool));
-      const primarySet = new Set(normalizedPool(snapshot.primaryPool || snapshot.pool));
-      const guardSet = new Set(normalizedPool(snapshot.guardPool || snapshot.pool));
-      if (snapshot.game === 'three-hit-three') {
-        const actualNumbers = regularNums(record);
-        const matched = actualNumbers.filter(num => primarySet.has(num));
-        const guardMatched = actualNumbers.filter(num => guardSet.has(num));
-        return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, guardMatched, primaryHit: matched.length >= 3, guardHit: guardMatched.length >= 3, hit: matched.length >= 3};
-      }
-      const actualNumbers = [specialNum(record)].filter(Boolean);
-      const matched = actualNumbers.filter(num => primarySet.has(num));
-      const guardMatched = actualNumbers.filter(num => guardSet.has(num));
-      return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, guardMatched, primaryHit: matched.length > 0, guardHit: guardMatched.length > 0, hit: matched.length > 0};
-    }
-    function bettingSnapshotReviewGroups(rows, item, limit = 10) {
-      const sortedRows = rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit);
-      const currentPool = normalizedPool(item?.pool || item?.snapshot?.pool || []);
-      const currentSet = new Set(currentPool);
-      return sortedRows.map(row => {
-        const snapshotPool = item?.poolItem ? poolSnapshotForIssue(item.poolItem, row.issue) : normalizedPool(item?.pool || []);
-        const snapshot = bettingRecommendationSnapshot(item.source || '', row, item.name, item.game, snapshotPool, item.score || 0, item.level || {}, item.reasons || []);
-        const settled = settleBettingSnapshot(snapshot, [row]);
-        const actualNumbers = settled.draw || [];
-        const currentMatched = actualNumbers.filter(num => currentSet.has(num));
-        const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
-        return {date: row.date || '', issue: row.issue || '', snapshot: settled, hit: settled.hit, guardHit: settled.guardHit, currentHit, actualNumbers, poolSnapshot: snapshot.pool, matched: settled.matched, guardMatched: settled.guardMatched, currentMatched};
-      });
-    }
-    function persistedBettingSnapshotReviewGroups(item, limit = 10) {
-      const currentPool = normalizedPool(item?.pool || []);
-      const currentSet = new Set(currentPool);
-      return asArray(bettingSnapshots?.items)
-        .filter(row => row.source === item.source && row.game === item.game && row.status === 'settled')
-        .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))
-        .slice(0, limit)
-        .map(snapshot => {
-          const actualNumbers = normalizedPool(snapshot.draw || []);
-          const currentMatched = actualNumbers.filter(num => currentSet.has(num));
-          const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
-          return {date: snapshot.date || '', issue: snapshot.issue || '', snapshot, hit: !!snapshot.primaryHit, guardHit: !!snapshot.guardHit, currentHit, actualNumbers, poolSnapshot: normalizedPool(snapshot.pool || []), matched: normalizedPool(snapshot.matched || []), guardMatched: normalizedPool(snapshot.guardMatched || []), currentMatched};
-        });
-    }
-    function bettingPoolReviewStats(groups) {
-      const hits = groups.filter(item => item.hit).length;
-      let currentMiss = 0;
-      for (const item of groups) {
-        if (item.hit) break;
-        currentMiss++;
-      }
-      return {groups, hits, total: groups.length, hitRate: groups.length ? Math.round(hits / groups.length * 100) : 0, currentMiss};
-    }
     function singleDrawBaseline(pickCount, totalCount = 49) {
       return totalCount ? Math.round(Number(pickCount || 0) / totalCount * 10000) / 100 : 0;
-    }
-    function bettingDecisionScore(stats, baseline, review) {
-      const hitRate = Number(stats?.hitRate || 0);
-      const recent = Number(stats?.recentHitRate || 0);
-      const currentMiss = Number(stats?.currentMiss || 0);
-      const maxMiss = Number(stats?.maxMiss || 0);
-      const reviewHitRate = Number(review?.hitRate || 0);
-      const reviewMiss = Number(review?.currentMiss || 0);
-      const edge = hitRate - Number(baseline || 0);
-      const reviewEdge = reviewHitRate - Number(baseline || 0);
-      let score = 62 + Math.max(-18, Math.min(24, edge * 0.75)) + Math.max(-16, Math.min(26, reviewEdge * 0.9)) + Math.max(-10, Math.min(12, (recent - hitRate) * 0.35)) - Math.min(18, currentMiss * 4) - Math.min(12, reviewMiss * 5);
-      if (maxMiss > 0 && currentMiss >= maxMiss) score -= 10;
-      const strongDecisionFloor = review?.total >= 6 && reviewHitRate >= Number(baseline || 0) + 3 && reviewMiss <= 2 && currentMiss <= Math.max(2, maxMiss || 2);
-      if (strongDecisionFloor) score = Math.max(score, 90 + Math.min(6, Math.max(0, reviewEdge) * 0.2));
-      return Math.max(0, Math.min(100, Math.round(score)));
-    }
-    function bettingRiskGate(score, currentMiss, maxMiss, recentHitRate, snapshotReview, baseline) {
-      const review = snapshotReview || {total: 0, hitRate: 0, currentMiss: 0};
-      if (review.total < 6) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'insufficient-sample'};
-      if (maxMiss > 0 && currentMiss > maxMiss) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'miss-overflow'};
-      if (review.currentMiss >= 3) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'snapshot-miss-streak'};
-      if (review.hitRate + 8 < Number(baseline || 0)) return {blocked: true, code: 'pause', label: '&#26242;&#20572;', reason: 'weak-snapshot-review'};
-      if (score >= 82 && currentMiss <= 1 && recentHitRate >= 60 && review.hitRate >= Number(baseline || 0)) return {blocked: false, code: 'bet', label: '&#19979;&#27880;', reason: 'strong-snapshot-review'};
-      if (score >= 68 && currentMiss <= Math.max(2, maxMiss) && recentHitRate >= 45 && review.hitRate + 4 >= Number(baseline || 0)) return {blocked: false, code: 'small', label: '&#23567;&#27880;', reason: 'controlled-risk'};
-      return {blocked: false, code: 'watch', label: '&#35266;&#26395;', reason: 'score-not-enough'};
-    }
-    function bettingLevel(score, currentMiss, maxMiss, recentHitRate, review, baseline) {
-      const gate = bettingRiskGate(score, currentMiss, maxMiss, recentHitRate, review, baseline);
-      return {code: gate.code, label: gate.label, reason: gate.reason};
-    }
-    function bettingRecommendationItem(source, latest, name, game, pool, stats, baseline, review, poolItem = null) {
-      const recent = Number(stats.recentHitRate || 0);
-      const hitRate = Number(stats.hitRate || 0);
-      const edge = Math.round((hitRate - Number(baseline || 0)) * 100) / 100;
-      const currentMiss = Number(stats.currentMiss || 0);
-      const maxMiss = Number(stats.maxMiss || 0);
-      const score = bettingDecisionScore(stats, baseline, review);
-      const level = bettingLevel(score, currentMiss, maxMiss, recent, review, baseline);
-      const reasons = [
-        `&#20915;&#31574;&#20998; ${score} / &#36817;10&#31383;&#21475; ${recent}%`,
-        `&#28431;&#31383; ${currentMiss} / ${maxMiss || '-'}`,
-        review.total ? `&#25512;&#33616;&#24555;&#29031;&#22797;&#30424; ${review.hits}/${review.total}` : '&#25512;&#33616;&#24555;&#29031;&#26679;&#26412;&#19981;&#36275;',
-        `&#39118;&#25511;&#65306;${esc(level.reason || 'score-not-enough')}`
-      ];
-      const snapshot = settleBettingSnapshot(bettingRecommendationSnapshot(source, latest, name, game, pool, score, level, reasons), cachedSourceRecords(source));
-      return {source, name, game, pool: normalizedPool(pool), poolItem, stats, baseline, snapshotReview: review, review, score, level, reasons, snapshot};
-    }
-    function bettingRecommendationAnalysis(source) {
-      const special = fiveWindowAnalysis(source);
-      const three = threeWindowAnalysis(source);
-      const sourceRows = cachedSourceRecords(source);
-      const specialStats = patternStats(special.yearWindows);
-      const specialBaseline = randomWindowBaseline(special.yearPool.length, 49, 5);
-      const threePool = (three.compoundPools || []).find(item => Number(item.poolSize || 0) === 8) || {};
-      const threeRecent = recentWindowStats(threePool);
-      const threeStats = {
-        hitRate: Number(threePool.hitRate || 0),
-        recentHitRate: Number(threeRecent.hitRate || 0),
-        currentMiss: Number(threePool.currentMiss ?? three.stats?.currentMiss ?? 0),
-        maxMiss: Number(threePool.maxMiss ?? three.stats?.maxMiss ?? 0)
-      };
-      const latest = sourceSummary(source).latest || special.latest || three.latest || {};
-      const specialGuardPool = completeSpecialPool8(special.yearPool, sourceRows);
-      const threeGuardPool = normalizedPool(threePool.pool || three.numberPool || []).slice(0, 5);
-      const seedItems = [
-        {source, name: '&#29305;&#21035;&#21495;&#20027;&#25512;1&#30721;', guardLabel: '&#38450;8&#30721;', game: 'special-number', pool: specialGuardPool, poolItem: {pool: specialGuardPool, windows: special.yearWindows}, stats: specialStats, baseline: singleDrawBaseline(1, 49)},
-        {source, name: '&#19977;&#20013;&#19977;&#20027;&#25512;3&#30721;', guardLabel: '&#38450;5&#30721;', game: 'three-hit-three', pool: threeGuardPool, poolItem: {...threePool, pool: threeGuardPool}, stats: threeStats, baseline: randomWindowBaseline(3, 49, 5)}
-      ];
-      const items = seedItems.map(seed => {
-        const draft = {...seed, score: 0, level: {code: 'watch', label: '&#35266;&#26395;'}, reasons: []};
-        const persistedGroups = persistedBettingSnapshotReviewGroups(draft, 10);
-        const snapshotReview = bettingPoolReviewStats(persistedGroups.length ? persistedGroups : bettingSnapshotReviewGroups(sourceRows, draft, 10));
-        return {...bettingRecommendationItem(source, latest, seed.name, seed.game, seed.pool, seed.stats, seed.baseline, snapshotReview, seed.poolItem), guardLabel: seed.guardLabel};
-      });
-      return {source, latest, items};
-    }
-    function bettingCard(item) {
-      const primaryPool = normalizedPool(item.snapshot?.primaryPool || []).length ? item.snapshot.primaryPool : (item.game === 'three-hit-three' ? normalizedPool(item.pool).slice(0, 3) : normalizedPool(item.pool).slice(0, 1));
-      const guardPool = normalizedPool(item.snapshot?.guardPool || []).length ? item.snapshot.guardPool : (item.game === 'three-hit-three' ? normalizedPool(item.pool).slice(0, 5) : normalizedPool(item.pool).slice(0, 8));
-      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div><p class="muted">&#20027;&#25512;</p>${numberChips(primaryPool)}<p class="muted">${item.guardLabel || '&#38450;&#30721;'}</p>${numberChips(guardPool)}<p>&#30446;&#26631;&#65306;${esc(item.snapshot?.date || '')} ${esc(item.snapshot?.issue || '')}&#26399;&#12288;&#20915;&#31574;&#20998;&#65306;${esc(item.score)}&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
-    }
-    function bettingReviewTable(analysis) {
-      const rows = analysis.items.flatMap(item => item.review.groups.map(group => ({name: item.name, ...group})));
-      return `<section class="panel full"><h2>&#26368;&#36817;&#25512;&#33616;&#24555;&#29031;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#20027;&#25512;&#32467;&#26524;</th><th>&#38450;&#30721;&#32467;&#26524;</th><th>&#20027;&#25512;</th><th>&#38450;&#30721;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.guardHit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${numberChips(row.snapshot?.primaryPool || [])}</td><td>${numberChips(row.snapshot?.guardPool || row.poolSnapshot || [])}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
-    }
-    function renderBetting() {
-      const selected = document.getElementById('betting-source')?.value || 'am';
-      const analysis = bettingRecommendationAnalysis(selected);
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="betting-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel full"><h2>&#35268;&#24459;&#36319;&#36394;&#19979;&#27880;&#21442;&#32771;</h2><p class="muted">${esc(analysis.latest?.date || '')} ${esc(analysis.latest?.issue || '')}&#26399;&#65292;&#20302;&#25104;&#26412;&#20027;&#25512;&#20026;&#19979;&#27880;&#21442;&#32771;&#65292;&#38450;&#30721;&#21482;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#26159;&#21542;&#20173;&#28982;&#26377;&#25928;&#12290;</p></section>
-        ${analysis.items.map(bettingCard).join('')}
-        ${bettingReviewTable(analysis)}
-      </div>`;
-      document.getElementById('betting-source').addEventListener('change', renderBetting);
     }
     function renderGames() {
       const selected = document.getElementById('game-source')?.value || 'am';
@@ -3271,7 +2933,6 @@ function New-DashboardHtml {
     let gamePredictionsPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
-    let bettingSnapshotsPromise = null;
     function cacheBustUrl(src) {
       const separator = src.includes('?') ? '&' : '?';
       return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
@@ -3343,24 +3004,7 @@ function New-DashboardHtml {
       }
       return threeCompoundPromise;
     }
-    async function ensureBettingSnapshots() {
-      if (bettingSnapshots?.items?.length) return bettingSnapshots;
-      if (!bettingSnapshotsPromise) {
-        bettingSnapshotsPromise = loadJsonOrScript('data/betting-snapshots.json', 'data/betting-snapshots.js', '__BETTING_SNAPSHOTS__').then(data => {
-          bettingSnapshots = data || {items: []};
-          return bettingSnapshots;
-        });
-      }
-      return bettingSnapshotsPromise;
-    }
     const tabDataLoaders = {
-      betting: async () => {
-        await ensureRecordsData();
-        gamePredictions = await ensureGamePredictionsData();
-        window5State = await ensureWindow5Data();
-        threeCompoundState = await ensureThreeCompoundData();
-        bettingSnapshots = await ensureBettingSnapshots();
-      },
       games: async () => {
         await ensureRecordsData();
         gamePredictions = await ensureGamePredictionsData();
@@ -3379,7 +3023,6 @@ function New-DashboardHtml {
       }
     };
     const renderers = {
-      betting: renderBetting,
       overview: renderOverview,
       games: renderGames,
       window5: renderWindow5,
@@ -3413,7 +3056,7 @@ function New-DashboardHtml {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
-      switchTab('betting');
+      switchTab('games');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });
@@ -3571,17 +3214,6 @@ if (Test-Path -LiteralPath $threeCompoundScript) {
         Write-DataJsFromJsonFile -JsonPath $threeCompoundPath -GlobalName '__THREE_COMPOUND_STATE__'
     } | Out-Null
 }
-$threeCompoundStateForSnapshots = [pscustomobject]@{ items = @() }
-if (Test-Path -LiteralPath $threeCompoundPath) {
-    try { $threeCompoundStateForSnapshots = Get-Content -LiteralPath $threeCompoundPath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $threeCompoundStateForSnapshots = [pscustomobject]@{ items = @() } }
-}
-$bettingSnapshotsPath = Join-Path $dataDir 'betting-snapshots.json'
-$bettingSnapshots = Invoke-Profiled 'betting-snapshots' {
-    return New-BettingSnapshots -Records $deduped -Window5 $window5 -ThreeCompound $threeCompoundStateForSnapshots -GeneratedAt $summary.generatedAt
-}
-Invoke-Profiled 'write-betting-snapshots-json' {
-    Write-DataJsonAndJs -JsonPath $bettingSnapshotsPath -Data $bettingSnapshots -GlobalName '__BETTING_SNAPSHOTS__' -Depth 10
-} | Out-Null
 $dashboardPath = Join-Path $RootDir 'index.html'
 Invoke-Profiled 'write-dashboard-html' {
     [IO.File]::WriteAllText($dashboardPath, (New-DashboardHtml), $Utf8NoBom)

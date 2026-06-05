@@ -270,8 +270,11 @@ try {
     if ($buildScript.Contains('C:\codex\test\am')) {
         throw 'build-data.ps1 should not use a machine-specific default path'
     }
-    if (-not $dashboard.Contains('data-tab="betting"') -or -not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose betting, overview, review, 5-window, three-hit 5-window, advanced analysis, manual fetch, and daily tabs'
+    if ($dashboard.Contains('data-tab="betting"') -or $dashboard.Contains('function renderBetting') -or $dashboard.Contains('function bettingRecommendationAnalysis') -or $dashboard.Contains('__BETTING_SNAPSHOTS__') -or $dashboard.Contains('ensureBettingSnapshots')) {
+        throw 'dashboard should not expose betting recommendation module or betting snapshot loaders'
+    }
+    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose overview, review, 5-window, three-hit 5-window, advanced analysis, manual fetch, and daily tabs'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
@@ -316,38 +319,11 @@ try {
     if (-not $dashboardSummaryScriptText.Contains('window.__DASHBOARD_SUMMARY__ = ')) {
         throw 'dashboard summary script fallback was not generated'
     }
-    $bettingSnapshotsFile = Join-Path $outDir 'data/betting-snapshots.json'
-    $bettingSnapshotsScript = Join-Path $outDir 'data/betting-snapshots.js'
-    if (-not (Test-Path -LiteralPath $bettingSnapshotsFile)) {
-        throw 'betting-snapshots.json was not created'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/betting-snapshots.json')) {
+        throw 'betting-snapshots.json should not be generated'
     }
-    if (-not (Test-Path -LiteralPath $bettingSnapshotsScript)) {
-        throw 'betting-snapshots.js script fallback was not generated'
-    }
-    $bettingSnapshotData = Get-Content -LiteralPath $bettingSnapshotsFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    if (@($bettingSnapshotData.items).Count -lt 4) {
-        throw 'betting snapshots should persist at least one special and one three-hit recommendation per source'
-    }
-    foreach ($source in @('am', 'hk')) {
-        foreach ($game in @('special-number', 'three-hit-three')) {
-            $snapshot = @($bettingSnapshotData.items | Where-Object { $_.source -eq $source -and $_.game -eq $game } | Select-Object -First 1)
-            if ($snapshot.Count -eq 0 -or @($snapshot[0].pool).Count -eq 0 -or -not $snapshot[0].status) {
-                throw "expected persisted betting snapshot for $source $game"
-            }
-            if ($game -eq 'special-number' -and (@($snapshot[0].primaryPool).Count -ne 1 -or @($snapshot[0].guardPool).Count -ne 8)) {
-                throw "special-number betting snapshot should persist one primary number and eight guard numbers for $source"
-            }
-            if ($game -eq 'three-hit-three' -and (@($snapshot[0].primaryPool).Count -ne 3 -or @($snapshot[0].guardPool).Count -ne 5)) {
-                throw "three-hit-three betting snapshot should persist three primary numbers and five guard numbers for $source"
-            }
-        }
-    }
-    $bettingSnapshotsScriptText = Get-Content -LiteralPath $bettingSnapshotsScript -Raw
-    if (-not $bettingSnapshotsScriptText.Contains('window.__BETTING_SNAPSHOTS__ = ')) {
-        throw 'betting snapshots script fallback should expose __BETTING_SNAPSHOTS__'
-    }
-    if (-not $dashboard.Contains('__BETTING_SNAPSHOTS__') -or -not $dashboard.Contains('ensureBettingSnapshots')) {
-        throw 'dashboard should load persisted betting snapshots before rendering recommendations'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/betting-snapshots.js')) {
+        throw 'betting-snapshots.js should not be generated'
     }
     if ($dashboard.Contains('"forecasts":')) {
         throw 'prediction observation data should not be embedded'

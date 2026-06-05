@@ -9,44 +9,12 @@ if (-not (Test-Path -LiteralPath $htmlPath)) {
 
 $html = Get-Content -LiteralPath $htmlPath -Raw
 
-if ($html -notmatch 'data-tab="betting"' -or $html -notmatch '&#19979;&#27880;&#25512;&#33616;') {
-    throw 'expected dashboard to expose betting recommendation as the first tab'
+if ($html -match 'data-tab="betting"' -or $html -match '&#19979;&#27880;&#25512;&#33616;' -or $html -match 'function renderBetting' -or $html -match 'function bettingRecommendationAnalysis' -or $html -match '__BETTING_SNAPSHOTS__' -or $html -match 'ensureBettingSnapshots' -or $html -match 'bettingSnapshotReviewGroups') {
+    throw 'betting recommendation module should be removed from the dashboard'
 }
 
-if ($html -notmatch 'function bettingRecommendationAnalysis' -or $html -notmatch 'function renderBetting' -or $html -notmatch '&#29305;&#21035;&#21495;&#20027;&#25512;1&#30721;' -or $html -notmatch '&#38450;8&#30721;' -or $html -notmatch '&#19977;&#20013;&#19977;&#20027;&#25512;3&#30721;' -or $html -notmatch '&#38450;5&#30721;') {
-    throw 'expected dashboard to render low-cost primary picks and guard pools'
-}
-
-if ($html -notmatch '&#19979;&#27880;' -or $html -notmatch '&#23567;&#27880;' -or $html -notmatch '&#35266;&#26395;' -or $html -notmatch '&#26242;&#20572;') {
-    throw 'expected betting recommendations to include bet, small bet, observe, and pause levels'
-}
-
-if ($html -notmatch 'function bettingPoolReviewStats' -or $html -notmatch 'specialPoolReviewGroups' -or $html -notmatch 'threePoolReviewGroups') {
-    throw 'expected betting review to recalculate hits from the displayed pools instead of old single-number recommendation rows'
-}
-
-if ($html -notmatch 'poolSnapshotForIssue' -or $html -notmatch 'currentHit' -or $html -notmatch '&#20027;&#25512;&#32467;&#26524;' -or $html -notmatch '&#38450;&#30721;&#32467;&#26524;') {
-    throw 'expected betting pool review to separate primary and guard snapshot results'
-}
-
-if ($html -notmatch 'function bettingRecommendationSnapshot' -or $html -notmatch 'function settleBettingSnapshot' -or $html -notmatch 'bettingSnapshotReviewGroups') {
-    throw 'expected betting recommendations to use immutable recommendation snapshots'
-}
-
-if ($html -notmatch 'snapshot\.primaryPool' -or $html -notmatch 'snapshot\.guardPool' -or $html -notmatch 'matched\.length >= 3' -or $html -notmatch '&#20027;&#25512;&#32467;&#26524;' -or $html -notmatch '&#38450;&#30721;&#32467;&#26524;') {
-    throw 'expected betting settlement to use primary and guard snapshot pools'
-}
-
-if ($html -notmatch 'function bettingRiskGate' -or $html -notmatch 'snapshotReview' -or $html -notmatch 'insufficient-sample' -or $html -notmatch 'weak-snapshot-review') {
-    throw 'expected betting recommendations to apply strict snapshot-based risk gates'
-}
-
-if ($html -notmatch 'function bettingDecisionScore' -or $html -notmatch 'singleDrawBaseline' -or $html -notmatch '&#20915;&#31574;&#20998;' -or $html -notmatch 'strongDecisionFloor') {
-    throw 'expected betting recommendations to use calibrated decision scores instead of raw low observation scores'
-}
-
-if ($html -notmatch 'function ensureBettingSnapshots' -or $html -notmatch '__BETTING_SNAPSHOTS__' -or $html -notmatch 'persistedBettingSnapshotReviewGroups') {
-    throw 'expected betting recommendations to load persisted snapshot ledger before rendering'
+if ($html -notmatch '<button class="active" data-tab="games">') {
+    throw 'dashboard should open on recommendation review after removing betting recommendations'
 }
 
 if ($html -notmatch 'function recentWindowStats') {
