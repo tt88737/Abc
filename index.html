@@ -86,9 +86,8 @@
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="games">&#25512;&#33616;&#22797;&#30424;</button>
       <button data-tab="overview">&#30475;&#26495;</button>
-      <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
+      <button class="active" data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
@@ -104,7 +103,6 @@
     let recentRecords = [];
     let summary = null;
     let generatedPredictions = {next: [], sanzhong: []};
-    let gamePredictions = {items: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
     const threeWindowAnalysisCache = new Map();
@@ -194,9 +192,6 @@
         <section class="panel full"><h2>&#26368;&#36817; 20 &#26399;</h2><table><thead><tr><th>&#26469;&#28304;</th><th>&#24180;&#20221;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#21495;&#30721;</th></tr></thead><tbody>${selectedRecords.slice(0, 20).map(r => `<tr><td>${esc(r.sourceName)}</td><td>${esc(displayYear(r))}</td><td>${esc(r.issue)}</td><td>${esc(r.date)}</td><td>${ballsHtml(r.balls)}</td></tr>`).join('')}</tbody></table></section>
       </div>`;
       document.getElementById('overview-source').addEventListener('change', renderOverview);
-    }
-    function gameRows(source, game) {
-      return (gamePredictions.items || []).filter(item => item.source === source && item.game === game);
     }
     function asArray(value) {
       if (Array.isArray(value)) return value;
@@ -1139,177 +1134,6 @@
         optimized: {special: {pool: optimizedSpecial, stats: optimizedSpecialStats, windows: optimizedSpecialWindows}, stable: {pool: optimizedStable, stats: optimizedStableStats, windows: optimizedStableWindows}}
       };
     }
-    function recommendationSummary(rows) {
-      const map = new Map();
-      rows.forEach(row => {
-        const nums = asArray(row.numbers).map(n => String(n).padStart(2, '0')).sort((a, b) => Number(a) - Number(b));
-        const key = nums.join('-');
-        if (!key) return;
-        if (!map.has(key)) map.set(key, {numbers: nums, count: 0, algorithms: []});
-        const item = map.get(key);
-        item.count++;
-        item.algorithms.push(row.algorithmName || row.algorithmId || '');
-      });
-      return [...map.values()].sort((a, b) => b.count - a.count || a.numbers.join('-').localeCompare(b.numbers.join('-')));
-    }
-    function recommendationCopyText(summaryRows, game) {
-      if (game === 'special-number') {
-        return summaryRows.map(item => String(Number(item.numbers[0]))).join(',');
-      }
-      return summaryRows.map(item => `\uFF08${item.numbers.join('-')}\uFF09`).join(',');
-    }
-    function recommendationSummaryHtml(rows, game) {
-      const summaryRows = recommendationSummary(rows);
-      const copyText = recommendationCopyText(summaryRows, game);
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(copyText)}`;
-      return `<h3>&#25512;&#33616;&#27719;&#24635;</h3>
-        <div class="copy-qr"><div><strong>&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;</strong><code>${esc(copyText)}</code></div><img alt="QR" src="${qrUrl}"></div>
-        <table><thead><tr><th>&#25512;&#33616;&#32452;&#21512;</th><th>&#27425;&#25968;</th><th>&#26469;&#28304;&#31639;&#27861;</th></tr></thead><tbody>${summaryRows.map(item => `<tr><td>${numberChips(item.numbers)}</td><td>${item.count}</td><td>${esc(item.algorithms.join(', '))}</td></tr>`).join('')}</tbody></table>`;
-    }
-    function recommendationHistoryHtml(rows) {
-      const historyRows = rows.filter(row => row.algorithmId !== 'ensemble');
-      const map = new Map();
-      historyRows.forEach(row => {
-        const key = [row.targetDate || '', row.displayYear || '', row.issue || '', row.createdAt || ''].join('|');
-        if (!map.has(key)) {
-          map.set(key, {
-            targetDate: row.targetDate || '',
-            displayYear: row.displayYear || '',
-            issue: row.issue || '',
-            createdAt: row.createdAt || '',
-            status: row.status || '',
-            rows: []
-          });
-        }
-        map.get(key).rows.push(row);
-      });
-      function historyGroupDate(group) {
-        const actualRow = group.rows.find(row => row.status === 'settled' && row.actualDate);
-        return actualRow ? actualRow.actualDate : group.targetDate;
-      }
-      const groups = [...map.values()].sort((a, b) =>
-        String(b.createdAt || '').localeCompare(String(a.createdAt || '')) ||
-        String(b.targetDate || '').localeCompare(String(a.targetDate || '')) ||
-        Number(b.issue || 0) - Number(a.issue || 0)
-      );
-      return `<h3>&#25512;&#33616;&#35760;&#24405;</h3>
-        <div class="history-list">${groups.slice(0, 30).map((group, idx) => {
-          const settled = group.rows.filter(row => row.status === 'settled');
-          const hits = settled.filter(row => row.hit).length;
-          const summary = group.status === 'settled'
-            ? `&#24050;&#24320;&#22870; ${hits}/${settled.length} &#21629;&#20013;`
-            : '&#24453;&#24320;&#22870;';
-          const actual = group.rows.find(row => row.actualNumbers)?.actualNumbers;
-          return `<details class="history-group" ${idx === 0 ? 'open' : ''}>
-            <summary><span>${esc(historyGroupDate(group))} ${esc(group.displayYear)} / ${esc(group.issue)}</span><span>${esc(group.createdAt)}</span><span>${summary}</span></summary>
-            <table class="compact-table"><thead><tr><th>&#31639;&#27861;</th><th>&#25512;&#33616;</th><th class="col-result">&#32467;&#26524;</th><th class="col-draw">&#24320;&#22870;</th></tr></thead><tbody>${group.rows.map(row => `<tr><td>${esc(row.algorithmName)}</td><td>${numberChips(row.numbers)}</td><td>${row.status === 'settled' ? (row.hit ? '&#21629;&#20013;' : '&#26410;&#20013;') : '&#24453;&#24320;&#22870;'}</td><td>${actual ? numberChips(actual) : '-'}</td></tr>`).join('')}</tbody></table>
-          </details>`;
-        }).join('')}</div>`;
-    }
-    function recommendationHitsRecord(recommendation, record, game) {
-      const nums = asArray(recommendation?.numbers).map(n => String(n).padStart(2, '0'));
-      if (!record || nums.length === 0) return false;
-      if (game === 'three-hit-three') {
-        const regular = record.balls.slice(0, 6).map(ball => String(ball.numberText).padStart(2, '0'));
-        return nums.length >= 3 && nums.slice(0, 3).every(num => regular.includes(num));
-      }
-      const special = String(record.balls[6]?.numberText || '').padStart(2, '0');
-      return nums[0] === special;
-    }
-    function historicalMaxMissForRecommendations(source, game, recommendations) {
-      const recs = cachedSourceRecords(source).slice().sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || Number(a.issue || 0) - Number(b.issue || 0));
-      const picks = recommendations.filter(row => asArray(row?.numbers).length > 0);
-      if (recs.length === 0 || picks.length === 0) return 0;
-      let maxMiss = 0;
-      let run = 0;
-      recs.forEach(record => {
-        const hit = picks.some(pick => recommendationHitsRecord(pick, record, game));
-        if (hit) {
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      return Math.max(maxMiss, run);
-    }
-    function gameMissStats(rows, historicalMaxMiss = null) {
-      const settled = rows.filter(row => row.status === 'settled').sort((a, b) => String(b.actualDate || '').localeCompare(String(a.actualDate || '')) || Number(b.actualIssue || 0) - Number(a.actualIssue || 0));
-      let currentMiss = 0;
-      for (const row of settled) {
-        if (row.hit) break;
-        currentMiss++;
-      }
-      let maxMiss = 0;
-      let run = 0;
-      let hits = 0;
-      [...settled].reverse().forEach(row => {
-        if (row.hit) {
-          hits++;
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      maxMiss = Math.max(maxMiss, run);
-      return {currentMiss, maxMiss: historicalMaxMiss ?? maxMiss, hits, settled: settled.length};
-    }
-    function gameGroupStats(rows, historicalMaxMiss = null) {
-      const map = new Map();
-      rows.filter(row => row.status === 'settled').forEach(row => {
-        const key = [row.actualDate || row.targetDate || '', row.displayYear || '', row.actualIssue || row.issue || ''].join('|');
-        if (!map.has(key)) map.set(key, []);
-        map.get(key).push(row);
-      });
-      const settledGroups = [...map.values()].map(group => ({
-        actualDate: group[0].actualDate || group[0].targetDate || '',
-        actualIssue: group[0].actualIssue || group[0].issue || 0,
-        hit: group.some(row => row.hit)
-      })).sort((a, b) => String(b.actualDate || '').localeCompare(String(a.actualDate || '')) || Number(b.actualIssue || 0) - Number(a.actualIssue || 0));
-      let currentMiss = 0;
-      for (const group of settledGroups) {
-        if (group.hit) break;
-        currentMiss++;
-      }
-      let maxMiss = 0;
-      let run = 0;
-      let hits = 0;
-      [...settledGroups].reverse().forEach(group => {
-        if (group.hit) {
-          hits++;
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      maxMiss = Math.max(maxMiss, run);
-      return {currentMiss, maxMiss: historicalMaxMiss ?? maxMiss, hits, settled: settledGroups.length};
-    }
-    function gameSection(source, game, title) {
-      const rows = gameRows(source, game).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || Number(b.issue || 0) - Number(a.issue || 0));
-      const pendingOrLatest = rows.find(row => row.status === 'pending') || rows[0];
-      const targetRows = pendingOrLatest ? rows.filter(row => Number(row.issue) === Number(pendingOrLatest.issue) && String(row.displayYear || '') === String(pendingOrLatest.displayYear || '') && String(row.targetDate || '') === String(pendingOrLatest.targetDate || '')) : [];
-      const ensemble = targetRows.find(row => row.algorithmId === 'ensemble');
-      const algorithms = targetRows.filter(row => row.algorithmId !== 'ensemble');
-      const ensembleHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, ensemble ? [ensemble] : []);
-      const algorithmHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, algorithms);
-      const ensembleStats = gameMissStats(rows.filter(row => row.algorithmId === 'ensemble'), ensembleHistoricalMaxMiss);
-      const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble'), algorithmHistoricalMaxMiss);
-      return `<section class="panel full">
-        <h2>${title}</h2>
-        <div class="grid">
-          <section class="panel wide"><h2>&#32508;&#21512;&#20027;&#25512;</h2>${ensemble ? `<p>${esc(ensemble.targetDate || '')} ${esc(ensemble.displayYear || '')} / ${esc(ensemble.issue || '')}</p>${numberChips(ensemble.numbers)}` : '<p class="muted">&#26242;&#26080;&#25512;&#33616;</p>'}</section>
-          <section class="panel"><h2>&#32508;&#21512;&#20027;&#25512;&#25112;&#32489;</h2><p>&#24403;&#21069;&#36951;&#33853;&#65306;${ensembleStats.currentMiss}</p><p>&#21382;&#21490;&#26368;&#22823;&#36951;&#33853;&#65306;${ensembleStats.maxMiss}</p><p>&#24050;&#32467;&#31639;&#65306;${ensembleStats.settled}&#65292;&#21629;&#20013;&#65306;${ensembleStats.hits}</p></section>
-          <section class="panel"><h2>11&#31639;&#27861;&#25972;&#20307;&#25112;&#32489;</h2><p>&#24403;&#21069;&#36951;&#33853;&#65306;${algorithmStats.currentMiss}</p><p>&#21382;&#21490;&#26368;&#22823;&#36951;&#33853;&#65306;${algorithmStats.maxMiss}</p><p>&#24050;&#32467;&#31639;&#65306;${algorithmStats.settled}&#65292;&#21629;&#20013;&#65306;${algorithmStats.hits}</p></section>
-        </div>
-        ${recommendationSummaryHtml(algorithms, game)}
-        <h3>11&#31181;&#31639;&#27861;&#25512;&#33616;</h3>
-        <table><thead><tr><th>&#31639;&#27861;</th><th>&#25512;&#33616;</th><th>&#30446;&#26631;&#26399;&#21495;</th><th>&#29366;&#24577;</th></tr></thead><tbody>${algorithms.map(row => `<tr><td>${esc(row.algorithmName)}</td><td>${numberChips(row.numbers)}</td><td>${esc(row.targetDate || '')}<br>${esc(row.displayYear || '')} / ${esc(row.issue || '')}</td><td>${row.status === 'settled' ? (row.hit ? '&#21629;&#20013;' : '&#26410;&#20013;') : '&#24453;&#24320;&#22870;'}</td></tr>`).join('')}</tbody></table>
-        ${recommendationHistoryHtml(rows)}
-      </section>`;
-    }
     function specialPoolReviewGroups(rows, pool, limit = 10) {
       const poolSet = new Set(normalizedPool(pool));
       return rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit).map(row => {
@@ -1335,15 +1159,6 @@
     }
     function singleDrawBaseline(pickCount, totalCount = 49) {
       return totalCount ? Math.round(Number(pickCount || 0) / totalCount * 10000) / 100 : 0;
-    }
-    function renderGames() {
-      const selected = document.getElementById('game-source')?.value || 'am';
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="game-source">${sourceOptions(selected)}</select></label></div></section>
-        ${gameSection(selected, 'three-hit-three', '&#19977;&#20013;&#19977;&#25512;&#33616;')}
-        ${gameSection(selected, 'special-number', '&#29305;&#21035;&#21495;&#25512;&#33616;')}
-      </div>`;
-      document.getElementById('game-source').addEventListener('change', renderGames);
     }
     function yearPoolHistoryTable(history) {
       const rows = (Array.isArray(history) ? history : []).slice(0, 10);
@@ -1610,7 +1425,6 @@
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
     let recordsDataPromise = null;
-    let gamePredictionsPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
     function cacheBustUrl(src) {
@@ -1654,16 +1468,6 @@
       }
       return recordsDataPromise;
     }
-    async function ensureGamePredictionsData() {
-      if (gamePredictions?.items?.length) return gamePredictions;
-      if (!gamePredictionsPromise) {
-        gamePredictionsPromise = loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__').then(data => {
-          gamePredictions = data || {items: []};
-          return gamePredictions;
-        });
-      }
-      return gamePredictionsPromise;
-    }
     async function ensureWindow5Data() {
       if (window5State?.items?.length) return window5State;
       if (!window5Promise) {
@@ -1685,10 +1489,6 @@
       return threeCompoundPromise;
     }
     const tabDataLoaders = {
-      games: async () => {
-        await ensureRecordsData();
-        gamePredictions = await ensureGamePredictionsData();
-      },
       window5: async () => {
         window5State = await ensureWindow5Data();
       },
@@ -1704,7 +1504,6 @@
     };
     const renderers = {
       overview: renderOverview,
-      games: renderGames,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       patternWatch: renderPatternWatch,
@@ -1736,7 +1535,7 @@
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
-      switchTab('games');
+      switchTab('window5');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });

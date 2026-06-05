@@ -474,22 +474,6 @@ function Get-BestPredictionNumbers {
     return @(Get-ModelPickFromHistory -History $SourceRecords -Model $model | ForEach-Object { $_.numberText })
 }
 
-function Get-GameAlgorithms {
-    return @(
-        [pscustomobject]@{ id = 'greedy'; name = (U @(0x8D2A, 0x5FC3)) }
-        [pscustomobject]@{ id = 'backtracking'; name = (U @(0x56DE, 0x6EAF)) }
-        [pscustomobject]@{ id = 'dynamic-programming'; name = (U @(0x52A8, 0x6001, 0x89C4, 0x5212)) }
-        [pscustomobject]@{ id = 'simulated-annealing'; name = (U @(0x6A21, 0x62DF, 0x9000, 0x706B)) }
-        [pscustomobject]@{ id = 'genetic'; name = (U @(0x9057, 0x4F20, 0x7B97, 0x6CD5)) }
-        [pscustomobject]@{ id = 'particle-swarm'; name = (U @(0x7C92, 0x5B50, 0x7FA4)) }
-        [pscustomobject]@{ id = 'monte-carlo'; name = (U @(0x8499, 0x7279, 0x5361, 0x6D1B)) }
-        [pscustomobject]@{ id = 'ant-colony'; name = (U @(0x8681, 0x7FA4)) }
-        [pscustomobject]@{ id = 'markov-chain'; name = (U @(0x9A6C, 0x5C14, 0x53EF, 0x592B, 0x94FE)) }
-        [pscustomobject]@{ id = 'bayesian'; name = (U @(0x8D1D, 0x53F6, 0x65AF, 0x63A8, 0x65AD)) }
-        [pscustomobject]@{ id = 'association-rules'; name = (U @(0x5173, 0x8054, 0x89C4, 0x5219)) }
-    )
-}
-
 function Get-NumberStats {
     param([object[]]$SourceRecords, [string]$Game)
 
@@ -514,106 +498,6 @@ function Get-NumberStats {
     }
 
     return $stats
-}
-
-function Get-AlgorithmNumbers {
-    param([object[]]$SourceRecords, [string]$Game, [string]$AlgorithmId, [string]$SeedIdentity = '')
-
-    $take = if ($Game -eq 'three-hit-three') { 3 } else { 1 }
-    $stats = Get-NumberStats -SourceRecords $SourceRecords -Game $Game
-    if ([string]::IsNullOrWhiteSpace($SeedIdentity)) {
-        $latest = @($SourceRecords | Select-Object -First 1)
-        $SeedIdentity = Get-RecordIdentity $latest[0]
-    }
-    return @(
-        foreach ($item in $stats.Values) {
-            $noise = Get-SeededNoise "$SeedIdentity|$Game|$AlgorithmId|$($item.numberText)"
-            $score = switch ($AlgorithmId) {
-                'greedy' { $item.recentHits * 3 + $item.hits * 0.4 - $item.miss * 0.15 }
-                'backtracking' { $item.hits * 0.8 + [Math]::Min($item.miss, 60) * 0.6 }
-                'dynamic-programming' { $item.recentHits * 1.4 + $item.hits * 0.5 + [Math]::Min($item.miss, 40) * 0.25 }
-                'simulated-annealing' { $item.recentHits * 1.2 + $item.hits * 0.35 + $noise * 18 - $item.miss * 0.08 }
-                'genetic' { $item.hits * 0.5 + $item.recentHits * 1.8 + $noise * 10 }
-                'particle-swarm' { $item.recentHits * 1.6 + (49 - [int]$item.numberText) * 0.03 + $noise * 8 }
-                'monte-carlo' { $item.hits * 0.25 + $item.recentHits * 0.8 + $noise * 25 }
-                'ant-colony' { $item.hits * 0.45 + $item.recentHits * 2.1 - $item.miss * 0.05 }
-                'markov-chain' { $item.recentHits * 1.1 + [Math]::Min($item.miss, 30) * 0.4 + $noise * 6 }
-                'bayesian' { (($item.hits + 1) / ($SourceRecords.Count + 49)) * 1000 + $item.recentHits * 0.9 }
-                'association-rules' { $item.hits * 0.55 + $item.recentHits * 1.3 + [Math]::Min($item.miss, 70) * 0.2 }
-                default { $item.hits }
-            }
-            [pscustomobject]@{ numberText = $item.numberText; score = [double]$score }
-        }
-    ) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { [int]$_.numberText }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.numberText }
-}
-
-function Settle-GameItem {
-    param([object]$Item, [object[]]$Records, [hashtable]$RecordLookup = $null)
-
-    if ($Item.status -eq 'settled' -and -not [string]::IsNullOrWhiteSpace([string]$Item.targetDate) -and -not [string]::IsNullOrWhiteSpace([string]$Item.actualDate) -and [string]$Item.targetDate -ne [string]$Item.actualDate) {
-        $Item | Add-Member -NotePropertyName status -NotePropertyValue 'pending' -Force
-        $Item.PSObject.Properties.Remove('hit')
-        $Item.PSObject.Properties.Remove('actualDate')
-        $Item.PSObject.Properties.Remove('actualIssue')
-        $Item.PSObject.Properties.Remove('actualNumbers')
-    }
-    $lookupKey = '{0}|{1}' -f $Item.source, [int]$Item.issue
-    $baseMatches = if ($RecordLookup -and $RecordLookup.ContainsKey($lookupKey)) {
-        @($RecordLookup[$lookupKey].ToArray())
-    } else {
-        @($Records | Where-Object {
-            $_.source -eq $Item.source -and
-            [int]$_.issue -eq [int]$Item.issue
-        })
-    }
-    $draw = @()
-    if (-not [string]::IsNullOrWhiteSpace([string]$Item.targetDate)) {
-        $draw = @($baseMatches | Where-Object { [string]$_.date -eq [string]$Item.targetDate } | Select-Object -First 1)
-        if ($draw.Count -eq 0 -and [string]$Item.source -eq 'hk') {
-            $draw = @($baseMatches | Where-Object { (Test-RecordMatchesGameItemYear -Record $_ -Item $Item) -and (Test-DateWithinDays -A ([string]$_.date) -B ([string]$Item.targetDate) -Days 1) } | Select-Object -First 1)
-        }
-    }
-    else {
-        $draw = @($baseMatches | Where-Object { Test-RecordMatchesGameItemYear -Record $_ -Item $Item } | Select-Object -First 1)
-    }
-    if ($draw.Count -eq 0) { return $Item }
-
-    $record = $draw[0]
-    $actual = @(
-        if ($Item.game -eq 'three-hit-three') {
-            $record.balls | Select-Object -First 6 | ForEach-Object { ([int]$_.numberText).ToString('00') }
-        } else {
-            ([int]$record.balls[6].numberText).ToString('00')
-        }
-    )
-    $recommended = @($Item.numbers | ForEach-Object { ([int]$_).ToString('00') })
-    $hit = if ($Item.game -eq 'three-hit-three') {
-        @($recommended | Where-Object { $actual -contains $_ }).Count -eq 3
-    } else {
-        @($recommended).Count -gt 0 -and [string]$actual[0] -eq [string]$recommended[0]
-    }
-
-    $Item | Add-Member -NotePropertyName status -NotePropertyValue 'settled' -Force
-    $Item | Add-Member -NotePropertyName hit -NotePropertyValue $hit -Force
-    $Item | Add-Member -NotePropertyName actualDate -NotePropertyValue $record.date -Force
-    $Item | Add-Member -NotePropertyName actualIssue -NotePropertyValue $record.issue -Force
-    $Item | Add-Member -NotePropertyName actualNumbers -NotePropertyValue $actual -Force
-    return $Item
-}
-
-function Update-SettledGameItemHit {
-    param([object]$Item)
-
-    $actual = @($Item.actualNumbers | ForEach-Object { ([int]$_).ToString('00') })
-    $recommended = @($Item.numbers | ForEach-Object { ([int]$_).ToString('00') })
-    if ($actual.Count -eq 0) { return $Item }
-    $hit = if ($Item.game -eq 'three-hit-three') {
-        @($recommended | Where-Object { $actual -contains $_ }).Count -eq 3
-    } else {
-        @($recommended).Count -gt 0 -and [string]$actual[0] -eq [string]$recommended[0]
-    }
-    $Item | Add-Member -NotePropertyName hit -NotePropertyValue $hit -Force
-    return $Item
 }
 
 function Get-Window5RawWindows {
@@ -869,112 +753,6 @@ function New-Window5State {
     )
 
     return [pscustomobject]@{ generatedAt = $GeneratedAt; items = $items }
-}
-
-function New-GamePredictions {
-    param([object[]]$Records, [object[]]$Existing = @())
-
-    $createdAt = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    $items = New-Object 'System.Collections.Generic.List[object]'
-    $recordLookup = New-RecordLookup -Records $Records
-    $sw = [Diagnostics.Stopwatch]::StartNew()
-    foreach ($old in @($Existing)) {
-        $actualNumbers = @($old.actualNumbers)
-        if ($old.status -eq 'settled' -and -not [string]::IsNullOrWhiteSpace([string]$old.actualDate) -and $null -ne $old.actualIssue -and $actualNumbers.Count -gt 0) {
-            $items.Add((Update-SettledGameItemHit -Item $old)) | Out-Null
-        }
-        else {
-            $items.Add((Settle-GameItem -Item $old -Records $Records -RecordLookup $recordLookup)) | Out-Null
-        }
-    }
-    $sw.Stop()
-    Add-ProfileRow 'game-settle-existing' $sw.Elapsed.TotalSeconds
-
-    $sw = [Diagnostics.Stopwatch]::StartNew()
-    foreach ($source in @('am', 'hk')) {
-        $sourceRecords = @($Records | Where-Object { $_.source -eq $source } | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true })
-        if ($sourceRecords.Count -eq 0) { continue }
-
-        $latest = $sourceRecords[0]
-        $targetDate = Get-NextDrawDate -SourceRecords $sourceRecords -Source $source
-        $issue = [int]$latest.issue + 1
-        $displayYear = Get-DisplayYearForTarget -TargetDate $targetDate -Latest $latest
-
-        foreach ($game in @('three-hit-three', 'special-number')) {
-            $gameName = if ($game -eq 'three-hit-three') { (U @(0x4E09, 0x4E2D, 0x4E09)) } else { (U @(0x7279, 0x522B, 0x53F7)) }
-            $existingForTarget = @($items | Where-Object { $_.source -eq $source -and $_.game -eq $game -and [int]$_.issue -eq $issue -and $_.displayYear -eq $displayYear -and [string]$_.targetDate -eq [string]$targetDate })
-            $existingAlgorithmIds = @($existingForTarget | ForEach-Object { $_.algorithmId })
-            $hasCompleteTarget = $existingForTarget.Count -ge 12 -and ($existingAlgorithmIds -contains 'ensemble') -and (@(Get-GameAlgorithms | Where-Object { $existingAlgorithmIds -notcontains $_.id }).Count -eq 0)
-            if ($hasCompleteTarget) { continue }
-
-            $algorithmRows = @()
-            $seedIdentity = Get-TargetIdentity -Source $source -Latest $latest -Issue $issue -TargetDate $targetDate -DisplayYear $displayYear
-            foreach ($algorithm in Get-GameAlgorithms) {
-                if ($existingAlgorithmIds -contains $algorithm.id) { continue }
-                $numbers = @(Get-AlgorithmNumbers -SourceRecords $sourceRecords -Game $game -AlgorithmId $algorithm.id -SeedIdentity $seedIdentity)
-                $row = [pscustomobject]@{
-                    id = ('{0}-{1}-{2}-{3}-{4}' -f $source, $game, $displayYear, $issue, $algorithm.id)
-                    source = $source
-                    sourceName = Get-SourceName $source
-                    game = $game
-                    gameName = $gameName
-                    algorithmId = $algorithm.id
-                    algorithmName = $algorithm.name
-                    year = $latest.year
-                    displayYear = $displayYear
-                    issue = $issue
-                    targetDate = $targetDate
-                    numbers = $numbers
-                    createdAt = $createdAt
-                    status = 'pending'
-                    savedBy = 'fetch'
-                }
-                $algorithmRows += $row
-                $items.Add($row) | Out-Null
-            }
-
-            $voteRows = @($existingForTarget | Where-Object { $_.algorithmId -ne 'ensemble' }) + @($algorithmRows)
-            $votes = @{}
-            foreach ($row in $voteRows) {
-                foreach ($num in $row.numbers) {
-                    if (-not $votes.ContainsKey($num)) { $votes[$num] = 0 }
-                    $votes[$num]++
-                }
-            }
-            $take = if ($game -eq 'three-hit-three') { 3 } else { 1 }
-            $ensembleNumbers = @($votes.GetEnumerator() | Sort-Object @{ Expression = 'Value'; Descending = $true }, @{ Expression = { [int]$_.Key }; Descending = $false } | Select-Object -First $take | ForEach-Object { $_.Key })
-            if ($existingAlgorithmIds -notcontains 'ensemble') {
-                $items.Add([pscustomobject]@{
-                    id = ('{0}-{1}-{2}-{3}-ensemble' -f $source, $game, $displayYear, $issue)
-                    source = $source
-                    sourceName = Get-SourceName $source
-                    game = $game
-                    gameName = $gameName
-                    algorithmId = 'ensemble'
-                    algorithmName = (U @(0x7EFC, 0x5408, 0x4E3B, 0x63A8))
-                    year = $latest.year
-                    displayYear = $displayYear
-                    issue = $issue
-                    targetDate = $targetDate
-                    numbers = $ensembleNumbers
-                    createdAt = $createdAt
-                    status = 'pending'
-                    savedBy = 'fetch'
-                }) | Out-Null
-            }
-        }
-    }
-    $sw.Stop()
-    Add-ProfileRow 'game-current-targets' $sw.Elapsed.TotalSeconds
-
-    $sw = [Diagnostics.Stopwatch]::StartNew()
-    $sortedItems = @($items | Sort-Object @{ Expression = 'createdAt'; Descending = $true }, @{ Expression = 'source'; Descending = $false }, @{ Expression = 'game'; Descending = $false }, @{ Expression = 'algorithmId'; Descending = $false } | Select-Object -First 500)
-    $sw.Stop()
-    Add-ProfileRow 'game-sort-output' $sw.Elapsed.TotalSeconds
-    return [pscustomobject]@{
-        generatedAt = $createdAt
-        items = $sortedItems
-    }
 }
 
 function Get-RecordComboKeys {
@@ -1406,9 +1184,8 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="games">&#25512;&#33616;&#22797;&#30424;</button>
       <button data-tab="overview">&#30475;&#26495;</button>
-      <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
+      <button class="active" data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
@@ -1424,7 +1201,6 @@ function New-DashboardHtml {
     let recentRecords = [];
     let summary = null;
     let generatedPredictions = {next: [], sanzhong: []};
-    let gamePredictions = {items: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
     const threeWindowAnalysisCache = new Map();
@@ -1514,9 +1290,6 @@ function New-DashboardHtml {
         <section class="panel full"><h2>&#26368;&#36817; 20 &#26399;</h2><table><thead><tr><th>&#26469;&#28304;</th><th>&#24180;&#20221;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#21495;&#30721;</th></tr></thead><tbody>${selectedRecords.slice(0, 20).map(r => `<tr><td>${esc(r.sourceName)}</td><td>${esc(displayYear(r))}</td><td>${esc(r.issue)}</td><td>${esc(r.date)}</td><td>${ballsHtml(r.balls)}</td></tr>`).join('')}</tbody></table></section>
       </div>`;
       document.getElementById('overview-source').addEventListener('change', renderOverview);
-    }
-    function gameRows(source, game) {
-      return (gamePredictions.items || []).filter(item => item.source === source && item.game === game);
     }
     function asArray(value) {
       if (Array.isArray(value)) return value;
@@ -2459,177 +2232,6 @@ function New-DashboardHtml {
         optimized: {special: {pool: optimizedSpecial, stats: optimizedSpecialStats, windows: optimizedSpecialWindows}, stable: {pool: optimizedStable, stats: optimizedStableStats, windows: optimizedStableWindows}}
       };
     }
-    function recommendationSummary(rows) {
-      const map = new Map();
-      rows.forEach(row => {
-        const nums = asArray(row.numbers).map(n => String(n).padStart(2, '0')).sort((a, b) => Number(a) - Number(b));
-        const key = nums.join('-');
-        if (!key) return;
-        if (!map.has(key)) map.set(key, {numbers: nums, count: 0, algorithms: []});
-        const item = map.get(key);
-        item.count++;
-        item.algorithms.push(row.algorithmName || row.algorithmId || '');
-      });
-      return [...map.values()].sort((a, b) => b.count - a.count || a.numbers.join('-').localeCompare(b.numbers.join('-')));
-    }
-    function recommendationCopyText(summaryRows, game) {
-      if (game === 'special-number') {
-        return summaryRows.map(item => String(Number(item.numbers[0]))).join(',');
-      }
-      return summaryRows.map(item => `\uFF08${item.numbers.join('-')}\uFF09`).join(',');
-    }
-    function recommendationSummaryHtml(rows, game) {
-      const summaryRows = recommendationSummary(rows);
-      const copyText = recommendationCopyText(summaryRows, game);
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(copyText)}`;
-      return `<h3>&#25512;&#33616;&#27719;&#24635;</h3>
-        <div class="copy-qr"><div><strong>&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;</strong><code>${esc(copyText)}</code></div><img alt="QR" src="${qrUrl}"></div>
-        <table><thead><tr><th>&#25512;&#33616;&#32452;&#21512;</th><th>&#27425;&#25968;</th><th>&#26469;&#28304;&#31639;&#27861;</th></tr></thead><tbody>${summaryRows.map(item => `<tr><td>${numberChips(item.numbers)}</td><td>${item.count}</td><td>${esc(item.algorithms.join(', '))}</td></tr>`).join('')}</tbody></table>`;
-    }
-    function recommendationHistoryHtml(rows) {
-      const historyRows = rows.filter(row => row.algorithmId !== 'ensemble');
-      const map = new Map();
-      historyRows.forEach(row => {
-        const key = [row.targetDate || '', row.displayYear || '', row.issue || '', row.createdAt || ''].join('|');
-        if (!map.has(key)) {
-          map.set(key, {
-            targetDate: row.targetDate || '',
-            displayYear: row.displayYear || '',
-            issue: row.issue || '',
-            createdAt: row.createdAt || '',
-            status: row.status || '',
-            rows: []
-          });
-        }
-        map.get(key).rows.push(row);
-      });
-      function historyGroupDate(group) {
-        const actualRow = group.rows.find(row => row.status === 'settled' && row.actualDate);
-        return actualRow ? actualRow.actualDate : group.targetDate;
-      }
-      const groups = [...map.values()].sort((a, b) =>
-        String(b.createdAt || '').localeCompare(String(a.createdAt || '')) ||
-        String(b.targetDate || '').localeCompare(String(a.targetDate || '')) ||
-        Number(b.issue || 0) - Number(a.issue || 0)
-      );
-      return `<h3>&#25512;&#33616;&#35760;&#24405;</h3>
-        <div class="history-list">${groups.slice(0, 30).map((group, idx) => {
-          const settled = group.rows.filter(row => row.status === 'settled');
-          const hits = settled.filter(row => row.hit).length;
-          const summary = group.status === 'settled'
-            ? `&#24050;&#24320;&#22870; ${hits}/${settled.length} &#21629;&#20013;`
-            : '&#24453;&#24320;&#22870;';
-          const actual = group.rows.find(row => row.actualNumbers)?.actualNumbers;
-          return `<details class="history-group" ${idx === 0 ? 'open' : ''}>
-            <summary><span>${esc(historyGroupDate(group))} ${esc(group.displayYear)} / ${esc(group.issue)}</span><span>${esc(group.createdAt)}</span><span>${summary}</span></summary>
-            <table class="compact-table"><thead><tr><th>&#31639;&#27861;</th><th>&#25512;&#33616;</th><th class="col-result">&#32467;&#26524;</th><th class="col-draw">&#24320;&#22870;</th></tr></thead><tbody>${group.rows.map(row => `<tr><td>${esc(row.algorithmName)}</td><td>${numberChips(row.numbers)}</td><td>${row.status === 'settled' ? (row.hit ? '&#21629;&#20013;' : '&#26410;&#20013;') : '&#24453;&#24320;&#22870;'}</td><td>${actual ? numberChips(actual) : '-'}</td></tr>`).join('')}</tbody></table>
-          </details>`;
-        }).join('')}</div>`;
-    }
-    function recommendationHitsRecord(recommendation, record, game) {
-      const nums = asArray(recommendation?.numbers).map(n => String(n).padStart(2, '0'));
-      if (!record || nums.length === 0) return false;
-      if (game === 'three-hit-three') {
-        const regular = record.balls.slice(0, 6).map(ball => String(ball.numberText).padStart(2, '0'));
-        return nums.length >= 3 && nums.slice(0, 3).every(num => regular.includes(num));
-      }
-      const special = String(record.balls[6]?.numberText || '').padStart(2, '0');
-      return nums[0] === special;
-    }
-    function historicalMaxMissForRecommendations(source, game, recommendations) {
-      const recs = cachedSourceRecords(source).slice().sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || Number(a.issue || 0) - Number(b.issue || 0));
-      const picks = recommendations.filter(row => asArray(row?.numbers).length > 0);
-      if (recs.length === 0 || picks.length === 0) return 0;
-      let maxMiss = 0;
-      let run = 0;
-      recs.forEach(record => {
-        const hit = picks.some(pick => recommendationHitsRecord(pick, record, game));
-        if (hit) {
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      return Math.max(maxMiss, run);
-    }
-    function gameMissStats(rows, historicalMaxMiss = null) {
-      const settled = rows.filter(row => row.status === 'settled').sort((a, b) => String(b.actualDate || '').localeCompare(String(a.actualDate || '')) || Number(b.actualIssue || 0) - Number(a.actualIssue || 0));
-      let currentMiss = 0;
-      for (const row of settled) {
-        if (row.hit) break;
-        currentMiss++;
-      }
-      let maxMiss = 0;
-      let run = 0;
-      let hits = 0;
-      [...settled].reverse().forEach(row => {
-        if (row.hit) {
-          hits++;
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      maxMiss = Math.max(maxMiss, run);
-      return {currentMiss, maxMiss: historicalMaxMiss ?? maxMiss, hits, settled: settled.length};
-    }
-    function gameGroupStats(rows, historicalMaxMiss = null) {
-      const map = new Map();
-      rows.filter(row => row.status === 'settled').forEach(row => {
-        const key = [row.actualDate || row.targetDate || '', row.displayYear || '', row.actualIssue || row.issue || ''].join('|');
-        if (!map.has(key)) map.set(key, []);
-        map.get(key).push(row);
-      });
-      const settledGroups = [...map.values()].map(group => ({
-        actualDate: group[0].actualDate || group[0].targetDate || '',
-        actualIssue: group[0].actualIssue || group[0].issue || 0,
-        hit: group.some(row => row.hit)
-      })).sort((a, b) => String(b.actualDate || '').localeCompare(String(a.actualDate || '')) || Number(b.actualIssue || 0) - Number(a.actualIssue || 0));
-      let currentMiss = 0;
-      for (const group of settledGroups) {
-        if (group.hit) break;
-        currentMiss++;
-      }
-      let maxMiss = 0;
-      let run = 0;
-      let hits = 0;
-      [...settledGroups].reverse().forEach(group => {
-        if (group.hit) {
-          hits++;
-          maxMiss = Math.max(maxMiss, run);
-          run = 0;
-        } else {
-          run++;
-        }
-      });
-      maxMiss = Math.max(maxMiss, run);
-      return {currentMiss, maxMiss: historicalMaxMiss ?? maxMiss, hits, settled: settledGroups.length};
-    }
-    function gameSection(source, game, title) {
-      const rows = gameRows(source, game).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')) || Number(b.issue || 0) - Number(a.issue || 0));
-      const pendingOrLatest = rows.find(row => row.status === 'pending') || rows[0];
-      const targetRows = pendingOrLatest ? rows.filter(row => Number(row.issue) === Number(pendingOrLatest.issue) && String(row.displayYear || '') === String(pendingOrLatest.displayYear || '') && String(row.targetDate || '') === String(pendingOrLatest.targetDate || '')) : [];
-      const ensemble = targetRows.find(row => row.algorithmId === 'ensemble');
-      const algorithms = targetRows.filter(row => row.algorithmId !== 'ensemble');
-      const ensembleHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, ensemble ? [ensemble] : []);
-      const algorithmHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, algorithms);
-      const ensembleStats = gameMissStats(rows.filter(row => row.algorithmId === 'ensemble'), ensembleHistoricalMaxMiss);
-      const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble'), algorithmHistoricalMaxMiss);
-      return `<section class="panel full">
-        <h2>${title}</h2>
-        <div class="grid">
-          <section class="panel wide"><h2>&#32508;&#21512;&#20027;&#25512;</h2>${ensemble ? `<p>${esc(ensemble.targetDate || '')} ${esc(ensemble.displayYear || '')} / ${esc(ensemble.issue || '')}</p>${numberChips(ensemble.numbers)}` : '<p class="muted">&#26242;&#26080;&#25512;&#33616;</p>'}</section>
-          <section class="panel"><h2>&#32508;&#21512;&#20027;&#25512;&#25112;&#32489;</h2><p>&#24403;&#21069;&#36951;&#33853;&#65306;${ensembleStats.currentMiss}</p><p>&#21382;&#21490;&#26368;&#22823;&#36951;&#33853;&#65306;${ensembleStats.maxMiss}</p><p>&#24050;&#32467;&#31639;&#65306;${ensembleStats.settled}&#65292;&#21629;&#20013;&#65306;${ensembleStats.hits}</p></section>
-          <section class="panel"><h2>11&#31639;&#27861;&#25972;&#20307;&#25112;&#32489;</h2><p>&#24403;&#21069;&#36951;&#33853;&#65306;${algorithmStats.currentMiss}</p><p>&#21382;&#21490;&#26368;&#22823;&#36951;&#33853;&#65306;${algorithmStats.maxMiss}</p><p>&#24050;&#32467;&#31639;&#65306;${algorithmStats.settled}&#65292;&#21629;&#20013;&#65306;${algorithmStats.hits}</p></section>
-        </div>
-        ${recommendationSummaryHtml(algorithms, game)}
-        <h3>11&#31181;&#31639;&#27861;&#25512;&#33616;</h3>
-        <table><thead><tr><th>&#31639;&#27861;</th><th>&#25512;&#33616;</th><th>&#30446;&#26631;&#26399;&#21495;</th><th>&#29366;&#24577;</th></tr></thead><tbody>${algorithms.map(row => `<tr><td>${esc(row.algorithmName)}</td><td>${numberChips(row.numbers)}</td><td>${esc(row.targetDate || '')}<br>${esc(row.displayYear || '')} / ${esc(row.issue || '')}</td><td>${row.status === 'settled' ? (row.hit ? '&#21629;&#20013;' : '&#26410;&#20013;') : '&#24453;&#24320;&#22870;'}</td></tr>`).join('')}</tbody></table>
-        ${recommendationHistoryHtml(rows)}
-      </section>`;
-    }
     function specialPoolReviewGroups(rows, pool, limit = 10) {
       const poolSet = new Set(normalizedPool(pool));
       return rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit).map(row => {
@@ -2655,15 +2257,6 @@ function New-DashboardHtml {
     }
     function singleDrawBaseline(pickCount, totalCount = 49) {
       return totalCount ? Math.round(Number(pickCount || 0) / totalCount * 10000) / 100 : 0;
-    }
-    function renderGames() {
-      const selected = document.getElementById('game-source')?.value || 'am';
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="game-source">${sourceOptions(selected)}</select></label></div></section>
-        ${gameSection(selected, 'three-hit-three', '&#19977;&#20013;&#19977;&#25512;&#33616;')}
-        ${gameSection(selected, 'special-number', '&#29305;&#21035;&#21495;&#25512;&#33616;')}
-      </div>`;
-      document.getElementById('game-source').addEventListener('change', renderGames);
     }
     function yearPoolHistoryTable(history) {
       const rows = (Array.isArray(history) ? history : []).slice(0, 10);
@@ -2930,7 +2523,6 @@ function New-DashboardHtml {
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
     let recordsDataPromise = null;
-    let gamePredictionsPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
     function cacheBustUrl(src) {
@@ -2974,16 +2566,6 @@ function New-DashboardHtml {
       }
       return recordsDataPromise;
     }
-    async function ensureGamePredictionsData() {
-      if (gamePredictions?.items?.length) return gamePredictions;
-      if (!gamePredictionsPromise) {
-        gamePredictionsPromise = loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__').then(data => {
-          gamePredictions = data || {items: []};
-          return gamePredictions;
-        });
-      }
-      return gamePredictionsPromise;
-    }
     async function ensureWindow5Data() {
       if (window5State?.items?.length) return window5State;
       if (!window5Promise) {
@@ -3005,10 +2587,6 @@ function New-DashboardHtml {
       return threeCompoundPromise;
     }
     const tabDataLoaders = {
-      games: async () => {
-        await ensureRecordsData();
-        gamePredictions = await ensureGamePredictionsData();
-      },
       window5: async () => {
         window5State = await ensureWindow5Data();
       },
@@ -3024,7 +2602,6 @@ function New-DashboardHtml {
     };
     const renderers = {
       overview: renderOverview,
-      games: renderGames,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       patternWatch: renderPatternWatch,
@@ -3056,7 +2633,7 @@ function New-DashboardHtml {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
       generatedPredictions = data.predictions || {next: [], sanzhong: []};
-      switchTab('games');
+      switchTab('window5');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });
@@ -3161,23 +2738,6 @@ $predictions = Invoke-Profiled 'generated-predictions' {
 Invoke-Profiled 'write-predictions-json' {
     [IO.File]::WriteAllText($predictionsPath, ($predictions | ConvertTo-Json -Depth 10 -Compress), $Utf8NoBom)
 } | Out-Null
-$gamePredictionsPath = Join-Path $dataDir 'game-predictions.json'
-$existingGameItems = @()
-if (Test-Path -LiteralPath $gamePredictionsPath) {
-    try {
-        $existingGameData = Get-Content -LiteralPath $gamePredictionsPath -Raw -Encoding UTF8 | ConvertFrom-Json
-        $existingGameItems = @($existingGameData.items | Where-Object { $_.algorithmId -ne 'mirofish-sandbox' })
-    }
-    catch {
-        $existingGameItems = @()
-    }
-}
-$gamePredictions = Invoke-Profiled 'game-predictions' {
-    return New-GamePredictions -Records $deduped -Existing $existingGameItems
-}
-Invoke-Profiled 'write-game-predictions-json' {
-    Write-DataJsonAndJs -JsonPath $gamePredictionsPath -Data $gamePredictions -GlobalName '__GAME_PREDICTIONS__' -Depth 10
-} | Out-Null
 $dashboardSummaryPath = Join-Path $dataDir 'dashboard-summary.json'
 $dashboardSummary = Invoke-Profiled 'dashboard-summary' {
     return New-DashboardSummary -Summary $summary -Records $deduped -Predictions $predictions
@@ -3197,7 +2757,7 @@ Invoke-Profiled 'write-window5-json' {
     Write-DataJsonAndJs -JsonPath $window5Path -Data $window5 -GlobalName '__WINDOW5_STATE__' -Depth 8
 } | Out-Null
 $threeCompoundPath = Join-Path $dataDir 'three-compound-state.json'
-$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; games = $gamePredictions; window5 = $window5; threeCompound = @{ items = @() } }
+$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; window5 = $window5; threeCompound = @{ items = @() } }
 $jsonPath = Join-Path $dataDir 'records.json'
 $json = Invoke-Profiled 'records-json-serialize' {
     return $payload | ConvertTo-Json -Depth 10 -Compress

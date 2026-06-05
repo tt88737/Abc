@@ -91,128 +91,6 @@ $hkSample = @"
 
 $dataDir = Join-Path $outDir 'data'
 New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
-$existingGame = [pscustomobject]@{
-    items = @(
-        [pscustomobject]@{
-            id = 'test-three-hit'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'three-hit-three'
-            gameName = 'three-hit-three'
-            algorithmId = 'greedy'
-            algorithmName = 'greedy'
-            year = 2025
-            displayYear = '2026'
-            issue = 55
-            targetDate = '2026-05-25'
-            numbers = @('12', '23', '37')
-            createdAt = '2026-05-24 21:45:00'
-            status = 'pending'
-        },
-        [pscustomobject]@{
-            id = 'test-special-hit'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'special-number'
-            gameName = 'special-number'
-            algorithmId = 'greedy'
-            algorithmName = 'greedy'
-            year = 2025
-            displayYear = '2026'
-            issue = 55
-            targetDate = '2026-05-25'
-            numbers = @('18')
-            createdAt = '2026-05-24 21:45:00'
-            status = 'pending'
-        },
-        [pscustomobject]@{
-            id = 'test-special-stale-wrong-hit'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'special-number'
-            gameName = 'special-number'
-            algorithmId = 'backtracking'
-            algorithmName = 'backtracking'
-            year = 2025
-            displayYear = '2026'
-            issue = 55
-            targetDate = '2026-05-25'
-            numbers = @('03')
-            createdAt = '2026-05-24 21:45:00'
-            status = 'settled'
-            hit = $true
-            actualDate = '2026-05-25'
-            actualIssue = 55
-            actualNumbers = @('18')
-        },
-        [pscustomobject]@{
-            id = 'test-hk-shifted-target-date'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'special-number'
-            gameName = 'special-number'
-            algorithmId = 'monte-carlo'
-            algorithmName = 'monte-carlo'
-            year = 2025
-            displayYear = '2026'
-            issue = 55
-            targetDate = '2026-05-26'
-            numbers = @('18')
-            createdAt = '2026-05-25 21:45:00'
-            status = 'pending'
-        },
-        [pscustomobject]@{
-            id = 'test-hk-future-issue-no-current-draw'
-            source = 'hk'
-            sourceName = 'hk'
-            game = 'special-number'
-            gameName = 'special-number'
-            algorithmId = 'particle-swarm'
-            algorithmName = 'particle-swarm'
-            year = 2025
-            displayYear = '2026'
-            issue = 57
-            targetDate = '2026-05-28'
-            numbers = @('18')
-            createdAt = '2026-05-26 21:45:00'
-            status = 'pending'
-        },
-        [pscustomobject]@{
-            id = 'partial-am-three-hit'
-            source = 'am'
-            sourceName = 'am'
-            game = 'three-hit-three'
-            gameName = 'three-hit-three'
-            algorithmId = 'greedy'
-            algorithmName = 'greedy'
-            year = 2025
-            displayYear = '2026'
-            issue = 135
-            targetDate = '2026-05-15'
-            numbers = @('01', '02', '03')
-            createdAt = '2026-05-14 21:45:00'
-            status = 'pending'
-        },
-        [pscustomobject]@{
-            id = 'test-future-am-three-hit'
-            source = 'am'
-            sourceName = 'am'
-            game = 'three-hit-three'
-            gameName = 'three-hit-three'
-            algorithmId = 'ensemble'
-            algorithmName = 'ensemble'
-            year = 2025
-            displayYear = '2026'
-            issue = 145
-            targetDate = '2026-05-25'
-            numbers = @('01', '02', '03')
-            createdAt = '2026-05-24 21:45:00'
-            status = 'pending'
-        }
-    )
-}
-[IO.File]::WriteAllText((Join-Path $dataDir 'game-predictions.json'), ($existingGame | ConvertTo-Json -Depth 8), $utf8NoBom)
-
 try {
     & $scriptPath -RootDir $outDir | Out-Null
     $firstWindowStatePath = Join-Path $dataDir 'window5-state.json'
@@ -273,8 +151,11 @@ try {
     if ($dashboard.Contains('data-tab="betting"') -or $dashboard.Contains('function renderBetting') -or $dashboard.Contains('function bettingRecommendationAnalysis') -or $dashboard.Contains('__BETTING_SNAPSHOTS__') -or $dashboard.Contains('ensureBettingSnapshots')) {
         throw 'dashboard should not expose betting recommendation module or betting snapshot loaders'
     }
-    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="games"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose overview, review, 5-window, three-hit 5-window, advanced analysis, manual fetch, and daily tabs'
+    if ($dashboard.Contains('data-tab="games"') -or $dashboard.Contains('function renderGames') -or $dashboard.Contains('function gameSection') -or $dashboard.Contains('function recommendationSummary') -or $dashboard.Contains('__GAME_PREDICTIONS__') -or $dashboard.Contains('ensureGamePredictionsData')) {
+        throw 'dashboard should not expose recommendation review module or game prediction loaders'
+    }
+    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose overview, 5-window, three-hit 5-window, advanced analysis, manual fetch, and daily tabs'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
@@ -364,64 +245,11 @@ try {
     if ($szKeys.Count -ne @($szKeys | Select-Object -Unique).Count) {
         throw 'sanzhong predictions should be unique by source/displayYear/issue'
     }
-    $gameFile = Join-Path $outDir 'data/game-predictions.json'
-    if (-not (Test-Path -LiteralPath $gameFile)) {
-        throw 'game-predictions.json was not created'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/game-predictions.json')) {
+        throw 'game-predictions.json should not be generated after recommendation review removal'
     }
-    $gameData = Get-Content -LiteralPath $gameFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    foreach ($source in @('am', 'hk')) {
-        foreach ($game in @('three-hit-three', 'special-number')) {
-            $latestTarget = @($gameData.items |
-                Where-Object { $_.source -eq $source -and $_.game -eq $game -and $_.id -notlike 'test-*' } |
-                Sort-Object @{ Expression = 'targetDate'; Descending = $true }, @{ Expression = 'displayYear'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } |
-                Select-Object -First 1)
-            if ($latestTarget.Count -eq 0) {
-                throw "expected latest generated target for $source $game"
-            }
-            $rows = @($gameData.items | Where-Object {
-                $_.source -eq $source -and
-                $_.game -eq $game -and
-                $_.targetDate -eq $latestTarget[0].targetDate -and
-                $_.displayYear -eq $latestTarget[0].displayYear -and
-                [int]$_.issue -eq [int]$latestTarget[0].issue
-            })
-            if ($rows.Count -ne 12) {
-                throw "expected 12 recommendation rows for $source $game"
-            }
-            if (@($rows | Where-Object { $_.algorithmId -eq 'ensemble' }).Count -ne 1) {
-                throw "expected ensemble recommendation for $source $game"
-            }
-            if (@($rows | Where-Object { $_.algorithmId -ne 'ensemble' }).Count -ne 11) {
-                throw "expected eleven algorithm recommendations for $source $game"
-            }
-            if (@($rows | Where-Object { $_.algorithmId -eq 'mirofish-sandbox' }).Count -ne 0) {
-                throw "MiroFish sandbox recommendations should not be generated for $source $game"
-            }
-        }
-    }
-    $settledThree = @($gameData.items | Where-Object { $_.id -eq 'test-three-hit' })[0]
-    if ($settledThree.status -ne 'settled' -or -not $settledThree.hit) {
-        throw 'three-hit-three pending row should settle as hit using first six numbers'
-    }
-    $settledSpecial = @($gameData.items | Where-Object { $_.id -eq 'test-special-hit' })[0]
-    if ($settledSpecial.status -ne 'settled' -or -not $settledSpecial.hit) {
-        throw 'special-number pending row should settle as hit using seventh number'
-    }
-    $staleSpecial = @($gameData.items | Where-Object { $_.id -eq 'test-special-stale-wrong-hit' })[0]
-    if ($staleSpecial.status -ne 'settled' -or $staleSpecial.hit) {
-        throw 'settled special-number rows should be recalculated when stored hit conflicts with actual special number'
-    }
-    $shiftedTarget = @($gameData.items | Where-Object { $_.id -eq 'test-hk-shifted-target-date' })[0]
-    if ($shiftedTarget.status -ne 'settled' -or -not $shiftedTarget.hit -or $shiftedTarget.actualDate -ne '2026-05-25') {
-        throw 'hk shifted target date should settle by issue and display year when exact target date is absent'
-    }
-    $futureHkIssue = @($gameData.items | Where-Object { $_.id -eq 'test-hk-future-issue-no-current-draw' })[0]
-    if ($futureHkIssue.status -ne 'pending') {
-        throw 'hk future issue should not settle against prior-year same issue'
-    }
-    $futureThree = @($gameData.items | Where-Object { $_.id -eq 'test-future-am-three-hit' })[0]
-    if ($futureThree.status -ne 'pending') {
-        throw 'future dated am 145 prediction should remain pending until exact target date is drawn'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/game-predictions.js')) {
+        throw 'game-predictions.js should not be generated after recommendation review removal'
     }
     if (Test-Path -LiteralPath (Join-Path $outDir 'data/prediction-observations.json')) {
         throw 'prediction-observations.json should not be generated after forecast removal'
@@ -441,47 +269,11 @@ try {
     if (-not $dashboard.Contains('normalizeNumberGroup(nums).map')) {
         throw 'number chip renderer should use normalized number groups'
     }
-    if (-not $dashboard.Contains('function recommendationSummary(rows)')) {
-        throw 'dashboard should summarize duplicate algorithm recommendations'
+    if ($dashboard.Contains('&#25512;&#33616;&#27719;&#24635;') -or $dashboard.Contains('function recommendationCopyText(summaryRows, game)')) {
+        throw 'recommendation review summary should not be emitted'
     }
-    if (-not $dashboard.Contains('&#25512;&#33616;&#27719;&#24635;')) {
-        throw 'game sections should render recommendation summary'
-    }
-    if (-not $dashboard.Contains('sort((a, b) => Number(a) - Number(b))')) {
-        throw 'recommendation summary should ignore number order'
-    }
-    if (-not $dashboard.Contains('function recommendationCopyText(summaryRows, game)')) {
-        throw 'dashboard should build copy text for recommendation summary'
-    }
-    if (-not $dashboard.Contains("game === 'special-number'")) {
-        throw 'special-number copy text should use comma separated single numbers'
-    }
-    if (-not $dashboard.Contains('api.qrserver.com/v1/create-qr-code')) {
-        throw 'dashboard should render qr code for recommendation summary copy text'
-    }
-    if (-not $dashboard.Contains('&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;')) {
-        throw 'dashboard should label the WeChat scan copy area'
-    }
-    if (-not $dashboard.Contains('function recommendationHistoryHtml(rows)')) {
-        throw 'dashboard should render grouped recommendation history'
-    }
-    if (-not $dashboard.Contains("const historyRows = rows.filter(row => row.algorithmId !== 'ensemble')")) {
-        throw 'recommendation history should exclude ensemble rows before grouping'
-    }
-    if (-not $dashboard.Contains('<details class="history-group"')) {
-        throw 'recommendation history should use collapsible groups'
-    }
-    if (-not $dashboard.Contains("groups.slice(0, 30).map")) {
-        throw 'recommendation history should limit grouped history by issue group'
-    }
-    if (-not $dashboard.Contains('function historyGroupDate(group)')) {
-        throw 'recommendation history should display actual draw date for settled groups'
-    }
-    if (-not $dashboard.Contains('&#32508;&#21512;&#20027;&#25512;&#25112;&#32489;')) {
-        throw 'dashboard should label ensemble-only stats clearly'
-    }
-    if (-not $dashboard.Contains('11&#31639;&#27861;&#25972;&#20307;&#25112;&#32489;')) {
-        throw 'dashboard should render aggregate stats for eleven algorithms'
+    if ($dashboard.Contains('api.qrserver.com/v1/create-qr-code') -or $dashboard.Contains('&#24494;&#20449;&#25195;&#30721;&#22797;&#21046;') -or $dashboard.Contains('function recommendationHistoryHtml(rows)') -or $dashboard.Contains('&#32508;&#21512;&#20027;&#25512;&#25112;&#32489;') -or $dashboard.Contains('11&#31639;&#27861;&#25972;&#20307;&#25112;&#32489;')) {
+        throw 'recommendation review detail UI should not be emitted'
     }
     if (-not $dashboard.Contains('function renderWindow5()')) {
         throw 'dashboard should expose a five-issue window coverage renderer'
@@ -763,33 +555,14 @@ try {
     if ($dashboard.Contains('forecastPredictions = data.forecasts') -or $dashboard.Contains('function forecastBacktestHtml(row)') -or $dashboard.Contains('function forecastStrategyPoolHtml(row)')) {
         throw 'forecast page helpers should not be emitted'
     }
-    $gameSectionBody = [regex]::Match($dashboard, 'function gameSection\(source, game, title\) \{[\s\S]*?function renderGames').Value
-    if ($dashboard.Contains('mirofish-sandbox') -or $dashboard.Contains('MiroFish') -or $gameSectionBody.Contains('MiroFish &#27801;&#30424;&#25512;&#28436;')) {
+    if ($dashboard.Contains('mirofish-sandbox') -or $dashboard.Contains('MiroFish')) {
         throw 'dashboard should not include MiroFish sandbox logic or data'
     }
-    if (-not $dashboard.Contains("targetRows.filter(row => row.algorithmId !== 'ensemble')")) {
-        throw 'dashboard should calculate eleven algorithm stats from non-ensemble rows'
+    if ($dashboard.Contains("targetRows.filter(row => row.algorithmId !== 'ensemble')") -or $dashboard.Contains('function gameGroupStats(rows, historicalMaxMiss = null)')) {
+        throw 'eleven algorithm recommendation review stats should not be emitted'
     }
-    if (-not $dashboard.Contains('function gameGroupStats(rows, historicalMaxMiss = null)')) {
-        throw 'dashboard should calculate grouped stats for eleven algorithms'
-    }
-    if (-not $dashboard.Contains('function historicalMaxMissForRecommendations(source, game, recommendations)')) {
-        throw 'dashboard should calculate historical max miss from all source records'
-    }
-    if (-not $dashboard.Contains("const ensembleHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, ensemble ? [ensemble] : [])")) {
-        throw 'ensemble max miss should be backtested against all historical records'
-    }
-    if (-not $dashboard.Contains('const algorithmHistoricalMaxMiss = historicalMaxMissForRecommendations(source, game, algorithms)')) {
-        throw 'algorithm max miss should be backtested against all historical records'
-    }
-    if (-not $dashboard.Contains("maxMiss: historicalMaxMiss ??")) {
-        throw 'stats cards should use historical max miss when available'
-    }
-    if (-not $dashboard.Contains("const algorithmStats = gameGroupStats(rows.filter(row => row.algorithmId !== 'ensemble'), algorithmHistoricalMaxMiss)")) {
-        throw 'algorithm aggregate stats should use issue-level grouped non-ensemble rows'
-    }
-    if (-not $dashboard.Contains('hit: group.some(row => row.hit)')) {
-        throw 'grouped algorithm stats should count an issue as hit when any algorithm hits'
+    if ($dashboard.Contains('function historicalMaxMissForRecommendations(source, game, recommendations)') -or $dashboard.Contains('historicalMaxMiss') -or $dashboard.Contains('hit: group.some(row => row.hit)')) {
+        throw 'recommendation review historical miss stats should not be emitted'
     }
     $apiPath = Join-Path $PSScriptRoot 'api/manual-fetch.js'
     if (-not (Test-Path -LiteralPath $apiPath)) {
@@ -859,7 +632,6 @@ const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
   .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
   .replace(/document.getElementById\('pattern-source'\)\.addEventListener\('change', renderPatternWatch\);/g, '')
   .replace(/document.getElementById\('daily-source'\)\.addEventListener\('change', renderDaily\);/g, '')
-  .replace(/document.getElementById\('game-source'\)\.addEventListener\('change', renderGames\);/g, '')
   .replace(/renderOverview\(\);/, "renderOverview(); fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
 global.__DATA__ = json;
 global.location = { protocol: 'file:' };

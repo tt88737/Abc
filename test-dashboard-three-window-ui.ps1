@@ -13,8 +13,12 @@ if ($html -match 'data-tab="betting"' -or $html -match '&#19979;&#27880;&#25512;
     throw 'betting recommendation module should be removed from the dashboard'
 }
 
-if ($html -notmatch '<button class="active" data-tab="games">') {
-    throw 'dashboard should open on recommendation review after removing betting recommendations'
+if ($html -match 'data-tab="games"' -or $html -match 'function renderGames' -or $html -match 'function gameSection' -or $html -match 'function recommendationSummary' -or $html -match '__GAME_PREDICTIONS__' -or $html -match 'ensureGamePredictionsData') {
+    throw 'recommendation review module should be removed from the dashboard'
+}
+
+if ($html -notmatch '<button class="active" data-tab="window5">') {
+    throw 'dashboard should open on five-issue window after removing recommendation review'
 }
 
 if ($html -notmatch 'function recentWindowStats') {
