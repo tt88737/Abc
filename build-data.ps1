@@ -926,8 +926,11 @@ function Get-SpecialSnapshotRows {
     $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
     foreach ($row in $rows) {
         $pool = @(Complete-SpecialPool8 -Pool (Get-PoolSnapshotForIssue -PoolItem ([pscustomobject]@{ pool = $Window5Item.yearPool; windows = $Window5Item.windows }) -Issue ([int]$row.issue)) -SourceRows $SourceRows)
+        $primaryPool = @($pool | Select-Object -First 1)
+        $guardPool = @($pool | Select-Object -First 8)
         $draw = @(([int]$row.balls[6].numberText).ToString('00'))
-        $matched = @($draw | Where-Object { $pool -contains $_ })
+        $matched = @($draw | Where-Object { $primaryPool -contains $_ })
+        $guardMatched = @($draw | Where-Object { $guardPool -contains $_ })
         [pscustomobject]@{
             id = ('{0}|special-number|{1}|{2}' -f $row.source, $row.date, $row.issue)
             source = $row.source
@@ -937,10 +940,15 @@ function Get-SpecialSnapshotRows {
             name = 'special-number-8-pool'
             pool = $pool
             poolSize = $pool.Count
+            primaryPool = $primaryPool
+            guardPool = $guardPool
             generatedAt = $GeneratedAt
             status = 'settled'
             draw = $draw
             matched = $matched
+            guardMatched = $guardMatched
+            primaryHit = $matched.Count -gt 0
+            guardHit = $guardMatched.Count -gt 0
             hit = $matched.Count -gt 0
         }
     }
@@ -952,8 +960,11 @@ function Get-ThreeSnapshotRows {
     $rows = @($SourceRows | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First $Limit)
     foreach ($row in $rows) {
         $pool = @(Get-PoolSnapshotForIssue -PoolItem $PoolItem -Issue ([int]$row.issue))
+        $guardPool = @($pool | Select-Object -First 5)
+        $primaryPool = @($guardPool | Select-Object -First 3)
         $draw = @($row.balls | Select-Object -First 6 | ForEach-Object { ([int]$_.numberText).ToString('00') })
-        $matched = @($draw | Where-Object { $pool -contains $_ })
+        $matched = @($draw | Where-Object { $primaryPool -contains $_ })
+        $guardMatched = @($draw | Where-Object { $guardPool -contains $_ })
         [pscustomobject]@{
             id = ('{0}|three-hit-three|{1}|{2}' -f $row.source, $row.date, $row.issue)
             source = $row.source
@@ -963,10 +974,15 @@ function Get-ThreeSnapshotRows {
             name = 'three-hit-three-8-pool'
             pool = $pool
             poolSize = $pool.Count
+            primaryPool = $primaryPool
+            guardPool = $guardPool
             generatedAt = $GeneratedAt
             status = 'settled'
             draw = $draw
             matched = $matched
+            guardMatched = $guardMatched
+            primaryHit = $matched.Count -ge 3
+            guardHit = $guardMatched.Count -ge 3
             hit = $matched.Count -ge 3
         }
     }
@@ -2804,6 +2820,8 @@ function New-DashboardHtml {
         game,
         name,
         pool: snapshotPool,
+        primaryPool: game === 'three-hit-three' ? snapshotPool.slice(0, 3) : snapshotPool.slice(0, 1),
+        guardPool: game === 'three-hit-three' ? snapshotPool.slice(0, 5) : snapshotPool.slice(0, 8),
         poolSize: snapshotPool.length,
         score,
         level: level?.code || 'watch',
@@ -2820,14 +2838,18 @@ function New-DashboardHtml {
       const record = asArray(rows).find(row => Number(row.issue || 0) === Number(snapshot?.issue || 0) && (!snapshot?.date || String(row.date || '') === String(snapshot.date || '')));
       if (!record) return {...snapshot, status: 'pending', draw: [], matched: [], hit: false};
       const poolSet = new Set(normalizedPool(snapshot.pool));
+      const primarySet = new Set(normalizedPool(snapshot.primaryPool || snapshot.pool));
+      const guardSet = new Set(normalizedPool(snapshot.guardPool || snapshot.pool));
       if (snapshot.game === 'three-hit-three') {
         const actualNumbers = regularNums(record);
-        const matched = actualNumbers.filter(num => poolSet.has(num));
-        return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, hit: matched.length >= 3};
+        const matched = actualNumbers.filter(num => primarySet.has(num));
+        const guardMatched = actualNumbers.filter(num => guardSet.has(num));
+        return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, guardMatched, primaryHit: matched.length >= 3, guardHit: guardMatched.length >= 3, hit: matched.length >= 3};
       }
       const actualNumbers = [specialNum(record)].filter(Boolean);
-      const matched = actualNumbers.filter(num => poolSet.has(num));
-      return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, hit: matched.length > 0};
+      const matched = actualNumbers.filter(num => primarySet.has(num));
+      const guardMatched = actualNumbers.filter(num => guardSet.has(num));
+      return {...snapshot, status: 'settled', date: record.date || snapshot.date || '', issue: record.issue || snapshot.issue || '', draw: actualNumbers, matched, guardMatched, primaryHit: matched.length > 0, guardHit: guardMatched.length > 0, hit: matched.length > 0};
     }
     function bettingSnapshotReviewGroups(rows, item, limit = 10) {
       const sortedRows = rows.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0)).slice(0, limit);
@@ -2840,7 +2862,7 @@ function New-DashboardHtml {
         const actualNumbers = settled.draw || [];
         const currentMatched = actualNumbers.filter(num => currentSet.has(num));
         const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
-        return {date: row.date || '', issue: row.issue || '', snapshot, hit: settled.hit, currentHit, actualNumbers, poolSnapshot: snapshot.pool, matched: settled.matched, currentMatched};
+        return {date: row.date || '', issue: row.issue || '', snapshot: settled, hit: settled.hit, guardHit: settled.guardHit, currentHit, actualNumbers, poolSnapshot: snapshot.pool, matched: settled.matched, guardMatched: settled.guardMatched, currentMatched};
       });
     }
     function persistedBettingSnapshotReviewGroups(item, limit = 10) {
@@ -2854,7 +2876,7 @@ function New-DashboardHtml {
           const actualNumbers = normalizedPool(snapshot.draw || []);
           const currentMatched = actualNumbers.filter(num => currentSet.has(num));
           const currentHit = item?.game === 'three-hit-three' ? currentMatched.length >= 3 : currentMatched.length > 0;
-          return {date: snapshot.date || '', issue: snapshot.issue || '', snapshot, hit: !!snapshot.hit, currentHit, actualNumbers, poolSnapshot: normalizedPool(snapshot.pool || []), matched: normalizedPool(snapshot.matched || []), currentMatched};
+          return {date: snapshot.date || '', issue: snapshot.issue || '', snapshot, hit: !!snapshot.primaryHit, guardHit: !!snapshot.guardHit, currentHit, actualNumbers, poolSnapshot: normalizedPool(snapshot.pool || []), matched: normalizedPool(snapshot.matched || []), guardMatched: normalizedPool(snapshot.guardMatched || []), currentMatched};
         });
     }
     function bettingPoolReviewStats(groups) {
@@ -2930,31 +2952,35 @@ function New-DashboardHtml {
         maxMiss: Number(threePool.maxMiss ?? three.stats?.maxMiss ?? 0)
       };
       const latest = sourceSummary(source).latest || special.latest || three.latest || {};
+      const specialGuardPool = completeSpecialPool8(special.yearPool, sourceRows);
+      const threeGuardPool = normalizedPool(threePool.pool || three.numberPool || []).slice(0, 5);
       const seedItems = [
-        {source, name: '&#29305;&#21035;&#21495;8&#30721;&#27744;', game: 'special-number', pool: special.yearPool, poolItem: {pool: special.yearPool, windows: special.yearWindows}, stats: specialStats, baseline: specialBaseline},
-        {source, name: '&#19977;&#20013;&#19977;8&#30721;&#27744;', game: 'three-hit-three', pool: threePool.pool || three.numberPool || [], poolItem: threePool, stats: threeStats, baseline: randomWindowBaseline(8, 49, 5)}
+        {source, name: '&#29305;&#21035;&#21495;&#20027;&#25512;1&#30721;', guardLabel: '&#38450;8&#30721;', game: 'special-number', pool: specialGuardPool, poolItem: {pool: specialGuardPool, windows: special.yearWindows}, stats: specialStats, baseline: singleDrawBaseline(1, 49)},
+        {source, name: '&#19977;&#20013;&#19977;&#20027;&#25512;3&#30721;', guardLabel: '&#38450;5&#30721;', game: 'three-hit-three', pool: threeGuardPool, poolItem: {...threePool, pool: threeGuardPool}, stats: threeStats, baseline: randomWindowBaseline(3, 49, 5)}
       ];
       const items = seedItems.map(seed => {
         const draft = {...seed, score: 0, level: {code: 'watch', label: '&#35266;&#26395;'}, reasons: []};
         const persistedGroups = persistedBettingSnapshotReviewGroups(draft, 10);
         const snapshotReview = bettingPoolReviewStats(persistedGroups.length ? persistedGroups : bettingSnapshotReviewGroups(sourceRows, draft, 10));
-        return bettingRecommendationItem(source, latest, seed.name, seed.game, seed.pool, seed.stats, seed.baseline, snapshotReview, seed.poolItem);
+        return {...bettingRecommendationItem(source, latest, seed.name, seed.game, seed.pool, seed.stats, seed.baseline, snapshotReview, seed.poolItem), guardLabel: seed.guardLabel};
       });
       return {source, latest, items};
     }
     function bettingCard(item) {
-      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div>${numberChips(item.snapshot?.pool || item.pool || [])}<p>&#30446;&#26631;&#65306;${esc(item.snapshot?.date || '')} ${esc(item.snapshot?.issue || '')}&#26399;&#12288;&#20915;&#31574;&#20998;&#65306;${esc(item.score)}&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
+      const primaryPool = normalizedPool(item.snapshot?.primaryPool || []).length ? item.snapshot.primaryPool : (item.game === 'three-hit-three' ? normalizedPool(item.pool).slice(0, 3) : normalizedPool(item.pool).slice(0, 1));
+      const guardPool = normalizedPool(item.snapshot?.guardPool || []).length ? item.snapshot.guardPool : (item.game === 'three-hit-three' ? normalizedPool(item.pool).slice(0, 5) : normalizedPool(item.pool).slice(0, 8));
+      return `<section class="panel betting-card ${item.level.code}"><div class="betting-head"><h2>${item.name}</h2><span class="betting-level ${item.level.code}">${item.level.label}</span></div><p class="muted">&#20027;&#25512;</p>${numberChips(primaryPool)}<p class="muted">${item.guardLabel || '&#38450;&#30721;'}</p>${numberChips(guardPool)}<p>&#30446;&#26631;&#65306;${esc(item.snapshot?.date || '')} ${esc(item.snapshot?.issue || '')}&#26399;&#12288;&#20915;&#31574;&#20998;&#65306;${esc(item.score)}&#12288;&#38543;&#26426;&#22522;&#20934;&#65306;${esc(item.baseline)}%</p><ul class="betting-reasons">${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></section>`;
     }
     function bettingReviewTable(analysis) {
       const rows = analysis.items.flatMap(item => item.review.groups.map(group => ({name: item.name, ...group})));
-      return `<section class="panel full"><h2>&#26368;&#36817;&#25512;&#33616;&#24555;&#29031;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#25512;&#33616;&#24555;&#29031;&#32467;&#26524;</th><th>&#24403;&#21069;&#27744;&#22238;&#30475;</th><th>&#25512;&#33616;&#24555;&#29031;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.currentHit === undefined ? '-' : (row.currentHit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>')}</td><td>${numberChips(row.snapshot?.pool || row.poolSnapshot || [])}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
+      return `<section class="panel full"><h2>&#26368;&#36817;&#25512;&#33616;&#24555;&#29031;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#26085;&#26399;</th><th>&#26399;&#21495;</th><th>&#20027;&#25512;&#32467;&#26524;</th><th>&#38450;&#30721;&#32467;&#26524;</th><th>&#20027;&#25512;</th><th>&#38450;&#30721;</th><th>&#24320;&#22870;</th></tr></thead><tbody>${rows.slice(0, 20).map(row => `<tr><td>${row.name}</td><td>${esc(row.date)}</td><td>${esc(row.issue)}</td><td>${row.hit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${row.guardHit ? '<span class="result-hit">&#20013;</span>' : '<span class="result-miss">&#26410;&#20013;</span>'}</td><td>${numberChips(row.snapshot?.primaryPool || [])}</td><td>${numberChips(row.snapshot?.guardPool || row.poolSnapshot || [])}</td><td>${row.actualNumbers?.length ? numberChips(row.actualNumbers) : '-'}</td></tr>`).join('')}</tbody></table></div></section>`;
     }
     function renderBetting() {
       const selected = document.getElementById('betting-source')?.value || 'am';
       const analysis = bettingRecommendationAnalysis(selected);
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="betting-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel full"><h2>&#20170;&#26085;&#19979;&#27880;&#25512;&#33616;</h2><p class="muted">${esc(analysis.latest?.date || '')} ${esc(analysis.latest?.issue || '')}&#26399;&#65292;&#31561;&#32423;&#21482;&#20381;&#25454;&#21382;&#21490;&#28378;&#21160;&#34920;&#29616;&#12289;&#26368;&#36817;&#24320;&#22870;&#27744;&#22797;&#30424;&#21644;&#24403;&#21069;&#28431;&#31383;&#35745;&#31639;&#12290;</p></section>
+        <section class="panel full"><h2>&#35268;&#24459;&#36319;&#36394;&#19979;&#27880;&#21442;&#32771;</h2><p class="muted">${esc(analysis.latest?.date || '')} ${esc(analysis.latest?.issue || '')}&#26399;&#65292;&#20302;&#25104;&#26412;&#20027;&#25512;&#20026;&#19979;&#27880;&#21442;&#32771;&#65292;&#38450;&#30721;&#21482;&#29992;&#20110;&#35266;&#23519;&#35268;&#24459;&#26159;&#21542;&#20173;&#28982;&#26377;&#25928;&#12290;</p></section>
         ${analysis.items.map(bettingCard).join('')}
         ${bettingReviewTable(analysis)}
       </div>`;

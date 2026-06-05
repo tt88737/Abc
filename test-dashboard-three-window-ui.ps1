@@ -13,8 +13,8 @@ if ($html -notmatch 'data-tab="betting"' -or $html -notmatch '&#19979;&#27880;&#
     throw 'expected dashboard to expose betting recommendation as the first tab'
 }
 
-if ($html -notmatch 'function bettingRecommendationAnalysis' -or $html -notmatch 'function renderBetting' -or $html -notmatch '&#29305;&#21035;&#21495;8&#30721;&#27744;' -or $html -notmatch '&#19977;&#20013;&#19977;8&#30721;&#27744;') {
-    throw 'expected dashboard to render simplified betting recommendations for special and three-hit 8-number pools'
+if ($html -notmatch 'function bettingRecommendationAnalysis' -or $html -notmatch 'function renderBetting' -or $html -notmatch '&#29305;&#21035;&#21495;&#20027;&#25512;1&#30721;' -or $html -notmatch '&#38450;8&#30721;' -or $html -notmatch '&#19977;&#20013;&#19977;&#20027;&#25512;3&#30721;' -or $html -notmatch '&#38450;5&#30721;') {
+    throw 'expected dashboard to render low-cost primary picks and guard pools'
 }
 
 if ($html -notmatch '&#19979;&#27880;' -or $html -notmatch '&#23567;&#27880;' -or $html -notmatch '&#35266;&#26395;' -or $html -notmatch '&#26242;&#20572;') {
@@ -25,16 +25,16 @@ if ($html -notmatch 'function bettingPoolReviewStats' -or $html -notmatch 'speci
     throw 'expected betting review to recalculate hits from the displayed pools instead of old single-number recommendation rows'
 }
 
-if ($html -notmatch 'poolSnapshotForIssue' -or $html -notmatch 'currentHit' -or $html -notmatch '&#25512;&#33616;&#24555;&#29031;&#32467;&#26524;' -or $html -notmatch '&#24403;&#21069;&#27744;&#22238;&#30475;') {
-    throw 'expected betting pool review to separate effective historical pool results from current-pool hindsight'
+if ($html -notmatch 'poolSnapshotForIssue' -or $html -notmatch 'currentHit' -or $html -notmatch '&#20027;&#25512;&#32467;&#26524;' -or $html -notmatch '&#38450;&#30721;&#32467;&#26524;') {
+    throw 'expected betting pool review to separate primary and guard snapshot results'
 }
 
 if ($html -notmatch 'function bettingRecommendationSnapshot' -or $html -notmatch 'function settleBettingSnapshot' -or $html -notmatch 'bettingSnapshotReviewGroups') {
     throw 'expected betting recommendations to use immutable recommendation snapshots'
 }
 
-if ($html -notmatch 'snapshot\.pool' -or $html -notmatch 'matched\.length >= 3' -or $html -notmatch '&#25512;&#33616;&#24555;&#29031;&#32467;&#26524;' -or $html -notmatch '&#24403;&#21069;&#27744;&#22238;&#30475;') {
-    throw 'expected betting settlement to use snapshot pools while keeping current-pool hindsight separate'
+if ($html -notmatch 'snapshot\.primaryPool' -or $html -notmatch 'snapshot\.guardPool' -or $html -notmatch 'matched\.length >= 3' -or $html -notmatch '&#20027;&#25512;&#32467;&#26524;' -or $html -notmatch '&#38450;&#30721;&#32467;&#26524;') {
+    throw 'expected betting settlement to use primary and guard snapshot pools'
 }
 
 if ($html -notmatch 'function bettingRiskGate' -or $html -notmatch 'snapshotReview' -or $html -notmatch 'insufficient-sample' -or $html -notmatch 'weak-snapshot-review') {
