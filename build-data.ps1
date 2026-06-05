@@ -308,198 +308,6 @@ function Get-LatestRecord {
     return @($Records | Where-Object { $_.source -eq $Source } | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First 1)[0]
 }
 
-function Get-NextDrawDate {
-    param([object[]]$SourceRecords, [string]$Source)
-
-    $latest = @($SourceRecords | Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } | Select-Object -First 1)
-    if ($latest.Count -eq 0 -or [string]::IsNullOrWhiteSpace($latest[0].date)) { return '' }
-
-    $latestDate = [datetime]::ParseExact($latest[0].date, 'yyyy-MM-dd', $null)
-    if ($Source -ne 'hk') {
-        return $latestDate.AddDays(1).ToString('yyyy-MM-dd')
-    }
-
-    $recentDates = @(
-        $SourceRecords |
-            Sort-Object @{ Expression = 'date'; Descending = $true }, @{ Expression = 'issue'; Descending = $true } |
-            Select-Object -First 30 |
-            ForEach-Object {
-                if (-not [string]::IsNullOrWhiteSpace($_.date)) {
-                    [datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)
-                }
-            } |
-            Sort-Object
-    )
-    $intervalCounts = @{}
-    for ($i = 1; $i -lt $recentDates.Count; $i++) {
-        $days = [int]($recentDates[$i] - $recentDates[$i - 1]).TotalDays
-        if ($days -ge 2 -and $days -le 10) {
-            if (-not $intervalCounts.ContainsKey($days)) { $intervalCounts[$days] = 0 }
-            $intervalCounts[$days]++
-        }
-    }
-    if ($intervalCounts.Count -eq 0) { return '' }
-
-    $interval = @($intervalCounts.GetEnumerator() | Sort-Object @{ Expression = 'Value'; Descending = $true }, @{ Expression = { [int]$_.Key }; Descending = $false } | Select-Object -First 1)[0].Key
-    return $latestDate.AddDays([int]$interval).ToString('yyyy-MM-dd')
-}
-
-function Get-ComboKey {
-    param([string[]]$Nums)
-    return (($Nums | ForEach-Object { ([int]$_).ToString('00') } | Sort-Object { [int]$_ }) -join '-')
-}
-
-function Get-Choose3 {
-    param([string[]]$Nums)
-    $out = [System.Collections.ArrayList]::new()
-    for ($i = 0; $i -lt $Nums.Count - 2; $i++) {
-        for ($j = $i + 1; $j -lt $Nums.Count - 1; $j++) {
-            for ($k = $j + 1; $k -lt $Nums.Count; $k++) {
-                [void]$out.Add([string[]]@($Nums[$i], $Nums[$j], $Nums[$k]))
-            }
-        }
-    }
-    return @($out)
-}
-
-function Get-SeededNoise {
-    param([string]$Text)
-    $hash = [uint32]2166136261
-    foreach ($ch in $Text.ToCharArray()) {
-        $hash = $hash -bxor [uint32][int][char]$ch
-        $hash = [uint32](([uint64]$hash * 16777619) % 4294967296)
-    }
-    return [double]$hash / 4294967295
-}
-
-function Get-RecordIdentity {
-    param([object]$Record)
-    if ($null -eq $Record) { return '' }
-    return '{0}|{1}|{2}|{3}' -f $Record.source, $Record.year, $Record.issue, $Record.date
-}
-
-function Get-TargetIdentity {
-    param([string]$Source, [object]$Latest, [int]$Issue, [string]$TargetDate, [string]$DisplayYear)
-    $anchor = if (-not [string]::IsNullOrWhiteSpace($TargetDate)) { $TargetDate } elseif (-not [string]::IsNullOrWhiteSpace($DisplayYear)) { $DisplayYear } else { Get-RecordIdentity $Latest }
-    return '{0}|{1}|{2}|latest:{3}' -f $Source, $Issue, $anchor, (Get-RecordIdentity $Latest)
-}
-
-function Test-DateWithinDays {
-    param([string]$A, [string]$B, [int]$Days)
-    if ([string]::IsNullOrWhiteSpace($A) -or [string]::IsNullOrWhiteSpace($B)) { return $false }
-    try {
-        $dateA = [datetime]::ParseExact($A, 'yyyy-MM-dd', $null)
-        $dateB = [datetime]::ParseExact($B, 'yyyy-MM-dd', $null)
-        return [Math]::Abs(($dateA - $dateB).TotalDays) -le $Days
-    }
-    catch {
-        return $false
-    }
-}
-
-function Get-DisplayYearForTarget {
-    param([string]$TargetDate, [object]$Latest)
-    if (-not [string]::IsNullOrWhiteSpace($TargetDate) -and $TargetDate.Length -ge 4) { return $TargetDate.Substring(0, 4) }
-    if ($null -ne $Latest -and -not [string]::IsNullOrWhiteSpace([string]$Latest.date) -and ([string]$Latest.date).Length -ge 4) { return ([string]$Latest.date).Substring(0, 4) }
-    if ($null -ne $Latest -and -not [string]::IsNullOrWhiteSpace([string]$Latest.year)) { return [string]$Latest.year }
-    return ''
-}
-
-function Test-RecordMatchesGameItemYear {
-    param([object]$Record, [object]$Item)
-
-    if ($null -eq $Record -or $null -eq $Item) { return $false }
-
-    $itemYear = [string]$Item.year
-    if (-not [string]::IsNullOrWhiteSpace($itemYear) -and -not [string]::IsNullOrWhiteSpace([string]$Record.year) -and [int]$Record.year -eq [int]$itemYear) {
-        return $true
-    }
-
-    $displayYear = [string]$Item.displayYear
-    if (-not [string]::IsNullOrWhiteSpace($displayYear) -and -not [string]::IsNullOrWhiteSpace([string]$Record.date) -and ([string]$Record.date).Length -ge 4 -and ([string]$Record.date).Substring(0, 4) -eq $displayYear) {
-        return $true
-    }
-
-    return $false
-}
-
-function New-RecordLookup {
-    param([object[]]$Records)
-
-    $lookup = @{}
-    foreach ($record in @($Records)) {
-        $key = '{0}|{1}' -f $record.source, [int]$record.issue
-        if (-not $lookup.ContainsKey($key)) {
-            $lookup[$key] = New-Object 'System.Collections.Generic.List[object]'
-        }
-        $lookup[$key].Add($record) | Out-Null
-    }
-    return $lookup
-}
-
-function Get-ModelPickFromHistory {
-    param([object[]]$History, [hashtable]$Model, [int]$Limit = 7)
-
-    $stats = @{}
-    foreach ($n in 1..49) {
-        $key = $n.ToString('00')
-        $stats[$key] = [pscustomobject]@{ numberText = $key; hits = 0; recentHits = 0; miss = $History.Count }
-    }
-    $recentAvoid = @{}
-    foreach ($record in @($History | Select-Object -First 5)) {
-        foreach ($ball in $record.balls) { $recentAvoid[$ball.numberText] = $true }
-    }
-    for ($order = 0; $order -lt $History.Count; $order++) {
-        foreach ($ball in $History[$order].balls) {
-            $item = $stats[$ball.numberText]
-            if ($null -eq $item) { continue }
-            $item.hits++
-            $item.miss = [Math]::Min($item.miss, $order)
-            if ($order -lt 60) { $item.recentHits++ }
-        }
-    }
-    return @(
-        foreach ($item in $stats.Values) {
-            $avoid = if ($recentAvoid.ContainsKey($item.numberText)) { 1 } else { 0 }
-            $score = $item.hits * $Model.all + $item.recentHits * $Model.recent + [Math]::Min($item.miss, 180) * $Model.miss - $avoid * $Model.avoid * 40
-            [pscustomobject]@{ numberText = $item.numberText; zodiac = ''; color = 'blue'; score = $score }
-        }
-    ) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { [int]$_.numberText }; Descending = $false } | Select-Object -First $Limit
-}
-
-function Get-BestPredictionNumbers {
-    param([object[]]$SourceRecords)
-
-    $model = @{ id = 'balanced'; all = 0.45; recent = 0.65; miss = 0.45; avoid = 0.25 }
-    return @(Get-ModelPickFromHistory -History $SourceRecords -Model $model | ForEach-Object { $_.numberText })
-}
-
-function Get-NumberStats {
-    param([object[]]$SourceRecords, [string]$Game)
-
-    $stats = @{}
-    foreach ($n in 1..49) {
-        $key = $n.ToString('00')
-        $stats[$key] = [pscustomobject]@{ numberText = $key; hits = 0; recentHits = 0; miss = $SourceRecords.Count; transitions = 0 }
-    }
-
-    for ($i = 0; $i -lt $SourceRecords.Count; $i++) {
-        $nums = if ($Game -eq 'three-hit-three') {
-            @($SourceRecords[$i].balls | Select-Object -First 6 | ForEach-Object { $_.numberText })
-        } else {
-            @($SourceRecords[$i].balls[6].numberText)
-        }
-        foreach ($num in $nums) {
-            if (-not $stats.ContainsKey($num)) { continue }
-            $stats[$num].hits++
-            if ($i -lt 80) { $stats[$num].recentHits++ }
-            $stats[$num].miss = [Math]::Min($stats[$num].miss, $i)
-        }
-    }
-
-    return $stats
-}
-
 function Get-Window5RawWindows {
     param([object[]]$Rows)
 
@@ -755,327 +563,10 @@ function New-Window5State {
     return [pscustomobject]@{ generatedAt = $GeneratedAt; items = $items }
 }
 
-function Get-RecordComboKeys {
-    param([object]$Record)
-
-    $firstSix = @($Record.balls | Select-Object -First 6 | ForEach-Object { ([int]$_.numberText).ToString('00') } | Sort-Object { [int]$_ })
-    return @(Get-Choose3 -Nums $firstSix | ForEach-Object { Get-ComboKey -Nums $_ })
-}
-
-function Get-SanZhongPortfolioMetrics {
-    param([object[]]$SourceRecords, [object[]]$Recommendations)
-
-    $keys = @{}
-    foreach ($rec in @($Recommendations)) {
-        if ($rec.key) {
-            $keys[$rec.key] = $true
-        }
-        elseif ($rec.combo) {
-            $keys[(Get-ComboKey -Nums $rec.combo)] = $true
-        }
-    }
-
-    $hitOrders = New-Object 'System.Collections.Generic.List[int]'
-    for ($order = 0; $order -lt $SourceRecords.Count; $order++) {
-        $matched = $false
-        foreach ($key in (Get-RecordComboKeys -Record $SourceRecords[$order])) {
-            if ($keys.ContainsKey($key)) {
-                $matched = $true
-                break
-            }
-        }
-        if ($matched) { [void]$hitOrders.Add($order) }
-    }
-
-    $currentMiss = if ($hitOrders.Count -gt 0) { $hitOrders[0] } else { $SourceRecords.Count }
-    $maxMiss = $currentMiss
-    for ($i = 1; $i -lt $hitOrders.Count; $i++) {
-        $maxMiss = [Math]::Max($maxMiss, $hitOrders[$i] - $hitOrders[$i - 1] - 1)
-    }
-    if ($hitOrders.Count -eq 0) { $maxMiss = $SourceRecords.Count }
-
-    $coverage = {
-        param([int]$Limit)
-        $take = [Math]::Min($Limit, $SourceRecords.Count)
-        if ($take -le 0) { return 0 }
-        $hits = @($hitOrders | Where-Object { $_ -lt $take }).Count
-        return [Math]::Round($hits / $take * 100, 1)
-    }
-
-    return [pscustomobject]@{
-        currentMiss = $currentMiss
-        maxMiss = $maxMiss
-        hitCount = $hitOrders.Count
-        allCoverage = if ($SourceRecords.Count -gt 0) { [Math]::Round($hitOrders.Count / $SourceRecords.Count * 100, 1) } else { 0 }
-        coverage60 = & $coverage 60
-        coverage120 = & $coverage 120
-        coverage240 = & $coverage 240
-    }
-}
-
-function Get-SanZhongPortfolioMetricsFromOrders {
-    param([int]$TotalRecords, [object[]]$Recommendations)
-
-    $seenOrders = @{}
-    foreach ($rec in @($Recommendations)) {
-        foreach ($order in @($rec.hitOrders)) {
-            $seenOrders[[int]$order] = $true
-        }
-    }
-    $hitOrders = @($seenOrders.Keys | ForEach-Object { [int]$_ } | Sort-Object)
-
-    $currentMiss = if ($hitOrders.Count -gt 0) { $hitOrders[0] } else { $TotalRecords }
-    $maxMiss = $currentMiss
-    for ($i = 1; $i -lt $hitOrders.Count; $i++) {
-        $maxMiss = [Math]::Max($maxMiss, $hitOrders[$i] - $hitOrders[$i - 1] - 1)
-    }
-    if ($hitOrders.Count -eq 0) { $maxMiss = $TotalRecords }
-
-    $coverage = {
-        param([int]$Limit)
-        $take = [Math]::Min($Limit, $TotalRecords)
-        if ($take -le 0) { return 0 }
-        $hits = @($hitOrders | Where-Object { $_ -lt $take }).Count
-        return [Math]::Round($hits / $take * 100, 1)
-    }
-
-    return [pscustomobject]@{
-        currentMiss = $currentMiss
-        maxMiss = $maxMiss
-        hitCount = $hitOrders.Count
-        allCoverage = if ($TotalRecords -gt 0) { [Math]::Round($hitOrders.Count / $TotalRecords * 100, 1) } else { 0 }
-        coverage60 = & $coverage 60
-        coverage120 = & $coverage 120
-        coverage240 = & $coverage 240
-    }
-}
-
-function Get-SanZhongRollingBacktest {
-    param([object[]]$SourceRecords, [object[]]$Recommendations, [int]$Window = 120)
-
-    $keys = @{}
-    foreach ($rec in @($Recommendations)) { $keys[$rec.key] = $true }
-    $limit = [Math]::Min($Window, $SourceRecords.Count)
-    $tested = 0
-    $hits = 0
-    for ($target = 0; $target -lt $limit; $target++) {
-        $matched = $false
-        foreach ($key in (Get-RecordComboKeys -Record $SourceRecords[$target])) {
-            if ($keys.ContainsKey($key)) {
-                $matched = $true
-                break
-            }
-        }
-        $tested++
-        if ($matched) { $hits++ }
-    }
-
-    return [pscustomobject]@{
-        tested = $tested
-        hits = $hits
-        hitRate = if ($tested -gt 0) { [Math]::Round($hits / $tested * 100, 1) } else { 0 }
-        window = $Window
-        mode = 'current-portfolio-window'
-    }
-}
-
-function Get-SanZhongRecommendationsCore {
-    param([object[]]$SourceRecords, [string]$Source, [bool]$IncludeBacktest = $true, [string]$SeedIdentity = '')
-
-    $stats = @{}
-    foreach ($a in 1..47) {
-        foreach ($b in (($a + 1)..48)) {
-            foreach ($c in (($b + 1)..49)) {
-                $combo = @($a.ToString('00'), $b.ToString('00'), $c.ToString('00'))
-                $key = $combo -join '-'
-                $stats[$key] = [pscustomobject]@{
-                    combo = $combo
-                    key = $key
-                    hits = 0
-                    lastSeen = $SourceRecords.Count
-                    recentHits = 0
-                    recent120Hits = 0
-                    recent240Hits = 0
-                    hitOrders = New-Object 'System.Collections.Generic.List[int]'
-                }
-            }
-        }
-    }
-
-    for ($order = 0; $order -lt $SourceRecords.Count; $order++) {
-        $firstSix = @($SourceRecords[$order].balls | Select-Object -First 6 | ForEach-Object { ([int]$_.numberText).ToString('00') } | Sort-Object { [int]$_ } -Unique)
-        for ($i = 0; $i -lt $firstSix.Count - 2; $i++) {
-            for ($j = $i + 1; $j -lt $firstSix.Count - 1; $j++) {
-                for ($k = $j + 1; $k -lt $firstSix.Count; $k++) {
-                    $combo = @($firstSix[$i], $firstSix[$j], $firstSix[$k])
-                    $key = $combo -join '-'
-                    $item = $stats[$key]
-                    if ($null -eq $item) { continue }
-                    $item.hits++
-                    $item.lastSeen = [Math]::Min($item.lastSeen, $order)
-                    [void]$item.hitOrders.Add($order)
-                    if ($order -lt 60) { $item.recentHits++ }
-                    if ($order -lt 120) { $item.recent120Hits++ }
-                    if ($order -lt 240) { $item.recent240Hits++ }
-                }
-            }
-        }
-    }
-
-    if ([string]::IsNullOrWhiteSpace($SeedIdentity)) {
-        $latest = @($SourceRecords | Select-Object -First 1)
-        $SeedIdentity = Get-RecordIdentity $latest[0]
-    }
-    $candidates = @(
-        foreach ($item in $stats.Values) {
-            $miss = $item.lastSeen
-            $score = $item.recentHits * 6 + $item.recent120Hits * 3.2 + $item.recent240Hits * 1.4 + $item.hits * 0.35 - [Math]::Min($miss, 180) * 0.08 + (Get-SeededNoise "$SeedIdentity|sanzhong|$Source|$($item.combo -join '-')") * 0.5
-            [pscustomobject]@{
-                combo = $item.combo
-                key = $item.key
-                hits = $item.hits
-                miss = $miss
-                recentHits = $item.recentHits
-                recent120Hits = $item.recent120Hits
-                recent240Hits = $item.recent240Hits
-                score = $score
-                hitOrders = @($item.hitOrders)
-            }
-        }
-    ) | Sort-Object @{ Expression = 'score'; Descending = $true } | Select-Object -First 240
-
-    $selected = @()
-    while ($selected.Count -lt 10 -and $candidates.Count -gt 0) {
-        $best = $null
-        foreach ($candidate in $candidates) {
-            if (@($selected | Where-Object { $_.key -eq $candidate.key }).Count -gt 0) { continue }
-            $test = @($selected + $candidate)
-            $metrics = Get-SanZhongPortfolioMetricsFromOrders -TotalRecords $SourceRecords.Count -Recommendations $test
-            $portfolioScore = $metrics.coverage120 * 1200 + $metrics.coverage240 * 500 + $metrics.coverage60 * 800 - $metrics.currentMiss * 90 - $metrics.maxMiss * 25 + $candidate.score
-            if ($null -eq $best -or $portfolioScore -gt $best.portfolioScore) {
-                $best = [pscustomobject]@{ candidate = $candidate; portfolio = $metrics; portfolioScore = $portfolioScore }
-            }
-        }
-        if ($null -eq $best) { break }
-        $selected += $best.candidate
-    }
-
-    $portfolio = Get-SanZhongPortfolioMetricsFromOrders -TotalRecords $SourceRecords.Count -Recommendations $selected
-    $backtest = if ($IncludeBacktest) { Get-SanZhongRollingBacktest -SourceRecords $SourceRecords -Recommendations $selected } else { [pscustomobject]@{ tested = 0; hits = 0; hitRate = 0; window = 0; mode = 'skipped' } }
-    return [pscustomobject]@{
-        combos = @($selected | ForEach-Object { ,@($_.combo | ForEach-Object { ([int]$_).ToString('00') }) })
-        rows = @($selected | ForEach-Object {
-            [pscustomobject]@{
-                combo = @($_.combo | ForEach-Object { ([int]$_).ToString('00') })
-                key = $_.key
-                hits = $_.hits
-                miss = $_.miss
-                recentHits = $_.recentHits
-                recent120Hits = $_.recent120Hits
-                recent240Hits = $_.recent240Hits
-                score = [Math]::Round($_.score, 1)
-            }
-        })
-        portfolio = $portfolio
-        backtest = $backtest
-        verifiedCandidates = 18424
-        method = 'exhaustive-49c3-portfolio'
-    }
-}
-
-function Get-SanZhongRecommendations {
-    param([object[]]$SourceRecords, [string]$Source, [string]$SeedIdentity = '')
-    return Get-SanZhongRecommendationsCore -SourceRecords $SourceRecords -Source $Source -IncludeBacktest $true -SeedIdentity $SeedIdentity
-}
-
-function New-GeneratedPredictions {
-    param([object[]]$Records, [object[]]$Existing = @())
-
-    $createdAt = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    $next = @()
-    $sanzhong = @()
-    $oldNext = @($Existing | Where-Object { $_.type -eq 'next' } | ForEach-Object { $_.item })
-    $oldSanZhong = @($Existing | Where-Object { $_.type -eq 'sanzhong' } | ForEach-Object { $_.item })
-    $oldNextByTarget = @{}
-    foreach ($item in $oldNext) {
-        $key = '{0}|{1}|{2}|{3}' -f $item.source, $item.displayYear, $item.issue, $item.targetDate
-        if (-not $oldNextByTarget.ContainsKey($key)) { $oldNextByTarget[$key] = $item }
-    }
-    $oldSanZhongByTarget = @{}
-    foreach ($item in $oldSanZhong) {
-        $key = '{0}|{1}|{2}|{3}' -f $item.source, $item.displayYear, $item.issue, $item.targetDate
-        if (-not $oldSanZhongByTarget.ContainsKey($key)) { $oldSanZhongByTarget[$key] = $item }
-    }
-    foreach ($source in @('am', 'hk')) {
-        $latest = Get-LatestRecord -Records $Records -Source $source
-        if ($null -eq $latest) { continue }
-        $sourceRecords = @($Records | Where-Object { $_.source -eq $source })
-        $targetDate = Get-NextDrawDate -SourceRecords $sourceRecords -Source $source
-        $issue = [int]$latest.issue + 1
-        $displayYear = Get-DisplayYearForTarget -TargetDate $targetDate -Latest $latest
-        $targetKey = '{0}|{1}|{2}|{3}' -f $source, $displayYear, $issue, $targetDate
-        if ($oldNextByTarget.ContainsKey($targetKey)) {
-            $next += $oldNextByTarget[$targetKey]
-        }
-        else {
-            $numbers = @(Get-BestPredictionNumbers -SourceRecords $sourceRecords)
-            if ($numbers.Count -eq 7) {
-                $next += [pscustomobject]@{ id = ('{0}-{1}-{2}-next' -f $source, $displayYear, $issue); source = $source; sourceName = Get-SourceName $source; year = $latest.year; displayYear = $displayYear; issue = $issue; targetDate = $targetDate; numbers = $numbers; createdAt = $createdAt; savedBy = 'fetch' }
-            }
-        }
-        if ($oldSanZhongByTarget.ContainsKey($targetKey)) {
-            $sanzhong += $oldSanZhongByTarget[$targetKey]
-        }
-        else {
-            $seedIdentity = Get-TargetIdentity -Source $source -Latest $latest -Issue $issue -TargetDate $targetDate -DisplayYear $displayYear
-            $sanZhongResult = Get-SanZhongRecommendations -SourceRecords $sourceRecords -Source $source -SeedIdentity $seedIdentity
-            $combos = @($sanZhongResult.combos)
-            if ($combos.Count -gt 0) {
-                $sanzhong += [pscustomobject]@{
-                    id = ('{0}-{1}-{2}-sanzhong' -f $source, $displayYear, $issue)
-                    source = $source
-                    sourceName = Get-SourceName $source
-                    year = $latest.year
-                    displayYear = $displayYear
-                    issue = $issue
-                    targetDate = $targetDate
-                    combos = $combos
-                    rows = $sanZhongResult.rows
-                    portfolio = $sanZhongResult.portfolio
-                    backtest = $sanZhongResult.backtest
-                    verifiedCandidates = $sanZhongResult.verifiedCandidates
-                    method = $sanZhongResult.method
-                    createdAt = $createdAt
-                    savedBy = 'fetch'
-                }
-            }
-        }
-    }
-
-    $merge = {
-        param([object[]]$OldItems, [object[]]$NewItems)
-        $seen = @{}
-        $out = New-Object 'System.Collections.Generic.List[object]'
-        foreach ($item in @($NewItems + $OldItems)) {
-            $displayYear = if ($item.displayYear) { $item.displayYear } elseif ($item.targetDate) { ([string]$item.targetDate).Substring(0, 4) } else { $item.year }
-            $key = '{0}|{1}|{2}' -f $item.source, $displayYear, $item.issue
-            if ($seen.ContainsKey($key)) { continue }
-            $seen[$key] = $true
-            $out.Add($item) | Out-Null
-        }
-        return @($out | Select-Object -First 100)
-    }
-    return [pscustomobject]@{
-        next = & $merge $oldNext $next
-        sanzhong = & $merge $oldSanZhong $sanzhong
-    }
-}
-
 function New-DashboardSummary {
     param(
         [object]$Summary,
-        [object[]]$Records,
-        [object]$Predictions
+        [object[]]$Records
     )
 
     $recentRecords = @(
@@ -1090,7 +581,6 @@ function New-DashboardSummary {
     return [pscustomobject]@{
         summary = $Summary
         recentRecords = $recentRecords
-        predictions = $Predictions
     }
 }
 
@@ -1184,12 +674,10 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button data-tab="overview">&#30475;&#26495;</button>
       <button class="active" data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
-      <button data-tab="daily">&#26085;&#25253;</button>
     </nav>
     <section id="app"></section>
   </main>
@@ -1200,7 +688,6 @@ function New-DashboardHtml {
     let records = [];
     let recentRecords = [];
     let summary = null;
-    let generatedPredictions = {next: [], sanzhong: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
     const threeWindowAnalysisCache = new Map();
@@ -1272,24 +759,6 @@ function New-DashboardHtml {
     };
     function statusText(value) {
       return statusTextMap[value] || esc(value || '-');
-    }
-    function renderOverview() {
-      const selected = document.getElementById('overview-source')?.value || 'am';
-      const selectedSummary = sourceSummary(selected);
-      const selectedRecords = sourceRecords(selected);
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="overview-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel"><h2>&#35760;&#24405;&#24635;&#25968;</h2><div class="metric">${selectedSummary.totalRecords}</div><div class="muted">${esc(selectedSummary.sourceName)} pages/*.html</div></section>
-        <section class="panel"><h2>&#21495;&#30721;&#26679;&#26412;</h2><div class="metric">${selectedSummary.totalBalls}</div><div class="muted">&#27599;&#26399; 7 &#20010;&#21495;&#30721;</div></section>
-        <section class="panel"><h2>&#26368;&#26032;&#26399;&#21495;</h2><div class="metric">${selectedSummary.latest ? esc(selectedSummary.latest.issue) : '-'}</div><div class="muted">${selectedSummary.latest ? esc(selectedSummary.latest.date) : ''}</div></section>
-        <section class="panel"><h2>&#26356;&#26032;&#26102;&#38388;</h2><div class="metric" style="font-size:18px">${esc(summary.generatedAt)}</div><div class="muted">&#26412;&#22320;&#29983;&#25104;&#26102;&#38388;</div></section>
-        <section class="panel wide"><h2>&#26368;&#26032;&#24320;&#22870;</h2>${selectedSummary.latest ? `<p>${esc(displayYear(selectedSummary.latest))}&#24180; ${esc(selectedSummary.latest.issue)}&#26399; ${esc(selectedSummary.latest.date)}</p>${ballsHtml(selectedSummary.latest.balls)}` : ''}</section>
-        <section class="panel wide"><h2>&#28909;&#38376;&#21495;&#30721;</h2>${rankHtml(selectedSummary.numbers, 12)}</section>
-        <section class="panel wide"><h2>&#29983;&#32918;&#20998;&#24067;</h2>${rankHtml(selectedSummary.zodiacs, 12)}</section>
-        <section class="panel wide"><h2>&#39068;&#33394;&#20998;&#24067;</h2>${rankHtml(selectedSummary.colors, 6)}</section>
-        <section class="panel full"><h2>&#26368;&#36817; 20 &#26399;</h2><table><thead><tr><th>&#26469;&#28304;</th><th>&#24180;&#20221;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#21495;&#30721;</th></tr></thead><tbody>${selectedRecords.slice(0, 20).map(r => `<tr><td>${esc(r.sourceName)}</td><td>${esc(displayYear(r))}</td><td>${esc(r.issue)}</td><td>${esc(r.date)}</td><td>${ballsHtml(r.balls)}</td></tr>`).join('')}</tbody></table></section>
-      </div>`;
-      document.getElementById('overview-source').addEventListener('change', renderOverview);
     }
     function asArray(value) {
       if (Array.isArray(value)) return value;
@@ -2434,25 +1903,6 @@ function New-DashboardHtml {
       </div>`;
       document.getElementById('pattern-source').addEventListener('change', renderPatternWatch);
     }
-    function renderDaily() {
-      const selected = document.getElementById('daily-source')?.value || 'am';
-      const selectedSummary = sourceSummary(selected);
-      const coldFor = (source) => {
-        const list = sourceRecords(source);
-        return Array.from({length: 49}, (_, idx) => String(idx + 1).padStart(2, '0')).map(num => {
-          const pos = list.findIndex(r => r.balls.some(b => b.numberText === num));
-          return {name: num, count: pos < 0 ? list.length : pos};
-        }).sort((a, b) => b.count - a.count).slice(0, 8);
-      };
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="daily-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel wide"><h2>&#20170;&#26085;&#26368;&#26032;</h2>${selectedSummary.latest ? `<p>${esc(selectedSummary.latest.sourceName)} ${esc(displayYear(selectedSummary.latest))}&#24180; ${esc(selectedSummary.latest.issue)}&#26399; ${esc(selectedSummary.latest.date)}</p>${ballsHtml(selectedSummary.latest.balls)}` : ''}</section>
-        <section class="panel wide"><h2>&#25968;&#25454;&#29366;&#24577;</h2><div class="metric">${selectedSummary.totalRecords}</div><p class="muted">&#29983;&#25104;&#26102;&#38388;&#65306;${esc(summary.generatedAt)}</p><p><a href="report.html">&#25171;&#24320;&#29420;&#31435;&#26085;&#25253;</a></p></section>
-        <section class="panel wide"><h2>&#28909;&#38376;&#21495;&#30721;</h2>${rankHtml((selectedSummary.numbers || []).slice(0, 8), 8)}</section>
-        <section class="panel wide"><h2>&#36951;&#28431;&#21495;&#30721;</h2>${rankHtml(coldFor(selected), 8)}</section>
-      </div>`;
-      document.getElementById('daily-source').addEventListener('change', renderDaily);
-    }
     const defaultFetchUrls = {
       am: 'https://2025kj.zkclhb.com:2025/am.html',
       hk: 'https://2025kj.zkclhb.com:2025/hk.html'
@@ -2560,7 +2010,6 @@ function New-DashboardHtml {
         recordsDataPromise = loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__').then(data => {
           records = data.records || [];
           summary = data.summary || summary || {};
-          generatedPredictions = data.predictions || generatedPredictions;
           return records;
         });
       }
@@ -2595,18 +2044,13 @@ function New-DashboardHtml {
       },
       patternWatch: async () => {
         await ensureRecordsData();
-      },
-      daily: async () => {
-        await ensureRecordsData();
       }
     };
     const renderers = {
-      overview: renderOverview,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       patternWatch: renderPatternWatch,
-      manualFetch: renderManualFetch,
-      daily: renderDaily
+      manualFetch: renderManualFetch
     };
     function showLoading(tab) {
       const label = document.querySelector(`.tabs button[data-tab="${tab}"]`)?.textContent || '';
@@ -2618,7 +2062,7 @@ function New-DashboardHtml {
       setTimeout(async () => {
         try {
           if (tabDataLoaders[tab]) await tabDataLoaders[tab]();
-          (renderers[tab] || renderOverview)();
+          (renderers[tab] || renderWindow5)();
         } catch (err) {
           app.innerHTML = `<section class="panel"><h2>&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
         }
@@ -2632,7 +2076,6 @@ function New-DashboardHtml {
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
-      generatedPredictions = data.predictions || {next: [], sanzhong: []};
       switchTab('window5');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
@@ -2642,55 +2085,6 @@ function New-DashboardHtml {
 </html>
 '@
     return $html
-}
-
-function New-ReportHtml {
-    param([object]$Summary)
-
-    $amJson = ($Summary.bySource.am | ConvertTo-Json -Depth 8 -Compress)
-    $hkJson = ($Summary.bySource.hk | ConvertTo-Json -Depth 8 -Compress)
-    $html = @'
-<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>&#24320;&#22870;&#26085;&#25253;</title>
-  <style>
-    body { margin: 0; font-family: "Microsoft YaHei", Arial, sans-serif; background: #f4f5f7; color: #1f2933; }
-    main { max-width: 920px; margin: 0 auto; padding: 18px; }
-    .panel { background:#fff; border:1px solid #d9dee7; border-radius:8px; padding:16px; margin-bottom:12px; }
-    .balls { display:flex; gap:6px; flex-wrap:wrap; }
-    .ball { min-width:34px; padding:4px 6px; color:#fff; border-radius:4px; text-align:center; font-weight:700; }
-    .red { background:#ef1010; } .green { background:#07860a; } .blue { background:#0617f2; }
-    a { color:#0b42d8; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>&#24320;&#22870;&#26085;&#25253;</h1>
-    <section class="panel"><p>&#29983;&#25104;&#26102;&#38388;&#65306;__GENERATED_AT__</p><p>&#35760;&#24405;&#24635;&#25968;&#65306;__TOTAL_RECORDS__&#65292;&#21495;&#30721;&#26679;&#26412;&#65306;__TOTAL_BALLS__</p><p><a href="index.html">&#36820;&#22238;&#25968;&#25454;&#30475;&#26495;</a></p></section>
-    <section class="panel"><h2>&#28595;&#38376;&#26085;&#25253;</h2><div id="am"></div></section>
-    <section class="panel"><h2>&#39321;&#28207;&#26085;&#25253;</h2><div id="hk"></div></section>
-  </main>
-  <script>
-    const am = __AM_JSON__;
-    const hk = __HK_JSON__;
-    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-    function displayYear(record) { const dateText = String(record?.date || ''); return dateText.length >= 4 ? dateText.slice(0, 4) : String(record?.year || ''); }
-    function ballsHtml(balls) { return '<div class="balls">' + balls.map(ball => `<span class="ball ${esc(ball.color)}">${esc(ball.numberText)}<br>${esc(ball.zodiac)}</span>`).join('') + '</div>'; }
-    function section(data) {
-      const latest = data.latest;
-      return `${latest ? `<p>${esc(displayYear(latest))}&#24180; ${esc(latest.issue)}&#26399; ${esc(latest.date)}</p>${ballsHtml(latest.balls)}` : ''}
-      <h3>&#28909;&#38376;&#21495;&#30721;</h3><ol>${(data.numbers || []).slice(0, 10).map(item => `<li>${esc(item.name)} - ${item.count}</li>`).join('')}</ol>`;
-    }
-    document.getElementById('am').innerHTML = section(am);
-    document.getElementById('hk').innerHTML = section(hk);
-  </script>
-</body>
-</html>
-'@
-    return $html.Replace('__AM_JSON__', $amJson).Replace('__HK_JSON__', $hkJson).Replace('__GENERATED_AT__', [string]$Summary.generatedAt).Replace('__TOTAL_RECORDS__', [string]$Summary.totalRecords).Replace('__TOTAL_BALLS__', [string]$Summary.totalBalls)
 }
 
 $pagesDir = Join-Path $RootDir 'pages'
@@ -2720,27 +2114,9 @@ $deduped = Invoke-Profiled 'dedupe-sort-summary' {
     return $rows
 }
 
-$predictionsPath = Join-Path $dataDir 'predictions.json'
-$existingPredictionPairs = @()
-if (Test-Path -LiteralPath $predictionsPath) {
-    try {
-        $existingPredictions = Get-Content -LiteralPath $predictionsPath -Raw -Encoding UTF8 | ConvertFrom-Json
-        foreach ($item in @($existingPredictions.next)) { $existingPredictionPairs += [pscustomobject]@{ type = 'next'; item = $item } }
-        foreach ($item in @($existingPredictions.sanzhong)) { $existingPredictionPairs += [pscustomobject]@{ type = 'sanzhong'; item = $item } }
-    }
-    catch {
-        $existingPredictionPairs = @()
-    }
-}
-$predictions = Invoke-Profiled 'generated-predictions' {
-    return New-GeneratedPredictions -Records $deduped -Existing $existingPredictionPairs
-}
-Invoke-Profiled 'write-predictions-json' {
-    [IO.File]::WriteAllText($predictionsPath, ($predictions | ConvertTo-Json -Depth 10 -Compress), $Utf8NoBom)
-} | Out-Null
 $dashboardSummaryPath = Join-Path $dataDir 'dashboard-summary.json'
 $dashboardSummary = Invoke-Profiled 'dashboard-summary' {
-    return New-DashboardSummary -Summary $summary -Records $deduped -Predictions $predictions
+    return New-DashboardSummary -Summary $summary -Records $deduped
 }
 Invoke-Profiled 'write-dashboard-summary-json' {
     Write-DataJsonAndJs -JsonPath $dashboardSummaryPath -Data $dashboardSummary -GlobalName '__DASHBOARD_SUMMARY__' -Depth 10
@@ -2757,7 +2133,7 @@ Invoke-Profiled 'write-window5-json' {
     Write-DataJsonAndJs -JsonPath $window5Path -Data $window5 -GlobalName '__WINDOW5_STATE__' -Depth 8
 } | Out-Null
 $threeCompoundPath = Join-Path $dataDir 'three-compound-state.json'
-$payload = [pscustomobject]@{ summary = $summary; records = $deduped; predictions = $predictions; window5 = $window5; threeCompound = @{ items = @() } }
+$payload = [pscustomobject]@{ summary = $summary; records = $deduped; window5 = $window5; threeCompound = @{ items = @() } }
 $jsonPath = Join-Path $dataDir 'records.json'
 $json = Invoke-Profiled 'records-json-serialize' {
     return $payload | ConvertTo-Json -Depth 10 -Compress
@@ -2778,14 +2154,9 @@ $dashboardPath = Join-Path $RootDir 'index.html'
 Invoke-Profiled 'write-dashboard-html' {
     [IO.File]::WriteAllText($dashboardPath, (New-DashboardHtml), $Utf8NoBom)
 } | Out-Null
-$reportPath = Join-Path $RootDir 'report.html'
-Invoke-Profiled 'write-report-html' {
-    [IO.File]::WriteAllText($reportPath, (New-ReportHtml -Summary $summary), $Utf8NoBom)
-} | Out-Null
 Write-Host "Records: $($deduped.Count)"
 Write-Host "Saved: $jsonPath"
 Write-Host "Saved: $dashboardPath"
-Write-Host "Saved: $reportPath"
 if ($Profile) {
     Write-Host 'Profile:'
     $BuildProfileRows | Sort-Object seconds -Descending | ForEach-Object {

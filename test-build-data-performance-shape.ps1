@@ -44,15 +44,15 @@ if (-not $text.Contains('function Invoke-Profiled')) {
     throw 'build-data.ps1 should define Invoke-Profiled'
 }
 
-foreach ($stage in @('parse-pages', 'generated-predictions', 'game-predictions', 'records-json-serialize', 'three-compound-python')) {
+foreach ($stage in @('parse-pages', 'records-json-serialize', 'three-compound-python')) {
     if (-not $text.Contains("'$stage'")) {
         throw "build profile should include stage $stage"
     }
 }
 
-foreach ($stage in @('game-settle-existing', 'game-current-targets', 'game-sort-output')) {
-    if (-not $text.Contains("'$stage'")) {
-        throw "build profile should include game sub-stage $stage"
+foreach ($stage in @('generated-predictions', 'write-predictions-json', 'game-predictions', 'game-settle-existing', 'game-current-targets', 'game-sort-output')) {
+    if ($text.Contains("'$stage'")) {
+        throw "build profile should not include removed stage $stage"
     }
 }
 
@@ -62,12 +62,8 @@ foreach ($stage in @('dedupe-build-map', 'dedupe-sort-records', 'summary-counts'
     }
 }
 
-if (-not $text.Contains('function New-RecordLookup')) {
-    throw 'build-data.ps1 should define indexed record lookup for repeated settlement'
-}
-
-if (-not $text.Contains('RecordLookup')) {
-    throw 'game settlement should use record lookup instead of repeated full scans'
+if ($text.Contains('function New-RecordLookup') -or $text.Contains('RecordLookup')) {
+    throw 'removed game settlement lookup should not remain in build-data.ps1'
 }
 
 Write-Host 'build-data performance shape ok'

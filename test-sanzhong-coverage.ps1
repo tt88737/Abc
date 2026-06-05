@@ -56,30 +56,35 @@ for ($i = 1; $i -le 36; $i++) {
 try {
     & $scriptPath -RootDir $outDir | Out-Null
 
-    $predictionsPath = Join-Path $outDir 'data/predictions.json'
-    if (-not (Test-Path -LiteralPath $predictionsPath)) {
-        throw 'predictions.json was not created'
+    $statePath = Join-Path $outDir 'data/three-compound-state.json'
+    if (-not (Test-Path -LiteralPath $statePath)) {
+        throw 'three-compound-state.json was not created'
     }
 
-    $predictions = Get-Content -LiteralPath $predictionsPath -Raw -Encoding UTF8 | ConvertFrom-Json
-    $am = @($predictions.sanzhong | Where-Object { $_.source -eq 'am' } | Select-Object -First 1)
+    $state = Get-Content -LiteralPath $statePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $am = @($state.items | Where-Object { $_.source -eq 'am' } | Select-Object -First 1)
     if (-not $am) {
-        throw 'am sanzhong prediction was not created'
+        throw 'am three-compound state was not created'
     }
-    if ($am.verifiedCandidates -ne 18424) {
-        throw "expected 18424 verified candidates, got $($am.verifiedCandidates)"
+    $yearPools = @($am.pools)
+    $crossYearPools = @($am.crossYearPools)
+    $yearSizes = @($yearPools | ForEach-Object { [int]$_.poolSize } | Sort-Object)
+    $crossYearSizes = @($crossYearPools | ForEach-Object { [int]$_.poolSize } | Sort-Object)
+    if (($yearSizes -join ',') -ne '5,6,7,8') {
+        throw "am three-compound year pools should include 5/6/7/8, got $($yearSizes -join ',')"
     }
-    if ($am.method -ne 'exhaustive-49c3-portfolio') {
-        throw "unexpected sanzhong method: $($am.method)"
+    if (($crossYearSizes -join ',') -ne '5,6,7,8') {
+        throw "am three-compound cross-year pools should include 5/6/7/8, got $($crossYearSizes -join ',')"
     }
-    if (-not $am.portfolio -or $null -eq $am.portfolio.coverage120) {
-        throw 'portfolio coverage metrics were not saved'
+    $eightPool = @($yearPools | Where-Object { [int]$_.poolSize -eq 8 } | Select-Object -First 1)
+    if (@($eightPool.pool).Count -ne 8) {
+        throw 'am three-compound 8-code year pool should include 8 numbers'
     }
-    if (-not $am.backtest -or $null -eq $am.backtest.hitRate) {
-        throw 'rolling backtest metrics were not saved'
+    if (@($eightPool.windows).Count -eq 0 -or -not @($eightPool.windows | Where-Object { $_.poolSnapshot })) {
+        throw 'am three-compound year pool windows should keep pool snapshots'
     }
-    if (@($am.combos).Count -ne 10) {
-        throw "expected 10 combos, got $(@($am.combos).Count)"
+    if (@($eightPool.changeHistory).Count -eq 0) {
+        throw 'am three-compound change history should be saved'
     }
 
     $dashboard = [IO.File]::ReadAllText((Join-Path $outDir 'index.html'), [Text.Encoding]::UTF8)
@@ -88,6 +93,9 @@ try {
     }
     if (-not $dashboard.Contains('function buildThreeHitCombos(records)')) {
         throw 'dashboard should include three-hit combo coverage analysis'
+    }
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/predictions.json')) {
+        throw 'predictions.json should not be created'
     }
 
     Write-Host 'PASS'

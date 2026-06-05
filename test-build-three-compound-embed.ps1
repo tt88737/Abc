@@ -49,7 +49,6 @@ try {
     $recordsScriptPath = Join-Path $outDir 'data\records.js'
     $summaryPath = Join-Path $outDir 'data\dashboard-summary.json'
     $summaryScriptPath = Join-Path $outDir 'data\dashboard-summary.js'
-    $gamesScriptPath = Join-Path $outDir 'data\game-predictions.js'
     $window5ScriptPath = Join-Path $outDir 'data\window5-state.js'
     $statePath = Join-Path $outDir 'data\three-compound-state.json'
     $stateScriptPath = Join-Path $outDir 'data\three-compound-state.js'
@@ -59,7 +58,8 @@ try {
     if (-not (Test-Path -LiteralPath $recordsScriptPath)) { throw 'records.js was not created' }
     if (-not (Test-Path -LiteralPath $summaryPath)) { throw 'dashboard-summary.json was not created' }
     if (-not (Test-Path -LiteralPath $summaryScriptPath)) { throw 'dashboard-summary.js was not created' }
-    if (-not (Test-Path -LiteralPath $gamesScriptPath)) { throw 'game-predictions.js was not created' }
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data\game-predictions.js')) { throw 'game-predictions.js should not be created' }
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data\game-predictions.json')) { throw 'game-predictions.json should not be created' }
     if (-not (Test-Path -LiteralPath $window5ScriptPath)) { throw 'window5-state.js was not created' }
     if (-not (Test-Path -LiteralPath $statePath)) { throw 'three-compound-state.json was not created' }
     if (-not (Test-Path -LiteralPath $stateScriptPath)) { throw 'three-compound-state.js was not created' }
@@ -86,11 +86,8 @@ try {
     if (-not $html.Contains("loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__')")) {
         throw 'dashboard should use local script fallback for records data'
     }
-    if (-not $html.Contains("loadJsonOrScript('data/game-predictions.json'")) {
-        throw 'dashboard should be able to load game predictions externally'
-    }
-    if (-not $html.Contains("loadJsonOrScript('data/game-predictions.json', 'data/game-predictions.js', '__GAME_PREDICTIONS__')")) {
-        throw 'dashboard should use local script fallback for game predictions'
+    if ($html.Contains("loadJsonOrScript('data/game-predictions.json'") -or $html.Contains('__GAME_PREDICTIONS__')) {
+        throw 'dashboard should not load removed game predictions'
     }
     if (-not $html.Contains("loadJsonOrScript('data/three-compound-state.json'")) {
         throw 'dashboard should be able to load three-compound state externally'
@@ -101,8 +98,8 @@ try {
     if (-not $html.Contains('async function ensureRecordsData()')) {
         throw 'dashboard should lazy load records data independently'
     }
-    if (-not $html.Contains('async function ensureGamePredictionsData()')) {
-        throw 'dashboard should lazy load game predictions independently'
+    if ($html.Contains('async function ensureGamePredictionsData()')) {
+        throw 'dashboard should not define removed game predictions loader'
     }
     if (-not $html.Contains('async function ensureWindow5Data()')) {
         throw 'dashboard should lazy load window5 state independently'

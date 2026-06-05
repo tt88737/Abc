@@ -86,12 +86,10 @@
   </header>
   <main>
     <nav class="tabs">
-      <button data-tab="overview">&#30475;&#26495;</button>
       <button class="active" data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
       <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
-      <button data-tab="daily">&#26085;&#25253;</button>
     </nav>
     <section id="app"></section>
   </main>
@@ -102,7 +100,6 @@
     let records = [];
     let recentRecords = [];
     let summary = null;
-    let generatedPredictions = {next: [], sanzhong: []};
     let window5State = {items: []};
     let threeCompoundState = {items: []};
     const threeWindowAnalysisCache = new Map();
@@ -174,24 +171,6 @@
     };
     function statusText(value) {
       return statusTextMap[value] || esc(value || '-');
-    }
-    function renderOverview() {
-      const selected = document.getElementById('overview-source')?.value || 'am';
-      const selectedSummary = sourceSummary(selected);
-      const selectedRecords = sourceRecords(selected);
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="overview-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel"><h2>&#35760;&#24405;&#24635;&#25968;</h2><div class="metric">${selectedSummary.totalRecords}</div><div class="muted">${esc(selectedSummary.sourceName)} pages/*.html</div></section>
-        <section class="panel"><h2>&#21495;&#30721;&#26679;&#26412;</h2><div class="metric">${selectedSummary.totalBalls}</div><div class="muted">&#27599;&#26399; 7 &#20010;&#21495;&#30721;</div></section>
-        <section class="panel"><h2>&#26368;&#26032;&#26399;&#21495;</h2><div class="metric">${selectedSummary.latest ? esc(selectedSummary.latest.issue) : '-'}</div><div class="muted">${selectedSummary.latest ? esc(selectedSummary.latest.date) : ''}</div></section>
-        <section class="panel"><h2>&#26356;&#26032;&#26102;&#38388;</h2><div class="metric" style="font-size:18px">${esc(summary.generatedAt)}</div><div class="muted">&#26412;&#22320;&#29983;&#25104;&#26102;&#38388;</div></section>
-        <section class="panel wide"><h2>&#26368;&#26032;&#24320;&#22870;</h2>${selectedSummary.latest ? `<p>${esc(displayYear(selectedSummary.latest))}&#24180; ${esc(selectedSummary.latest.issue)}&#26399; ${esc(selectedSummary.latest.date)}</p>${ballsHtml(selectedSummary.latest.balls)}` : ''}</section>
-        <section class="panel wide"><h2>&#28909;&#38376;&#21495;&#30721;</h2>${rankHtml(selectedSummary.numbers, 12)}</section>
-        <section class="panel wide"><h2>&#29983;&#32918;&#20998;&#24067;</h2>${rankHtml(selectedSummary.zodiacs, 12)}</section>
-        <section class="panel wide"><h2>&#39068;&#33394;&#20998;&#24067;</h2>${rankHtml(selectedSummary.colors, 6)}</section>
-        <section class="panel full"><h2>&#26368;&#36817; 20 &#26399;</h2><table><thead><tr><th>&#26469;&#28304;</th><th>&#24180;&#20221;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#21495;&#30721;</th></tr></thead><tbody>${selectedRecords.slice(0, 20).map(r => `<tr><td>${esc(r.sourceName)}</td><td>${esc(displayYear(r))}</td><td>${esc(r.issue)}</td><td>${esc(r.date)}</td><td>${ballsHtml(r.balls)}</td></tr>`).join('')}</tbody></table></section>
-      </div>`;
-      document.getElementById('overview-source').addEventListener('change', renderOverview);
     }
     function asArray(value) {
       if (Array.isArray(value)) return value;
@@ -1336,25 +1315,6 @@
       </div>`;
       document.getElementById('pattern-source').addEventListener('change', renderPatternWatch);
     }
-    function renderDaily() {
-      const selected = document.getElementById('daily-source')?.value || 'am';
-      const selectedSummary = sourceSummary(selected);
-      const coldFor = (source) => {
-        const list = sourceRecords(source);
-        return Array.from({length: 49}, (_, idx) => String(idx + 1).padStart(2, '0')).map(num => {
-          const pos = list.findIndex(r => r.balls.some(b => b.numberText === num));
-          return {name: num, count: pos < 0 ? list.length : pos};
-        }).sort((a, b) => b.count - a.count).slice(0, 8);
-      };
-      app.innerHTML = `<div class="grid">
-        <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="daily-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel wide"><h2>&#20170;&#26085;&#26368;&#26032;</h2>${selectedSummary.latest ? `<p>${esc(selectedSummary.latest.sourceName)} ${esc(displayYear(selectedSummary.latest))}&#24180; ${esc(selectedSummary.latest.issue)}&#26399; ${esc(selectedSummary.latest.date)}</p>${ballsHtml(selectedSummary.latest.balls)}` : ''}</section>
-        <section class="panel wide"><h2>&#25968;&#25454;&#29366;&#24577;</h2><div class="metric">${selectedSummary.totalRecords}</div><p class="muted">&#29983;&#25104;&#26102;&#38388;&#65306;${esc(summary.generatedAt)}</p><p><a href="report.html">&#25171;&#24320;&#29420;&#31435;&#26085;&#25253;</a></p></section>
-        <section class="panel wide"><h2>&#28909;&#38376;&#21495;&#30721;</h2>${rankHtml((selectedSummary.numbers || []).slice(0, 8), 8)}</section>
-        <section class="panel wide"><h2>&#36951;&#28431;&#21495;&#30721;</h2>${rankHtml(coldFor(selected), 8)}</section>
-      </div>`;
-      document.getElementById('daily-source').addEventListener('change', renderDaily);
-    }
     const defaultFetchUrls = {
       am: 'https://2025kj.zkclhb.com:2025/am.html',
       hk: 'https://2025kj.zkclhb.com:2025/hk.html'
@@ -1462,7 +1422,6 @@
         recordsDataPromise = loadJsonOrScript('data/records.json', 'data/records.js', '__RECORDS_DATA__').then(data => {
           records = data.records || [];
           summary = data.summary || summary || {};
-          generatedPredictions = data.predictions || generatedPredictions;
           return records;
         });
       }
@@ -1497,18 +1456,13 @@
       },
       patternWatch: async () => {
         await ensureRecordsData();
-      },
-      daily: async () => {
-        await ensureRecordsData();
       }
     };
     const renderers = {
-      overview: renderOverview,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       patternWatch: renderPatternWatch,
-      manualFetch: renderManualFetch,
-      daily: renderDaily
+      manualFetch: renderManualFetch
     };
     function showLoading(tab) {
       const label = document.querySelector(`.tabs button[data-tab="${tab}"]`)?.textContent || '';
@@ -1520,7 +1474,7 @@
       setTimeout(async () => {
         try {
           if (tabDataLoaders[tab]) await tabDataLoaders[tab]();
-          (renderers[tab] || renderOverview)();
+          (renderers[tab] || renderWindow5)();
         } catch (err) {
           app.innerHTML = `<section class="panel"><h2>&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
         }
@@ -1534,7 +1488,6 @@
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
-      generatedPredictions = data.predictions || {next: [], sanzhong: []};
       switchTab('window5');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;

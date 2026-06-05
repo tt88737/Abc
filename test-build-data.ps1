@@ -154,8 +154,11 @@ try {
     if ($dashboard.Contains('data-tab="games"') -or $dashboard.Contains('function renderGames') -or $dashboard.Contains('function gameSection') -or $dashboard.Contains('function recommendationSummary') -or $dashboard.Contains('__GAME_PREDICTIONS__') -or $dashboard.Contains('ensureGamePredictionsData')) {
         throw 'dashboard should not expose recommendation review module or game prediction loaders'
     }
-    if (-not $dashboard.Contains('data-tab="overview"') -or -not $dashboard.Contains('data-tab="daily"') -or -not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose overview, 5-window, three-hit 5-window, advanced analysis, manual fetch, and daily tabs'
+    if ($dashboard.Contains('data-tab="overview"') -or $dashboard.Contains('data-tab="daily"') -or $dashboard.Contains('function renderOverview') -or $dashboard.Contains('function renderDaily')) {
+        throw 'dashboard should not expose overview or daily modules after cleanup'
+    }
+    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose only 5-window, three-hit 5-window, advanced analysis, and manual fetch tabs'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
@@ -193,8 +196,8 @@ try {
         throw 'dashboard-summary.js was not created'
     }
     $dashboardSummaryText = Get-Content -LiteralPath $dashboardSummaryFile -Raw
-    if (-not $dashboardSummaryText.Contains('"predictions"')) {
-        throw 'collection-time predictions were not included in dashboard summary'
+    if ($dashboardSummaryText.Contains('"predictions"')) {
+        throw 'dashboard summary should not include removed predictions'
     }
     $dashboardSummaryScriptText = Get-Content -LiteralPath $dashboardSummaryScript -Raw
     if (-not $dashboardSummaryScriptText.Contains('window.__DASHBOARD_SUMMARY__ = ')) {
@@ -224,26 +227,11 @@ try {
     if (-not $dashboard.Contains('.compact-table')) {
         throw 'compact table styles should be emitted'
     }
-    $predictionFile = Join-Path $outDir 'data/predictions.json'
-    if (-not (Test-Path -LiteralPath $predictionFile)) {
-        throw 'predictions.json was not created'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'data/predictions.json')) {
+        throw 'predictions.json should not be generated after prediction cleanup'
     }
-    $predictions = Get-Content -LiteralPath $predictionFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    $hkNext = @($predictions.next | Where-Object { $_.source -eq 'hk' } | Select-Object -First 1)
-    if ($hkNext.Count -gt 0 -and $hkNext[0].targetDate -eq '2026-05-26') {
-        throw 'hk next draw date should not be generated as latest date plus one day'
-    }
-    $hkSanZhong = @($predictions.sanzhong | Where-Object { $_.source -eq 'hk' } | Select-Object -First 1)
-    if ($hkSanZhong.Count -gt 0 -and $hkSanZhong[0].targetDate -eq '2026-05-26') {
-        throw 'hk sanzhong target date should not be generated as latest date plus one day'
-    }
-    $nextKeys = @($predictions.next | ForEach-Object { '{0}|{1}|{2}' -f $_.source, $_.displayYear, $_.issue })
-    if ($nextKeys.Count -ne @($nextKeys | Select-Object -Unique).Count) {
-        throw 'next predictions should be unique by source/displayYear/issue'
-    }
-    $szKeys = @($predictions.sanzhong | ForEach-Object { '{0}|{1}|{2}' -f $_.source, $_.displayYear, $_.issue })
-    if ($szKeys.Count -ne @($szKeys | Select-Object -Unique).Count) {
-        throw 'sanzhong predictions should be unique by source/displayYear/issue'
+    if (Test-Path -LiteralPath (Join-Path $outDir 'report.html')) {
+        throw 'report.html should not be generated after daily cleanup'
     }
     if (Test-Path -LiteralPath (Join-Path $outDir 'data/game-predictions.json')) {
         throw 'game-predictions.json should not be generated after recommendation review removal'
@@ -626,13 +614,11 @@ const json = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
   .replace(/const app = document.getElementById\('app'\);/, "const app = {innerHTML:''};")
   .replace(/const tabs = document.querySelectorAll\('\.tabs button'\);/, "const tabs = [];")
-  .replace(/loadDashboardData\(\)\.then\([\s\S]*?\.catch\(err => \{\s*app\.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;<\/h2><p>\$\{esc\(err\.message\)\}<\/p><\/section>`;\s*\}\);/, "recentRecords = (__DATA__.records || []); summary = __DATA__.summary || {}; generatedPredictions = __DATA__.predictions || {next: [], sanzhong: []};")
-  .replace(/document.getElementById\('overview-source'\)\.addEventListener\('change', renderOverview\);/g, '')
+  .replace(/loadDashboardData\(\)\.then\([\s\S]*?\.catch\(err => \{\s*app\.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;<\/h2><p>\$\{esc\(err\.message\)\}<\/p><\/section>`;\s*\}\);/, "recentRecords = (__DATA__.records || []); summary = __DATA__.summary || {};")
   .replace(/document.getElementById\('window5-source'\)\.addEventListener\('change', renderWindow5\);/g, '')
   .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
   .replace(/document.getElementById\('pattern-source'\)\.addEventListener\('change', renderPatternWatch\);/g, '')
-  .replace(/document.getElementById\('daily-source'\)\.addEventListener\('change', renderDaily\);/g, '')
-  .replace(/renderOverview\(\);/, "renderOverview(); fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
+  .replace(/switchTab\('window5'\);/, "fiveWindowAnalysis('am'); fiveWindowAnalysis('hk');");
 global.__DATA__ = json;
 global.location = { protocol: 'file:' };
 global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
