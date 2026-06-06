@@ -152,7 +152,7 @@ def coverage_stats(windows, pool):
     }
 
 
-def current_window_state(source_rows, current_year, pool):
+def current_window_state(source_rows, current_year, scoped_rows, range_name):
     year_rows = [row for row in source_rows if display_year(row) == current_year]
     if not year_rows:
         return {
@@ -162,6 +162,8 @@ def current_window_state(source_rows, current_year, pool):
             "count": 0,
             "expected": 5,
             "covered": False,
+            "pool": NUMS_ALL[:POOL_SIZE],
+            "poolBasis": "before-current-window",
             "hits": [],
             "draws": [],
         }
@@ -172,7 +174,12 @@ def current_window_state(source_rows, current_year, pool):
         [row for row in year_rows if start <= int(row.get("issue") or 0) <= end],
         key=lambda row: int(row.get("issue") or 0),
     )
-    pool_set = set(pool)
+    pre_window_rows = [
+        row for row in scoped_rows
+        if display_year(row) != current_year or int(row.get("issue") or 0) < start
+    ]
+    pre_window_pool, _ = exact_best_pool(fixed_five_windows(pre_window_rows))
+    pool_set = set(pre_window_pool)
     draws = []
     hits = []
     for row in window_rows:
@@ -192,6 +199,8 @@ def current_window_state(source_rows, current_year, pool):
         "count": len(window_rows),
         "expected": 5,
         "covered": len(hits) > 0,
+        "pool": pre_window_pool,
+        "poolBasis": "before-current-window",
         "hits": hits,
         "draws": draws,
     }
@@ -230,7 +239,7 @@ def build_item(source, rows, range_name, generated_at):
         "method": "exact-49c8-window-coverage",
         "computedAt": generated_at,
         "yearPools": year_pools,
-        "currentWindow": current_window_state(source_rows, current_year, pool),
+        "currentWindow": current_window_state(source_rows, current_year, scoped_rows, range_name),
         **stats,
     }
 

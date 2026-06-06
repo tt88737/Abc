@@ -1,5 +1,5 @@
 window.__HISTORY_PATTERN_STATE__ = {
-  "generatedAt": "2026-06-06 15:31:58",
+  "generatedAt": "2026-06-06 15:56:33",
   "items": [
     {
       "source": "am",
@@ -17,7 +17,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:31:58",
+      "computedAt": "2026-06-06 15:56:33",
       "yearPools": [
         {
           "year": "2026",
@@ -41,43 +41,34 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "currentWindow": {
         "year": "2026",
-        "start": 151,
-        "end": 155,
-        "count": 5,
+        "start": 156,
+        "end": 160,
+        "count": 1,
         "expected": 5,
         "covered": true,
+        "pool": [
+          "01",
+          "22",
+          "24",
+          "27",
+          "31",
+          "37",
+          "43",
+          "46"
+        ],
+        "poolBasis": "before-current-window",
         "hits": [
           {
-            "issue": 151,
-            "date": "2026-05-31",
-            "num": "31"
+            "issue": 156,
+            "date": "2026-06-05",
+            "num": "01"
           }
         ],
         "draws": [
           {
-            "issue": 151,
-            "date": "2026-05-31",
-            "num": "31"
-          },
-          {
-            "issue": 152,
-            "date": "2026-06-01",
-            "num": "45"
-          },
-          {
-            "issue": 153,
-            "date": "2026-06-02",
-            "num": "41"
-          },
-          {
-            "issue": 154,
-            "date": "2026-06-03",
-            "num": "41"
-          },
-          {
-            "issue": 155,
-            "date": "2026-06-04",
-            "num": "07"
+            "issue": 156,
+            "date": "2026-06-05",
+            "num": "01"
           }
         ]
       },
@@ -536,7 +527,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:31:58",
+      "computedAt": "2026-06-06 15:56:33",
       "yearPools": [
         {
           "year": "2026",
@@ -674,37 +665,34 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "currentWindow": {
         "year": "2026",
-        "start": 151,
-        "end": 155,
-        "count": 5,
+        "start": 156,
+        "end": 160,
+        "count": 1,
         "expected": 5,
-        "covered": false,
-        "hits": [],
+        "covered": true,
+        "pool": [
+          "01",
+          "03",
+          "05",
+          "06",
+          "14",
+          "39",
+          "48",
+          "49"
+        ],
+        "poolBasis": "before-current-window",
+        "hits": [
+          {
+            "issue": 156,
+            "date": "2026-06-05",
+            "num": "01"
+          }
+        ],
         "draws": [
           {
-            "issue": 151,
-            "date": "2026-05-31",
-            "num": "31"
-          },
-          {
-            "issue": 152,
-            "date": "2026-06-01",
-            "num": "45"
-          },
-          {
-            "issue": 153,
-            "date": "2026-06-02",
-            "num": "41"
-          },
-          {
-            "issue": 154,
-            "date": "2026-06-03",
-            "num": "41"
-          },
-          {
-            "issue": 155,
-            "date": "2026-06-04",
-            "num": "07"
+            "issue": 156,
+            "date": "2026-06-05",
+            "num": "01"
           }
         ]
       },
@@ -8548,7 +8536,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:31:58",
+      "computedAt": "2026-06-06 15:56:33",
       "yearPools": [
         {
           "year": "2026",
@@ -8576,14 +8564,19 @@ window.__HISTORY_PATTERN_STATE__ = {
         "end": 60,
         "count": 5,
         "expected": 5,
-        "covered": true,
-        "hits": [
-          {
-            "issue": 58,
-            "date": "2026-05-30",
-            "num": "42"
-          }
+        "covered": false,
+        "pool": [
+          "01",
+          "02",
+          "03",
+          "11",
+          "13",
+          "19",
+          "27",
+          "40"
         ],
+        "poolBasis": "before-current-window",
+        "hits": [],
         "draws": [
           {
             "issue": 56,
@@ -8804,7 +8797,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:31:58",
+      "computedAt": "2026-06-06 15:56:33",
       "yearPools": [
         {
           "year": "2026",
@@ -8947,6 +8940,17 @@ window.__HISTORY_PATTERN_STATE__ = {
         "count": 5,
         "expected": 5,
         "covered": true,
+        "pool": [
+          "01",
+          "02",
+          "03",
+          "08",
+          "11",
+          "20",
+          "23",
+          "41"
+        ],
+        "poolBasis": "before-current-window",
         "hits": [
           {
             "issue": 59,

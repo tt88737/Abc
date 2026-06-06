@@ -299,7 +299,7 @@ try {
     if (-not $dashboard.Contains('historyYearGroups.set(String(item.year), [])') -or -not $dashboard.Contains('&#26242;&#26080;&#28431;&#31383;')) {
         throw 'history pattern should show years with zero missed windows'
     }
-    if (-not $dashboard.Contains('currentWindowHits') -or -not $dashboard.Contains('&#24403;&#21069;&#31383;&#21475;') -or -not $dashboard.Contains('&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)}')) {
+    if (-not $dashboard.Contains('currentWindowHits') -or -not $dashboard.Contains('&#24403;&#21069;&#31383;&#21475;') -or -not $dashboard.Contains('&#24320;&#22870;&#21069;8&#30721;') -or -not $dashboard.Contains('&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)}')) {
         throw 'history pattern should show current five-issue window progress and coverage'
     }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
@@ -521,8 +521,8 @@ try {
     if (@($historyAmAll.yearPools).Count -eq 0 -or -not @($historyAmAll.yearPools | Where-Object { @($_.pool).Count -eq 8 -and $true -eq $_.exact })) {
         throw 'history pattern should persist exact yearly 8-code pools'
     }
-    if ($null -eq $historyAmAll.currentWindow -or $null -eq $historyAmAll.currentWindow.covered -or $null -eq $historyAmAll.currentWindow.hits -or $null -eq $historyAmAll.currentWindow.draws) {
-        throw 'history pattern should persist current window coverage details'
+    if ($null -eq $historyAmAll.currentWindow -or $null -eq $historyAmAll.currentWindow.covered -or $null -eq $historyAmAll.currentWindow.hits -or $null -eq $historyAmAll.currentWindow.draws -or @($historyAmAll.currentWindow.pool).Count -ne 8 -or $historyAmAll.currentWindow.poolBasis -ne 'before-current-window') {
+        throw 'history pattern should persist current window coverage details using the pre-window pool'
     }
     $threeCompoundFile = Join-Path $outDir 'data/three-compound-state.json'
     if (-not (Test-Path -LiteralPath $threeCompoundFile)) {
