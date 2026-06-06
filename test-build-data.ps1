@@ -275,8 +275,11 @@ try {
     if (-not $dashboard.Contains('function renderHistoryPattern()') -or -not $dashboard.Contains('history-pattern-source') -or -not $dashboard.Contains('history-pattern-range')) {
         throw 'dashboard should expose a history pattern observation page'
     }
-    if (-not $dashboard.Contains('function buildHistorySpecialFixed8Analysis(source, range)') -or -not $dashboard.Contains('function bestFixed8PoolForWindows(windows)')) {
-        throw 'history pattern should calculate special-number fixed 8-code five-window coverage'
+    if (-not $dashboard.Contains("loadJsonOrScript('data/history-pattern-state.json'") -or -not $dashboard.Contains('__HISTORY_PATTERN_STATE__')) {
+        throw 'history pattern should load precomputed exact state'
+    }
+    if ($dashboard.Contains('function bestFixed8PoolForWindows(windows)')) {
+        throw 'history pattern should not calculate best 8-code pools in the browser'
     }
     if (-not $dashboard.Contains('historyPattern: async () =>') -or -not $dashboard.Contains('historyPattern: renderHistoryPattern')) {
         throw 'history pattern should load full records before rendering'
@@ -499,6 +502,22 @@ try {
         throw 'window5-state.json was not created'
     }
     $windowState = Get-Content -LiteralPath $windowStateFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    $historyPatternFile = Join-Path $outDir 'data/history-pattern-state.json'
+    $historyPatternScript = Join-Path $outDir 'data/history-pattern-state.js'
+    if (-not (Test-Path -LiteralPath $historyPatternFile)) {
+        throw 'history-pattern-state.json was not created'
+    }
+    if (-not (Test-Path -LiteralPath $historyPatternScript)) {
+        throw 'history-pattern-state.js was not created'
+    }
+    $historyPattern = Get-Content -LiteralPath $historyPatternFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    $historyAmAll = @($historyPattern.items | Where-Object { $_.source -eq 'am' -and $_.range -eq 'all' } | Select-Object -First 1)
+    if (-not $historyAmAll -or -not $historyAmAll.exact -or @($historyAmAll.pool).Count -ne 8) {
+        throw 'history pattern all-history item should contain an exact 8-code pool'
+    }
+    if (@($historyAmAll.yearPools).Count -eq 0 -or -not @($historyAmAll.yearPools | Where-Object { @($_.pool).Count -eq 8 -and $true -eq $_.exact })) {
+        throw 'history pattern should persist exact yearly 8-code pools'
+    }
     $threeCompoundFile = Join-Path $outDir 'data/three-compound-state.json'
     if (-not (Test-Path -LiteralPath $threeCompoundFile)) {
         throw 'three-compound-state.json was not created'
