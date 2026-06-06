@@ -2011,7 +2011,16 @@ function New-DashboardHtml {
       const max = values.length ? Math.max(...values) : 1;
       return max ? (map.get(String(key || '')) || 0) / max : 0;
     }
-    function dimensionScoreRows(source, mode, inputRows = null) {
+    function recommendationAlgorithms() {
+      return [
+        {id: 'balanced-50', name: '&#19977;&#32500;&#22343;&#34913;', packWeights: [0.5, 0.25, 0.25], special: {zodiac: 0.42, tail: 0.33, color: 0.25, number: 0.08}, regular: {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.20}},
+        {id: 'recent-hot', name: '&#36817;30&#26399;&#20559;&#28909;', packWeights: [0.3, 0.55, 0.15], special: {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.28}, regular: {zodiac: 0.26, tail: 0.22, color: 0.14, number: 0.38}},
+        {id: 'year-structure', name: '&#24403;&#24180;&#32467;&#26500;', packWeights: [0.7, 0.15, 0.15], special: {zodiac: 0.46, tail: 0.34, color: 0.20, number: 0.05}, regular: {zodiac: 0.40, tail: 0.30, color: 0.18, number: 0.12}},
+        {id: 'tail-color', name: '&#23614;&#25968;&#39068;&#33394;', packWeights: [0.45, 0.35, 0.20], special: {zodiac: 0.22, tail: 0.48, color: 0.30, number: 0.08}, regular: {zodiac: 0.20, tail: 0.42, color: 0.25, number: 0.13}},
+        {id: 'all-history', name: '&#20840;&#21382;&#21490;&#31283;&#23450;', packWeights: [0.25, 0.15, 0.60], special: {zodiac: 0.38, tail: 0.30, color: 0.22, number: 0.18}, regular: {zodiac: 0.30, tail: 0.24, color: 0.18, number: 0.28}},
+      ];
+    }
+    function dimensionScoreRows(source, mode, inputRows = null, algorithm = null) {
       const rows = inputRows || recommendationSourceRows(source);
       if (!rows.length) return [];
       const latest = rows[rows.length - 1];
@@ -2019,10 +2028,11 @@ function New-DashboardHtml {
       const yearRows = rows.filter(row => displayYear(row) === year);
       const recentRows = rows.slice(-30);
       const packs = [dimensionCountPack(yearRows, mode), dimensionCountPack(recentRows, mode), dimensionCountPack(rows, mode)];
-      const packWeights = [0.5, 0.25, 0.25];
+      const algo = algorithm || recommendationAlgorithms()[0];
+      const packWeights = algo.packWeights || [0.5, 0.25, 0.25];
       const weights = mode === 'special'
-        ? {zodiac: 0.42, tail: 0.33, color: 0.25, number: 0.08}
-        : {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.20};
+        ? algo.special
+        : algo.regular;
       const zodiacMap = latestZodiacMap(source, rows);
       const colors = colorMapFromRows(rows);
       return Array.from({length: 49}, (_, index) => {
@@ -2040,15 +2050,43 @@ function New-DashboardHtml {
         return {numberText, score, zodiac, tail, color};
       }).sort((a, b) => b.score - a.score || Number(a.numberText) - Number(b.numberText));
     }
+    function recommendationForRows(source, rows, algorithm) {
+      const specialScores = dimensionScoreRows(source, 'special', rows, algorithm);
+      const threeScores = dimensionScoreRows(source, 'regular', rows, algorithm);
+      return {special: specialScores[0] || null, threePool: threeScores.slice(0, 5)};
+    }
+    function backtestRecommendationAlgorithm(source, mode, algorithm, rows, windowSize = 50) {
+      const start = Math.max(30, rows.length - windowSize);
+      let hits = 0;
+      let total = 0;
+      for (let index = start; index < rows.length; index++) {
+        const beforeRows = rows.slice(0, index);
+        if (beforeRows.length < 30) continue;
+        const recommendation = recommendationForRows(source, beforeRows, algorithm);
+        const hit = recommendationTrackHitForRecord(recommendation, rows[index]);
+        hits += mode === 'special' ? (hit.specialHit ? 1 : 0) : (hit.threeHit ? 1 : 0);
+        total++;
+      }
+      return {hits, total, backtestHitRate: total ? Math.round(hits / total * 10000) / 100 : 0, windowSize};
+    }
+    function selectBestRecommendationAlgorithm(source, mode, rows, windowSize = 50) {
+      const scored = recommendationAlgorithms().map(algorithm => ({algorithm, ...backtestRecommendationAlgorithm(source, mode, algorithm, rows, windowSize)}));
+      scored.sort((a, b) => b.backtestHitRate - a.backtestHitRate || b.hits - a.hits || a.algorithm.id.localeCompare(b.algorithm.id));
+      return scored[0] || {algorithm: recommendationAlgorithms()[0], hits: 0, total: 0, backtestHitRate: 0, windowSize};
+    }
     function recommendationTrackAnalysis(source, inputRows = null) {
       const rows = inputRows || recommendationSourceRows(source);
       const latest = rows[rows.length - 1] || {};
-      const specialScores = dimensionScoreRows(source, 'special', rows);
-      const threeScores = dimensionScoreRows(source, 'regular', rows);
+      const specialSelection = selectBestRecommendationAlgorithm(source, 'special', rows);
+      const threeSelection = selectBestRecommendationAlgorithm(source, 'regular', rows);
+      const specialScores = dimensionScoreRows(source, 'special', rows, specialSelection.algorithm);
+      const threeScores = dimensionScoreRows(source, 'regular', rows, threeSelection.algorithm);
       const latestIssue = Number(latest.issue || 0);
       return {
         source,
         latest,
+        specialAlgorithm: specialSelection,
+        threeAlgorithm: threeSelection,
         basisIssue: latestIssue,
         basisDate: latest.date || '',
         recommendIssue: latestIssue ? latestIssue + 1 : '',
@@ -2093,6 +2131,8 @@ function New-DashboardHtml {
       line.push(`&#25512;&#33616;&#26399;&#21495;&#65306; <strong>${esc(analysis.recommendIssue || '-')}&#26399;</strong>`);
       line.push(`&#29983;&#25104;&#26102;&#38388;&#65306; ${esc(analysis.generatedAt || '-')}`);
       line.push(`&#20381;&#25454;&#24320;&#22870;&#65306; ${esc(analysis.basisIssue || '-')}&#26399;&#65292;${esc(analysis.basisDate || '-')}`);
+      line.push(`&#24403;&#21069;&#31639;&#27861;&#65306; &#29305;&#21495; ${analysis.specialAlgorithm?.algorithm?.name || '-'}&#65292;&#19977;&#20013;&#19977; ${analysis.threeAlgorithm?.algorithm?.name || '-'}`);
+      line.push(`&#22238;&#27979;&#33539;&#22260;&#65306; &#26368;&#36817;${esc(analysis.specialAlgorithm?.windowSize || 50)}&#26399;&#65292;&#22238;&#27979;&#21629;&#20013;&#29575;&#65306; &#29305;&#21495; ${esc(analysis.specialAlgorithm?.backtestHitRate ?? 0)}%&#65288;${esc(analysis.specialAlgorithm?.hits ?? 0)}/${esc(analysis.specialAlgorithm?.total ?? 0)}&#65289;&#65292;&#19977;&#20013;&#19977; ${esc(analysis.threeAlgorithm?.backtestHitRate ?? 0)}%&#65288;${esc(analysis.threeAlgorithm?.hits ?? 0)}/${esc(analysis.threeAlgorithm?.total ?? 0)}&#65289;`);
       line.push('');
       line.push(`&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;&#65306; <strong>${esc(special.numberText || '-')}</strong>`);
       line.push(`&#32467;&#26500;&#65306; ${esc(special.zodiac || '-')}&#65292;&#23614;&#25968; <strong>${esc(special.tail || '-')}</strong>&#65292;${colorLabel(special.color)}&#12290;`);

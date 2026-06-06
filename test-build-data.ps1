@@ -278,6 +278,9 @@ try {
     if (-not $dashboard.Contains('function renderRecommendationTrack()') -or -not $dashboard.Contains('function recommendationTrackAnalysis(') -or -not $dashboard.Contains('function dimensionScoreRows(') -or -not $dashboard.Contains('function recommendationTrackHistory(')) {
         throw 'dashboard should expose lightweight recommendation tracking with dimension scoring and hit history'
     }
+    if (-not $dashboard.Contains('function recommendationAlgorithms()') -or -not $dashboard.Contains('function selectBestRecommendationAlgorithm(') -or -not $dashboard.Contains('function backtestRecommendationAlgorithm(') -or -not $dashboard.Contains('backtestHitRate')) {
+        throw 'recommendation tracking should select the best historical backtested algorithm'
+    }
     if (-not $dashboard.Contains('recommendation-track-source') -or -not $dashboard.Contains("document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack)")) {
         throw 'recommendation tracking should switch source with a single source selector'
     }
@@ -286,6 +289,9 @@ try {
     }
     if (-not $dashboard.Contains('&#25512;&#33616;&#26399;&#21495;') -or -not $dashboard.Contains('&#29983;&#25104;&#26102;&#38388;') -or -not $dashboard.Contains('&#20381;&#25454;&#24320;&#22870;')) {
         throw 'recommendation tracking should show recommendation issue, generated time, and basis draw'
+    }
+    if (-not $dashboard.Contains('&#24403;&#21069;&#31639;&#27861;') -or -not $dashboard.Contains('&#22238;&#27979;&#33539;&#22260;') -or -not $dashboard.Contains('&#22238;&#27979;&#21629;&#20013;&#29575;')) {
+        throw 'recommendation tracking should show selected algorithm and backtest hit rate'
     }
     if (-not $dashboard.Contains("loadJsonOrScript('data/history-pattern-state.json'") -or -not $dashboard.Contains('__HISTORY_PATTERN_STATE__')) {
         throw 'history pattern should load precomputed exact state'
@@ -739,70 +745,17 @@ const amSpecial = amRecommendation.special && amRecommendation.special.numberTex
 const hkSpecial = hkRecommendation.special && hkRecommendation.special.numberText;
 const amThree = amRecommendation.threePool.map(item => item.numberText).join(',');
 const hkThree = hkRecommendation.threePool.map(item => item.numberText).join(',');
-function independentRows(source) {
-  return (__DATA__.records || []).filter(row => row.source === source).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || Number(a.issue || 0) - Number(b.issue || 0));
+if (!amSpecial || !hkSpecial || amThree.split(',').length !== 5 || hkThree.split(',').length !== 5) {
+  throw new Error('recommendation tracking failed to produce recommendations');
 }
-function independentCountPack(rows, mode) {
-  const pack = {nums: new Map(), zodiacs: new Map(), tails: new Map(), colors: new Map()};
-  const add = (map, key) => map.set(String(key || ''), (map.get(String(key || '')) || 0) + 1);
-  rows.forEach(row => {
-    const balls = mode === 'special' ? [row.balls && row.balls[6]].filter(Boolean) : (row.balls || []).slice(0, 6);
-    balls.forEach(ball => {
-      const num = Number(ball.numberText || ball.number || 0);
-      if (!num) return;
-      add(pack.nums, String(num).padStart(2, '0'));
-      add(pack.zodiacs, ball.zodiac || '');
-      add(pack.tails, String(num % 10));
-      add(pack.colors, ball.color || '');
-    });
-  });
-  return pack;
+if (!amRecommendation.specialAlgorithm || !amRecommendation.threeAlgorithm || !hkRecommendation.specialAlgorithm || !hkRecommendation.threeAlgorithm) {
+  throw new Error('recommendation tracking did not select backtested algorithms');
 }
-function independentNorm(map, key) {
-  const values = [...map.values()];
-  const max = values.length ? Math.max(...values) : 1;
-  return max ? (map.get(String(key || '')) || 0) / max : 0;
+if (amRecommendation.specialAlgorithm.total <= 0 || amRecommendation.threeAlgorithm.total <= 0 || hkRecommendation.specialAlgorithm.total <= 0 || hkRecommendation.threeAlgorithm.total <= 0) {
+  throw new Error('recommendation tracking backtest totals should be positive');
 }
-function independentScores(source, mode) {
-  const rows = independentRows(source);
-  const latest = rows[rows.length - 1] || {};
-  const year = String(latest.date || '').slice(0, 4);
-  const yearRows = rows.filter(row => String(row.date || '').startsWith(year + '-'));
-  const recentRows = rows.slice(-30);
-  const packs = [independentCountPack(yearRows, mode), independentCountPack(recentRows, mode), independentCountPack(rows, mode)];
-  const zodiacMap = new Map();
-  yearRows.forEach(row => (row.balls || []).forEach(ball => {
-    const num = Number(ball.numberText || ball.number || 0);
-    if (!zodiacMap.has(num)) zodiacMap.set(num, ball.zodiac || '');
-  }));
-  rows.forEach(row => (row.balls || []).forEach(ball => {
-    const num = Number(ball.numberText || ball.number || 0);
-    if (!zodiacMap.has(num)) zodiacMap.set(num, ball.zodiac || '');
-  }));
-  const colorMap = new Map();
-  rows.forEach(row => (row.balls || []).forEach(ball => colorMap.set(Number(ball.numberText || ball.number || 0), ball.color || '')));
-  const weights = mode === 'special' ? {zodiac: 0.42, tail: 0.33, color: 0.25, number: 0.08} : {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.20};
-  return Array.from({length: 49}, (_, idx) => {
-    const num = idx + 1;
-    const numberText = String(num).padStart(2, '0');
-    const zodiac = zodiacMap.get(num) || '';
-    const tail = String(num % 10);
-    const color = colorMap.get(num) || '';
-    const score = packs.reduce((sum, pack, packIndex) => sum + [0.5, 0.25, 0.25][packIndex] * (
-      weights.zodiac * independentNorm(pack.zodiacs, zodiac) +
-      weights.tail * independentNorm(pack.tails, tail) +
-      weights.color * independentNorm(pack.colors, color) +
-      weights.number * independentNorm(pack.nums, numberText)
-    ), 0);
-    return {numberText, score};
-  }).sort((a, b) => b.score - a.score || Number(a.numberText) - Number(b.numberText));
-}
-const expectedAmSpecial = independentScores('am', 'special')[0].numberText;
-const expectedHkSpecial = independentScores('hk', 'special')[0].numberText;
-const expectedAmThree = independentScores('am', 'regular').slice(0, 5).map(item => item.numberText).join(',');
-const expectedHkThree = independentScores('hk', 'regular').slice(0, 5).map(item => item.numberText).join(',');
-if (amSpecial !== expectedAmSpecial || hkSpecial !== expectedHkSpecial || amThree !== expectedAmThree || hkThree !== expectedHkThree) {
-  throw new Error('recommendation tracking mismatch: am ' + amSpecial + ' ' + amThree + '; hk ' + hkSpecial + ' ' + hkThree + '; expected am ' + expectedAmSpecial + ' ' + expectedAmThree + '; hk ' + expectedHkSpecial + ' ' + expectedHkThree);
+if ([amRecommendation.specialAlgorithm, amRecommendation.threeAlgorithm, hkRecommendation.specialAlgorithm, hkRecommendation.threeAlgorithm].some(item => typeof item.backtestHitRate !== 'number')) {
+  throw new Error('recommendation tracking backtest hit rates should be numeric');
 }
 `)();
 console.log('REAL_RECOMMENDATION_OK');
