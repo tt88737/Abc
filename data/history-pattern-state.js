@@ -1,5 +1,5 @@
 window.__HISTORY_PATTERN_STATE__ = {
-  "generatedAt": "2026-06-06 15:19:43",
+  "generatedAt": "2026-06-06 15:31:58",
   "items": [
     {
       "source": "am",
@@ -17,7 +17,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:19:43",
+      "computedAt": "2026-06-06 15:31:58",
       "yearPools": [
         {
           "year": "2026",
@@ -39,6 +39,48 @@ window.__HISTORY_PATTERN_STATE__ = {
           "maxMiss": 0
         }
       ],
+      "currentWindow": {
+        "year": "2026",
+        "start": 151,
+        "end": 155,
+        "count": 5,
+        "expected": 5,
+        "covered": true,
+        "hits": [
+          {
+            "issue": 151,
+            "date": "2026-05-31",
+            "num": "31"
+          }
+        ],
+        "draws": [
+          {
+            "issue": 151,
+            "date": "2026-05-31",
+            "num": "31"
+          },
+          {
+            "issue": 152,
+            "date": "2026-06-01",
+            "num": "45"
+          },
+          {
+            "issue": 153,
+            "date": "2026-06-02",
+            "num": "41"
+          },
+          {
+            "issue": 154,
+            "date": "2026-06-03",
+            "num": "41"
+          },
+          {
+            "issue": 155,
+            "date": "2026-06-04",
+            "num": "07"
+          }
+        ]
+      },
       "windows": [
         {
           "year": "2026",
@@ -494,7 +536,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:19:43",
+      "computedAt": "2026-06-06 15:31:58",
       "yearPools": [
         {
           "year": "2026",
@@ -630,6 +672,42 @@ window.__HISTORY_PATTERN_STATE__ = {
           "maxMiss": 1
         }
       ],
+      "currentWindow": {
+        "year": "2026",
+        "start": 151,
+        "end": 155,
+        "count": 5,
+        "expected": 5,
+        "covered": false,
+        "hits": [],
+        "draws": [
+          {
+            "issue": 151,
+            "date": "2026-05-31",
+            "num": "31"
+          },
+          {
+            "issue": 152,
+            "date": "2026-06-01",
+            "num": "45"
+          },
+          {
+            "issue": 153,
+            "date": "2026-06-02",
+            "num": "41"
+          },
+          {
+            "issue": 154,
+            "date": "2026-06-03",
+            "num": "41"
+          },
+          {
+            "issue": 155,
+            "date": "2026-06-04",
+            "num": "07"
+          }
+        ]
+      },
       "windows": [
         {
           "year": "2020",
@@ -8470,7 +8548,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:19:43",
+      "computedAt": "2026-06-06 15:31:58",
       "yearPools": [
         {
           "year": "2026",
@@ -8492,6 +8570,48 @@ window.__HISTORY_PATTERN_STATE__ = {
           "maxMiss": 0
         }
       ],
+      "currentWindow": {
+        "year": "2026",
+        "start": 56,
+        "end": 60,
+        "count": 5,
+        "expected": 5,
+        "covered": true,
+        "hits": [
+          {
+            "issue": 58,
+            "date": "2026-05-30",
+            "num": "42"
+          }
+        ],
+        "draws": [
+          {
+            "issue": 56,
+            "date": "2026-05-26",
+            "num": "33"
+          },
+          {
+            "issue": 57,
+            "date": "2026-05-28",
+            "num": "47"
+          },
+          {
+            "issue": 58,
+            "date": "2026-05-30",
+            "num": "42"
+          },
+          {
+            "issue": 59,
+            "date": "2026-06-02",
+            "num": "20"
+          },
+          {
+            "issue": 60,
+            "date": "2026-06-04",
+            "num": "44"
+          }
+        ]
+      },
       "windows": [
         {
           "year": "2026",
@@ -8684,7 +8804,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "exact": true,
       "method": "exact-49c8-window-coverage",
-      "computedAt": "2026-06-06 15:19:43",
+      "computedAt": "2026-06-06 15:31:58",
       "yearPools": [
         {
           "year": "2026",
@@ -8820,6 +8940,48 @@ window.__HISTORY_PATTERN_STATE__ = {
           "maxMiss": 0
         }
       ],
+      "currentWindow": {
+        "year": "2026",
+        "start": 56,
+        "end": 60,
+        "count": 5,
+        "expected": 5,
+        "covered": true,
+        "hits": [
+          {
+            "issue": 59,
+            "date": "2026-06-02",
+            "num": "20"
+          }
+        ],
+        "draws": [
+          {
+            "issue": 56,
+            "date": "2026-05-26",
+            "num": "33"
+          },
+          {
+            "issue": 57,
+            "date": "2026-05-28",
+            "num": "47"
+          },
+          {
+            "issue": 58,
+            "date": "2026-05-30",
+            "num": "42"
+          },
+          {
+            "issue": 59,
+            "date": "2026-06-02",
+            "num": "20"
+          },
+          {
+            "issue": 60,
+            "date": "2026-06-04",
+            "num": "44"
+          }
+        ]
+      },
       "windows": [
         {
           "year": "2020",

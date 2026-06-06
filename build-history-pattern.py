@@ -152,6 +152,51 @@ def coverage_stats(windows, pool):
     }
 
 
+def current_window_state(source_rows, current_year, pool):
+    year_rows = [row for row in source_rows if display_year(row) == current_year]
+    if not year_rows:
+        return {
+            "year": current_year,
+            "start": 0,
+            "end": 0,
+            "count": 0,
+            "expected": 5,
+            "covered": False,
+            "hits": [],
+            "draws": [],
+        }
+    latest_issue = max((int(row.get("issue") or 0) for row in year_rows), default=0)
+    start = ((latest_issue - 1) // 5) * 5 + 1 if latest_issue else 0
+    end = start + 4 if start else 0
+    window_rows = sorted(
+        [row for row in year_rows if start <= int(row.get("issue") or 0) <= end],
+        key=lambda row: int(row.get("issue") or 0),
+    )
+    pool_set = set(pool)
+    draws = []
+    hits = []
+    for row in window_rows:
+        num = special_num(row)
+        item = {
+            "issue": int(row.get("issue") or 0),
+            "date": str(row.get("date") or ""),
+            "num": num,
+        }
+        draws.append(item)
+        if num in pool_set:
+            hits.append(item)
+    return {
+        "year": current_year,
+        "start": start,
+        "end": end,
+        "count": len(window_rows),
+        "expected": 5,
+        "covered": len(hits) > 0,
+        "hits": hits,
+        "draws": draws,
+    }
+
+
 def build_item(source, rows, range_name, generated_at):
     source_rows = [row for row in rows if row.get("source") == source]
     latest = max(source_rows, key=lambda row: (str(row.get("date") or ""), int(row.get("issue") or 0)), default=None)
@@ -185,6 +230,7 @@ def build_item(source, rows, range_name, generated_at):
         "method": "exact-49c8-window-coverage",
         "computedAt": generated_at,
         "yearPools": year_pools,
+        "currentWindow": current_window_state(source_rows, current_year, pool),
         **stats,
     }
 

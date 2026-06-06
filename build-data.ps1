@@ -1909,6 +1909,13 @@ function New-DashboardHtml {
       const selected = document.getElementById('history-pattern-source')?.value || 'am';
       const range = document.getElementById('history-pattern-range')?.value || 'year';
       const analysis = buildHistorySpecialFixed8Analysis(selected, range);
+      const currentWindow = analysis.currentWindow || {};
+      const currentWindowLabel = currentWindow.start ? `${String(currentWindow.start).padStart(3, '0')}-${String(currentWindow.end).padStart(3, '0')}` : '-';
+      const currentWindowHits = asArray(currentWindow.hits);
+      const currentWindowDraws = asArray(currentWindow.draws);
+      const currentWindowDetail = currentWindowHits.length
+        ? currentWindowHits.map(item => `${String(item.issue).padStart(3, '0')}&#26399; ${esc(item.num)}`).join('&#65292;')
+        : (currentWindowDraws.length ? `&#24050;&#24320;&#29305;&#21495;&#65306;${currentWindowDraws.map(item => `${String(item.issue).padStart(3, '0')}&#26399; ${esc(item.num)}`).join('&#65292;')}` : '&#24403;&#21069;&#31383;&#21475;&#26242;&#26080;&#24320;&#22870;');
       app.innerHTML = `<div class="grid">
         <section class="panel full">
           <div class="filters">
@@ -1926,6 +1933,7 @@ function New-DashboardHtml {
             <section class="panel"><h2>&#35206;&#30422;8&#30721;</h2>${numberChips(analysis.pool)}<p class="muted">${analysis.rangeLabel}&#65292;${analysis.method}</p></section>
             <section class="panel"><h2>&#31383;&#21475;&#35206;&#30422;&#29575;</h2><div class="metric">${esc(analysis.hitRate)}%</div><p class="muted">${esc(analysis.covered)} / ${esc(analysis.total)} &#20010;&#23436;&#25972;&#31383;&#21475;</p></section>
             <section class="panel"><h2>&#28431;&#31383;</h2><div class="metric">${esc(analysis.misses.length)}</div><p class="muted">&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.currentMiss)}&#65292;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.maxMiss)}</p></section>
+            <section class="panel"><h2>&#24403;&#21069;&#31383;&#21475;</h2><div class="metric">${esc(currentWindowLabel)}</div><p class="muted">&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)} &#26399;&#65292;${currentWindow.covered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</p><p class="muted">${currentWindow.covered ? '&#35206;&#30422;&#65306;' : ''}${currentWindowDetail}</p></section>
           </div>
         </section>
         <section class="panel full">
