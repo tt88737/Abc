@@ -228,6 +228,8 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name, pos
             "covered": False,
             "pool": NUMS_ALL[:POOL_SIZE],
             "poolBasis": "before-current-window",
+            "displayMode": "active-window",
+            "reviewWindow": None,
             "postWindowOptimal": {
                 "pool": complete_pool(post_window_pool),
                 "covered": False,
@@ -237,7 +239,14 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name, pos
             "draws": [],
         }
     latest_issue = max((int(row.get("issue") or 0) for row in year_rows), default=0)
-    start = ((latest_issue - 1) // 5) * 5 + 1 if latest_issue else 0
+    natural_start = ((latest_issue - 1) // 5) * 5 + 1 if latest_issue else 0
+    natural_end = natural_start + 4 if natural_start else 0
+    natural_rows = sorted(
+        [row for row in year_rows if natural_start <= int(row.get("issue") or 0) <= natural_end],
+        key=lambda row: int(row.get("issue") or 0),
+    )
+    natural_complete = len(natural_rows) >= 5
+    start = natural_start + 5 if natural_complete else natural_start
     end = start + 4 if start else 0
     window_rows = sorted(
         [row for row in year_rows if start <= int(row.get("issue") or 0) <= end],
@@ -266,6 +275,48 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name, pos
             hits.append(item)
         if num in post_pool_set:
             post_hits.append(item)
+    review_window = None
+    if natural_complete:
+        review_pre_rows = [
+            row for row in scoped_rows
+            if display_year(row) != current_year or int(row.get("issue") or 0) < natural_start
+        ]
+        review_pre_pool, _ = exact_best_pool_cached(fixed_five_windows(review_pre_rows))
+        review_pre_pool = complete_pool(review_pre_pool)
+        review_pool_set = set(review_pre_pool)
+        review_nums = sorted({special_num(row) for row in natural_rows if special_num(row)}, key=int)
+        review_hits = []
+        review_post_hits = []
+        review_draws = []
+        for row in natural_rows:
+            num = special_num(row)
+            item = {
+                "issue": int(row.get("issue") or 0),
+                "date": str(row.get("date") or ""),
+                "num": num,
+            }
+            review_draws.append(item)
+            if num in review_pool_set:
+                review_hits.append(item)
+            if num in post_pool_set:
+                review_post_hits.append(item)
+        review_window = {
+            "year": current_year,
+            "start": natural_start,
+            "end": natural_end,
+            "count": len(natural_rows),
+            "expected": 5,
+            "nums": review_nums,
+            "covered": len(review_hits) > 0,
+            "pool": review_pre_pool,
+            "poolBasis": "before-review-window",
+            "hits": review_hits,
+            "draws": review_draws,
+            "postWindowOptimal": {
+                "covered": len(review_post_hits) > 0,
+                "hits": review_post_hits,
+            },
+        }
     return {
         "year": current_year,
         "start": start,
@@ -275,6 +326,8 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name, pos
         "covered": len(hits) > 0,
         "pool": pre_window_pool,
         "poolBasis": "before-current-window",
+        "displayMode": "next-window" if natural_complete else "active-window",
+        "reviewWindow": review_window,
         "postWindowOptimal": {
             "pool": post_pool,
             "covered": len(post_hits) > 0,

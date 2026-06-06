@@ -527,8 +527,8 @@ try {
     if ($historyAmAll.total -gt 0 -and (-not @($historyAmAll.rollingWindows | Where-Object { @($_.pool).Count -eq 8 -and $_.poolBasis -eq 'before-window' -and $null -ne $_.covered }))) {
         throw 'history pattern should persist per-window rolling pre-window pools and coverage'
     }
-    if ($null -eq $historyAmAll.currentWindow -or $null -eq $historyAmAll.currentWindow.covered -or $null -eq $historyAmAll.currentWindow.hits -or $null -eq $historyAmAll.currentWindow.draws -or @($historyAmAll.currentWindow.pool).Count -ne 8 -or $historyAmAll.currentWindow.poolBasis -ne 'before-current-window') {
-        throw 'history pattern should persist current window coverage details using the pre-window pool'
+    if ($null -eq $historyAmAll.currentWindow -or $null -eq $historyAmAll.currentWindow.covered -or $null -eq $historyAmAll.currentWindow.hits -or $null -eq $historyAmAll.currentWindow.draws -or @($historyAmAll.currentWindow.pool).Count -ne 8 -or $historyAmAll.currentWindow.poolBasis -ne 'before-current-window' -or $null -eq $historyAmAll.currentWindow.displayMode -or ($historyAmAll.currentWindow.displayMode -eq 'next-window' -and $null -eq $historyAmAll.currentWindow.reviewWindow)) {
+        throw 'history pattern should persist current window coverage details using the pre-window pool and next-window display mode'
     }
     if ($null -eq $historyAmAll.currentWindow.postWindowOptimal -or @($historyAmAll.currentWindow.postWindowOptimal.pool).Count -ne 8 -or $null -eq $historyAmAll.currentWindow.postWindowOptimal.covered -or $null -eq $historyAmAll.currentWindow.postWindowOptimal.hits) {
         throw 'history pattern should persist current window post-window optimal coverage details'

@@ -1,5 +1,5 @@
 window.__HISTORY_PATTERN_STATE__ = {
-  "generatedAt": "2026-06-06 17:25:13",
+  "generatedAt": "2026-06-06 17:42:34",
   "items": [
     {
       "source": "am",
@@ -468,7 +468,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 17:25:13",
+      "computedAt": "2026-06-06 17:42:34",
       "yearPools": [
         {
           "year": "2026",
@@ -508,6 +508,8 @@ window.__HISTORY_PATTERN_STATE__ = {
           "46"
         ],
         "poolBasis": "before-current-window",
+        "displayMode": "active-window",
+        "reviewWindow": null,
         "postWindowOptimal": {
           "pool": [
             "01",
@@ -10412,7 +10414,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 17:25:13",
+      "computedAt": "2026-06-06 17:42:34",
       "yearPools": [
         {
           "year": "2026",
@@ -10566,6 +10568,8 @@ window.__HISTORY_PATTERN_STATE__ = {
           "49"
         ],
         "poolBasis": "before-current-window",
+        "displayMode": "active-window",
+        "reviewWindow": null,
         "postWindowOptimal": {
           "pool": [
             "01",
@@ -39359,7 +39363,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 17:25:13",
+      "computedAt": "2026-06-06 17:42:34",
       "yearPools": [
         {
           "year": "2026",
@@ -39383,22 +39387,87 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "currentWindow": {
         "year": "2026",
-        "start": 56,
-        "end": 60,
-        "count": 5,
+        "start": 61,
+        "end": 65,
+        "count": 0,
         "expected": 5,
         "covered": false,
         "pool": [
-          "01",
-          "02",
-          "03",
-          "11",
-          "13",
+          "06",
+          "17",
           "19",
-          "27",
-          "40"
+          "21",
+          "31",
+          "40",
+          "42",
+          "45"
         ],
         "poolBasis": "before-current-window",
+        "displayMode": "next-window",
+        "reviewWindow": {
+          "year": "2026",
+          "start": 56,
+          "end": 60,
+          "count": 5,
+          "expected": 5,
+          "nums": [
+            "20",
+            "33",
+            "42",
+            "44",
+            "47"
+          ],
+          "covered": false,
+          "pool": [
+            "01",
+            "02",
+            "03",
+            "11",
+            "13",
+            "19",
+            "27",
+            "40"
+          ],
+          "poolBasis": "before-review-window",
+          "hits": [],
+          "draws": [
+            {
+              "issue": 56,
+              "date": "2026-05-26",
+              "num": "33"
+            },
+            {
+              "issue": 57,
+              "date": "2026-05-28",
+              "num": "47"
+            },
+            {
+              "issue": 58,
+              "date": "2026-05-30",
+              "num": "42"
+            },
+            {
+              "issue": 59,
+              "date": "2026-06-02",
+              "num": "20"
+            },
+            {
+              "issue": 60,
+              "date": "2026-06-04",
+              "num": "44"
+            }
+          ],
+          "postWindowOptimal": {
+            "covered": true,
+            "hits": [
+              {
+                "issue": 58,
+                "date": "2026-05-30",
+                "num": "42"
+              }
+            ]
+          }
+        },
         "postWindowOptimal": {
           "pool": [
             "06",
@@ -39410,43 +39479,11 @@ window.__HISTORY_PATTERN_STATE__ = {
             "42",
             "45"
           ],
-          "covered": true,
-          "hits": [
-            {
-              "issue": 58,
-              "date": "2026-05-30",
-              "num": "42"
-            }
-          ]
+          "covered": false,
+          "hits": []
         },
         "hits": [],
-        "draws": [
-          {
-            "issue": 56,
-            "date": "2026-05-26",
-            "num": "33"
-          },
-          {
-            "issue": 57,
-            "date": "2026-05-28",
-            "num": "47"
-          },
-          {
-            "issue": 58,
-            "date": "2026-05-30",
-            "num": "42"
-          },
-          {
-            "issue": 59,
-            "date": "2026-06-02",
-            "num": "20"
-          },
-          {
-            "issue": 60,
-            "date": "2026-06-04",
-            "num": "44"
-          }
-        ]
+        "draws": []
       },
       "rollingWindows": [
         {
@@ -42692,7 +42729,7 @@ window.__HISTORY_PATTERN_STATE__ = {
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 17:25:13",
+      "computedAt": "2026-06-06 17:42:34",
       "yearPools": [
         {
           "year": "2026",
@@ -42830,11 +42867,11 @@ window.__HISTORY_PATTERN_STATE__ = {
       ],
       "currentWindow": {
         "year": "2026",
-        "start": 56,
-        "end": 60,
-        "count": 5,
+        "start": 61,
+        "end": 65,
+        "count": 0,
         "expected": 5,
-        "covered": true,
+        "covered": false,
         "pool": [
           "01",
           "02",
@@ -42846,6 +42883,77 @@ window.__HISTORY_PATTERN_STATE__ = {
           "41"
         ],
         "poolBasis": "before-current-window",
+        "displayMode": "next-window",
+        "reviewWindow": {
+          "year": "2026",
+          "start": 56,
+          "end": 60,
+          "count": 5,
+          "expected": 5,
+          "nums": [
+            "20",
+            "33",
+            "42",
+            "44",
+            "47"
+          ],
+          "covered": true,
+          "pool": [
+            "01",
+            "02",
+            "03",
+            "08",
+            "11",
+            "20",
+            "23",
+            "41"
+          ],
+          "poolBasis": "before-review-window",
+          "hits": [
+            {
+              "issue": 59,
+              "date": "2026-06-02",
+              "num": "20"
+            }
+          ],
+          "draws": [
+            {
+              "issue": 56,
+              "date": "2026-05-26",
+              "num": "33"
+            },
+            {
+              "issue": 57,
+              "date": "2026-05-28",
+              "num": "47"
+            },
+            {
+              "issue": 58,
+              "date": "2026-05-30",
+              "num": "42"
+            },
+            {
+              "issue": 59,
+              "date": "2026-06-02",
+              "num": "20"
+            },
+            {
+              "issue": 60,
+              "date": "2026-06-04",
+              "num": "44"
+            }
+          ],
+          "postWindowOptimal": {
+            "covered": true,
+            "hits": [
+              {
+                "issue": 59,
+                "date": "2026-06-02",
+                "num": "20"
+              }
+            ]
+          }
+        },
         "postWindowOptimal": {
           "pool": [
             "01",
@@ -42857,49 +42965,11 @@ window.__HISTORY_PATTERN_STATE__ = {
             "23",
             "41"
           ],
-          "covered": true,
-          "hits": [
-            {
-              "issue": 59,
-              "date": "2026-06-02",
-              "num": "20"
-            }
-          ]
+          "covered": false,
+          "hits": []
         },
-        "hits": [
-          {
-            "issue": 59,
-            "date": "2026-06-02",
-            "num": "20"
-          }
-        ],
-        "draws": [
-          {
-            "issue": 56,
-            "date": "2026-05-26",
-            "num": "33"
-          },
-          {
-            "issue": 57,
-            "date": "2026-05-28",
-            "num": "47"
-          },
-          {
-            "issue": 58,
-            "date": "2026-05-30",
-            "num": "42"
-          },
-          {
-            "issue": 59,
-            "date": "2026-06-02",
-            "num": "20"
-          },
-          {
-            "issue": 60,
-            "date": "2026-06-04",
-            "num": "44"
-          }
-        ]
+        "hits": [],
+        "draws": []
       },
       "rollingWindows": [
         {
