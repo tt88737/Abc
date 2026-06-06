@@ -1967,7 +1967,10 @@ function New-DashboardHtml {
       const latest = rows[rows.length - 1] || {};
       const year = displayYear(latest);
       const map = new Map();
-      rows.filter(row => displayYear(row) === year).forEach(row => asArray(row.balls).forEach(ball => map.set(Number(ball.numberText || ball.number || 0), ball.zodiac || '')));
+      rows.filter(row => displayYear(row) === year).forEach(row => asArray(row.balls).forEach(ball => {
+        const num = Number(ball.numberText || ball.number || 0);
+        if (!map.has(num)) map.set(num, ball.zodiac || '');
+      }));
       rows.forEach(row => asArray(row.balls).forEach(ball => {
         const num = Number(ball.numberText || ball.number || 0);
         if (!map.has(num)) map.set(num, ball.zodiac || '');

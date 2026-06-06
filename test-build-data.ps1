@@ -701,12 +701,50 @@ const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
 global.__DATA__ = json;
 global.location = { protocol: 'file:' };
 global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
-new Function(script)();
+new Function(script + `
+const amRecommendation = recommendationTrackAnalysis('am');
+const hkRecommendation = recommendationTrackAnalysis('hk');
+if (!amRecommendation.special || amRecommendation.threePool.length !== 5 || !hkRecommendation.special || hkRecommendation.threePool.length !== 5) {
+  throw new Error('recommendation tracking failed to calculate current recommendations');
+}
+`)();
 console.log('RUNTIME_OK');
 '@
     $runtimeOutput = $runtimeCheck | node - (Join-Path $outDir 'index.html') (Join-Path $outDir 'data/records.json')
     if ($LASTEXITCODE -ne 0 -or ($runtimeOutput -join "`n") -notmatch 'RUNTIME_OK') {
         throw "dashboard runtime check failed: $($runtimeOutput -join ' ')"
+    }
+
+    $realRuntimeCheck = @'
+const fs = require('fs');
+const html = fs.readFileSync(process.argv[2], 'utf8');
+const json = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
+const script = html.match(/<script>\s*([\s\S]*?)\s*<\/script>\s*<\/body>/)[1]
+  .replace(/const app = document.getElementById\('app'\);/, "const app = {innerHTML:''};")
+  .replace(/const tabs = document.querySelectorAll\('\.tabs button'\);/, "const tabs = [];")
+  .replace(/loadDashboardData\(\)\.then\([\s\S]*?\.catch\(err => \{\s*app\.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;<\/h2><p>\$\{esc\(err\.message\)\}<\/p><\/section>`;\s*\}\);/, "recentRecords = (__DATA__.records || []); summary = __DATA__.summary || {};")
+  .replace(/document.getElementById\('window5-source'\)\.addEventListener\('change', renderWindow5\);/g, '')
+  .replace(/document.getElementById\('three-window5-source'\)\.addEventListener\('change', renderThreeWindow5\);/g, '')
+  .replace(/document.getElementById\('pattern-source'\)\.addEventListener\('change', renderPatternWatch\);/g, '');
+global.__DATA__ = json;
+global.location = { protocol: 'file:' };
+global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
+new Function(script + `
+const amRecommendation = recommendationTrackAnalysis('am');
+const hkRecommendation = recommendationTrackAnalysis('hk');
+const amSpecial = amRecommendation.special && amRecommendation.special.numberText;
+const hkSpecial = hkRecommendation.special && hkRecommendation.special.numberText;
+const amThree = amRecommendation.threePool.map(item => item.numberText).join(',');
+const hkThree = hkRecommendation.threePool.map(item => item.numberText).join(',');
+if (amSpecial !== '11' || hkSpecial !== '19' || amThree !== '24,07,44,31,46' || hkThree !== '27,12,37,46,22') {
+  throw new Error('recommendation tracking changed: am ' + amSpecial + ' ' + amThree + '; hk ' + hkSpecial + ' ' + hkThree);
+}
+`)();
+console.log('REAL_RECOMMENDATION_OK');
+'@
+    $realRuntimeOutput = $realRuntimeCheck | node - (Join-Path $PSScriptRoot 'index.html') (Join-Path $PSScriptRoot 'data/records.json')
+    if ($LASTEXITCODE -ne 0 -or ($realRuntimeOutput -join "`n") -notmatch 'REAL_RECOMMENDATION_OK') {
+        throw "dashboard real recommendation check failed: $($realRuntimeOutput -join ' ')"
     }
 
     Write-Host 'PASS'
