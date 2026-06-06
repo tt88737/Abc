@@ -299,7 +299,7 @@ try {
     if (-not $dashboard.Contains('historyYearGroups.set(String(item.year), [])') -or -not $dashboard.Contains('&#26242;&#26080;&#28431;&#31383;')) {
         throw 'history pattern should show years with zero missed windows'
     }
-    if (-not $dashboard.Contains('currentWindowHits') -or -not $dashboard.Contains('&#24403;&#21069;&#31383;&#21475;') -or -not $dashboard.Contains('&#24320;&#22870;&#21069;8&#30721;') -or -not $dashboard.Contains('&#20107;&#21518;&#35206;&#30422;') -or -not $dashboard.Contains('&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)}')) {
+    if (-not $dashboard.Contains('currentWindowHits') -or -not $dashboard.Contains('&#24403;&#21069;&#31383;&#21475;') -or -not $dashboard.Contains('&#24320;&#22870;&#21069;&#21629;&#20013;') -or -not $dashboard.Contains('&#20107;&#21518;&#35206;&#30422;') -or -not $dashboard.Contains('&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)}')) {
         throw 'history pattern should show current five-issue window progress and coverage'
     }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
