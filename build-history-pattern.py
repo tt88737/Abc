@@ -216,7 +216,7 @@ def rolling_window_stats(windows):
     }
 
 
-def current_window_state(source_rows, current_year, scoped_rows, range_name):
+def current_window_state(source_rows, current_year, scoped_rows, range_name, post_window_pool):
     year_rows = [row for row in source_rows if display_year(row) == current_year]
     if not year_rows:
         return {
@@ -228,6 +228,11 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name):
             "covered": False,
             "pool": NUMS_ALL[:POOL_SIZE],
             "poolBasis": "before-current-window",
+            "postWindowOptimal": {
+                "pool": complete_pool(post_window_pool),
+                "covered": False,
+                "hits": [],
+            },
             "hits": [],
             "draws": [],
         }
@@ -244,8 +249,11 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name):
     ]
     pre_window_pool, _ = exact_best_pool_cached(fixed_five_windows(pre_window_rows))
     pool_set = set(pre_window_pool)
+    post_pool = complete_pool(post_window_pool)
+    post_pool_set = set(post_pool)
     draws = []
     hits = []
+    post_hits = []
     for row in window_rows:
         num = special_num(row)
         item = {
@@ -256,6 +264,8 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name):
         draws.append(item)
         if num in pool_set:
             hits.append(item)
+        if num in post_pool_set:
+            post_hits.append(item)
     return {
         "year": current_year,
         "start": start,
@@ -265,6 +275,11 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name):
         "covered": len(hits) > 0,
         "pool": pre_window_pool,
         "poolBasis": "before-current-window",
+        "postWindowOptimal": {
+            "pool": post_pool,
+            "covered": len(post_hits) > 0,
+            "hits": post_hits,
+        },
         "hits": hits,
         "draws": draws,
     }
@@ -306,7 +321,7 @@ def build_item(source, rows, range_name, generated_at):
         "validationMode": "rolling-before-window",
         "computedAt": generated_at,
         "yearPools": year_pools,
-        "currentWindow": current_window_state(source_rows, current_year, scoped_rows, range_name),
+        "currentWindow": current_window_state(source_rows, current_year, scoped_rows, range_name, post_pool),
         "rollingWindows": stats["windows"],
         **stats,
     }
