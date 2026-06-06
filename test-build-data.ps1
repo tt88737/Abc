@@ -284,6 +284,9 @@ try {
     if (-not $dashboard.Contains('&#25512;&#33616;&#36319;&#36394;') -or -not $dashboard.Contains('&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#26368;&#20248;') -or -not $dashboard.Contains('&#30721;&#22797;&#24335;')) {
         throw 'recommendation tracking should render current recommendation and historical hit records'
     }
+    if (-not $dashboard.Contains('&#25512;&#33616;&#26399;&#21495;') -or -not $dashboard.Contains('&#29983;&#25104;&#26102;&#38388;') -or -not $dashboard.Contains('&#20381;&#25454;&#24320;&#22870;')) {
+        throw 'recommendation tracking should show recommendation issue, generated time, and basis draw'
+    }
     if (-not $dashboard.Contains("loadJsonOrScript('data/history-pattern-state.json'") -or -not $dashboard.Contains('__HISTORY_PATTERN_STATE__')) {
         throw 'history pattern should load precomputed exact state'
     }

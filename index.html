@@ -1449,9 +1449,14 @@
       const latest = rows[rows.length - 1] || {};
       const specialScores = dimensionScoreRows(source, 'special', rows);
       const threeScores = dimensionScoreRows(source, 'regular', rows);
+      const latestIssue = Number(latest.issue || 0);
       return {
         source,
         latest,
+        basisIssue: latestIssue,
+        basisDate: latest.date || '',
+        recommendIssue: latestIssue ? latestIssue + 1 : '',
+        generatedAt: summary?.generatedAt || '',
         special: specialScores[0] || null,
         specialAlternates: specialScores.slice(1, 8),
         threePool: threeScores.slice(0, 5),
@@ -1489,6 +1494,10 @@
       const threePool = asArray(analysis.threePool);
       const line = [];
       line.push(sourceName);
+      line.push(`&#25512;&#33616;&#26399;&#21495;&#65306; <strong>${esc(analysis.recommendIssue || '-')}&#26399;</strong>`);
+      line.push(`&#29983;&#25104;&#26102;&#38388;&#65306; ${esc(analysis.generatedAt || '-')}`);
+      line.push(`&#20381;&#25454;&#24320;&#22870;&#65306; ${esc(analysis.basisIssue || '-')}&#26399;&#65292;${esc(analysis.basisDate || '-')}`);
+      line.push('');
       line.push(`&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;&#65306; <strong>${esc(special.numberText || '-')}</strong>`);
       line.push(`&#32467;&#26500;&#65306; ${esc(special.zodiac || '-')}&#65292;&#23614;&#25968; <strong>${esc(special.tail || '-')}</strong>&#65292;${colorLabel(special.color)}&#12290;`);
       line.push('');
