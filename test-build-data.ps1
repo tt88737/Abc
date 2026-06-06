@@ -302,6 +302,9 @@ try {
     if (-not $dashboard.Contains('currentWindowHits') -or -not $dashboard.Contains('&#24403;&#21069;&#31383;&#21475;') -or -not $dashboard.Contains('&#24320;&#22870;&#21069;&#21629;&#20013;') -or -not $dashboard.Contains('&#20107;&#21518;&#35206;&#30422;') -or -not $dashboard.Contains('&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)}')) {
         throw 'history pattern should show current five-issue window progress and coverage'
     }
+    if (-not $dashboard.Contains('&#20107;&#21518;&#35206;&#30422;&#29575;') -or -not $dashboard.Contains('&#20107;&#21518;&#28431;&#31383;')) {
+        throw 'history pattern should show post-window optimal coverage and miss stats'
+    }
     if (-not $dashboard.Contains('function renderManualFetch()')) {
         throw 'dashboard should expose a manual fetch renderer'
     }
@@ -529,6 +532,9 @@ try {
     }
     if ($null -eq $historyAmAll.currentWindow.postWindowOptimal -or @($historyAmAll.currentWindow.postWindowOptimal.pool).Count -ne 8 -or $null -eq $historyAmAll.currentWindow.postWindowOptimal.covered -or $null -eq $historyAmAll.currentWindow.postWindowOptimal.hits) {
         throw 'history pattern should persist current window post-window optimal coverage details'
+    }
+    if ($null -eq $historyAmAll.postWindowStats -or $null -eq $historyAmAll.postWindowStats.hitRate -or $null -eq $historyAmAll.postWindowStats.currentMiss -or $null -eq $historyAmAll.postWindowStats.maxMiss -or $null -eq $historyAmAll.postWindowStats.misses) {
+        throw 'history pattern should persist post-window optimal coverage and miss stats'
     }
     $threeCompoundFile = Join-Path $outDir 'data/three-compound-state.json'
     if (-not (Test-Path -LiteralPath $threeCompoundFile)) {

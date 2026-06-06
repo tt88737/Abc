@@ -1910,6 +1910,7 @@ function New-DashboardHtml {
       const range = document.getElementById('history-pattern-range')?.value || 'year';
       const analysis = buildHistorySpecialFixed8Analysis(selected, range);
       const currentWindow = analysis.currentWindow || {};
+      const postStats = analysis.postWindowStats || {};
       const currentWindowLabel = currentWindow.start ? `${String(currentWindow.start).padStart(3, '0')}-${String(currentWindow.end).padStart(3, '0')}` : '-';
       const currentWindowHits = asArray(currentWindow.hits);
       const currentWindowDraws = asArray(currentWindow.draws);
@@ -1936,6 +1937,8 @@ function New-DashboardHtml {
             <section class="panel"><h2>&#26368;&#26032;&#24320;&#22870;&#21069;8&#30721;</h2>${numberChips(analysis.pool)}<p class="muted">${analysis.rangeLabel}&#65292;&#27599;&#20010;&#23436;&#25972;5&#26399;&#31383;&#21475;&#37117;&#29992;&#31383;&#21475;&#24320;&#22987;&#21069;&#30340;&#25968;&#25454;&#35745;&#31639;8&#30721;&#39564;&#35777;</p>${analysis.postWindowOptimalPool ? `<p class="muted">&#20107;&#21518;&#26368;&#20248;8&#30721; ${numberChips(analysis.postWindowOptimalPool)}</p>` : ''}</section>
             <section class="panel"><h2>&#28378;&#21160;&#35206;&#30422;&#29575;</h2><div class="metric">${esc(analysis.hitRate)}%</div><p class="muted">${esc(analysis.covered)} / ${esc(analysis.total)} &#20010;&#23436;&#25972;&#31383;&#21475;</p></section>
             <section class="panel"><h2>&#28431;&#31383;</h2><div class="metric">${esc(analysis.misses.length)}</div><p class="muted">&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.currentMiss)}&#65292;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.maxMiss)}</p></section>
+            <section class="panel"><h2>&#20107;&#21518;&#35206;&#30422;&#29575;</h2><div class="metric">${esc(postStats.hitRate ?? 0)}%</div><p class="muted">${esc(postStats.covered ?? 0)} / ${esc(postStats.total ?? 0)} &#20010;&#23436;&#25972;&#31383;&#21475;</p></section>
+            <section class="panel"><h2>&#20107;&#21518;&#28431;&#31383;</h2><div class="metric">${esc(asArray(postStats.misses).length)}</div><p class="muted">&#24403;&#21069;&#28431;&#31383;&#65306;${esc(postStats.currentMiss ?? 0)}&#65292;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(postStats.maxMiss ?? 0)}</p></section>
             <section class="panel"><h2>&#24403;&#21069;&#31383;&#21475;</h2><div class="metric">${esc(currentWindowLabel)}</div><p class="muted">&#24050;&#24320; ${esc(currentWindow.count || 0)} / ${esc(currentWindow.expected || 5)} &#26399;&#65292;${currentWindow.covered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</p><p class="muted">&#24320;&#22870;&#21069;&#21629;&#20013;&#65306;${currentWindowDetail}</p><p class="muted">&#20107;&#21518;&#35206;&#30422;&#65306;${postWindowOptimal.covered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</p><p class="muted">&#20107;&#21518;&#21629;&#20013;&#65306;${postWindowDetail}</p></section>
           </div>
         </section>
@@ -1968,7 +1971,7 @@ function New-DashboardHtml {
     }
     function buildHistorySpecialFixed8Analysis(source, range) {
       const item = asArray(historyPatternState.items).find(row => row.source === source && row.range === range) || {};
-      return {...item, source, pool: item.pool || [], postWindowOptimalPool: item.postWindowOptimalPool || [], yearPools: item.yearPools || [], misses: item.misses || [], currentYear: item.currentYear || '', range, rangeLabel: range === 'all' ? '&#20840;&#37096;&#21382;&#21490;' : `${item.currentYear || ''}&#24180;`, method: item.method || 'rolling-before-window-exact-49c8'};
+      return {...item, source, pool: item.pool || [], postWindowOptimalPool: item.postWindowOptimalPool || [], postWindowStats: item.postWindowStats || {}, yearPools: item.yearPools || [], misses: item.misses || [], currentYear: item.currentYear || '', range, rangeLabel: range === 'all' ? '&#20840;&#37096;&#21382;&#21490;' : `${item.currentYear || ''}&#24180;`, method: item.method || 'rolling-before-window-exact-49c8'};
     }
     const defaultFetchUrls = {
       am: 'https://2025kj.zkclhb.com:2025/am.html',

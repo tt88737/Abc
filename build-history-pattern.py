@@ -292,6 +292,8 @@ def build_item(source, rows, range_name, generated_at):
     scoped_rows = source_rows if range_name == "all" else [row for row in source_rows if display_year(row) == current_year]
     windows = fixed_five_windows(scoped_rows)
     post_pool, _ = exact_best_pool_cached(windows)
+    post_pool = complete_pool(post_pool)
+    post_stats = coverage_stats(windows, post_pool)
     stats = rolling_window_stats(windows)
     years = sorted({display_year(row) for row in scoped_rows if display_year(row)}, reverse=True)
     year_pools = []
@@ -315,7 +317,8 @@ def build_item(source, rows, range_name, generated_at):
         "range": range_name,
         "currentYear": current_year,
         "pool": stats["windows"][-1]["pool"] if stats["windows"] else complete_pool(post_pool),
-        "postWindowOptimalPool": complete_pool(post_pool),
+        "postWindowOptimalPool": post_pool,
+        "postWindowStats": post_stats,
         "exact": True,
         "method": "rolling-before-window-exact-49c8",
         "validationMode": "rolling-before-window",

@@ -1,5 +1,5 @@
 window.__HISTORY_PATTERN_STATE__ = {
-  "generatedAt": "2026-06-06 16:52:16",
+  "generatedAt": "2026-06-06 17:18:32",
   "items": [
     {
       "source": "am",
@@ -25,10 +25,450 @@ window.__HISTORY_PATTERN_STATE__ = {
         "43",
         "46"
       ],
+      "postWindowStats": {
+        "windows": [
+          {
+            "year": "2026",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "09",
+              "22",
+              "29",
+              "43",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "13",
+              "21",
+              "27",
+              "28",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "01",
+              "11",
+              "26",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "06",
+              "12",
+              "32",
+              "39",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "18",
+              "28",
+              "37",
+              "42",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "19",
+              "41",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "06",
+              "19",
+              "26",
+              "27",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "01",
+              "11",
+              "28",
+              "42",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "16",
+              "19",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "03",
+              "13",
+              "23",
+              "24",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "01",
+              "14",
+              "15",
+              "38",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "09",
+              "10",
+              "23",
+              "31",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "05",
+              "18",
+              "24",
+              "28",
+              "29"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "05",
+              "23",
+              "24",
+              "25",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "10",
+              "33",
+              "34",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "02",
+              "03",
+              "29",
+              "35",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "05",
+              "16",
+              "17",
+              "19",
+              "27"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "12",
+              "26",
+              "27",
+              "36",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "06",
+              "17",
+              "35",
+              "37",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "17",
+              "33",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "20",
+              "28",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "16",
+              "22",
+              "30",
+              "45",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "04",
+              "09",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "06",
+              "08",
+              "11",
+              "16",
+              "22"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "01",
+              "31",
+              "39",
+              "44",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "29",
+              "37",
+              "41",
+              "45",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "07",
+              "30",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "16",
+              "24",
+              "26",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "05",
+              "23",
+              "33",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "09",
+              "13",
+              "27",
+              "42",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "07",
+              "31",
+              "41",
+              "45"
+            ],
+            "covered": true
+          }
+        ],
+        "covered": 31,
+        "misses": [],
+        "total": 31,
+        "hitRate": 100.0,
+        "currentMiss": 0,
+        "maxMiss": 0
+      },
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 16:52:16",
+      "computedAt": "2026-06-06 17:18:32",
       "yearPools": [
         {
           "year": "2026",
@@ -2144,10 +2584,7835 @@ window.__HISTORY_PATTERN_STATE__ = {
         "48",
         "49"
       ],
+      "postWindowStats": {
+        "windows": [
+          {
+            "year": "2020",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "07",
+              "16",
+              "17",
+              "28",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "11",
+              "16",
+              "24",
+              "26",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "11",
+              "22",
+              "27"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "26",
+              "30",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "16",
+              "18",
+              "21",
+              "24",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "14",
+              "24",
+              "33",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 161,
+            "end": 165,
+            "count": 5,
+            "nums": [
+              "05",
+              "27",
+              "30",
+              "34"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "14",
+              "28",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "08",
+              "22",
+              "36",
+              "38",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "26",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "19",
+              "38",
+              "39",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "10",
+              "20",
+              "23",
+              "25",
+              "35"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "06",
+              "08",
+              "36",
+              "45",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "04",
+              "14",
+              "31",
+              "34"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "17",
+              "30",
+              "35",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "07",
+              "20",
+              "33",
+              "35",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "03",
+              "15",
+              "17",
+              "35",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "21",
+              "23",
+              "31",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "05",
+              "08",
+              "10",
+              "35",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "05",
+              "37",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "04",
+              "21",
+              "28",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 236,
+            "end": 240,
+            "count": 5,
+            "nums": [
+              "05",
+              "11",
+              "18",
+              "19"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "05",
+              "26",
+              "34",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "21",
+              "22",
+              "29",
+              "33",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "16",
+              "27",
+              "30",
+              "37",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "03",
+              "04",
+              "07",
+              "20",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "19"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "01",
+              "09",
+              "18",
+              "38",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 271,
+            "end": 275,
+            "count": 5,
+            "nums": [
+              "05",
+              "28",
+              "31",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "28",
+              "31",
+              "35",
+              "41",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "02",
+              "03",
+              "13",
+              "19",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "03",
+              "16",
+              "24",
+              "39",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "24",
+              "25",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "09",
+              "15",
+              "23",
+              "34",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "23",
+              "24",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "01",
+              "32",
+              "35",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 311,
+            "end": 315,
+            "count": 5,
+            "nums": [
+              "02",
+              "33",
+              "36",
+              "39",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 316,
+            "end": 320,
+            "count": 5,
+            "nums": [
+              "01",
+              "05",
+              "06",
+              "37",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "20",
+              "29",
+              "30",
+              "36",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "05",
+              "25",
+              "32",
+              "34"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "03",
+              "09",
+              "24",
+              "39",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "12",
+              "35",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 341,
+            "end": 345,
+            "count": 5,
+            "nums": [
+              "13",
+              "15",
+              "35",
+              "39",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "09",
+              "13",
+              "24",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "10",
+              "26",
+              "30",
+              "34"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "02",
+              "09",
+              "22",
+              "26",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "02",
+              "08",
+              "10",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "09",
+              "17",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "29",
+              "33",
+              "35"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "11",
+              "17",
+              "29",
+              "30",
+              "33"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "01",
+              "08",
+              "15",
+              "28",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "03",
+              "21",
+              "37",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "06",
+              "11",
+              "14",
+              "27",
+              "33"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "14",
+              "21",
+              "31",
+              "42",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "11",
+              "24",
+              "28",
+              "33",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "17",
+              "31",
+              "39",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "08",
+              "28",
+              "31",
+              "32",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "27",
+              "30",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "10",
+              "16",
+              "27",
+              "31",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "03",
+              "21",
+              "23",
+              "26",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "02",
+              "08",
+              "09",
+              "20",
+              "21"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "16",
+              "39",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "08",
+              "10",
+              "15",
+              "18",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "12",
+              "13",
+              "20",
+              "23"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "14",
+              "24",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "14",
+              "16",
+              "28",
+              "39",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "08",
+              "14",
+              "25",
+              "34",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "09",
+              "23",
+              "26",
+              "37",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "22",
+              "27",
+              "35",
+              "36",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "01",
+              "04",
+              "31",
+              "45",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "01",
+              "23",
+              "37",
+              "38",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "30",
+              "31",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "32",
+              "33",
+              "38",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "28",
+              "31",
+              "42",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "02",
+              "08",
+              "11",
+              "35",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "09",
+              "22",
+              "31",
+              "36",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "27",
+              "39",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 161,
+            "end": 165,
+            "count": 5,
+            "nums": [
+              "02",
+              "18",
+              "25",
+              "36",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "11",
+              "13",
+              "14",
+              "28",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "09",
+              "12",
+              "34",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "10",
+              "30",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "26",
+              "28",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "17",
+              "18",
+              "20"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "03",
+              "14",
+              "23",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "07",
+              "11",
+              "14",
+              "28",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "19",
+              "29",
+              "33",
+              "36",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "07",
+              "14",
+              "21",
+              "22",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "12",
+              "28",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "05",
+              "26",
+              "37",
+              "39",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "04",
+              "20",
+              "24",
+              "39",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "04",
+              "15",
+              "17",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "05",
+              "09",
+              "15",
+              "45",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 236,
+            "end": 240,
+            "count": 5,
+            "nums": [
+              "08",
+              "13",
+              "20",
+              "22",
+              "26"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "11",
+              "21",
+              "28",
+              "38",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "14",
+              "15",
+              "19",
+              "24",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "31",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "05",
+              "16",
+              "19",
+              "28",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "01",
+              "08",
+              "10",
+              "33",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "05",
+              "12",
+              "16",
+              "22",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 271,
+            "end": 275,
+            "count": 5,
+            "nums": [
+              "06",
+              "33",
+              "44",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "02",
+              "05",
+              "19",
+              "34",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "03",
+              "14",
+              "23",
+              "26",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "15",
+              "17",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "24",
+              "30",
+              "32",
+              "37",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "36",
+              "37",
+              "40",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "03",
+              "25",
+              "30",
+              "34",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "05",
+              "11",
+              "19",
+              "35",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 311,
+            "end": 315,
+            "count": 5,
+            "nums": [
+              "06",
+              "17",
+              "25",
+              "41",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 316,
+            "end": 320,
+            "count": 5,
+            "nums": [
+              "23",
+              "34",
+              "37",
+              "39",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "07",
+              "09",
+              "22",
+              "39",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "06",
+              "30",
+              "35",
+              "38",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "03",
+              "32",
+              "37",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "18",
+              "25",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 341,
+            "end": 345,
+            "count": 5,
+            "nums": [
+              "01",
+              "33",
+              "39",
+              "43",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "08",
+              "11",
+              "37",
+              "38",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "14",
+              "18",
+              "25",
+              "43",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 356,
+            "end": 360,
+            "count": 5,
+            "nums": [
+              "17",
+              "22",
+              "32",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 361,
+            "end": 365,
+            "count": 5,
+            "nums": [
+              "16",
+              "20",
+              "39",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "10",
+              "21",
+              "22",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "17",
+              "35",
+              "39",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "20",
+              "32",
+              "33",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "06",
+              "09",
+              "19",
+              "24",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "03",
+              "12",
+              "14",
+              "19",
+              "33"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "01",
+              "04",
+              "19",
+              "46",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "12",
+              "16",
+              "26",
+              "41",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "03",
+              "21",
+              "32",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "08",
+              "11",
+              "21",
+              "35",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "19",
+              "25",
+              "39",
+              "42",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "02",
+              "10",
+              "13",
+              "27",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "27",
+              "28",
+              "29"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "08",
+              "24",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "08",
+              "11",
+              "12",
+              "22"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "02",
+              "19",
+              "30",
+              "32",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "22",
+              "23",
+              "28",
+              "31",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "13",
+              "26",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "05",
+              "06",
+              "11",
+              "19",
+              "34"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "31",
+              "35",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "09",
+              "24",
+              "36",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "05",
+              "08",
+              "22",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "14",
+              "16",
+              "34",
+              "40",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "09",
+              "10",
+              "11",
+              "21",
+              "27"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "16",
+              "32",
+              "34",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "16",
+              "17",
+              "36",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "12",
+              "42",
+              "45",
+              "47",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "03",
+              "19",
+              "27",
+              "40",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "17",
+              "19",
+              "21",
+              "22",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "27",
+              "28"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "04",
+              "17",
+              "41",
+              "42",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "05",
+              "14",
+              "18",
+              "30",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "12",
+              "14",
+              "16",
+              "26",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 161,
+            "end": 165,
+            "count": 5,
+            "nums": [
+              "02",
+              "39",
+              "40",
+              "45",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "19",
+              "47",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "01",
+              "20",
+              "34",
+              "42",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "20",
+              "31",
+              "40",
+              "41",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "16",
+              "26",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "19",
+              "25",
+              "31",
+              "35",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "02",
+              "03",
+              "04",
+              "08",
+              "25"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "13",
+              "29",
+              "35",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "08",
+              "11",
+              "19",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "12",
+              "18",
+              "19",
+              "30",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "26",
+              "39",
+              "41",
+              "42",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "15",
+              "18",
+              "25",
+              "41",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "24",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "35",
+              "39",
+              "41",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "15",
+              "22",
+              "31",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 236,
+            "end": 240,
+            "count": 5,
+            "nums": [
+              "05",
+              "09",
+              "17",
+              "20",
+              "27"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "06",
+              "26",
+              "29",
+              "33",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "13",
+              "21",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "05",
+              "20",
+              "25",
+              "38",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "12",
+              "17",
+              "19"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "03",
+              "06",
+              "18",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "21",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 271,
+            "end": 275,
+            "count": 5,
+            "nums": [
+              "01",
+              "07",
+              "18",
+              "47",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "03",
+              "12",
+              "14",
+              "18",
+              "20"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "18",
+              "28",
+              "37",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "09",
+              "19",
+              "26",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "35",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "03",
+              "14",
+              "17",
+              "39",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "02",
+              "09",
+              "23",
+              "44",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "30",
+              "33",
+              "36",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 311,
+            "end": 315,
+            "count": 5,
+            "nums": [
+              "01",
+              "10",
+              "14",
+              "15",
+              "20"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 316,
+            "end": 320,
+            "count": 5,
+            "nums": [
+              "03",
+              "11",
+              "38",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "01",
+              "05",
+              "08",
+              "17"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "11",
+              "30",
+              "31",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "20",
+              "24",
+              "26",
+              "29",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "21",
+              "29",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 341,
+            "end": 345,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "25",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "26",
+              "33",
+              "36",
+              "41",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "02",
+              "10",
+              "13",
+              "26",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 356,
+            "end": 360,
+            "count": 5,
+            "nums": [
+              "30",
+              "35",
+              "46",
+              "47",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 361,
+            "end": 365,
+            "count": 5,
+            "nums": [
+              "07",
+              "17",
+              "22",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "18",
+              "32",
+              "39",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "06",
+              "09",
+              "26",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "12",
+              "13",
+              "15",
+              "16",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "26",
+              "32",
+              "36",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "07",
+              "09",
+              "36",
+              "40",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "02",
+              "18",
+              "32",
+              "35",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "04",
+              "11",
+              "47",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "21",
+              "30",
+              "31"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "05",
+              "11",
+              "16",
+              "23",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "13",
+              "23",
+              "30"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "05",
+              "06",
+              "21",
+              "26",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "03",
+              "04",
+              "21",
+              "39",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "09",
+              "27",
+              "32",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "08",
+              "20",
+              "40",
+              "42",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "09",
+              "18",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "19",
+              "21",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "01",
+              "25",
+              "35",
+              "37",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "06",
+              "27",
+              "30",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "01",
+              "24",
+              "33",
+              "35",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "08",
+              "13",
+              "28"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "23",
+              "24",
+              "33",
+              "39",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "16",
+              "20",
+              "28",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "01",
+              "14",
+              "15",
+              "18",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "01",
+              "28",
+              "41",
+              "44",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "21",
+              "22",
+              "30",
+              "35",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "02",
+              "11",
+              "21",
+              "31",
+              "35"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "06",
+              "07",
+              "09",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "07",
+              "13",
+              "14"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "05",
+              "06",
+              "17",
+              "29",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "14",
+              "22",
+              "33"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "12",
+              "19",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "04",
+              "14",
+              "42",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 161,
+            "end": 165,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "17",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "10",
+              "12",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "12",
+              "36",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "02",
+              "04",
+              "32",
+              "34",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "08",
+              "23",
+              "36",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "31",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "08",
+              "29",
+              "31",
+              "44",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "08",
+              "18",
+              "32",
+              "44",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "03",
+              "04",
+              "11",
+              "25"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "07",
+              "28",
+              "38",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "14",
+              "28",
+              "34",
+              "42",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "10",
+              "18",
+              "19",
+              "20",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "09",
+              "29",
+              "31",
+              "38",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "03",
+              "20",
+              "29",
+              "33",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "04",
+              "12",
+              "13",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 236,
+            "end": 240,
+            "count": 5,
+            "nums": [
+              "14",
+              "15",
+              "17",
+              "19",
+              "23"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "18",
+              "20",
+              "25",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "03",
+              "13",
+              "14",
+              "21",
+              "29"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "01",
+              "09",
+              "26",
+              "34",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "09",
+              "17",
+              "29",
+              "34",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "09",
+              "20",
+              "25",
+              "31",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "02",
+              "03",
+              "08",
+              "13",
+              "32"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 271,
+            "end": 275,
+            "count": 5,
+            "nums": [
+              "10",
+              "13",
+              "27",
+              "28",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "08",
+              "10",
+              "18",
+              "39",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "06",
+              "16",
+              "33",
+              "38",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "19",
+              "21",
+              "23",
+              "39",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "20",
+              "25",
+              "35",
+              "44",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "20",
+              "24",
+              "32",
+              "36",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "15",
+              "25",
+              "28",
+              "32",
+              "34"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "13",
+              "16",
+              "28",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 311,
+            "end": 315,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "26",
+              "29",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 316,
+            "end": 320,
+            "count": 5,
+            "nums": [
+              "23",
+              "41",
+              "42",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "19",
+              "26",
+              "32"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "01",
+              "18",
+              "21",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "06",
+              "08",
+              "24",
+              "37",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "10",
+              "16",
+              "31",
+              "41",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 341,
+            "end": 345,
+            "count": 5,
+            "nums": [
+              "01",
+              "05",
+              "07",
+              "34",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "09",
+              "14",
+              "28",
+              "37",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "10",
+              "13",
+              "18",
+              "41",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 356,
+            "end": 360,
+            "count": 5,
+            "nums": [
+              "01",
+              "08",
+              "26",
+              "29",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 361,
+            "end": 365,
+            "count": 5,
+            "nums": [
+              "01",
+              "12",
+              "19",
+              "36",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "06",
+              "19",
+              "26",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "06",
+              "19",
+              "20",
+              "23",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "18",
+              "20",
+              "22",
+              "39",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "17",
+              "23",
+              "29",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "01",
+              "20",
+              "32",
+              "35",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "03",
+              "09",
+              "16",
+              "28",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "07",
+              "11",
+              "30",
+              "40",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "19",
+              "29",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "02",
+              "15",
+              "28",
+              "41",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "02",
+              "09",
+              "30",
+              "35",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "09",
+              "12",
+              "25",
+              "31"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "11",
+              "23",
+              "30",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "04",
+              "31",
+              "33",
+              "46",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "08",
+              "20",
+              "34",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "03",
+              "16",
+              "19",
+              "34"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "05",
+              "17",
+              "32",
+              "38",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "05",
+              "13",
+              "22",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "06",
+              "11",
+              "13",
+              "37",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "24",
+              "33",
+              "34",
+              "41",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "17",
+              "28",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "05",
+              "19",
+              "21",
+              "35",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "16",
+              "43",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "18",
+              "24",
+              "29",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "10",
+              "21",
+              "25",
+              "29",
+              "32"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "21",
+              "22",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "17",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "04",
+              "07",
+              "19",
+              "37",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "14",
+              "16",
+              "35",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "16",
+              "27",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "02",
+              "22",
+              "27",
+              "33",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "21",
+              "32",
+              "44",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "20",
+              "27",
+              "42",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 161,
+            "end": 165,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "35",
+              "40",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "10",
+              "14",
+              "32",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "16",
+              "32",
+              "40",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "03",
+              "11",
+              "20"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "25",
+              "27",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "29",
+              "39",
+              "41",
+              "43",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "04",
+              "05",
+              "21",
+              "31",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "10",
+              "15",
+              "16",
+              "39",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "05",
+              "25",
+              "40",
+              "43",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "04",
+              "14",
+              "18",
+              "19",
+              "33"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "06",
+              "20",
+              "38",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "14",
+              "15",
+              "21",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "01",
+              "05",
+              "19",
+              "22",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "05",
+              "20",
+              "34",
+              "37",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "17",
+              "23",
+              "24"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 236,
+            "end": 240,
+            "count": 5,
+            "nums": [
+              "03",
+              "06",
+              "18",
+              "24",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "04",
+              "17",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "11",
+              "15",
+              "24",
+              "31",
+              "32"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "14",
+              "27",
+              "30",
+              "36",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "08",
+              "29",
+              "39",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "16",
+              "30",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "22",
+              "27",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 271,
+            "end": 275,
+            "count": 5,
+            "nums": [
+              "30",
+              "40",
+              "41",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "07",
+              "22",
+              "26",
+              "29",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "13",
+              "21",
+              "27",
+              "43",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "04",
+              "11",
+              "26",
+              "40",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "14",
+              "24",
+              "30",
+              "44",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "09",
+              "21",
+              "44",
+              "46",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "16",
+              "17",
+              "24",
+              "32",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "03",
+              "04",
+              "08",
+              "09",
+              "22"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 311,
+            "end": 315,
+            "count": 5,
+            "nums": [
+              "18",
+              "21",
+              "35",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 316,
+            "end": 320,
+            "count": 5,
+            "nums": [
+              "05",
+              "12",
+              "13",
+              "41",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "01",
+              "27",
+              "28",
+              "36",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "11",
+              "14",
+              "19",
+              "20",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "32",
+              "34",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "05",
+              "38",
+              "40",
+              "47",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 341,
+            "end": 345,
+            "count": 5,
+            "nums": [
+              "02",
+              "18",
+              "45",
+              "46",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "01",
+              "04",
+              "17",
+              "28",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "10",
+              "25",
+              "27",
+              "47",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 356,
+            "end": 360,
+            "count": 5,
+            "nums": [
+              "09",
+              "14",
+              "15",
+              "21",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 361,
+            "end": 365,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "04",
+              "20",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "08",
+              "22",
+              "33",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "04",
+              "15",
+              "25",
+              "30",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "06",
+              "07",
+              "27",
+              "36",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "21",
+              "34",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "04",
+              "14",
+              "30",
+              "41",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "13",
+              "25",
+              "37",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "21",
+              "22",
+              "23",
+              "39",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "20",
+              "25",
+              "29",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "07",
+              "28",
+              "30",
+              "37",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "05",
+              "12",
+              "18",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "10",
+              "11",
+              "25",
+              "44",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "11",
+              "20",
+              "24",
+              "31",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "10",
+              "23",
+              "31",
+              "35",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "12",
+              "29",
+              "43",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "03",
+              "09",
+              "35",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "10",
+              "22",
+              "24",
+              "28",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "20",
+              "28",
+              "34",
+              "35",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "14",
+              "15",
+              "30",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "10",
+              "20",
+              "33",
+              "39",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "03",
+              "20",
+              "31",
+              "34",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "26",
+              "32",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "03",
+              "18",
+              "27",
+              "46",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "03",
+              "38",
+              "45",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "23",
+              "28",
+              "36",
+              "38",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "10",
+              "24",
+              "33",
+              "45",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "02",
+              "13",
+              "23",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "02",
+              "10",
+              "14",
+              "37",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "09",
+              "11",
+              "14",
+              "36",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "10",
+              "13",
+              "17",
+              "25",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "02",
+              "14",
+              "32",
+              "40",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "10",
+              "26",
+              "38",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "05",
+              "11",
+              "18",
+              "23",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 161,
+            "end": 165,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "16",
+              "23",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "07",
+              "09",
+              "16",
+              "33",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "30",
+              "36",
+              "38",
+              "39",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "04",
+              "24",
+              "27",
+              "29",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "05",
+              "23",
+              "28",
+              "33",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "08",
+              "15",
+              "17",
+              "18",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "24",
+              "25",
+              "29",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "10",
+              "14",
+              "34",
+              "43",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "01",
+              "18",
+              "20",
+              "30",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "09",
+              "10",
+              "13",
+              "15",
+              "24"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "02",
+              "11",
+              "15",
+              "18",
+              "21"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "23",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "25",
+              "32",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "02",
+              "15",
+              "31",
+              "39",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "13",
+              "37",
+              "38",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "12",
+              "25"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "17",
+              "23",
+              "33",
+              "35",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "03",
+              "28",
+              "38",
+              "47",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "10",
+              "33",
+              "38",
+              "43",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "10",
+              "29",
+              "31",
+              "35",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 271,
+            "end": 275,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "36",
+              "44",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "09",
+              "16",
+              "27",
+              "28",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "24",
+              "41",
+              "45",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "03",
+              "14",
+              "19",
+              "34",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "02",
+              "05",
+              "18",
+              "44",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "22",
+              "23",
+              "40",
+              "44",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "05",
+              "15",
+              "22",
+              "42",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "06",
+              "16",
+              "17",
+              "20",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 311,
+            "end": 315,
+            "count": 5,
+            "nums": [
+              "04",
+              "14",
+              "23",
+              "37",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 316,
+            "end": 320,
+            "count": 5,
+            "nums": [
+              "06",
+              "18",
+              "24",
+              "28",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "15",
+              "23",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "03",
+              "17",
+              "19",
+              "36",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "06",
+              "26",
+              "44",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "16",
+              "17",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 341,
+            "end": 345,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "24",
+              "27",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "03",
+              "13",
+              "16",
+              "22",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "01",
+              "04",
+              "08",
+              "30",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 356,
+            "end": 360,
+            "count": 5,
+            "nums": [
+              "07",
+              "11",
+              "24",
+              "41",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 361,
+            "end": 365,
+            "count": 5,
+            "nums": [
+              "12",
+              "23",
+              "24",
+              "26"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "09",
+              "22",
+              "29",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "13",
+              "21",
+              "27",
+              "28",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "01",
+              "11",
+              "26",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "06",
+              "12",
+              "32",
+              "39",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "18",
+              "28",
+              "37",
+              "42",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "19",
+              "41",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "06",
+              "19",
+              "26",
+              "27",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "01",
+              "11",
+              "28",
+              "42",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "16",
+              "19",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "03",
+              "13",
+              "23",
+              "24",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "01",
+              "14",
+              "15",
+              "38",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "09",
+              "10",
+              "23",
+              "31",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "05",
+              "18",
+              "24",
+              "28",
+              "29"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "05",
+              "23",
+              "24",
+              "25",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "10",
+              "33",
+              "34",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "02",
+              "03",
+              "29",
+              "35",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "05",
+              "16",
+              "17",
+              "19",
+              "27"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "12",
+              "26",
+              "27",
+              "36",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "06",
+              "17",
+              "35",
+              "37",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "17",
+              "33",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "01",
+              "06",
+              "20",
+              "28",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "16",
+              "22",
+              "30",
+              "45",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "04",
+              "09",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "06",
+              "08",
+              "11",
+              "16",
+              "22"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "01",
+              "31",
+              "39",
+              "44",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "29",
+              "37",
+              "41",
+              "45",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "07",
+              "30",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "16",
+              "24",
+              "26",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "05",
+              "23",
+              "33",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "09",
+              "13",
+              "27",
+              "42",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "07",
+              "31",
+              "41",
+              "45"
+            ],
+            "covered": false
+          }
+        ],
+        "covered": 310,
+        "misses": [
+          {
+            "year": "2020",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "11",
+              "16",
+              "24",
+              "26",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "16",
+              "18",
+              "21",
+              "24",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "08",
+              "22",
+              "36",
+              "38",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "10",
+              "20",
+              "23",
+              "25",
+              "35"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "17",
+              "30",
+              "35",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "21",
+              "23",
+              "31",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "04",
+              "21",
+              "28",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "21",
+              "22",
+              "29",
+              "33",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "19"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "28",
+              "31",
+              "35",
+              "41",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "24",
+              "25",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "23",
+              "24",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "20",
+              "29",
+              "30",
+              "36",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "10",
+              "26",
+              "30",
+              "34"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "02",
+              "09",
+              "22",
+              "26",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "02",
+              "08",
+              "10",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "29",
+              "33",
+              "35"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "11",
+              "17",
+              "29",
+              "30",
+              "33"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "08",
+              "28",
+              "31",
+              "32",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "10",
+              "16",
+              "27",
+              "31",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "02",
+              "08",
+              "09",
+              "20",
+              "21"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "12",
+              "13",
+              "20",
+              "23"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "09",
+              "23",
+              "26",
+              "37",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "09",
+              "22",
+              "31",
+              "36",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 171,
+            "end": 175,
+            "count": 5,
+            "nums": [
+              "09",
+              "12",
+              "34",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "19",
+              "29",
+              "33",
+              "36",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 226,
+            "end": 230,
+            "count": 5,
+            "nums": [
+              "04",
+              "15",
+              "17",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 236,
+            "end": 240,
+            "count": 5,
+            "nums": [
+              "08",
+              "13",
+              "20",
+              "22",
+              "26"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "11",
+              "21",
+              "28",
+              "38",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 291,
+            "end": 295,
+            "count": 5,
+            "nums": [
+              "24",
+              "30",
+              "32",
+              "37",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 296,
+            "end": 300,
+            "count": 5,
+            "nums": [
+              "36",
+              "37",
+              "40",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 356,
+            "end": 360,
+            "count": 5,
+            "nums": [
+              "17",
+              "22",
+              "32",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "10",
+              "21",
+              "22",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "20",
+              "32",
+              "33",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "02",
+              "10",
+              "13",
+              "27",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "27",
+              "28",
+              "29"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "08",
+              "24",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "02",
+              "19",
+              "30",
+              "32",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "22",
+              "23",
+              "28",
+              "31",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "09",
+              "10",
+              "11",
+              "21",
+              "27"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "16",
+              "32",
+              "34",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "04",
+              "17",
+              "41",
+              "42",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "20",
+              "31",
+              "40",
+              "41",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "19",
+              "25",
+              "31",
+              "35",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 201,
+            "end": 205,
+            "count": 5,
+            "nums": [
+              "08",
+              "11",
+              "19",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "15",
+              "18",
+              "25",
+              "41",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "24",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "15",
+              "22",
+              "31",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "13",
+              "21",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "12",
+              "17",
+              "19"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "21",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "09",
+              "19",
+              "26",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 306,
+            "end": 310,
+            "count": 5,
+            "nums": [
+              "30",
+              "33",
+              "36",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 326,
+            "end": 330,
+            "count": 5,
+            "nums": [
+              "11",
+              "30",
+              "31",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 331,
+            "end": 335,
+            "count": 5,
+            "nums": [
+              "20",
+              "24",
+              "26",
+              "29",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 346,
+            "end": 350,
+            "count": 5,
+            "nums": [
+              "26",
+              "33",
+              "36",
+              "41",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "07",
+              "09",
+              "36",
+              "40",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "02",
+              "18",
+              "32",
+              "35",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "21",
+              "30",
+              "31"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "13",
+              "23",
+              "30"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "09",
+              "27",
+              "32",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "16",
+              "20",
+              "28",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "21",
+              "22",
+              "30",
+              "35",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "02",
+              "11",
+              "21",
+              "31",
+              "35"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "02",
+              "04",
+              "32",
+              "34",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "08",
+              "23",
+              "36",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 196,
+            "end": 200,
+            "count": 5,
+            "nums": [
+              "08",
+              "18",
+              "32",
+              "44",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "10",
+              "18",
+              "19",
+              "20",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "09",
+              "29",
+              "31",
+              "38",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "04",
+              "12",
+              "13",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 241,
+            "end": 245,
+            "count": 5,
+            "nums": [
+              "18",
+              "20",
+              "25",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 256,
+            "end": 260,
+            "count": 5,
+            "nums": [
+              "09",
+              "17",
+              "29",
+              "34",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "15",
+              "25",
+              "28",
+              "32",
+              "34"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "19",
+              "26",
+              "32"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 336,
+            "end": 340,
+            "count": 5,
+            "nums": [
+              "10",
+              "16",
+              "31",
+              "41",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 351,
+            "end": 355,
+            "count": 5,
+            "nums": [
+              "10",
+              "13",
+              "18",
+              "41",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "17",
+              "23",
+              "29",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "07",
+              "11",
+              "30",
+              "40",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "02",
+              "15",
+              "28",
+              "41",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "09",
+              "12",
+              "25",
+              "31"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "11",
+              "23",
+              "30",
+              "44",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "18",
+              "24",
+              "29",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "10",
+              "21",
+              "25",
+              "29",
+              "32"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "21",
+              "22",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "04",
+              "07",
+              "19",
+              "37",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "16",
+              "27",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 146,
+            "end": 150,
+            "count": 5,
+            "nums": [
+              "02",
+              "22",
+              "27",
+              "33",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 156,
+            "end": 160,
+            "count": 5,
+            "nums": [
+              "20",
+              "27",
+              "42",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 181,
+            "end": 185,
+            "count": 5,
+            "nums": [
+              "25",
+              "27",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "17",
+              "23",
+              "24"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 246,
+            "end": 250,
+            "count": 5,
+            "nums": [
+              "11",
+              "15",
+              "24",
+              "31",
+              "32"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "22",
+              "27",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "07",
+              "22",
+              "26",
+              "29",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "13",
+              "21",
+              "27",
+              "43",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 286,
+            "end": 290,
+            "count": 5,
+            "nums": [
+              "04",
+              "11",
+              "26",
+              "40",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 301,
+            "end": 305,
+            "count": 5,
+            "nums": [
+              "16",
+              "17",
+              "24",
+              "32",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "08",
+              "22",
+              "33",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "04",
+              "15",
+              "25",
+              "30",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "13",
+              "25",
+              "37",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "20",
+              "25",
+              "29",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "07",
+              "28",
+              "30",
+              "37",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "11",
+              "20",
+              "24",
+              "31",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "12",
+              "29",
+              "43",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "20",
+              "28",
+              "34",
+              "35",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "23",
+              "28",
+              "36",
+              "38",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "10",
+              "13",
+              "17",
+              "25",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "10",
+              "26",
+              "38",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 166,
+            "end": 170,
+            "count": 5,
+            "nums": [
+              "07",
+              "09",
+              "16",
+              "33",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 176,
+            "end": 180,
+            "count": 5,
+            "nums": [
+              "04",
+              "24",
+              "27",
+              "29",
+              "36"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 186,
+            "end": 190,
+            "count": 5,
+            "nums": [
+              "08",
+              "15",
+              "17",
+              "18",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 191,
+            "end": 195,
+            "count": 5,
+            "nums": [
+              "24",
+              "25",
+              "29",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 206,
+            "end": 210,
+            "count": 5,
+            "nums": [
+              "09",
+              "10",
+              "13",
+              "15",
+              "24"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 211,
+            "end": 215,
+            "count": 5,
+            "nums": [
+              "02",
+              "11",
+              "15",
+              "18",
+              "21"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 216,
+            "end": 220,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "23",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 221,
+            "end": 225,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "25",
+              "32",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 231,
+            "end": 235,
+            "count": 5,
+            "nums": [
+              "13",
+              "37",
+              "38",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 251,
+            "end": 255,
+            "count": 5,
+            "nums": [
+              "17",
+              "23",
+              "33",
+              "35",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 261,
+            "end": 265,
+            "count": 5,
+            "nums": [
+              "10",
+              "33",
+              "38",
+              "43",
+              "44"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 266,
+            "end": 270,
+            "count": 5,
+            "nums": [
+              "10",
+              "29",
+              "31",
+              "35",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 276,
+            "end": 280,
+            "count": 5,
+            "nums": [
+              "09",
+              "16",
+              "27",
+              "28",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 281,
+            "end": 285,
+            "count": 5,
+            "nums": [
+              "24",
+              "41",
+              "45",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 321,
+            "end": 325,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "15",
+              "23",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 361,
+            "end": 365,
+            "count": 5,
+            "nums": [
+              "12",
+              "23",
+              "24",
+              "26"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "09",
+              "22",
+              "29",
+              "43",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "13",
+              "21",
+              "27",
+              "28",
+              "41"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "18",
+              "28",
+              "37",
+              "42",
+              "47"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "17",
+              "33",
+              "43"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "07",
+              "30",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 151,
+            "end": 155,
+            "count": 5,
+            "nums": [
+              "07",
+              "31",
+              "41",
+              "45"
+            ],
+            "covered": false
+          }
+        ],
+        "total": 439,
+        "hitRate": 70.62,
+        "currentMiss": 1,
+        "maxMiss": 4
+      },
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 16:52:16",
+      "computedAt": "2026-06-06 17:18:32",
       "yearPools": [
         {
           "year": "2026",
@@ -30914,10 +39179,187 @@ window.__HISTORY_PATTERN_STATE__ = {
         "42",
         "45"
       ],
+      "postWindowStats": {
+        "windows": [
+          {
+            "year": "2026",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "14",
+              "27",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "27",
+              "45",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "05",
+              "11",
+              "15",
+              "42",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "20",
+              "33",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "29",
+              "34",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "13",
+              "31",
+              "34",
+              "48",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "19",
+              "24",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "02",
+              "18",
+              "40",
+              "43",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "15",
+              "34",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "09",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "19",
+              "22",
+              "28"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "20",
+              "33",
+              "42",
+              "44",
+              "47"
+            ],
+            "covered": true
+          }
+        ],
+        "covered": 12,
+        "misses": [],
+        "total": 12,
+        "hitRate": 100.0,
+        "currentMiss": 0,
+        "maxMiss": 0
+      },
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 16:52:16",
+      "computedAt": "2026-06-06 17:18:32",
       "yearPools": [
         {
           "year": "2026",
@@ -31801,10 +40243,2456 @@ window.__HISTORY_PATTERN_STATE__ = {
         "23",
         "41"
       ],
+      "postWindowStats": {
+        "windows": [
+          {
+            "year": "2020",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "01",
+              "08",
+              "38",
+              "39",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "13",
+              "20",
+              "36",
+              "42",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "26",
+              "44",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "24",
+              "25",
+              "32",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "22",
+              "23",
+              "39",
+              "44",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2020",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "14",
+              "21",
+              "22",
+              "28",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "33",
+              "34",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "03",
+              "15",
+              "17",
+              "22",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "07",
+              "10",
+              "16",
+              "22",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "02",
+              "05",
+              "21",
+              "30",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "06",
+              "20",
+              "31",
+              "35",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "21",
+              "23",
+              "24",
+              "27",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "06",
+              "12",
+              "30",
+              "41",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "04",
+              "06",
+              "11",
+              "20",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "10",
+              "21",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "20",
+              "30",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "14",
+              "17",
+              "28",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "12",
+              "20",
+              "33",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "03",
+              "14",
+              "27",
+              "46",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "12",
+              "29",
+              "31",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "08",
+              "19",
+              "40",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "12",
+              "15",
+              "16",
+              "39",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "02",
+              "12",
+              "22",
+              "23",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "23",
+              "38",
+              "40",
+              "41",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "02",
+              "35",
+              "36",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "04",
+              "05",
+              "21",
+              "41",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "08",
+              "15",
+              "18",
+              "33",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "22",
+              "41",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "01",
+              "09",
+              "19",
+              "27",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2021",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "09",
+              "23",
+              "35",
+              "39",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "02",
+              "05",
+              "33",
+              "36",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "08",
+              "11",
+              "12",
+              "43",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "01",
+              "10",
+              "12",
+              "15",
+              "17"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "03",
+              "28",
+              "30",
+              "34",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "18",
+              "25",
+              "41",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "17",
+              "33",
+              "34",
+              "40",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "24",
+              "34",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "15",
+              "34",
+              "41",
+              "44",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "13",
+              "23",
+              "25",
+              "27",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "14",
+              "44",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "13",
+              "29",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "04",
+              "07",
+              "22",
+              "34",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "03",
+              "20",
+              "24",
+              "26",
+              "33"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "11",
+              "13",
+              "40",
+              "46",
+              "48"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "03",
+              "17",
+              "30",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "05",
+              "23",
+              "40",
+              "42",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "04",
+              "11",
+              "20",
+              "36",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "04",
+              "20",
+              "29",
+              "31",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "15",
+              "19",
+              "39",
+              "45",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "07",
+              "10",
+              "11",
+              "21",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2022",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "10",
+              "21",
+              "30"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "08",
+              "29",
+              "37",
+              "42",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "18",
+              "23",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "09",
+              "14",
+              "18",
+              "23",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "06",
+              "20",
+              "23",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "04",
+              "11",
+              "24",
+              "35",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "03",
+              "04",
+              "07",
+              "25",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "03",
+              "11",
+              "14",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "10",
+              "20",
+              "33",
+              "39",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "04",
+              "20",
+              "22",
+              "24",
+              "25"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "06",
+              "26",
+              "29",
+              "35",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "02",
+              "07",
+              "27",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "01",
+              "07",
+              "27",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "12",
+              "15",
+              "26",
+              "38",
+              "39"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "02",
+              "04",
+              "07",
+              "11",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "14",
+              "19",
+              "26",
+              "39"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "01",
+              "04",
+              "18",
+              "36",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "03",
+              "13",
+              "27",
+              "33",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "09",
+              "11",
+              "14",
+              "39",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "12",
+              "16",
+              "21",
+              "29",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "41",
+              "42",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "03",
+              "04",
+              "12",
+              "28"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "11",
+              "14",
+              "34",
+              "35",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "01",
+              "12",
+              "37",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "03",
+              "26",
+              "29",
+              "30",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "31",
+              "40",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "01",
+              "24",
+              "26",
+              "44",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "11",
+              "15",
+              "20",
+              "23",
+              "24"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "13",
+              "48"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "08",
+              "19",
+              "34",
+              "40",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2023",
+            "start": 141,
+            "end": 145,
+            "count": 5,
+            "nums": [
+              "06",
+              "20",
+              "28",
+              "32",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "21",
+              "32",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "03",
+              "15",
+              "19",
+              "29",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "12",
+              "22",
+              "23",
+              "32",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "05",
+              "13",
+              "15",
+              "24",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "21",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "01",
+              "15",
+              "44",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "03",
+              "28",
+              "38",
+              "43",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "01",
+              "03",
+              "07",
+              "21",
+              "25"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "25",
+              "27",
+              "28",
+              "47",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "17",
+              "23",
+              "24",
+              "30",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "02",
+              "05",
+              "13",
+              "19",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "01",
+              "08",
+              "13",
+              "25",
+              "37"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "11",
+              "13",
+              "32",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "04",
+              "14",
+              "23",
+              "45",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "02",
+              "16",
+              "22",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "08",
+              "12",
+              "21",
+              "39",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "04",
+              "09",
+              "14",
+              "20",
+              "26"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "02",
+              "26",
+              "38",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "07",
+              "08",
+              "09",
+              "34",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "16",
+              "19",
+              "31"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "10",
+              "20",
+              "27",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "06",
+              "14",
+              "19",
+              "25",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "03",
+              "08",
+              "21",
+              "23",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "17",
+              "27",
+              "35"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "07",
+              "12",
+              "23",
+              "29",
+              "30"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "01",
+              "23",
+              "34",
+              "35",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2024",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "04",
+              "22",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "10",
+              "14",
+              "18",
+              "28",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "02",
+              "06",
+              "11",
+              "16",
+              "22"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "08",
+              "24",
+              "28",
+              "39",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "01",
+              "17",
+              "23",
+              "37",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "04",
+              "23",
+              "33",
+              "36"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "01",
+              "09",
+              "23",
+              "32",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "04",
+              "13",
+              "14",
+              "39",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "15",
+              "25",
+              "34",
+              "43",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "02",
+              "08",
+              "21",
+              "44",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "14",
+              "22",
+              "29",
+              "32",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "08",
+              "28",
+              "42",
+              "44",
+              "47"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "09",
+              "16",
+              "24",
+              "32",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "17",
+              "18",
+              "26",
+              "33",
+              "48"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 61,
+            "end": 65,
+            "count": 5,
+            "nums": [
+              "03",
+              "13",
+              "19",
+              "26",
+              "27"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "13",
+              "26",
+              "29",
+              "30"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 71,
+            "end": 75,
+            "count": 5,
+            "nums": [
+              "20",
+              "30",
+              "34",
+              "36",
+              "41"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "05",
+              "15",
+              "32",
+              "38",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 81,
+            "end": 85,
+            "count": 5,
+            "nums": [
+              "08",
+              "24",
+              "36",
+              "39",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "07",
+              "13",
+              "20",
+              "26",
+              "33"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "02",
+              "03",
+              "06",
+              "14",
+              "32"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 96,
+            "end": 100,
+            "count": 5,
+            "nums": [
+              "09",
+              "11",
+              "30",
+              "38"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "25",
+              "30",
+              "32",
+              "41",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 106,
+            "end": 110,
+            "count": 5,
+            "nums": [
+              "07",
+              "20",
+              "33",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 111,
+            "end": 115,
+            "count": 5,
+            "nums": [
+              "01",
+              "02",
+              "12",
+              "13",
+              "39"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 116,
+            "end": 120,
+            "count": 5,
+            "nums": [
+              "04",
+              "24",
+              "31",
+              "41",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 121,
+            "end": 125,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "08",
+              "15",
+              "23"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2025",
+            "start": 126,
+            "end": 130,
+            "count": 5,
+            "nums": [
+              "01",
+              "24",
+              "25",
+              "39",
+              "43"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 1,
+            "end": 5,
+            "count": 5,
+            "nums": [
+              "01",
+              "13",
+              "14",
+              "27",
+              "42"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "27",
+              "45",
+              "46",
+              "48"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "05",
+              "11",
+              "15",
+              "42",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "04",
+              "10",
+              "20",
+              "33",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "11",
+              "12",
+              "29",
+              "34",
+              "45"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "13",
+              "31",
+              "34",
+              "48",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "03",
+              "07",
+              "19",
+              "24",
+              "44"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 36,
+            "end": 40,
+            "count": 5,
+            "nums": [
+              "02",
+              "18",
+              "40",
+              "43",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "08",
+              "09",
+              "15",
+              "34",
+              "40"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 46,
+            "end": 50,
+            "count": 5,
+            "nums": [
+              "04",
+              "08",
+              "09",
+              "40",
+              "49"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "08",
+              "16",
+              "19",
+              "22",
+              "28"
+            ],
+            "covered": true
+          },
+          {
+            "year": "2026",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "20",
+              "33",
+              "42",
+              "44",
+              "47"
+            ],
+            "covered": true
+          }
+        ],
+        "covered": 118,
+        "misses": [
+          {
+            "year": "2020",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "24",
+              "25",
+              "32",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2020",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "14",
+              "21",
+              "22",
+              "28",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 11,
+            "end": 15,
+            "count": 5,
+            "nums": [
+              "07",
+              "10",
+              "16",
+              "22",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "14",
+              "17",
+              "28",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2021",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "12",
+              "15",
+              "16",
+              "39",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "17",
+              "33",
+              "34",
+              "40",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "05",
+              "10",
+              "13",
+              "29",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "04",
+              "07",
+              "22",
+              "34",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 91,
+            "end": 95,
+            "count": 5,
+            "nums": [
+              "15",
+              "19",
+              "39",
+              "45",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2022",
+            "start": 101,
+            "end": 105,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "10",
+              "21",
+              "30"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "06",
+              "26",
+              "29",
+              "35",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "12",
+              "15",
+              "26",
+              "38",
+              "39"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "14",
+              "19",
+              "26",
+              "39"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 86,
+            "end": 90,
+            "count": 5,
+            "nums": [
+              "12",
+              "16",
+              "21",
+              "29",
+              "40"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2023",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "05",
+              "07",
+              "13",
+              "48"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 16,
+            "end": 20,
+            "count": 5,
+            "nums": [
+              "05",
+              "13",
+              "15",
+              "24",
+              "37"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 21,
+            "end": 25,
+            "count": 5,
+            "nums": [
+              "06",
+              "10",
+              "21",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "25",
+              "27",
+              "28",
+              "47",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 131,
+            "end": 135,
+            "count": 5,
+            "nums": [
+              "04",
+              "22",
+              "38"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2024",
+            "start": 136,
+            "end": 140,
+            "count": 5,
+            "nums": [
+              "10",
+              "14",
+              "18",
+              "28",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "04",
+              "13",
+              "14",
+              "39",
+              "45"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 31,
+            "end": 35,
+            "count": 5,
+            "nums": [
+              "15",
+              "25",
+              "34",
+              "43",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 41,
+            "end": 45,
+            "count": 5,
+            "nums": [
+              "14",
+              "22",
+              "29",
+              "32",
+              "49"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 51,
+            "end": 55,
+            "count": 5,
+            "nums": [
+              "09",
+              "16",
+              "24",
+              "32",
+              "46"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 56,
+            "end": 60,
+            "count": 5,
+            "nums": [
+              "17",
+              "18",
+              "26",
+              "33",
+              "48"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 66,
+            "end": 70,
+            "count": 5,
+            "nums": [
+              "06",
+              "13",
+              "26",
+              "29",
+              "30"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2025",
+            "start": 76,
+            "end": 80,
+            "count": 5,
+            "nums": [
+              "05",
+              "15",
+              "32",
+              "38",
+              "42"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 6,
+            "end": 10,
+            "count": 5,
+            "nums": [
+              "27",
+              "45",
+              "46",
+              "48"
+            ],
+            "covered": false
+          },
+          {
+            "year": "2026",
+            "start": 26,
+            "end": 30,
+            "count": 5,
+            "nums": [
+              "13",
+              "31",
+              "34",
+              "48",
+              "49"
+            ],
+            "covered": false
+          }
+        ],
+        "total": 147,
+        "hitRate": 80.27,
+        "currentMiss": 0,
+        "maxMiss": 2
+      },
       "exact": true,
       "method": "rolling-before-window-exact-49c8",
       "validationMode": "rolling-before-window",
-      "computedAt": "2026-06-06 16:52:16",
+      "computedAt": "2026-06-06 17:18:32",
       "yearPools": [
         {
           "year": "2026",
