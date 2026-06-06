@@ -278,6 +278,9 @@ try {
     if (-not $dashboard.Contains('function renderRecommendationTrack()') -or -not $dashboard.Contains('function recommendationTrackAnalysis(') -or -not $dashboard.Contains('function dimensionScoreRows(') -or -not $dashboard.Contains('function recommendationTrackHistory(')) {
         throw 'dashboard should expose lightweight recommendation tracking with dimension scoring and hit history'
     }
+    if (-not $dashboard.Contains('recommendation-track-source') -or -not $dashboard.Contains("document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack)")) {
+        throw 'recommendation tracking should switch source with a single source selector'
+    }
     if (-not $dashboard.Contains('&#25512;&#33616;&#36319;&#36394;') -or -not $dashboard.Contains('&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#26368;&#20248;') -or -not $dashboard.Contains('&#30721;&#22797;&#24335;')) {
         throw 'recommendation tracking should render current recommendation and historical hit records'
     }

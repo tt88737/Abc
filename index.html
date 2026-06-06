@@ -1512,25 +1512,27 @@
       return history.map(item => `<tr><td>${sourceName}</td>${recommendationHistoryCells(item)}</tr>`).join('');
     }
     function renderRecommendationTrack() {
-      const am = recommendationTrackAnalysis('am');
-      const hk = recommendationTrackAnalysis('hk');
-      const amHistory = recommendationTrackHistory('am', am);
-      const hkHistory = recommendationTrackHistory('hk', hk);
+      const selected = document.getElementById('recommendation-track-source')?.value || 'am';
+      const analysis = recommendationTrackAnalysis(selected);
+      const history = recommendationTrackHistory(selected, analysis);
+      const sourceName = selected === 'hk' ? '&#39321;&#28207;' : '&#28595;&#38376;';
       app.innerHTML = `<div class="grid">
         <section class="panel full">
+          <div class="filters">
+            <label>&#26469;&#28304;<select id="recommendation-track-source">${sourceOptions(selected)}</select></label>
+          </div>
           <h2>&#25512;&#33616;&#36319;&#36394;</h2>
           <p class="muted">&#25353;&#29983;&#32918;&#12289;&#23614;&#25968;&#12289;&#39068;&#33394;&#19977;&#20010;&#32500;&#24230;&#35745;&#31639;&#65292;&#24403;&#21069;&#24180;&#26435;&#37325;&#26368;&#39640;&#65292;&#36817;30&#26399;&#20854;&#27425;&#65292;&#20840;&#37096;&#21382;&#21490;&#20828;&#24213;&#12290;</p>
         </section>
-        <section class="panel wide"><pre class="recommendation-copy">${recommendationLine('&#28595;&#38376;', am)}</pre></section>
-        <section class="panel wide"><pre class="recommendation-copy">${recommendationLine('&#39321;&#28207;', hk)}</pre></section>
+        <section class="panel full"><pre class="recommendation-copy">${recommendationLine(sourceName, analysis)}</pre></section>
         <section class="panel full">
           <h2>&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;</h2>
           <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26469;&#28304;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#29305;&#21495;&#25512;&#33616;</th><th>&#24320;&#20986;&#29305;&#21495;</th><th>&#29305;&#21495;&#32467;&#26524;</th><th>&#19977;&#20013;&#19977;&#25512;&#33616;</th><th>&#19977;&#20013;&#19977;&#32467;&#26524;</th></tr></thead><tbody>
-            ${recommendationHistoryRows('&#28595;&#38376;', amHistory)}
-            ${recommendationHistoryRows('&#39321;&#28207;', hkHistory)}
+            ${recommendationHistoryRows(sourceName, history)}
           </tbody></table></div>
         </section>
       </div>`;
+      document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack);
     }
     function historyWindowLabel(win) {
       return `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`;
