@@ -287,14 +287,14 @@ try {
     if ($dashboard.Contains('esc(analysis.rangeLabel)') -or $dashboard.Contains('esc(analysis.method)')) {
         throw 'history pattern should not double-escape html entity labels'
     }
-    if (-not $dashboard.Contains('001-005') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;')) {
-        throw 'history pattern should render the fixed 8-code five-window observation'
+    if (-not $dashboard.Contains('001-005') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#24320;&#22870;&#21069;&#28378;&#21160;8&#30721;')) {
+        throw 'history pattern should render the rolling pre-window 8-code five-window observation'
     }
     if (-not $dashboard.Contains('historyYearGroups') -or -not $dashboard.Contains('class="history-year-group"')) {
         throw 'history pattern missed windows should be grouped by year'
     }
     if (-not $dashboard.Contains('historyYearPoolMap') -or -not $dashboard.Contains('b[0].localeCompare(a[0])')) {
-        throw 'history pattern missed window year groups should be sorted descending with yearly fixed 8-code pools'
+        throw 'history pattern missed window year groups should be sorted descending with yearly rolling 8-code pools'
     }
     if (-not $dashboard.Contains('historyYearGroups.set(String(item.year), [])') -or -not $dashboard.Contains('&#26242;&#26080;&#28431;&#31383;')) {
         throw 'history pattern should show years with zero missed windows'
@@ -515,11 +515,14 @@ try {
     }
     $historyPattern = Get-Content -LiteralPath $historyPatternFile -Raw -Encoding UTF8 | ConvertFrom-Json
     $historyAmAll = @($historyPattern.items | Where-Object { $_.source -eq 'am' -and $_.range -eq 'all' } | Select-Object -First 1)
-    if (-not $historyAmAll -or -not $historyAmAll.exact -or @($historyAmAll.pool).Count -ne 8) {
-        throw 'history pattern all-history item should contain an exact 8-code pool'
+    if (-not $historyAmAll -or -not $historyAmAll.exact -or @($historyAmAll.pool).Count -ne 8 -or $historyAmAll.validationMode -ne 'rolling-before-window') {
+        throw 'history pattern all-history item should contain rolling pre-window exact 8-code validation'
     }
     if (@($historyAmAll.yearPools).Count -eq 0 -or -not @($historyAmAll.yearPools | Where-Object { @($_.pool).Count -eq 8 -and $true -eq $_.exact })) {
         throw 'history pattern should persist exact yearly 8-code pools'
+    }
+    if ($historyAmAll.total -gt 0 -and (-not @($historyAmAll.rollingWindows | Where-Object { @($_.pool).Count -eq 8 -and $_.poolBasis -eq 'before-window' -and $null -ne $_.covered }))) {
+        throw 'history pattern should persist per-window rolling pre-window pools and coverage'
     }
     if ($null -eq $historyAmAll.currentWindow -or $null -eq $historyAmAll.currentWindow.covered -or $null -eq $historyAmAll.currentWindow.hits -or $null -eq $historyAmAll.currentWindow.draws -or @($historyAmAll.currentWindow.pool).Count -ne 8 -or $historyAmAll.currentWindow.poolBasis -ne 'before-current-window') {
         throw 'history pattern should persist current window coverage details using the pre-window pool'

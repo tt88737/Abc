@@ -5,6 +5,7 @@ from pathlib import Path
 
 NUMS_ALL = [f"{i:02d}" for i in range(1, 50)]
 POOL_SIZE = 8
+EXACT_POOL_CACHE = {}
 
 
 def display_year(row):
@@ -117,12 +118,75 @@ def exact_best_pool(windows):
     return best_nums[:POOL_SIZE], max(best_count, 0)
 
 
+def exact_best_pool_cached(windows):
+    key = tuple((win.get("year"), win.get("start"), tuple(win.get("nums") or [])) for win in windows)
+    if key not in EXACT_POOL_CACHE:
+        EXACT_POOL_CACHE[key] = exact_best_pool(windows)
+    return EXACT_POOL_CACHE[key]
+
+
 def coverage_stats(windows, pool):
     pool_set = set(pool)
     evaluated = []
     for win in windows:
         covered = any(num in pool_set for num in win["nums"])
         evaluated.append({**win, "covered": covered})
+    covered_count = sum(1 for win in evaluated if win["covered"])
+    misses = [win for win in evaluated if not win["covered"]]
+    max_miss = 0
+    current_miss = 0
+    run = 0
+    for win in evaluated:
+        if win["covered"]:
+            max_miss = max(max_miss, run)
+            run = 0
+        else:
+            run += 1
+    max_miss = max(max_miss, run)
+    for win in reversed(evaluated):
+        if win["covered"]:
+            break
+        current_miss += 1
+    total = len(evaluated)
+    hit_rate = round(covered_count / total * 100, 2) if total else 0
+    return {
+        "windows": evaluated,
+        "covered": covered_count,
+        "misses": misses,
+        "total": total,
+        "hitRate": hit_rate,
+        "currentMiss": current_miss,
+        "maxMiss": max_miss,
+    }
+
+
+def complete_pool(pool):
+    out = list(pool)
+    for num in NUMS_ALL:
+        if num not in out:
+            out.append(num)
+        if len(out) >= POOL_SIZE:
+            break
+    return out[:POOL_SIZE]
+
+
+def rolling_window_stats(windows):
+    evaluated = []
+    pool_cache = {}
+    for idx, win in enumerate(windows):
+        if idx not in pool_cache:
+            pool_cache[idx] = exact_best_pool_cached(windows[:idx])[0]
+        pool = pool_cache[idx]
+        pool = complete_pool(pool)
+        pool_set = set(pool)
+        hits = [num for num in win["nums"] if num in pool_set]
+        evaluated.append({
+            **win,
+            "pool": pool,
+            "poolBasis": "before-window",
+            "covered": len(hits) > 0,
+            "hits": hits,
+        })
     covered_count = sum(1 for win in evaluated if win["covered"])
     misses = [win for win in evaluated if not win["covered"]]
     max_miss = 0
@@ -178,7 +242,7 @@ def current_window_state(source_rows, current_year, scoped_rows, range_name):
         row for row in scoped_rows
         if display_year(row) != current_year or int(row.get("issue") or 0) < start
     ]
-    pre_window_pool, _ = exact_best_pool(fixed_five_windows(pre_window_rows))
+    pre_window_pool, _ = exact_best_pool_cached(fixed_five_windows(pre_window_rows))
     pool_set = set(pre_window_pool)
     draws = []
     hits = []
@@ -212,17 +276,18 @@ def build_item(source, rows, range_name, generated_at):
     current_year = display_year(latest) if latest else ""
     scoped_rows = source_rows if range_name == "all" else [row for row in source_rows if display_year(row) == current_year]
     windows = fixed_five_windows(scoped_rows)
-    pool, _ = exact_best_pool(windows)
-    stats = coverage_stats(windows, pool)
+    post_pool, _ = exact_best_pool_cached(windows)
+    stats = rolling_window_stats(windows)
     years = sorted({display_year(row) for row in scoped_rows if display_year(row)}, reverse=True)
     year_pools = []
     for year in years:
-        year_windows = [win for win in windows if win["year"] == year]
-        year_pool, _ = exact_best_pool(year_windows)
-        year_stats = coverage_stats(year_windows, year_pool)
+        year_windows = [win for win in stats["windows"] if win["year"] == year]
+        completed_year_windows = [win for win in windows if win["year"] == year]
+        year_pool, _ = exact_best_pool_cached(completed_year_windows)
+        year_stats = rolling_window_stats(completed_year_windows)
         year_pools.append({
             "year": year,
-            "pool": year_pool,
+            "pool": complete_pool(year_pool),
             "exact": True,
             "covered": year_stats["covered"],
             "total": year_stats["total"],
@@ -234,12 +299,15 @@ def build_item(source, rows, range_name, generated_at):
         "source": source,
         "range": range_name,
         "currentYear": current_year,
-        "pool": pool,
+        "pool": stats["windows"][-1]["pool"] if stats["windows"] else complete_pool(post_pool),
+        "postWindowOptimalPool": complete_pool(post_pool),
         "exact": True,
-        "method": "exact-49c8-window-coverage",
+        "method": "rolling-before-window-exact-49c8",
+        "validationMode": "rolling-before-window",
         "computedAt": generated_at,
         "yearPools": year_pools,
         "currentWindow": current_window_state(source_rows, current_year, scoped_rows, range_name),
+        "rollingWindows": stats["windows"],
         **stats,
     }
 
