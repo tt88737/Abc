@@ -739,8 +739,70 @@ const amSpecial = amRecommendation.special && amRecommendation.special.numberTex
 const hkSpecial = hkRecommendation.special && hkRecommendation.special.numberText;
 const amThree = amRecommendation.threePool.map(item => item.numberText).join(',');
 const hkThree = hkRecommendation.threePool.map(item => item.numberText).join(',');
-if (amSpecial !== '11' || hkSpecial !== '19' || amThree !== '24,07,44,31,46' || hkThree !== '27,12,37,46,22') {
-  throw new Error('recommendation tracking changed: am ' + amSpecial + ' ' + amThree + '; hk ' + hkSpecial + ' ' + hkThree);
+function independentRows(source) {
+  return (__DATA__.records || []).filter(row => row.source === source).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || Number(a.issue || 0) - Number(b.issue || 0));
+}
+function independentCountPack(rows, mode) {
+  const pack = {nums: new Map(), zodiacs: new Map(), tails: new Map(), colors: new Map()};
+  const add = (map, key) => map.set(String(key || ''), (map.get(String(key || '')) || 0) + 1);
+  rows.forEach(row => {
+    const balls = mode === 'special' ? [row.balls && row.balls[6]].filter(Boolean) : (row.balls || []).slice(0, 6);
+    balls.forEach(ball => {
+      const num = Number(ball.numberText || ball.number || 0);
+      if (!num) return;
+      add(pack.nums, String(num).padStart(2, '0'));
+      add(pack.zodiacs, ball.zodiac || '');
+      add(pack.tails, String(num % 10));
+      add(pack.colors, ball.color || '');
+    });
+  });
+  return pack;
+}
+function independentNorm(map, key) {
+  const values = [...map.values()];
+  const max = values.length ? Math.max(...values) : 1;
+  return max ? (map.get(String(key || '')) || 0) / max : 0;
+}
+function independentScores(source, mode) {
+  const rows = independentRows(source);
+  const latest = rows[rows.length - 1] || {};
+  const year = String(latest.date || '').slice(0, 4);
+  const yearRows = rows.filter(row => String(row.date || '').startsWith(year + '-'));
+  const recentRows = rows.slice(-30);
+  const packs = [independentCountPack(yearRows, mode), independentCountPack(recentRows, mode), independentCountPack(rows, mode)];
+  const zodiacMap = new Map();
+  yearRows.forEach(row => (row.balls || []).forEach(ball => {
+    const num = Number(ball.numberText || ball.number || 0);
+    if (!zodiacMap.has(num)) zodiacMap.set(num, ball.zodiac || '');
+  }));
+  rows.forEach(row => (row.balls || []).forEach(ball => {
+    const num = Number(ball.numberText || ball.number || 0);
+    if (!zodiacMap.has(num)) zodiacMap.set(num, ball.zodiac || '');
+  }));
+  const colorMap = new Map();
+  rows.forEach(row => (row.balls || []).forEach(ball => colorMap.set(Number(ball.numberText || ball.number || 0), ball.color || '')));
+  const weights = mode === 'special' ? {zodiac: 0.42, tail: 0.33, color: 0.25, number: 0.08} : {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.20};
+  return Array.from({length: 49}, (_, idx) => {
+    const num = idx + 1;
+    const numberText = String(num).padStart(2, '0');
+    const zodiac = zodiacMap.get(num) || '';
+    const tail = String(num % 10);
+    const color = colorMap.get(num) || '';
+    const score = packs.reduce((sum, pack, packIndex) => sum + [0.5, 0.25, 0.25][packIndex] * (
+      weights.zodiac * independentNorm(pack.zodiacs, zodiac) +
+      weights.tail * independentNorm(pack.tails, tail) +
+      weights.color * independentNorm(pack.colors, color) +
+      weights.number * independentNorm(pack.nums, numberText)
+    ), 0);
+    return {numberText, score};
+  }).sort((a, b) => b.score - a.score || Number(a.numberText) - Number(b.numberText));
+}
+const expectedAmSpecial = independentScores('am', 'special')[0].numberText;
+const expectedHkSpecial = independentScores('hk', 'special')[0].numberText;
+const expectedAmThree = independentScores('am', 'regular').slice(0, 5).map(item => item.numberText).join(',');
+const expectedHkThree = independentScores('hk', 'regular').slice(0, 5).map(item => item.numberText).join(',');
+if (amSpecial !== expectedAmSpecial || hkSpecial !== expectedHkSpecial || amThree !== expectedAmThree || hkThree !== expectedHkThree) {
+  throw new Error('recommendation tracking mismatch: am ' + amSpecial + ' ' + amThree + '; hk ' + hkSpecial + ' ' + hkThree + '; expected am ' + expectedAmSpecial + ' ' + expectedAmThree + '; hk ' + expectedHkSpecial + ' ' + expectedHkThree);
 }
 `)();
 console.log('REAL_RECOMMENDATION_OK');

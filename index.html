@@ -15,6 +15,7 @@
     .tabs button { border: 1px solid #cbd5e1; background: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
     .tabs button.active { background: #0b42d8; color: #fff; border-color: #0b42d8; }
     .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .grid.compact-grid { align-items: start; }
     .panel { background: #fff; border: 1px solid #d9dee7; border-radius: 8px; padding: 14px; }
     .panel h2 { margin: 0 0 10px; font-size: 16px; }
     .metric { font-size: 28px; font-weight: 800; }
@@ -50,6 +51,9 @@
     .change-summary { display: grid; gap: 6px; }
     .change-summary-row { display: grid; grid-template-columns: 42px 1fr; gap: 6px; align-items: start; }
     .change-summary-label { color: #667085; font-size: 12px; line-height: 22px; }
+    .window5-status { display: grid; gap: 6px; }
+    .window5-status p { margin: 0; }
+    .window5-pool-card p { margin: 8px 0; }
     .change-detail summary, .change-history-all summary { cursor: pointer; color: #0b42d8; font-weight: 700; }
     .change-detail[open] summary, .change-history-all[open] summary { margin-bottom: 8px; }
     .change-detail .mini-grid { grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 10px; min-width: 680px; }
@@ -1176,9 +1180,13 @@
       const hitText = win.hits.length ? win.hits.map(item => `${esc(item.issue)}&#26399; ${esc(item.num)}`).join(' / ') : '&#35266;&#23519;&#20013;';
       app.innerHTML = `<div class="grid">
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="window5-source">${sourceOptions(selected)}</select></label></div></section>
-        <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
-        <section class="panel"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${statusText(analysis.adjustmentStatus)}</p><p class="muted">${statusText(analysis.adjustmentReason)}</p>${latestYearPoolChangeHtml(analysis.yearPoolHistory)}<p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
-        <section class="panel"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${statusText(analysis.stablePoolStatus)}</p><p class="muted">${statusText(analysis.stablePoolReason)}</p><p>&#20248;&#21270;&#65306;${statusText(analysis.stablePoolOptimizationStatus)}</p><p class="muted">${statusText(analysis.stablePoolOptimizationReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
+        <section class="panel full">
+          <div class="grid compact-grid">
+            <section class="panel wide"><h2>5&#26399;&#31383;&#21475;&#35266;&#23519;</h2><div class="window5-status"><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#35206;&#30422;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></div></section>
+            <section class="panel window5-pool-card"><h2>&#24403;&#24180;&#35206;&#30422;&#27744;</h2>${numberChips(analysis.yearPool)}<p>${statusText(analysis.adjustmentStatus)}</p><p class="muted">${statusText(analysis.adjustmentReason)}</p>${latestYearPoolChangeHtml(analysis.yearPoolHistory)}<p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.changeTime || '-')}</p></section>
+            <section class="panel window5-pool-card"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${statusText(analysis.stablePoolStatus)}</p><p class="muted">${statusText(analysis.stablePoolReason)}</p><p>&#20248;&#21270;&#65306;${statusText(analysis.stablePoolOptimizationStatus)}</p><p class="muted">${statusText(analysis.stablePoolOptimizationReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
+          </div>
+        </section>
         <section class="panel full"><h2>&#26126;&#32454;&#25968;&#25454;</h2><div class="detail-placeholder"><button class="secondary window5-detail-toggle" type="button">&#23637;&#24320;&#21464;&#26356;&#35760;&#24405;&#12289;&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;&#21644;&#24180;&#24230;&#22238;&#27979;</button></div><div id="window5-details"></div></section>
       </div>`;
       document.getElementById('window5-source').addEventListener('change', renderWindow5);
