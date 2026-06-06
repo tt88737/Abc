@@ -20,6 +20,30 @@ def special_num(row):
     return str(balls[6].get("numberText") or balls[6].get("number") or "").zfill(2)
 
 
+def latest_draw_state(row):
+    if not row:
+        return None
+    balls = []
+    for ball in row.get("balls") or []:
+        balls.append({
+            "index": int(ball.get("index") or 0),
+            "numberText": str(ball.get("numberText") or ball.get("number") or "").zfill(2),
+            "zodiac": str(ball.get("zodiac") or ""),
+            "color": str(ball.get("color") or ""),
+            "colorName": str(ball.get("colorName") or ""),
+        })
+    balls = sorted(balls, key=lambda item: item["index"])
+    special = balls[6] if len(balls) >= 7 else None
+    return {
+        "issue": int(row.get("issue") or 0),
+        "date": str(row.get("date") or ""),
+        "year": display_year(row),
+        "balls": balls,
+        "regular": balls[:6],
+        "special": special,
+    }
+
+
 def fixed_five_windows(rows):
     by_year = {}
     for row in rows:
@@ -376,6 +400,7 @@ def build_item(source, rows, range_name, generated_at):
         "method": "rolling-before-window-exact-49c8",
         "validationMode": "rolling-before-window",
         "computedAt": generated_at,
+        "latestDraw": latest_draw_state(latest),
         "yearPools": year_pools,
         "currentWindow": current_window_state(source_rows, current_year, scoped_rows, range_name, post_pool),
         "rollingWindows": stats["windows"],

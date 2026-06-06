@@ -290,6 +290,9 @@ try {
     if (-not $dashboard.Contains('001-005') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#24320;&#22870;&#21069;&#28378;&#21160;8&#30721;')) {
         throw 'history pattern should render the rolling pre-window 8-code five-window observation'
     }
+    if (-not $dashboard.Contains('&#26368;&#26032;&#24320;&#22870;') -or -not $dashboard.Contains('latestDraw')) {
+        throw 'history pattern should render the latest draw board'
+    }
     if (-not $dashboard.Contains('historyYearGroups') -or -not $dashboard.Contains('class="history-year-group"')) {
         throw 'history pattern missed windows should be grouped by year'
     }
@@ -520,6 +523,12 @@ try {
     $historyAmAll = @($historyPattern.items | Where-Object { $_.source -eq 'am' -and $_.range -eq 'all' } | Select-Object -First 1)
     if (-not $historyAmAll -or -not $historyAmAll.exact -or @($historyAmAll.pool).Count -ne 8 -or $historyAmAll.validationMode -ne 'rolling-before-window') {
         throw 'history pattern all-history item should contain rolling pre-window exact 8-code validation'
+    }
+    if ($null -eq $historyAmAll.latestDraw -or @($historyAmAll.latestDraw.balls).Count -ne 7 -or $null -eq $historyAmAll.latestDraw.special) {
+        throw 'history pattern should persist latest draw details'
+    }
+    if (-not $historyAmAll.latestDraw.issue -or -not $historyAmAll.latestDraw.date -or @($historyAmAll.latestDraw.regular).Count -ne 6 -or -not $historyAmAll.latestDraw.special.numberText -or -not $historyAmAll.latestDraw.special.zodiac -or -not $historyAmAll.latestDraw.special.color) {
+        throw 'history pattern latest draw details should include issue, date, regular balls, special ball, zodiac, and color'
     }
     if (@($historyAmAll.yearPools).Count -eq 0 -or -not @($historyAmAll.yearPools | Where-Object { @($_.pool).Count -eq 8 -and $true -eq $_.exact })) {
         throw 'history pattern should persist exact yearly 8-code pools'
