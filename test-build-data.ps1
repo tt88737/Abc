@@ -157,8 +157,8 @@ try {
     if ($dashboard.Contains('data-tab="overview"') -or $dashboard.Contains('data-tab="daily"') -or $dashboard.Contains('function renderOverview') -or $dashboard.Contains('function renderDaily')) {
         throw 'dashboard should not expose overview or daily modules after cleanup'
     }
-    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="historyPattern"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose five-window, three-hit five-window, history pattern, advanced analysis, and manual fetch tabs'
+    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="historyPattern"') -or -not $dashboard.Contains('data-tab="recommendationTrack"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
+        throw 'dashboard should expose five-window, three-hit five-window, history pattern, recommendation tracking, advanced analysis, and manual fetch tabs'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
@@ -274,6 +274,12 @@ try {
     }
     if (-not $dashboard.Contains('function renderHistoryPattern()') -or -not $dashboard.Contains('history-pattern-source') -or -not $dashboard.Contains('history-pattern-range')) {
         throw 'dashboard should expose a history pattern observation page'
+    }
+    if (-not $dashboard.Contains('function renderRecommendationTrack()') -or -not $dashboard.Contains('function recommendationTrackAnalysis(') -or -not $dashboard.Contains('function dimensionScoreRows(') -or -not $dashboard.Contains('function recommendationTrackHistory(')) {
+        throw 'dashboard should expose lightweight recommendation tracking with dimension scoring and hit history'
+    }
+    if (-not $dashboard.Contains('&#25512;&#33616;&#36319;&#36394;') -or -not $dashboard.Contains('&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#26368;&#20248;') -or -not $dashboard.Contains('&#30721;&#22797;&#24335;')) {
+        throw 'recommendation tracking should render current recommendation and historical hit records'
     }
     if (-not $dashboard.Contains("loadJsonOrScript('data/history-pattern-state.json'") -or -not $dashboard.Contains('__HISTORY_PATTERN_STATE__')) {
         throw 'history pattern should load precomputed exact state'

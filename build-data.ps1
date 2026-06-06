@@ -666,6 +666,8 @@ function New-DashboardHtml {
     .detail-placeholder { padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; }
     .result-hit { color: #07860a; font-weight: 800; }
     .result-miss { color: #dc2626; font-weight: 800; }
+    .recommendation-copy { margin: 0; white-space: pre-wrap; line-height: 1.45; font-family: Consolas, "Microsoft YaHei", monospace; font-size: 15px; color: #dbeafe; background: #062f63; border-radius: 8px; padding: 14px; }
+    .recommendation-copy strong, .recommendation-copy .accent { color: #38bdf8; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .latest-draw-grid { grid-template-columns: 1fr; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -677,6 +679,7 @@ function New-DashboardHtml {
   <main>
     <nav class="tabs">
       <button class="active" data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
+      <button data-tab="recommendationTrack">&#25512;&#33616;&#36319;&#36394;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
@@ -1956,6 +1959,167 @@ function New-DashboardHtml {
       document.getElementById('history-pattern-source').addEventListener('change', renderHistoryPattern);
       document.getElementById('history-pattern-range').addEventListener('change', renderHistoryPattern);
     }
+    function recommendationSourceRows(source, beforeIndex = null) {
+      const rows = cachedSourceRecords(source).slice().sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || Number(a.issue || 0) - Number(b.issue || 0));
+      return beforeIndex === null ? rows : rows.slice(0, beforeIndex);
+    }
+    function latestZodiacMap(source, rows) {
+      const latest = rows[rows.length - 1] || {};
+      const year = displayYear(latest);
+      const map = new Map();
+      rows.filter(row => displayYear(row) === year).forEach(row => asArray(row.balls).forEach(ball => map.set(Number(ball.numberText || ball.number || 0), ball.zodiac || '')));
+      rows.forEach(row => asArray(row.balls).forEach(ball => {
+        const num = Number(ball.numberText || ball.number || 0);
+        if (!map.has(num)) map.set(num, ball.zodiac || '');
+      }));
+      return map;
+    }
+    function colorMapFromRows(rows) {
+      const map = new Map();
+      rows.forEach(row => asArray(row.balls).forEach(ball => map.set(Number(ball.numberText || ball.number || 0), ball.color || '')));
+      return map;
+    }
+    function dimensionCountPack(rows, mode) {
+      const nums = new Map(), zodiacs = new Map(), tails = new Map(), colors = new Map();
+      const add = (map, key) => map.set(String(key || ''), (map.get(String(key || '')) || 0) + 1);
+      rows.forEach(row => {
+        const balls = mode === 'special' ? [row.balls?.[6]].filter(Boolean) : asArray(row.balls).slice(0, 6);
+        balls.forEach(ball => {
+          const num = Number(ball.numberText || ball.number || 0);
+          if (!num) return;
+          add(nums, String(num).padStart(2, '0'));
+          add(zodiacs, ball.zodiac || '');
+          add(tails, String(num % 10));
+          add(colors, ball.color || '');
+        });
+      });
+      return {nums, zodiacs, tails, colors};
+    }
+    function normalizedCount(map, key) {
+      const values = [...map.values()];
+      const max = values.length ? Math.max(...values) : 1;
+      return max ? (map.get(String(key || '')) || 0) / max : 0;
+    }
+    function dimensionScoreRows(source, mode, inputRows = null) {
+      const rows = inputRows || recommendationSourceRows(source);
+      if (!rows.length) return [];
+      const latest = rows[rows.length - 1];
+      const year = displayYear(latest);
+      const yearRows = rows.filter(row => displayYear(row) === year);
+      const recentRows = rows.slice(-30);
+      const packs = [dimensionCountPack(yearRows, mode), dimensionCountPack(recentRows, mode), dimensionCountPack(rows, mode)];
+      const packWeights = [0.5, 0.25, 0.25];
+      const weights = mode === 'special'
+        ? {zodiac: 0.42, tail: 0.33, color: 0.25, number: 0.08}
+        : {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.20};
+      const zodiacMap = latestZodiacMap(source, rows);
+      const colors = colorMapFromRows(rows);
+      return Array.from({length: 49}, (_, index) => {
+        const num = index + 1;
+        const numberText = String(num).padStart(2, '0');
+        const zodiac = zodiacMap.get(num) || '';
+        const tail = String(num % 10);
+        const color = colors.get(num) || '';
+        const score = packs.reduce((sum, pack, packIndex) => sum + packWeights[packIndex] * (
+          weights.zodiac * normalizedCount(pack.zodiacs, zodiac) +
+          weights.tail * normalizedCount(pack.tails, tail) +
+          weights.color * normalizedCount(pack.colors, color) +
+          weights.number * normalizedCount(pack.nums, numberText)
+        ), 0);
+        return {numberText, score, zodiac, tail, color};
+      }).sort((a, b) => b.score - a.score || Number(a.numberText) - Number(b.numberText));
+    }
+    function recommendationTrackAnalysis(source, inputRows = null) {
+      const rows = inputRows || recommendationSourceRows(source);
+      const latest = rows[rows.length - 1] || {};
+      const specialScores = dimensionScoreRows(source, 'special', rows);
+      const threeScores = dimensionScoreRows(source, 'regular', rows);
+      return {
+        source,
+        latest,
+        special: specialScores[0] || null,
+        specialAlternates: specialScores.slice(1, 8),
+        threePool: threeScores.slice(0, 5),
+        threeAlternates: threeScores.slice(5, 8),
+        computedRows: rows.length
+      };
+    }
+    function recommendationTrackHitForRecord(recommendation, record) {
+      const specialNumText = specialNum(record);
+      const regularNums = asArray(record.balls).slice(0, 6).map(ball => String(Number(ball.numberText || ball.number || 0)).padStart(2, '0'));
+      const threePool = asArray(recommendation.threePool).map(item => item.numberText);
+      const threeHits = regularNums.filter(num => threePool.includes(num));
+      return {
+        specialHit: recommendation.special?.numberText === specialNumText,
+        specialNum: specialNumText,
+        threeHit: threeHits.length >= 3,
+        threeHits,
+      };
+    }
+    function recommendationTrackHistory(source, current) {
+      const rows = recommendationSourceRows(source);
+      const start = Math.max(1, rows.length - 12);
+      const history = [];
+      for (let index = rows.length - 1; index >= start; index--) {
+        const beforeRows = rows.slice(0, index);
+        if (beforeRows.length < 30) continue;
+        const recommendation = recommendationTrackAnalysis(source, beforeRows);
+        const hit = recommendationTrackHitForRecord(recommendation, rows[index]);
+        history.push({record: rows[index], recommendation, ...hit});
+      }
+      return history.slice(0, 10);
+    }
+    function recommendationLine(sourceName, analysis) {
+      const special = analysis.special || {};
+      const threePool = asArray(analysis.threePool);
+      const line = [];
+      line.push(sourceName);
+      line.push(`&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;&#65306; <strong>${esc(special.numberText || '-')}</strong>`);
+      line.push(`&#32467;&#26500;&#65306; ${esc(special.zodiac || '-')}&#65292;&#23614;&#25968; <strong>${esc(special.tail || '-')}</strong>&#65292;${colorLabel(special.color)}&#12290;`);
+      line.push('');
+      line.push(`&#22791;&#36873;&#35266;&#23519;&#65306; <span class="accent">${analysis.specialAlternates.map(item => esc(item.numberText)).join('&#12289; ') || '-'}</span>`);
+      line.push('');
+      line.push(`&#19977;&#20013;&#19977;&#26368;&#20248; <strong>5</strong>&#30721;&#22797;&#24335;&#65306;`);
+      line.push(`<span class="accent">${threePool.map(item => esc(item.numberText)).join('&#12289; ') || '-'}</span>`);
+      line.push('');
+      line.push('&#32467;&#26500;&#65306;');
+      threePool.forEach(item => line.push(`- ${esc(item.numberText)} ${esc(item.zodiac || '-')}&#65292;&#23614;${esc(item.tail || '-')}&#65292;${colorLabel(item.color)}`));
+      return line.join('\n');
+    }
+    function colorLabel(color) {
+      if (color === 'red') return '&#32418;&#27874;';
+      if (color === 'green') return '&#32511;&#27874;';
+      if (color === 'blue') return '&#34013;&#27874;';
+      return esc(color || '-');
+    }
+    function recommendationHistoryCells(item) {
+      return `<td>${esc(item.record.issue)}&#26399;</td><td>${esc(item.record.date)}</td><td>${esc(item.recommendation.special?.numberText || '-')}</td><td>${esc(item.specialNum)}</td><td class="${item.specialHit ? 'result-hit' : 'result-miss'}">${item.specialHit ? '&#21629;&#20013;' : '&#26410;&#20013;'}</td><td>${item.recommendation.threePool.map(row => esc(row.numberText)).join('&#12289; ')}</td><td class="${item.threeHit ? 'result-hit' : 'result-miss'}">${item.threeHit ? `&#21629;&#20013; ${item.threeHits.join('&#12289; ')}` : '&#26410;&#20013;'}</td>`;
+    }
+    function recommendationHistoryRows(sourceName, history) {
+      if (!history.length) return `<tr><td>${sourceName}</td><td colspan="7">&#26242;&#26080;&#36275;&#22815;&#21382;&#21490;&#25512;&#33616;&#35760;&#24405;</td></tr>`;
+      return history.map(item => `<tr><td>${sourceName}</td>${recommendationHistoryCells(item)}</tr>`).join('');
+    }
+    function renderRecommendationTrack() {
+      const am = recommendationTrackAnalysis('am');
+      const hk = recommendationTrackAnalysis('hk');
+      const amHistory = recommendationTrackHistory('am', am);
+      const hkHistory = recommendationTrackHistory('hk', hk);
+      app.innerHTML = `<div class="grid">
+        <section class="panel full">
+          <h2>&#25512;&#33616;&#36319;&#36394;</h2>
+          <p class="muted">&#25353;&#29983;&#32918;&#12289;&#23614;&#25968;&#12289;&#39068;&#33394;&#19977;&#20010;&#32500;&#24230;&#35745;&#31639;&#65292;&#24403;&#21069;&#24180;&#26435;&#37325;&#26368;&#39640;&#65292;&#36817;30&#26399;&#20854;&#27425;&#65292;&#20840;&#37096;&#21382;&#21490;&#20828;&#24213;&#12290;</p>
+        </section>
+        <section class="panel wide"><pre class="recommendation-copy">${recommendationLine('&#28595;&#38376;', am)}</pre></section>
+        <section class="panel wide"><pre class="recommendation-copy">${recommendationLine('&#39321;&#28207;', hk)}</pre></section>
+        <section class="panel full">
+          <h2>&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;</h2>
+          <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26469;&#28304;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#29305;&#21495;&#25512;&#33616;</th><th>&#24320;&#20986;&#29305;&#21495;</th><th>&#29305;&#21495;&#32467;&#26524;</th><th>&#19977;&#20013;&#19977;&#25512;&#33616;</th><th>&#19977;&#20013;&#19977;&#32467;&#26524;</th></tr></thead><tbody>
+            ${recommendationHistoryRows('&#28595;&#38376;', amHistory)}
+            ${recommendationHistoryRows('&#39321;&#28207;', hkHistory)}
+          </tbody></table></div>
+        </section>
+      </div>`;
+    }
     function historyWindowLabel(win) {
       return `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`;
     }
@@ -2132,6 +2296,9 @@ function New-DashboardHtml {
       historyPattern: async () => {
         historyPatternState = await ensureHistoryPatternData();
       },
+      recommendationTrack: async () => {
+        await ensureRecordsData();
+      },
       patternWatch: async () => {
         await ensureRecordsData();
       }
@@ -2140,6 +2307,7 @@ function New-DashboardHtml {
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       historyPattern: renderHistoryPattern,
+      recommendationTrack: renderRecommendationTrack,
       patternWatch: renderPatternWatch,
       manualFetch: renderManualFetch
     };
