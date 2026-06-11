@@ -240,7 +240,7 @@ for (const item of data.reliabilitySummary.bestReliableMatches) {
   assert.notEqual(item.betAction, "回避", "best reliable match list should not include avoid picks");
   assert.notEqual(item.marketCheckStatus, "divergent", "best reliable match list should not include market-divergent picks");
   assert.ok(Array.isArray(item.dualScores) && item.dualScores.length === 2, "reliable match row should include two score picks");
-  assert.deepEqual(item.dualScores.map(row => row.role), ["主推", "博冷"], "reliable match row should label score picks as main and upset");
+  assert.deepEqual(item.dualScores.map(row => row.role), ["主推", "备用"], "reliable match row should label score picks as main and backup");
 }
 assert.ok(!("marketSummary" in data), "data should not include market summary");
 
@@ -257,16 +257,22 @@ assert.ok(scenarioSet.size >= 5, "expert scenarios should vary by match context"
 const bigMismatchRows = modelRows.filter(item => Math.abs(Number(item.model.strength?.diff || 0)) >= 20);
 assert.ok(bigMismatchRows.length > 0, "test data should include strong mismatch matches");
 assert.ok(
-  bigMismatchRows.some(item => item.model.dualScores.some(row => /^[04]-[04]$|^[14]-[14]$|^[03]-[03]$|^[13]-[13]$/.test(row.score) && row.score !== "1-1")),
-  "strong mismatch expert picks should include big-score routes such as 3-0, 4-0, 4-1, 0-3, or 1-4"
+  bigMismatchRows.some(item => item.model.dualScores.some(row => {
+    const [home, away] = row.score.split("-").map(Number);
+    return Math.abs(home - away) >= 2;
+  })),
+  "strong mismatch expert picks should include at least one two-goal favorite-win route"
 );
 const eliteMismatchRows = modelRows.filter(item => Math.abs(Number(item.model.strength?.diff || 0)) >= 24);
 assert.ok(
-  eliteMismatchRows.some(item => item.model.dualScores.some(row => /(^4-\d$)|(^\d-4$)/.test(row.score))),
-  "elite mismatch expert picks should include a four-goal big-score route"
+  eliteMismatchRows.every(item => {
+    const topFive = item.model.scoreCandidates.slice(0, 5).map(row => row.score);
+    return topFive.includes(item.model.dualScores[0].score);
+  }),
+  "elite mismatch main score should stay aligned with the top five score distribution candidates"
 );
 const upsetScoreCounts = modelRows.reduce((counts, item) => {
-  const upset = item.model.dualScores.find(row => row.role === "博冷");
+  const upset = item.model.upsetScore;
   if (upset) counts[upset.score] = (counts[upset.score] || 0) + 1;
   return counts;
 }, {});
@@ -369,16 +375,56 @@ for (const item of modelRows.slice(0, 8)) {
   assert.equal(typeof item.model.marketAnomaly.penalty, "number", `${item.matchId} market anomaly should include score penalty`);
   assert.ok(item.model.marketAnomaly.reason, `${item.matchId} market anomaly should include reason`);
   assert.ok(item.model.scoreRationale?.main && item.model.scoreRationale?.upset, `${item.matchId} should include score rationale for main and upset picks`);
+  assert.ok(item.model.scoreRationale?.backup, `${item.matchId} should include backup score rationale separately`);
   assert.ok(item.model.expertScenario, `${item.matchId} should include expert scenario`);
   assert.ok(item.model.expertReason.length >= 20, `${item.matchId} should include expert football reasoning`);
+  assert.ok(
+    !/博冷(?:保留|防)[^。；]*(?:三球|四球|零封|打穿|大胜)/.test(item.model.expertReason),
+    `${item.matchId} expert reason should not describe same-direction big-score backup routes as true upset`
+  );
   assert.ok(
     /压制|低位|反击|定位球|控场|身体|转换|谨慎|抢分|轮换|保留|强弱|节奏|防守|进攻/.test(item.model.expertReason),
     `${item.matchId} expert reason should describe football match context`
   );
   assert.ok(["稳定", "均衡", "防冷", "回避"].includes(item.model.recommendationType), `${item.matchId} should include recommendation type`);
   assert.ok(Array.isArray(item.model.dualScores) && item.model.dualScores.length === 2, `${item.matchId} should include two score picks`);
-  assert.deepEqual(item.model.dualScores.map(row => row.role), ["主推", "博冷"], `${item.matchId} should include main and upset score picks`);
+  assert.deepEqual(item.model.dualScores.map(row => row.role), ["主推", "备用"], `${item.matchId} should include main and backup score picks`);
   assert.equal(item.model.dualScores[0].score, item.model.score, `${item.matchId} main score should match expert main pick`);
+  const topCandidate = item.model.scoreCandidates?.[0];
+  const mainCandidate = item.model.scoreCandidates?.find(row => row.score === item.model.score);
+  assert.ok(mainCandidate, `${item.matchId} main score should stay inside the top five score distribution candidates`);
+  assert.ok(
+    Number(topCandidate.probability || 0) - Number(mainCandidate.probability || 0) <= 0.025,
+    `${item.matchId} main score should not trail the top score candidate by more than 2.5 percentage points`
+  );
+  assert.ok(item.model.upsetScore?.score, `${item.matchId} should include a separate true upset score`);
+  assert.equal(item.model.upsetScore.role, "博冷", `${item.matchId} true upset score should be labelled separately`);
+  assert.notEqual(
+    item.model.upsetScore.score,
+    item.model.dualScores[1]?.score,
+    `${item.matchId} true upset score should add information instead of duplicating the backup score`
+  );
+  if (item.model.expertReason.includes("概率分布校准")) {
+    assert.ok(
+      item.model.expertReason.includes(`校准后主推${item.model.score}`),
+      `${item.matchId} calibrated expert reason should restate the final main score`
+    );
+  }
+  const [mainHome, mainAway] = item.model.score.split("-").map(Number);
+  const [upsetHome, upsetAway] = item.model.upsetScore.score.split("-").map(Number);
+  assert.ok(
+    upsetHome + upsetAway <= 3,
+    `${item.matchId} true upset score should stay in low-score draw, underdog small-win, or narrow underdog-loss territory`
+  );
+  const mainResult = mainHome > mainAway ? "home" : mainHome < mainAway ? "away" : "draw";
+  const upsetResult = upsetHome > upsetAway ? "home" : upsetHome < upsetAway ? "away" : "draw";
+  const weakerScored = mainResult === "home" ? upsetAway > 0 : mainResult === "away" ? upsetHome > 0 : true;
+  const isUnderdogResult = mainResult !== "draw" && upsetResult !== mainResult;
+  const isNarrowUnderdogLoss = mainResult === "home" ? (upsetHome > upsetAway && upsetAway > 0 && upsetHome - upsetAway <= 1) : mainResult === "away" ? (upsetAway > upsetHome && upsetHome > 0 && upsetAway - upsetHome <= 1) : false;
+  assert.ok(
+    upsetResult === "draw" || isUnderdogResult || weakerScored || isNarrowUnderdogLoss,
+    `${item.matchId} true upset score should be draw, underdog result, narrow underdog-loss, or weaker-team scoring`
+  );
   assert.ok(item.model.dualScoreCoverage > item.model.scoreProbability, `${item.matchId} dual coverage should be higher than single score probability`);
   assert.ok(item.model.betScore >= 0 && item.model.betScore <= 100, `${item.matchId} should include bet score`);
   assert.ok(["可跟踪", "观察", "回避"].includes(item.model.betAction), `${item.matchId} should include bet action`);
@@ -428,8 +474,10 @@ for (const combo of data.scoreCombos) {
     if (item.analystVerdict !== "可小注跟踪") {
       assert.notEqual(item.betAction, "可跟踪", "combo match action should not overstate analyst verdict");
     }
-    assert.ok(item.scoreRationale?.main && item.scoreRationale?.upset, "combo match should include main/upset rationale");
+    assert.ok(item.scoreRationale?.main && item.scoreRationale?.backup && item.scoreRationale?.upset, "combo match should include main/backup/upset rationale");
     assert.ok(Array.isArray(item.dualScores) && item.dualScores.length === 2, "combo match should include two scores");
+    assert.deepEqual(item.dualScores.map(row => row.role), ["主推", "备用"], "combo match dual scores should remain main and backup");
+    assert.ok(item.upsetScore?.score, "combo match should include separate true upset score");
     assert.ok(item.dualScoreCoverage > 0, "combo match should include dual score coverage");
     assert.ok(!("marketWatch" in item), "combo match should not include market watch");
   });

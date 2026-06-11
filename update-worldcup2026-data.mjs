@@ -1746,6 +1746,66 @@ function scoreObject(scoreText, scores) {
   return found || {home, away, probability: 0.01};
 }
 
+function trueUpsetScoreFor({main, backup, scores, strengthDiff}) {
+  const mainScore = scoreObject(main, scores);
+  const mainResult = resultFromScore(mainScore);
+  const homeFavorite = strengthDiff >= 0;
+  const sameScore = (score, text) => `${score.home}-${score.away}` === text;
+  const available = predicate => scores
+    .filter(score => !sameScore(score, main) && !sameScore(score, backup) && predicate(score))
+    .sort((a, b) => (a.home + a.away) - (b.home + b.away) || b.probability - a.probability)[0];
+  const drawValue = score => {
+    if (score.home === 1 && score.away === 1) return 0;
+    if (score.home === 0 && score.away === 0) return 1;
+    if (score.home === 2 && score.away === 2) return 3;
+    return 2;
+  };
+  const drawCover = () => scores
+    .filter(score => !sameScore(score, main) && !sameScore(score, backup) && resultFromScore(score) === "draw" && score.home + score.away <= 2)
+    .sort((a, b) => drawValue(a) - drawValue(b) || b.probability - a.probability)[0] ||
+    available(score => resultFromScore(score) === "draw");
+  if (mainResult === "draw") {
+    return available(score => resultFromScore(score) !== "draw" && Math.abs(score.home - score.away) === 1) ||
+      available(score => resultFromScore(score) !== "draw") ||
+      drawCover() ||
+      scoreObject(homeFavorite ? "1-0" : "0-1", scores);
+  }
+  const underdogResult = mainResult === "home" ? "away" : "home";
+  const absDiff = Math.abs(strengthDiff);
+  const draw = drawCover();
+  const narrowFavoriteWinWithUnderdogGoal = available(score =>
+    resultFromScore(score) === mainResult &&
+    Math.abs(score.home - score.away) === 1 &&
+    (mainResult === "home" ? score.away > 0 : score.home > 0) &&
+    score.home + score.away <= 3
+  );
+  const underdogSmallWin = available(score =>
+    resultFromScore(score) === underdogResult &&
+    Math.abs(score.home - score.away) === 1 &&
+    score.home + score.away <= 3
+  );
+  const fallback = mainResult === "home" ? scoreObject("1-1", scores) : scoreObject("1-1", scores);
+  if (absDiff >= 12) return narrowFavoriteWinWithUnderdogGoal || draw || underdogSmallWin || fallback;
+  if (absDiff <= 6) return draw || underdogSmallWin || narrowFavoriteWinWithUnderdogGoal || fallback;
+  return draw || narrowFavoriteWinWithUnderdogGoal || underdogSmallWin || fallback;
+}
+
+function calibrateMainScore({main, backup, scores, reason}) {
+  const top = scores[0];
+  const mainScore = scoreObject(main, scores);
+  const mainInTopFive = scores.slice(0, 5).some(score => score.home === mainScore.home && score.away === mainScore.away);
+  const trailsTopTooMuch = Number(top?.probability || 0) - Number(mainScore.probability || 0) > 0.025;
+  if (!top || (mainInTopFive && !trailsTopTooMuch)) {
+    return {main, backup, reason};
+  }
+  const calibratedMain = `${top.home}-${top.away}`;
+  return {
+    main: calibratedMain,
+    backup: main === calibratedMain ? backup : main,
+    reason: `${reason} 概率分布校准：模型最高候选为${calibratedMain}，校准后主推${calibratedMain}，原专家比分${main}作为备用保留。`
+  };
+}
+
 function expertScorePick(match, {scores, strengthDiff, homeLambda, awayLambda, strategyContext, teamNews, ratings = {}, historicalSummary = {}, recentResults = {}}) {
   const homeTier = contenderTier(match.home);
   const awayTier = contenderTier(match.away);
@@ -1806,7 +1866,7 @@ function expertScorePick(match, {scores, strengthDiff, homeLambda, awayLambda, s
       main = homeFav ? "2-1" : "1-2";
       upset = homeFav ? "2-0" : "0-2";
       scenario = "强队占优但有失球风险";
-      reason = `${stronger}实力占优，但${weaker}有转换、定位球或备战变量制造进球的空间，主推强队赢球但丢一球；博冷保留强队控场零封。`;
+      reason = `${stronger}实力占优，但${weaker}有转换、定位球或备战变量制造进球的空间，主推强队赢球但丢一球；备用保留强队控场零封，博冷另防弱队进球后小负或逼平。`;
     } else {
       main = homeFav ? "2-0" : "0-2";
       upset = homeFav ? "2-1" : "1-2";
@@ -1819,29 +1879,29 @@ function expertScorePick(match, {scores, strengthDiff, homeLambda, awayLambda, s
       main = homeFav ? "4-0" : "0-4";
       upset = homeFav ? "3-0" : "0-3";
       scenario = "强队冲净胜球";
-      reason = `${stronger}进攻层级和阵容厚度明显高出一档，${weaker}防线抗压偏弱；若比赛目标需要净胜球，强队不会只满足小胜，主推四球打穿，博冷保留三球零封。`;
+      reason = `${stronger}进攻层级和阵容厚度明显高出一档，${weaker}防线抗压偏弱；若比赛目标需要净胜球，强队不会只满足小胜，主推四球打穿，备用保留三球零封，博冷另防强队降节奏或弱队偷到进球。`;
     } else if (absDiff >= 24 && strongerAttackHigh && weakerDefenseFragile && strongerElite) {
       if (weakerCanScore || strongerHasIssues) {
         main = homeFav ? "3-1" : "1-3";
         upset = homeFav ? "4-1" : "1-4";
         scenario = "强队大胜但留失球口";
-        reason = `${stronger}进攻层级和替补深度明显高于${weaker}，弱队防线长时间承压容易被打穿；但${weaker}仍有反击或定位球进球点，主推三球级别优势，博冷防比赛打开后到四球路线。`;
+        reason = `${stronger}进攻层级和替补深度明显高于${weaker}，弱队防线长时间承压容易被打穿；但${weaker}仍有反击或定位球进球点，主推三球级别优势，备用保留比赛打开后的四球路线，博冷另防弱队进球小负。`;
       } else {
         main = homeFav ? "3-0" : "0-3";
         upset = homeFav ? "4-0" : "0-4";
         scenario = "强队大胜零封";
-        reason = `${stronger}进攻火力和控场能力明显高于${weaker}，且${weaker}防线抗压偏弱；结合历史世界杯均场进球${historicalGoalEnvironment || "参考"}和参赛经验差${experienceGap}，若早进球仍可能打到三球以上，主推三球零封，博冷防四球打穿。`;
+        reason = `${stronger}进攻火力和控场能力明显高于${weaker}，且${weaker}防线抗压偏弱；结合历史世界杯均场进球${historicalGoalEnvironment || "参考"}和参赛经验差${experienceGap}，若早进球仍可能打到三球以上，主推三球零封，备用防四球打穿，博冷另防强队领先后降节奏。`;
       }
     } else if (absDiff >= 24 && strongerAttackHigh && weakerDefenseFragile && !lowTempo) {
       main = homeFav ? "4-1" : "1-4";
       upset = homeFav ? "3-0" : "0-3";
       scenario = "强队火力打穿但留失球口";
-      reason = `${stronger}攻击线具备连续制造机会的能力，${weaker}防线脆弱但仍可能通过反击或定位球偷到一球，主推大比分赢球；博冷防强队控场零封。`;
+      reason = `${stronger}攻击线具备连续制造机会的能力，${weaker}防线脆弱但仍可能通过反击或定位球偷到一球，主推大比分赢球；备用防强队控场零封，博冷另防弱队进球后小负。`;
     } else if (strongerElite && lowTempo) {
       main = homeFav ? "2-0" : "0-2";
       upset = homeFav ? "3-0" : "0-3";
       scenario = "争冠队控场保留";
-      reason = `${stronger}属于争冠级别球队，面对${weaker}预计控场优势明显，但小组阶段存在轮换和保留实力，主推稳健两球胜；若早进球或弱队防线崩盘，博冷防三球打穿。`;
+      reason = `${stronger}属于争冠级别球队，面对${weaker}预计控场优势明显，但小组阶段存在轮换和保留实力，主推稳健两球胜；若早进球或弱队防线崩盘，备用防三球打穿，博冷另防优势方只赢一球或弱队进球。`;
     } else if (weakerCanScore || strongerHasIssues) {
       main = strongerAttackHigh && weakerDefenseFragile ? (homeFav ? "4-1" : "1-4") : (homeFav ? "3-1" : "1-3");
       upset = homeFav ? "2-1" : "1-2";
@@ -1851,7 +1911,7 @@ function expertScorePick(match, {scores, strengthDiff, homeLambda, awayLambda, s
       main = strongerAttackHigh && weakerDefenseFragile ? (homeFav ? "4-0" : "0-4") : (homeFav ? "3-0" : "0-3");
       upset = homeFav ? "2-0" : "0-2";
       scenario = "强队打穿";
-      reason = `${stronger}强弱优势非常清晰，${weaker}若长时间低位防守会承受持续压力；结合强队进攻层级和弱队防线质量，主推强队打穿零封；博冷防强队领先后降节奏。`;
+      reason = `${stronger}强弱优势非常清晰，${weaker}若长时间低位防守会承受持续压力；结合强队进攻层级和弱队防线质量，主推强队打穿零封；备用防强队领先后降节奏，博冷另防优势方一球小胜或弱队进球。`;
     }
   }
 
@@ -1861,17 +1921,24 @@ function expertScorePick(match, {scores, strengthDiff, homeLambda, awayLambda, s
     scenario = `${scenario} / 轮换修正`;
     reason += " 同时考虑争冠队赛程规划，若领先较早可能降节奏，因此主推从大胜修正为更稳健的两球胜。";
   }
+  const calibrated = calibrateMainScore({main, backup: upset, scores, reason});
+  main = calibrated.main;
+  upset = calibrated.backup;
+  reason = calibrated.reason;
 
   const mainScore = scoreObject(main, scores);
-  const upsetScore = scoreObject(upset, scores);
+  const backupScore = scoreObject(upset, scores);
+  const upsetScore = trueUpsetScoreFor({main, backup: upset, scores, strengthDiff});
+  const upsetText = `${upsetScore.home}-${upsetScore.away}`;
   return {
     score: main,
     result: resultFromScore(mainScore),
     scenario,
     reason,
+    upsetScore: {score: upsetText, probability: round4(upsetScore.probability), result: resultFromScore(upsetScore), role: "博冷"},
     picks: [
       {score: main, probability: round4(mainScore.probability), result: resultFromScore(mainScore), role: "主推"},
-      {score: upset, probability: round4(upsetScore.probability), result: resultFromScore(upsetScore), role: "博冷"}
+      {score: upset, probability: round4(backupScore.probability), result: resultFromScore(backupScore), role: "备用"}
     ]
   };
 }
@@ -1907,7 +1974,7 @@ function dualScorePicks(scores, preferredResult, selectedFirst = scores[0]) {
     score: `${score.home}-${score.away}`,
     probability: round4(score.probability),
     result: resultFromScore(score),
-    role: index === 0 ? "主推" : "博冷"
+    role: index === 0 ? "主推" : "备用"
   }));
 }
 
@@ -2500,10 +2567,12 @@ function venueMapForMatches(matches, weatherForecasts = {}) {
 
 function scoreRationaleFor({expertPick, tacticalContext, strategyContext, formContext, marketCheck}) {
   const main = expertPick.picks?.[0] || {};
-  const upset = expertPick.picks?.[1] || {};
+  const backup = expertPick.picks?.[1] || {};
+  const upset = expertPick.upsetScore || {};
   return {
     main: `主推${main.score || expertPick.score}：${tacticalContext.scenario}，${formContext.reason}，${strategyContext.reason}`,
-    upset: `博冷${upset.score || "-"}：保留${tacticalContext.underdog}反击/定位球、强队轮换或市场分歧风险；${marketCheck.reason}`
+    backup: `备用${backup.score || "-"}：保留同方向比分变化、强队控场或弱队进球的常规防线。`,
+    upset: `博冷${upset.score || "-"}：优先防平局、弱队进球、爆冷小胜或优势方一球小胜；${marketCheck.reason}`
   };
 }
 
@@ -2573,6 +2642,7 @@ function buildMatchModel(match, context = {}) {
   const scoreCandidates = scores.slice(0, 5).map(score => ({score: `${score.home}-${score.away}`, probability: round4(score.probability), result: resultFromScore(score)}));
   const scoreProbability = round4(topScore.probability);
   const dualScores = expertPick.picks;
+  const upsetScore = expertPick.upsetScore;
   const dualScoreCoverage = round4(dualScores.reduce((sum, item) => sum + item.probability, 0));
   const type = recommendationType(confidence, risk, drawProbability);
   const marketCheck = marketCheckFor(match, result);
@@ -2640,6 +2710,7 @@ function buildMatchModel(match, context = {}) {
     scoreRationale,
     teamNews,
     lineupStatus,
+    upsetScore,
     strategyContext,
     groupSituationContext,
     expertScenario: expertPick.scenario,
@@ -2844,6 +2915,7 @@ function buildScoreCombos(jcMatches, finalMainPicks = null) {
       score: item.jcMatch.model.score,
       dualScores: item.jcMatch.model.dualScores,
       dualScoreCoverage: item.jcMatch.model.dualScoreCoverage,
+      upsetScore: item.jcMatch.model.upsetScore,
       pick: item.jcMatch.model.pick,
       confidence: item.jcMatch.model.confidence,
       risk: item.jcMatch.model.risk,
@@ -2895,6 +2967,7 @@ function buildReliabilitySummary(jcMatches) {
       score: item.model.score,
       dualScores: item.model.dualScores,
       dualScoreCoverage: item.model.dualScoreCoverage,
+      upsetScore: item.model.upsetScore,
       betScore: item.model.betScore,
       betAction: item.model.betAction,
       lineupStatus: item.model.lineupStatus,

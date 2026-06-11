@@ -55,9 +55,26 @@
     .tabs { display: flex; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
     .tab { border: 1px solid var(--line); background: var(--panel-deep); color: var(--muted); border-radius: 999px; padding: 7px 12px; font-weight: 700; cursor: pointer; }
     .tab.active { background: var(--gold); color: #1a1200; border-color: var(--gold); }
-    .matches, .jc-list { padding: 14px 16px 16px; display: grid; gap: 10px; }
+    .matches, .jc-list, .score-decision-list { padding: 14px 16px 16px; display: grid; gap: 10px; }
     .match { display: grid; grid-template-columns: minmax(190px, 1fr) 86px 142px 92px; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-deep); }
     .match .teams { font-weight: 800; line-height: 1.35; }
+    .score-row { display: grid; grid-template-columns: 82px minmax(210px, 1.15fr) minmax(120px, 0.55fr) minmax(130px, 0.65fr) minmax(260px, 1.25fr); gap: 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-deep); font-size: 13px; }
+    .score-row > * { min-width: 0; overflow-wrap: anywhere; }
+    .score-row strong { color: var(--gold); }
+    .score-row .teams { font-size: 14px; }
+    .score-main { color: var(--gold); font-size: 16px; font-weight: 900; line-height: 1.35; }
+    .score-side { color: #d9ecff; font-weight: 800; line-height: 1.35; }
+    .score-risk { line-height: 1.55; color: var(--muted); }
+    .score-candidates { margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .context-lines { display: grid; gap: 3px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .context-lines b { color: #d9ecff; font-weight: 800; }
+    .decision-summary { padding: 16px; display: grid; gap: 12px; }
+    .decision-summary-head { border: 1px solid rgba(244, 185, 66, 0.42); background: rgba(244, 185, 66, 0.08); border-radius: 8px; padding: 12px; line-height: 1.55; }
+    .decision-summary-head strong { display: block; color: var(--gold); font-size: 22px; line-height: 1.2; margin-bottom: 4px; }
+    .decision-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .decision-summary-item { border: 1px solid var(--line); border-radius: 8px; background: var(--panel-deep); padding: 10px; min-height: 64px; }
+    .decision-summary-item strong { display: block; color: var(--gold); font-size: 18px; line-height: 1.2; margin-bottom: 4px; }
+    .decision-summary-item span { color: var(--muted); font-size: 12px; line-height: 1.35; }
     .match-id { display: inline-flex; align-items: center; min-height: 22px; padding: 2px 8px; margin: 0 8px 0 0; border-radius: 999px; background: var(--gold); color: #1a1200; font-size: 12px; font-weight: 900; vertical-align: top; white-space: nowrap; }
     .match-id.closed { background: #3a4b62; color: var(--muted); }
     .note { color: var(--muted); font-size: 12px; margin-top: 3px; line-height: 1.45; }
@@ -108,7 +125,7 @@
     .alert strong { display: block; margin-bottom: 4px; color: #ffd166; }
     .risk-box, .footer-note { margin: 16px; color: var(--muted); font-size: 13px; line-height: 1.6; }
     @media (max-width: 1080px) { .decision-grid { grid-template-columns: 1fr; } .stats, .market-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 720px) { .page { padding: 14px; } .topbar, .section-head { display: grid; } .stats, .groups, .match, .jc-match, .leader, .market-summary-grid, .market-best-row, .brief-action, .brief-row { grid-template-columns: 1fr; } .score, .pick { text-align: left; } .champion-card { grid-template-columns: 34px 1fr 54px; } .champion-card .bar { grid-column: 1 / -1; } }
+    @media (max-width: 720px) { .page { padding: 14px; } .topbar, .section-head { display: grid; } .stats, .groups, .match, .jc-match, .leader, .market-summary-grid, .market-best-row, .brief-action, .brief-row, .score-row, .decision-summary-grid { grid-template-columns: 1fr; } .score, .pick { text-align: left; } .champion-card { grid-template-columns: 34px 1fr 54px; } .champion-card .bar { grid-column: 1 / -1; } }
   </style>
 </head>
 <body>
@@ -127,29 +144,30 @@
       <div class="stat"><strong id="dataUpdatedAt">未生成</strong><span id="sourceStatus">等待数据刷新</span></div>
     </section>
 
-    <section class="decision-grid" aria-label="四串一决策区">
+    <section class="decision-grid" aria-label="比分决策区">
         <section class="section">
           <div class="section-head"><h2>比赛可靠性简报</h2><small>强度、伤停、平局概率、情报质量</small></div>
           <div class="market-summary" id="reliabilitySummary"></div>
         </section>
         <section class="section">
-          <div class="section-head"><h2>四串一简报</h2><small>只看当前可串关比分赛事</small></div>
+          <div class="section-head"><h2>今日可用结论 / 四串一简报</h2><small>开售场次、候选组合、规避提示</small></div>
+          <div class="decision-summary" id="decisionSummary"></div>
           <div class="brief-panel" id="comboBrief"></div>
         </section>
     </section>
 
     <div class="layout">
       <div class="main-stack">
-        <section class="section"><div class="section-head"><h2>竞彩当前开售赛事</h2><small>四串一只允许从这里取比赛</small></div><div class="jc-list" id="jcMatches"></div></section>
+        <section class="section"><div class="section-head"><h2>竞彩当前开售赛事</h2><small>只使用当前开售场次做比分判断</small></div><div class="jc-list" id="jcMatches"></div></section>
         <section class="section">
-          <div class="section-head"><h2>重点比赛概率预测</h2><small>比分只作参考，核心看概率与风险</small></div>
+          <div class="section-head"><h2>比赛级比分决策表</h2><small>主推比分、备用比分、风险和关键理由同屏扫描</small></div>
           <div class="tabs">
             <button class="tab active" type="button" data-filter="all">全部</button>
             <button class="tab" type="button" data-filter="hot">焦点场</button>
             <button class="tab" type="button" data-filter="combo">组合候选</button>
             <button class="tab" type="button" data-filter="upset">冷门风险</button>
           </div>
-          <div class="matches" id="matches"></div>
+          <div class="score-decision-list" id="scoreDecisionRows"></div>
         </section>
       </div>
     </div>
@@ -175,7 +193,6 @@
     const alerts = Array.isArray(liveData.alerts) ? liveData.alerts : [];
     const matches = Array.isArray(liveData.matches) ? liveData.matches : [];
     const jcMatches = Array.isArray(liveData.jcMatches) ? liveData.jcMatches : [];
-    const scoreCombos = Array.isArray(liveData.scoreCombos) ? liveData.scoreCombos : [];
     const reliabilitySummary = liveData.reliabilitySummary || {};
     const tagText = { hot: "争冠", safe: "稳定", risk: "风险", "": "观察" };
     function normalizeTeamName(value) { return String(value || "").replace(/\s+/g, "").replace(/[（）()]/g, "").replace(/队/g, "").toLowerCase(); }
@@ -183,6 +200,32 @@
     function riskClass(value) { if (value === "低") return "risk-low"; if (value === "高") return "risk-high"; return "risk-mid"; }
     function actionClass(value) { if (value === "可跟踪") return "action-bet"; if (value === "观察") return "action-watch"; return "action-avoid"; }
     function checkText(status) { if (status === "aligned") return "校验一致"; if (status === "caution") return "校验谨慎"; if (status === "divergent") return "校验分歧"; return "校验缺失"; }
+    function pctText(value) { return `${Math.round(Number(value || 0) * 100)}%`; }
+    function scoreCandidateText(model) { return (model.scoreCandidates || []).slice(0, 4).map(row => `${row.score} ${pctText(row.probability)}`).join(" / ") || "-"; }
+    function expectedGoalText(model) {
+      const goals = model.expectedGoals || {};
+      if (goals.home === undefined && goals.away === undefined) return "预期进球 -";
+      return `预期进球 ${goals.home ?? "-"}-${goals.away ?? "-"}`;
+    }
+    function lineupText(model) {
+      const lineup = model.lineupContext || {};
+      const home = lineup.home?.formation || "-";
+      const away = lineup.away?.formation || "-";
+      const score = lineup.score ?? "-";
+      return `首发 ${lineup.status || model.lineupStatus || "-"} ${score}分 ${home}/${away}`;
+    }
+    function motivationText(model) {
+      const group = model.groupSituationContext || {};
+      const strategy = model.strategyContext || {};
+      const must = group.mustWinLevel || strategy.qualificationNeed || "-";
+      return `战意 ${must} / ${group.reason || strategy.reason || "-"}`;
+    }
+    function tempoText(model) {
+      const strategy = model.strategyContext || {};
+      const drawUtility = strategy.drawUtility !== undefined ? `${Math.round(Number(strategy.drawUtility || 0) * 100)}%` : "-";
+      const suppression = strategy.goalSuppression !== undefined ? `${Math.round(Number(strategy.goalSuppression || 0) * 100)}%` : "-";
+      return `节奏 平局收益${drawUtility} 压低进球${suppression}`;
+    }
     function semanticText(context) {
       if (!context) return "情报待定";
       const tiers = context.sourceTierSummary || {};
@@ -230,26 +273,51 @@
         </div>
       `;
     }
+    function renderDecisionSummary() {
+      const target = document.getElementById("decisionSummary");
+      const finalPicks = reliabilitySummary.finalPicks || {};
+      const mainRows = Array.isArray(finalPicks.main) ? finalPicks.main : [];
+      const watchRows = Array.isArray(finalPicks.watch) ? finalPicks.watch : [];
+      const avoidRows = jcMatches.filter(item => (item.model?.betAction || "") === "规避");
+      const topMain = mainRows[0] || reliabilitySummary.bestReliableMatches?.[0] || null;
+      if (!reliabilitySummary.matchCount) {
+        target.innerHTML = `<div class="empty-state">当前没有可分析的开售赛事，比分建议暂停。</div>`;
+        return;
+      }
+      target.innerHTML = `
+        <div class="decision-summary-head">
+          <strong>${reliabilitySummary.executionAdvice || "只观察"}</strong>
+          <span>${reliabilitySummary.summaryText || "等待更明确的比分优势和首发确认。"}${topMain ? ` 首选观察：${topMain.teams || "-"}，${(topMain.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ") || topMain.score || "-"}` : ""}</span>
+        </div>
+        <div class="decision-summary-grid">
+          <div class="decision-summary-item"><strong>${reliabilitySummary.matchCount ?? 0}</strong><span>当前开售可分析场次</span></div>
+          <div class="decision-summary-item"><strong>${mainRows.length}</strong><span>赛前主推候选</span></div>
+          <div class="decision-summary-item"><strong>${watchRows.length}</strong><span>观察备选</span></div>
+          <div class="decision-summary-item"><strong>${avoidRows.length}</strong><span>模型规避场次</span></div>
+        </div>
+      `;
+    }
     function renderComboBrief() {
       const target = document.getElementById("comboBrief");
-      const combo = scoreCombos[0];
+      const combo = Array.isArray(liveData.scoreCombos) ? liveData.scoreCombos[0] : null;
       if (!combo) {
-        target.innerHTML = `<div class="empty-state">当前可串关比分赛事不足 4 场，暂不生成四串一。</div>`;
+        target.innerHTML = `<div class="empty-state">当前可串关比分赛事不足 4 场，四串一只观察单场比分。</div>`;
         return;
       }
       target.innerHTML = `
         <div class="brief-action">
           <strong>${combo.comboAction || "观察"}</strong>
-          <span>${combo.analystVerdict || "只做比分参考"}：16 注双比分组合，理论覆盖 ${Math.round((combo.dualScoreCoverage || 0) * 10000) / 100}%，组合评分 ${combo.comboBetScore ?? "-"}，平均可靠性 ${combo.comboReliability ?? "-"}%，分散评分 ${combo.diversificationAudit?.score ?? "-"}。</span>
+          <span>${combo.analystVerdict || "只做比分参考"}：组合评分 ${combo.comboBetScore ?? "-"}，平均可靠性 ${combo.comboReliability ?? "-"}%，分散评分 ${combo.diversificationAudit?.score ?? "-"}。</span>
         </div>
         <div class="brief-list">
-          ${(combo.matches || []).map(item => `<div class="brief-row"><strong>${item.matchId || "-"}</strong><span>${item.teams || "-"}<br><small>${(item.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ")} / 战术场景 ${item.tacticalScenario || "-"} / ${checkText(item.marketCheckStatus)}</small><div class="reason-lines"><span><b>主推理由</b> ${item.scoreRationale?.main || "-"}</span><span><b>博冷理由</b> ${item.scoreRationale?.upset || "-"}</span></div></span><span>${item.analystVerdict || item.betAction || "-"}</span></div>`).join("")}
+          ${(combo.matches || []).map(item => `<div class="brief-row"><strong>${item.matchId || "-"}</strong><span>${item.teams || "-"}<br><small>${(item.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ")} / 战术场景 ${item.tacticalScenario || "-"} / ${checkText(item.marketCheckStatus)}</small></span><span>${item.analystVerdict || item.betAction || "-"}</span></div>`).join("")}
         </div>
       `;
     }
     function renderMatches(filter = "all") {
       const list = filter === "all" ? matches : matches.filter(item => item.type === filter);
-      document.getElementById("matches").innerHTML = list.map(item => {
+      const target = document.getElementById("scoreDecisionRows");
+      target.innerHTML = list.map(item => {
         const jc = jcMatchForTeams(item.teams);
         const matchId = jc?.matchId || "未开售";
         const model = jc?.model || item;
@@ -258,8 +326,10 @@
         const dual = (model.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ");
         const weather = model.venueContext?.weather || {};
         const weatherText = `天气${weather.weatherRisk || "-"} ${weather.temperatureC ?? "-"}C / 雨${weather.precipitationMm ?? "-"}mm / 风${weather.windKph ?? "-"}km/h`;
-        const meta = model.betScore !== undefined ? `<div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">评分 ${model.betScore ?? "-"}</span><span class="model-chip">质量 ${model.analysisQualityScore ?? "-"}</span><span class="model-chip">${model.recommendationType || "模型"}</span><span class="model-chip">双比分 ${Math.round((model.dualScoreCoverage || 0) * 100)}%</span>${flags ? `<span class="model-chip">${flags}</span>` : ""}</div>` : "";
-        return `<article class="match"><div><div class="teams"><span class="match-id ${jc ? "" : "closed"}">${matchId}</span>${item.teams}</div><div class="note">${model.reason || item.note || ""}</div>${meta}</div><div class="score">${dual || model.score || item.score || "-"}</div><div class="prob">${probability || "-"}<br><span class="${riskClass(model.risk)}">${model.risk ? `风险 ${model.risk}` : ""}</span></div><div class="pick">${model.pick || item.pick || "-"}<br><small>${model.confidence ?? item.confidence ?? "-"}%</small></div></article>`;
+        const mainScore = (model.dualScores || []).find(row => row.role === "主推")?.score || model.score || item.score || "-";
+        const backupScore = (model.dualScores || []).find(row => row.role === "备用")?.score || (model.dualScores || [])[1]?.score || "-";
+        const trueUpsetScore = model.upsetScore?.score || "-";
+        return `<article class="score-row"><div><strong>${matchId}</strong><div class="note">${jc?.startTime || ""}</div></div><div><div class="teams">${item.teams}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">结论 ${model.analystVerdict || model.pick || item.pick || "-"}</span><span class="model-chip">${checkText(model.marketCheck?.status)}</span></div><div class="context-lines"><span><b>首发</b> ${lineupText(model)}</span><span><b>战意</b> ${motivationText(model)}</span></div></div><div><div class="score-main">主推 ${mainScore}</div><div class="score-side">备用 ${backupScore}</div><div class="score-side">博冷 ${trueUpsetScore}</div><div class="score-candidates"><b>比分分布</b> ${scoreCandidateText(model)}</div></div><div class="score-risk">${probability || "-"}<br>${expectedGoalText(model)}<br><span class="${riskClass(model.risk)}">${model.risk ? `风险 ${model.risk}` : ""}</span><br>${weatherText}</div><div><div class="reason-lines"><span><b>主推理由</b> ${model.scoreRationale?.main || model.reason || item.note || "-"}</span><span><b>备用理由</b> ${model.scoreRationale?.backup || "-"}</span><span><b>博冷理由</b> ${model.scoreRationale?.upset || "-"}</span><span><b>战术场景</b> ${model.tacticalContext?.scenario || "-"}${flags ? ` / ${flags}` : ""}</span><span><b>节奏</b> ${tempoText(model)}</span></div></div></article>`;
       }).join("");
     }
     function renderJcMatches() {
@@ -277,7 +347,7 @@
       }).join("");
     }
     document.querySelectorAll(".tab").forEach(button => button.addEventListener("click", () => { document.querySelectorAll(".tab").forEach(item => item.classList.remove("active")); button.classList.add("active"); renderMatches(button.dataset.filter); }));
-    renderLiveStatus(); renderChampionPrediction(); renderGroups(); renderLeaders(); renderAlerts(); renderReliabilitySummary(); renderComboBrief(); renderMatches(); renderJcMatches();
+    renderLiveStatus(); renderChampionPrediction(); renderGroups(); renderLeaders(); renderAlerts(); renderReliabilitySummary(); renderDecisionSummary(); renderComboBrief(); renderMatches(); renderJcMatches();
   </script>
 </body>
 </html>
