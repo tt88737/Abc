@@ -17,8 +17,12 @@ if ($html -match 'data-tab="games"' -or $html -match 'function renderGames' -or 
     throw 'recommendation review module should be removed from the dashboard'
 }
 
-if ($html -notmatch '<button class="active" data-tab="historyPattern">') {
-    throw 'dashboard should open on history pattern observation'
+if (-not $html.Contains('<button class="active" data-tab="worldcupAnalysis">')) {
+    throw 'dashboard should open on world cup analysis'
+}
+
+if (-not $html.Contains("switchTab('worldcupAnalysis')")) {
+    throw 'dashboard should initialize the world cup analysis tab'
 }
 
 if ($html -notmatch 'function recentWindowStats') {

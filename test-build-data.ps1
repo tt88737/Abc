@@ -157,11 +157,20 @@ try {
     if ($dashboard.Contains('data-tab="overview"') -or $dashboard.Contains('data-tab="daily"') -or $dashboard.Contains('function renderOverview') -or $dashboard.Contains('function renderDaily')) {
         throw 'dashboard should not expose overview or daily modules after cleanup'
     }
-    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="historyPattern"') -or -not $dashboard.Contains('data-tab="recommendationTrack"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"')) {
-        throw 'dashboard should expose five-window, three-hit five-window, history pattern, recommendation tracking, advanced analysis, and manual fetch tabs'
+    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="historyPattern"') -or -not $dashboard.Contains('data-tab="recommendationTrack"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"') -or -not $dashboard.Contains('data-tab="worldcupAnalysis"')) {
+        throw 'dashboard should expose five-window, three-hit five-window, history pattern, recommendation tracking, advanced analysis, manual fetch, and world cup tabs'
+    }
+    if ($dashboard.Contains('data-tab="worldcupAnalysis" data-href=') -or $dashboard.Contains('window.location.href = btn.dataset.href')) {
+        throw 'world cup analysis should switch as a dashboard tab instead of navigating to a standalone page'
+    }
+    if (-not $dashboard.Contains('function renderWorldcupAnalysis()') -or -not $dashboard.Contains('worldcup2026-dashboard.html') -or -not $dashboard.Contains('worldcupAnalysis: renderWorldcupAnalysis')) {
+        throw 'dashboard should render world cup analysis inside the current tab content'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
+    }
+    if (-not $dashboard.Contains("switchTab('worldcupAnalysis')")) {
+        throw 'dashboard should open the world cup tab first'
     }
     if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
         throw 'dashboard should not expose trend, picker, sandbox, or forecast modules'
@@ -275,23 +284,29 @@ try {
     if (-not $dashboard.Contains('function renderHistoryPattern()') -or -not $dashboard.Contains('history-pattern-source') -or -not $dashboard.Contains('history-pattern-range')) {
         throw 'dashboard should expose a history pattern observation page'
     }
-    if (-not $dashboard.Contains('function renderRecommendationTrack()') -or -not $dashboard.Contains('function recommendationTrackAnalysis(') -or -not $dashboard.Contains('function dimensionScoreRows(') -or -not $dashboard.Contains('function recommendationTrackHistory(')) {
-        throw 'dashboard should expose lightweight recommendation tracking with dimension scoring and hit history'
+    if (-not $dashboard.Contains('function renderRecommendationTrack()') -or -not $dashboard.Contains('function fixedPatternTrackAnalysis(') -or -not $dashboard.Contains('function fixedPatternRows(') -or -not $dashboard.Contains('function fixedPatternMissRows(')) {
+        throw 'recommendation tracking should expose fixed-rule pattern tracking'
     }
-    if (-not $dashboard.Contains('function recommendationAlgorithms()') -or -not $dashboard.Contains('function selectBestRecommendationAlgorithm(') -or -not $dashboard.Contains('function backtestRecommendationAlgorithm(') -or -not $dashboard.Contains('backtestHitRate')) {
-        throw 'recommendation tracking should select the best historical backtested algorithm'
+    if ($dashboard.Contains('recommendationTrack: async () => {' + "`r`n" + '        await ensureRecordsData();') -or $dashboard.Contains('recommendationTrack: async () => {' + "`n" + '        await ensureRecordsData();')) {
+        throw 'recommendation tracking should not load full records on tab open'
+    }
+    if (-not $dashboard.Contains('await ensureWindow5Data();') -or -not $dashboard.Contains('await ensureThreeCompoundData();')) {
+        throw 'recommendation tracking should load only precomputed fixed-rule state files'
+    }
+    if (-not $dashboard.Contains('stableRule') -or -not $dashboard.Contains('preWindowPool') -or -not $dashboard.Contains('maxMiss') -or -not $dashboard.Contains('recentHitRate')) {
+        throw 'recommendation tracking should use fixed pre-window rules with miss and recent metrics'
     }
     if (-not $dashboard.Contains('recommendation-track-source') -or -not $dashboard.Contains("document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack)")) {
         throw 'recommendation tracking should switch source with a single source selector'
     }
-    if (-not $dashboard.Contains('&#25512;&#33616;&#36319;&#36394;') -or -not $dashboard.Contains('&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#26368;&#20248;') -or -not $dashboard.Contains('&#30721;&#22797;&#24335;')) {
-        throw 'recommendation tracking should render current recommendation and historical hit records'
+    if (-not $dashboard.Contains('&#25512;&#33616;&#36319;&#36394;') -or -not $dashboard.Contains('&#22266;&#23450;&#35268;&#24459;&#36319;&#36394;') -or -not $dashboard.Contains('&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;') -or -not $dashboard.Contains('&#19977;&#20013;&#19977;&#22797;&#24335;') -or -not $dashboard.Contains('&#22266;&#23450;&#35268;&#24459;&#28431;&#31383;&#35760;&#24405;')) {
+        throw 'recommendation tracking should render fixed special and three-hit pattern records'
     }
-    if (-not $dashboard.Contains('&#25512;&#33616;&#26399;&#21495;') -or -not $dashboard.Contains('&#29983;&#25104;&#26102;&#38388;') -or -not $dashboard.Contains('&#20381;&#25454;&#24320;&#22870;')) {
-        throw 'recommendation tracking should show recommendation issue, generated time, and basis draw'
+    if (-not $dashboard.Contains('&#24403;&#21069;&#31383;&#21475;') -or -not $dashboard.Contains('&#24050;&#24320;') -or -not $dashboard.Contains('&#20381;&#25454;&#24320;&#22870;')) {
+        throw 'recommendation tracking should show current window, opened count, and basis draw'
     }
-    if (-not $dashboard.Contains('&#24403;&#21069;&#31639;&#27861;') -or -not $dashboard.Contains('&#22238;&#27979;&#33539;&#22260;') -or -not $dashboard.Contains('&#22238;&#27979;&#21629;&#20013;&#29575;')) {
-        throw 'recommendation tracking should show selected algorithm and backtest hit rate'
+    if (-not $dashboard.Contains('&#35206;&#30422;&#29575;') -or -not $dashboard.Contains('&#36817;10&#31383;&#21475;') -or -not $dashboard.Contains('&#26368;&#22823;&#28431;&#31383;')) {
+        throw 'recommendation tracking should show coverage, recent window performance, and max miss'
     }
     if (-not $dashboard.Contains("loadJsonOrScript('data/history-pattern-state.json'") -or -not $dashboard.Contains('__HISTORY_PATTERN_STATE__')) {
         throw 'history pattern should load precomputed exact state'
@@ -688,6 +703,12 @@ try {
     if (-not $installTaskScript.Contains('fetch-all.ps1')) {
         throw 'local scheduled task should run the unified fetch-all script'
     }
+    if (-not $installTaskScript.Contains('run-hidden.vbs') -or -not $installTaskScript.Contains("-Execute 'wscript.exe'")) {
+        throw 'local scheduled task should use the hidden window runner'
+    }
+    if ($installTaskScript.Contains("-Execute 'powershell.exe'")) {
+        throw 'local scheduled task should not execute powershell.exe directly because it can flash a window'
+    }
     $mojibakeMarker = [string][char]0x951F
     if ($dashboard.Contains($mojibakeMarker)) {
         throw 'dashboard contains mojibake marker'
@@ -711,10 +732,16 @@ global.__DATA__ = json;
 global.location = { protocol: 'file:' };
 global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
 new Function(script + `
-const amRecommendation = recommendationTrackAnalysis('am');
-const hkRecommendation = recommendationTrackAnalysis('hk');
-if (!amRecommendation.special || amRecommendation.threePool.length !== 5 || !hkRecommendation.special || hkRecommendation.threePool.length !== 5) {
-  throw new Error('recommendation tracking failed to calculate current recommendations');
+const amTrack = fixedPatternTrackAnalysis('am');
+const hkTrack = fixedPatternTrackAnalysis('hk');
+if (!amTrack.items?.length || !hkTrack.items?.length) {
+  throw new Error('fixed pattern tracking failed to calculate rows');
+}
+if (![amTrack, hkTrack].every(track => track.items.some(item => item.type === 'special') && track.items.some(item => item.type === 'three'))) {
+  throw new Error('fixed pattern tracking should include special and three-hit rules');
+}
+if (![amTrack, hkTrack].every(track => track.items.every(item => typeof item.hitRate === 'number' && typeof item.total === 'number' && Array.isArray(item.preWindowPool)))) {
+  throw new Error('fixed pattern tracking rows should include numeric rates and pre-window pools');
 }
 `)();
 console.log('RUNTIME_OK');
@@ -739,23 +766,13 @@ global.__DATA__ = json;
 global.location = { protocol: 'file:' };
 global.document = { getElementById: () => ({ value: 'am', addEventListener() {}, textContent: JSON.stringify(json) }), querySelectorAll: () => [] };
 new Function(script + `
-const amRecommendation = recommendationTrackAnalysis('am');
-const hkRecommendation = recommendationTrackAnalysis('hk');
-const amSpecial = amRecommendation.special && amRecommendation.special.numberText;
-const hkSpecial = hkRecommendation.special && hkRecommendation.special.numberText;
-const amThree = amRecommendation.threePool.map(item => item.numberText).join(',');
-const hkThree = hkRecommendation.threePool.map(item => item.numberText).join(',');
-if (!amSpecial || !hkSpecial || amThree.split(',').length !== 5 || hkThree.split(',').length !== 5) {
-  throw new Error('recommendation tracking failed to produce recommendations');
+const amTrack = fixedPatternTrackAnalysis('am');
+const hkTrack = fixedPatternTrackAnalysis('hk');
+if (amTrack.items.length < 2 || hkTrack.items.length < 2) {
+  throw new Error('fixed pattern tracking should produce multiple rows');
 }
-if (!amRecommendation.specialAlgorithm || !amRecommendation.threeAlgorithm || !hkRecommendation.specialAlgorithm || !hkRecommendation.threeAlgorithm) {
-  throw new Error('recommendation tracking did not select backtested algorithms');
-}
-if (amRecommendation.specialAlgorithm.total <= 0 || amRecommendation.threeAlgorithm.total <= 0 || hkRecommendation.specialAlgorithm.total <= 0 || hkRecommendation.threeAlgorithm.total <= 0) {
-  throw new Error('recommendation tracking backtest totals should be positive');
-}
-if ([amRecommendation.specialAlgorithm, amRecommendation.threeAlgorithm, hkRecommendation.specialAlgorithm, hkRecommendation.threeAlgorithm].some(item => typeof item.backtestHitRate !== 'number')) {
-  throw new Error('recommendation tracking backtest hit rates should be numeric');
+if (![amTrack, hkTrack].every(track => track.items.every(item => typeof item.maxMiss === 'number' && typeof item.recentHitRate === 'number'))) {
+  throw new Error('fixed pattern tracking should include miss and recent metrics');
 }
 `)();
 console.log('REAL_RECOMMENDATION_OK');

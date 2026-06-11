@@ -672,6 +672,7 @@ function New-DashboardHtml {
     .result-miss { color: #dc2626; font-weight: 800; }
     .recommendation-copy { margin: 0; white-space: pre-wrap; line-height: 1.45; font-family: Consolas, "Microsoft YaHei", monospace; font-size: 15px; color: #dbeafe; background: #062f63; border-radius: 8px; padding: 14px; }
     .recommendation-copy strong, .recommendation-copy .accent { color: #38bdf8; }
+    .embedded-page { width: 100%; min-height: calc(100vh - 190px); border: 1px solid #d9dee7; border-radius: 8px; background: #fff; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .latest-draw-grid { grid-template-columns: 1fr; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -682,7 +683,8 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
+      <button class="active" data-tab="worldcupAnalysis">&#19990;&#30028;&#26479;&#20998;&#26512;</button>
+      <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
       <button data-tab="recommendationTrack">&#25512;&#33616;&#36319;&#36394;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
@@ -1971,26 +1973,12 @@ function New-DashboardHtml {
       const rows = cachedSourceRecords(source).slice().sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || Number(a.issue || 0) - Number(b.issue || 0));
       return beforeIndex === null ? rows : rows.slice(0, beforeIndex);
     }
-    function latestZodiacMap(source, rows) {
-      const latest = rows[rows.length - 1] || {};
-      const year = displayYear(latest);
-      const map = new Map();
-      rows.filter(row => displayYear(row) === year).forEach(row => asArray(row.balls).forEach(ball => {
-        const num = Number(ball.numberText || ball.number || 0);
-        if (!map.has(num)) map.set(num, ball.zodiac || '');
-      }));
-      rows.forEach(row => asArray(row.balls).forEach(ball => {
-        const num = Number(ball.numberText || ball.number || 0);
-        if (!map.has(num)) map.set(num, ball.zodiac || '');
-      }));
-      return map;
-    }
     function colorMapFromRows(rows) {
       const map = new Map();
       rows.forEach(row => asArray(row.balls).forEach(ball => map.set(Number(ball.numberText || ball.number || 0), ball.color || '')));
       return map;
     }
-    function dimensionCountPack(rows, mode) {
+    function dimensionCountPack(rows, mode = 'special') {
       const nums = new Map(), zodiacs = new Map(), tails = new Map(), colors = new Map();
       const add = (map, key) => map.set(String(key || ''), (map.get(String(key || '')) || 0) + 1);
       rows.forEach(row => {
@@ -2011,158 +1999,398 @@ function New-DashboardHtml {
       const max = values.length ? Math.max(...values) : 1;
       return max ? (map.get(String(key || '')) || 0) / max : 0;
     }
-    function recommendationAlgorithms() {
-      return [
-        {id: 'balanced-50', name: '&#19977;&#32500;&#22343;&#34913;', packWeights: [0.5, 0.25, 0.25], special: {zodiac: 0.42, tail: 0.33, color: 0.25, number: 0.08}, regular: {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.20}},
-        {id: 'recent-hot', name: '&#36817;30&#26399;&#20559;&#28909;', packWeights: [0.3, 0.55, 0.15], special: {zodiac: 0.34, tail: 0.28, color: 0.18, number: 0.28}, regular: {zodiac: 0.26, tail: 0.22, color: 0.14, number: 0.38}},
-        {id: 'year-structure', name: '&#24403;&#24180;&#32467;&#26500;', packWeights: [0.7, 0.15, 0.15], special: {zodiac: 0.46, tail: 0.34, color: 0.20, number: 0.05}, regular: {zodiac: 0.40, tail: 0.30, color: 0.18, number: 0.12}},
-        {id: 'tail-color', name: '&#23614;&#25968;&#39068;&#33394;', packWeights: [0.45, 0.35, 0.20], special: {zodiac: 0.22, tail: 0.48, color: 0.30, number: 0.08}, regular: {zodiac: 0.20, tail: 0.42, color: 0.25, number: 0.13}},
-        {id: 'all-history', name: '&#20840;&#21382;&#21490;&#31283;&#23450;', packWeights: [0.25, 0.15, 0.60], special: {zodiac: 0.38, tail: 0.30, color: 0.22, number: 0.18}, regular: {zodiac: 0.30, tail: 0.24, color: 0.18, number: 0.28}},
-      ];
+    function specialWindowTriggerStrategies(source) {
+      return source === 'hk'
+        ? [
+          {id: 'hk-hot50-12-miss1', name: '&#36817;50&#26399;&#28909;&#21495;12&#30721;', method: 'hot', lookback: 50, poolSize: 12, minPrevMiss: 1},
+          {id: 'hk-hot50-15-miss1', name: '&#36817;50&#26399;&#28909;&#21495;15&#30721;', method: 'hot', lookback: 50, poolSize: 15, minPrevMiss: 1},
+          {id: 'hk-tailcolor50-15-miss1', name: '&#36817;50&#26399;&#23614;&#25968;&#39068;&#33394;15&#30721;', method: 'tailcolor', lookback: 50, poolSize: 15, minPrevMiss: 1},
+        ]
+        : [
+          {id: 'am-hot100-12-miss2', name: '&#36817;100&#26399;&#28909;&#21495;12&#30721;', method: 'hot', lookback: 100, poolSize: 12, minPrevMiss: 2},
+          {id: 'am-tailcolor50-15-miss2', name: '&#36817;50&#26399;&#23614;&#25968;&#39068;&#33394;15&#30721;', method: 'tailcolor', lookback: 50, poolSize: 15, minPrevMiss: 2},
+          {id: 'am-hot100-15-miss1', name: '&#36817;100&#26399;&#28909;&#21495;15&#30721;', method: 'hot', lookback: 100, poolSize: 15, minPrevMiss: 1},
+        ];
     }
-    function dimensionScoreRows(source, mode, inputRows = null, algorithm = null) {
-      const rows = inputRows || recommendationSourceRows(source);
-      if (!rows.length) return [];
-      const latest = rows[rows.length - 1];
-      const year = displayYear(latest);
-      const yearRows = rows.filter(row => displayYear(row) === year);
-      const recentRows = rows.slice(-30);
-      const packs = [dimensionCountPack(yearRows, mode), dimensionCountPack(recentRows, mode), dimensionCountPack(rows, mode)];
-      const algo = algorithm || recommendationAlgorithms()[0];
-      const packWeights = algo.packWeights || [0.5, 0.25, 0.25];
-      const weights = mode === 'special'
-        ? algo.special
-        : algo.regular;
-      const zodiacMap = latestZodiacMap(source, rows);
+    function specialWindowScoreRows(rows, strategy) {
+      const basisRows = rows.slice(-Number(strategy.lookback || 50));
+      const pack = dimensionCountPack(basisRows.length ? basisRows : rows, 'special');
       const colors = colorMapFromRows(rows);
       return Array.from({length: 49}, (_, index) => {
         const num = index + 1;
         const numberText = String(num).padStart(2, '0');
-        const zodiac = zodiacMap.get(num) || '';
         const tail = String(num % 10);
         const color = colors.get(num) || '';
-        const score = packs.reduce((sum, pack, packIndex) => sum + packWeights[packIndex] * (
-          weights.zodiac * normalizedCount(pack.zodiacs, zodiac) +
-          weights.tail * normalizedCount(pack.tails, tail) +
-          weights.color * normalizedCount(pack.colors, color) +
-          weights.number * normalizedCount(pack.nums, numberText)
-        ), 0);
-        return {numberText, score, zodiac, tail, color};
+        const score = strategy.method === 'tailcolor'
+          ? normalizedCount(pack.tails, tail) * 0.52 + normalizedCount(pack.colors, color) * 0.32 + normalizedCount(pack.nums, numberText) * 0.16
+          : normalizedCount(pack.nums, numberText) * 0.72 + normalizedCount(pack.tails, tail) * 0.18 + normalizedCount(pack.colors, color) * 0.10;
+        return {numberText, score, tail, color};
       }).sort((a, b) => b.score - a.score || Number(a.numberText) - Number(b.numberText));
     }
-    function recommendationForRows(source, rows, algorithm) {
-      const specialScores = dimensionScoreRows(source, 'special', rows, algorithm);
-      const threeScores = dimensionScoreRows(source, 'regular', rows, algorithm);
-      return {special: specialScores[0] || null, threePool: threeScores.slice(0, 5)};
+    function specialWindowPoolForRows(rows, strategy) {
+      return specialWindowScoreRows(rows, strategy).slice(0, Number(strategy.poolSize || 12)).map(item => item.numberText);
     }
-    function backtestRecommendationAlgorithm(source, mode, algorithm, rows, windowSize = 50) {
-      const start = Math.max(30, rows.length - windowSize);
+    function specialWindowGroups(rows) {
+      const groups = new Map();
+      rows.forEach((row, order) => {
+        const issue = Number(row.issue || 0);
+        if (!issue) return;
+        const start = Math.floor((issue - 1) / 5) * 5 + 1;
+        const year = displayYear(row);
+        const key = `${year}-${start}`;
+        if (!groups.has(key)) groups.set(key, {year, start, end: start + 4, rows: []});
+        groups.get(key).rows.push({...row, _order: order});
+      });
+      return [...groups.values()]
+        .map(win => ({...win, rows: win.rows.sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0)), count: win.rows.length}))
+        .sort((a, b) => String(a.year).localeCompare(String(b.year)) || Number(a.start) - Number(b.start));
+    }
+    function specialWindowCovered(win, pool) {
+      const poolSet = new Set(asArray(pool).map(item => String(Number(item)).padStart(2, '0')));
+      const hits = asArray(win.rows).map(row => ({issue: row.issue, date: row.date, num: specialNum(row)})).filter(item => poolSet.has(item.num));
+      return {covered: hits.length > 0, hits};
+    }
+    function backtestSpecialWindowTriggerStrategy(source, strategy, rows) {
+      const windows = specialWindowGroups(rows).filter(win => Number(win.count || 0) >= 5);
+      const records = [];
+      let prevMiss = 0;
       let hits = 0;
       let total = 0;
-      for (let index = start; index < rows.length; index++) {
-        const beforeRows = rows.slice(0, index);
-        if (beforeRows.length < 30) continue;
-        const recommendation = recommendationForRows(source, beforeRows, algorithm);
-        const hit = recommendationTrackHitForRecord(recommendation, rows[index]);
-        hits += mode === 'special' ? (hit.specialHit ? 1 : 0) : (hit.threeHit ? 1 : 0);
-        total++;
-      }
-      return {hits, total, backtestHitRate: total ? Math.round(hits / total * 10000) / 100 : 0, windowSize};
+      windows.forEach(win => {
+        const firstOrder = Math.min(...win.rows.map(row => Number(row._order || 0)));
+        const beforeRows = rows.slice(0, firstOrder);
+        if (beforeRows.length < Number(strategy.lookback || 50)) {
+          const pool = specialWindowPoolForRows(beforeRows, strategy);
+          const result = specialWindowCovered(win, pool);
+          prevMiss = result.covered ? 0 : prevMiss + 1;
+          return;
+        }
+        const pool = specialWindowPoolForRows(beforeRows, strategy);
+        const triggerPrevMiss = prevMiss;
+        const triggered = triggerPrevMiss >= Number(strategy.minPrevMiss || 1);
+        const result = specialWindowCovered(win, pool);
+        const record = {...win, pool, prevMiss: triggerPrevMiss, triggered, covered: result.covered, hits: result.hits};
+        if (triggered) {
+          total++;
+          if (result.covered) hits++;
+          records.push(record);
+        }
+        prevMiss = result.covered ? 0 : prevMiss + 1;
+      });
+      return {strategy, hits, total, backtestHitRate: total ? Math.round(hits / total * 10000) / 100 : 0, records, finalPrevMiss: prevMiss};
     }
-    function selectBestRecommendationAlgorithm(source, mode, rows, windowSize = 50) {
-      const scored = recommendationAlgorithms().map(algorithm => ({algorithm, ...backtestRecommendationAlgorithm(source, mode, algorithm, rows, windowSize)}));
-      scored.sort((a, b) => b.backtestHitRate - a.backtestHitRate || b.hits - a.hits || a.algorithm.id.localeCompare(b.algorithm.id));
-      return scored[0] || {algorithm: recommendationAlgorithms()[0], hits: 0, total: 0, backtestHitRate: 0, windowSize};
+    function currentSpecialWindow(rows) {
+      const latest = rows[rows.length - 1] || {};
+      const latestIssue = Number(latest.issue || 0);
+      if (!latestIssue) return {year: '', start: 0, end: 0, count: 0, rows: []};
+      const start = latestIssue % 5 === 0 ? latestIssue + 1 : Math.floor((latestIssue - 1) / 5) * 5 + 1;
+      const year = displayYear(latest);
+      const currentRows = rows.filter(row => displayYear(row) === year && Number(row.issue || 0) >= start && Number(row.issue || 0) <= start + 4);
+      return {year, start, end: start + 4, count: currentRows.length, rows: currentRows};
     }
     function recommendationTrackAnalysis(source, inputRows = null) {
       const rows = inputRows || recommendationSourceRows(source);
       const latest = rows[rows.length - 1] || {};
-      const specialSelection = selectBestRecommendationAlgorithm(source, 'special', rows);
-      const threeSelection = selectBestRecommendationAlgorithm(source, 'regular', rows);
-      const specialScores = dimensionScoreRows(source, 'special', rows, specialSelection.algorithm);
-      const threeScores = dimensionScoreRows(source, 'regular', rows, threeSelection.algorithm);
-      const latestIssue = Number(latest.issue || 0);
-      return {
-        source,
-        latest,
-        specialAlgorithm: specialSelection,
-        threeAlgorithm: threeSelection,
-        basisIssue: latestIssue,
-        basisDate: latest.date || '',
-        recommendIssue: latestIssue ? latestIssue + 1 : '',
-        generatedAt: summary?.generatedAt || '',
-        special: specialScores[0] || null,
-        specialAlternates: specialScores.slice(1, 8),
-        threePool: threeScores.slice(0, 5),
-        threeAlternates: threeScores.slice(5, 8),
-        computedRows: rows.length
-      };
+      const currentWindow = currentSpecialWindow(rows);
+      const strategies = specialWindowTriggerStrategies(source).map(strategy => {
+        const backtest = backtestSpecialWindowTriggerStrategy(source, strategy, rows);
+        const pool = specialWindowPoolForRows(rows, strategy);
+        const triggerPrevMiss = Number(backtest.finalPrevMiss || 0);
+        const triggered = triggerPrevMiss >= Number(strategy.minPrevMiss || 1);
+        const currentHit = specialWindowCovered(currentWindow, pool);
+        return {...strategy, pool, prevMiss: triggerPrevMiss, triggered, currentCovered: currentHit.covered, currentHits: currentHit.hits, hits: backtest.hits, total: backtest.total, backtestHitRate: backtest.backtestHitRate, records: backtest.records};
+      }).sort((a, b) => Number(b.triggered) - Number(a.triggered) || b.backtestHitRate - a.backtestHitRate || b.hits - a.hits || a.poolSize - b.poolSize);
+      return {source, latest, basisIssue: latest.issue || '', basisDate: latest.date || '', generatedAt: summary?.generatedAt || '', currentWindow, strategies, currentStrategy: strategies[0] || null, computedRows: rows.length};
     }
-    function recommendationTrackHitForRecord(recommendation, record) {
-      const specialNumText = specialNum(record);
-      const regularNums = asArray(record.balls).slice(0, 6).map(ball => String(Number(ball.numberText || ball.number || 0)).padStart(2, '0'));
-      const threePool = asArray(recommendation.threePool).map(item => item.numberText);
-      const threeHits = regularNums.filter(num => threePool.includes(num));
-      return {
-        specialHit: recommendation.special?.numberText === specialNumText,
-        specialNum: specialNumText,
-        threeHit: threeHits.length >= 3,
-        threeHits,
-      };
+    function specialWindowTriggerHistory(source, analysis) {
+      const rows = [];
+      asArray(analysis.strategies).forEach(strategy => {
+        asArray(strategy.records).slice(-12).forEach(record => rows.push({strategy, record}));
+      });
+      return rows.sort((a, b) => String(b.record.year).localeCompare(String(a.record.year)) || Number(b.record.start) - Number(a.record.start)).slice(0, 18);
     }
-    function recommendationTrackHistory(source, current) {
+    function specialBallMetaRows(rows) {
+      const map = new Map();
+      rows.forEach(row => asArray(row.balls).forEach(ball => {
+        const num = String(Number(ball.numberText || ball.number || 0)).padStart(2, '0');
+        if (num !== '00') map.set(num, {num, tail: String(Number(num) % 10), zodiac: ball.zodiac || '', color: ball.color || ''});
+      }));
+      return Array.from({length: 49}, (_, index) => {
+        const num = String(index + 1).padStart(2, '0');
+        return map.get(num) || {num, tail: String((index + 1) % 10), zodiac: '', color: ''};
+      });
+    }
+    function topSpecialDimensionValues(rows, field, count, lookback = null) {
+      const basis = lookback ? rows.slice(-lookback) : rows;
+      const pack = dimensionCountPack(basis.length ? basis : rows, 'special');
+      const map = field === 'tail' ? pack.tails : field === 'zodiac' ? pack.zodiacs : pack.colors;
+      return [...map.entries()].filter(item => item[0]).sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))).slice(0, count).map(item => item[0]);
+    }
+    function specialDimensionStrategies(source) {
+      return source === 'hk'
+        ? [
+          {id: 'tail-4-100', label: '&#23614;&#25968;', field: 'tail', count: 4, lookback: 100},
+          {id: 'zodiac-5-50', label: '&#29983;&#32918;', field: 'zodiac', count: 5, lookback: 50},
+          {id: 'color-1-all', label: '&#39068;&#33394;', field: 'color', count: 1, lookback: null},
+        ]
+        : [
+          {id: 'tail-4-50', label: '&#23614;&#25968;', field: 'tail', count: 4, lookback: 50},
+          {id: 'zodiac-5-50', label: '&#29983;&#32918;', field: 'zodiac', count: 5, lookback: 50},
+          {id: 'color-1-200', label: '&#39068;&#33394;', field: 'color', count: 1, lookback: 200},
+        ];
+    }
+    function specialDimensionHit(win, field, pool) {
+      const poolSet = new Set(asArray(pool).map(String));
+      const hits = asArray(win.rows).map(row => {
+        const ball = row.balls?.[6] || {};
+        const num = Number(ball.numberText || ball.number || 0);
+        const value = field === 'tail' ? String(num % 10) : field === 'zodiac' ? (ball.zodiac || '') : (ball.color || '');
+        return {issue: row.issue, date: row.date, num: String(num).padStart(2, '0'), value};
+      }).filter(item => poolSet.has(String(item.value)));
+      return {covered: hits.length > 0, hits};
+    }
+    function specialDimensionWindowAnalysis(source) {
       const rows = recommendationSourceRows(source);
-      const start = Math.max(1, rows.length - 12);
-      const history = [];
-      for (let index = rows.length - 1; index >= start; index--) {
-        const beforeRows = rows.slice(0, index);
-        if (beforeRows.length < 30) continue;
-        const recommendation = recommendationTrackAnalysis(source, beforeRows);
-        const hit = recommendationTrackHitForRecord(recommendation, rows[index]);
-        history.push({record: rows[index], recommendation, ...hit});
+      const currentWindow = currentSpecialWindow(rows);
+      const windows = specialWindowGroups(rows).filter(win => Number(win.count || 0) >= 5);
+      const items = specialDimensionStrategies(source).map(strategy => {
+        let covered = 0;
+        let total = 0;
+        let currentMiss = 0;
+        let maxMiss = 0;
+        const misses = [];
+        const records = [];
+        windows.forEach(win => {
+          const firstOrder = Math.min(...win.rows.map(row => Number(row._order || 0)));
+          const beforeRows = rows.slice(0, firstOrder);
+          if (beforeRows.length < 20) return;
+          const pool = topSpecialDimensionValues(beforeRows, strategy.field, strategy.count, strategy.lookback);
+          const result = specialDimensionHit(win, strategy.field, pool);
+          total++;
+          if (result.covered) {
+            covered++;
+            currentMiss = 0;
+          } else {
+            currentMiss++;
+            maxMiss = Math.max(maxMiss, currentMiss);
+            misses.push({...win, pool, hits: result.hits});
+          }
+          records.push({...win, pool, covered: result.covered, hits: result.hits});
+        });
+        const currentPool = topSpecialDimensionValues(rows, strategy.field, strategy.count, strategy.lookback);
+        const currentHit = specialDimensionHit(currentWindow, strategy.field, currentPool);
+        return {...strategy, pool: currentPool, covered, total, hitRate: total ? Math.round(covered / total * 10000) / 100 : 0, currentMiss, maxMiss, misses, records, currentCovered: currentHit.covered, currentHits: currentHit.hits};
+      });
+      const valueMap = new Map(items.map(item => [item.field, item.pool]));
+      const metaRows = specialBallMetaRows(rows);
+      const intersectionNumbers = metaRows.filter(item => {
+        const tails = valueMap.get('tail') || [];
+        const zodiacs = valueMap.get('zodiac') || [];
+        const colors = valueMap.get('color') || [];
+        return tails.includes(item.tail) && zodiacs.includes(item.zodiac) && colors.includes(item.color);
+      }).map(item => item.num);
+      return {source, currentWindow, items, intersectionNumbers};
+    }
+    function specialDimensionRows(analysis) {
+      return asArray(analysis.items).map(item => `<tr><td>${item.label}</td><td>${item.lookback ? `&#36817;${esc(item.lookback)}&#26399;` : '&#20840;&#37096;&#21382;&#21490;'}</td><td>${asArray(item.pool).map(esc).join('&#12289; ')}</td><td>${esc(item.covered)} / ${esc(item.total)}</td><td>${esc(item.hitRate)}%</td><td>${esc(item.currentMiss)} / ${esc(item.maxMiss)}</td><td class="${item.currentCovered ? 'result-hit' : 'result-miss'}">${item.currentCovered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</td><td>${asArray(item.currentHits).map(hit => `${esc(hit.issue)}&#26399; ${esc(hit.num)}(${esc(hit.value)})`).join('&#12289; ') || '-'}</td></tr>`).join('');
+    }
+    function specialDimensionMissRows(analysis) {
+      const rows = [];
+      asArray(analysis.items).forEach(item => asArray(item.misses).slice(-8).forEach(win => rows.push({item, win})));
+      const sorted = rows.sort((a, b) => String(b.win.year).localeCompare(String(a.win.year)) || Number(b.win.start) - Number(a.win.start)).slice(0, 18);
+      if (!sorted.length) return '<tr><td colspan="5">&#26242;&#26080;&#32500;&#24230;&#28431;&#31383;&#35760;&#24405;</td></tr>';
+      return sorted.map(row => `<tr><td>${row.item.label}</td><td>${esc(row.win.year)}</td><td>${String(row.win.start).padStart(3, '0')}-${String(row.win.end).padStart(3, '0')}</td><td>${asArray(row.win.pool).map(esc).join('&#12289; ')}</td><td>${asArray(row.win.rows).map(item => `${esc(item.issue)}&#26399; ${esc(specialNum(item))}`).join('&#12289; ')}</td></tr>`).join('');
+    }
+    function fixedPatternStatsFromWindows(windows, poolField = 'poolSnapshot') {
+      const completed = asArray(windows).filter(win => Number(win.count || 0) >= 5);
+      const covered = completed.filter(win => win.covered);
+      const recent = completed.slice(-10);
+      let currentMiss = 0;
+      let maxMiss = 0;
+      completed.forEach(win => {
+        if (win.covered) currentMiss = 0;
+        else {
+          currentMiss++;
+          maxMiss = Math.max(maxMiss, currentMiss);
+        }
+      });
+      const finalMiss = (() => {
+        let miss = 0;
+        for (let index = completed.length - 1; index >= 0; index--) {
+          if (completed[index].covered) break;
+          miss++;
+        }
+        return miss;
+      })();
+      return {
+        windows: completed,
+        covered: covered.length,
+        total: completed.length,
+        hitRate: completed.length ? Math.round(covered.length / completed.length * 10000) / 100 : 0,
+        recentCovered: recent.filter(win => win.covered).length,
+        recentTotal: recent.length,
+        recentHitRate: recent.length ? Math.round(recent.filter(win => win.covered).length / recent.length * 10000) / 100 : 0,
+        currentMiss: finalMiss,
+        maxMiss,
+        misses: completed.filter(win => !win.covered),
+        preWindowPool: asArray(completed[completed.length - 1]?.[poolField] || completed[completed.length - 1]?.pool || []),
+      };
+    }
+    function fixedPatternTrackAnalysis(source) {
+      if (!records.length) {
+        const special = fiveWindowAnalysis(source);
+        const three = threeWindowAnalysis(source);
+        const items = [];
+        items.push({
+          type: 'special',
+          stableRule: '&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;',
+          scope: '&#24403;&#24180;',
+          poolSize: 8,
+          preWindowPool: special.yearPool || [],
+          currentWindow: special.currentWindow || {},
+          currentCovered: Boolean(special.currentWindow?.covered),
+          currentHits: asArray(special.currentWindow?.hits),
+          covered: 0,
+          total: 0,
+          hitRate: 0,
+          recentCovered: 0,
+          recentTotal: 0,
+          recentHitRate: 0,
+          currentMiss: 0,
+          maxMiss: 0,
+          misses: [],
+        });
+        items.push({
+          type: 'special',
+          stableRule: '&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;15&#30721;',
+          scope: '&#20840;&#37096;&#21382;&#21490;',
+          poolSize: 15,
+          preWindowPool: special.stablePool || [],
+          currentWindow: special.currentWindow || {},
+          currentCovered: false,
+          currentHits: [],
+          covered: 0,
+          total: 0,
+          hitRate: 0,
+          recentCovered: 0,
+          recentTotal: 0,
+          recentHitRate: 0,
+          currentMiss: 0,
+          maxMiss: 0,
+          misses: [],
+        });
+        asArray(three.compoundPools).forEach(poolItem => {
+          const stats = fixedPatternStatsFromWindows(poolItem.windows, 'poolSnapshot');
+          const current = asArray(poolItem.windows).find(item => item.start === three.currentWindow?.start) || {};
+          items.push({
+            type: 'three',
+            stableRule: `&#19977;&#20013;&#19977;&#22797;&#24335;${esc(poolItem.poolSize)}&#30721;`,
+            scope: '&#24403;&#24180;',
+            poolSize: poolItem.poolSize,
+            preWindowPool: poolItem.pool || stats.preWindowPool || [],
+            currentWindow: three.currentWindow || {},
+            currentCovered: Boolean(current.covered),
+            currentHits: asArray(current.hits),
+            ...stats,
+          });
+        });
+        return {source, currentWindow: special.currentWindow || {}, items};
       }
-      return history.slice(0, 10);
+      const special = fiveWindowAnalysis(source);
+      const three = threeWindowAnalysis(source);
+      const win = special.currentWindow || {};
+      const items = [];
+      const specialYearStats = fixedPatternStatsFromWindows(special.yearWindows, 'poolSnapshot');
+      items.push({
+        type: 'special',
+        stableRule: '&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;',
+        scope: '&#24403;&#24180;',
+        poolSize: 8,
+        preWindowPool: special.yearPool || specialYearStats.preWindowPool || [],
+        currentWindow: win,
+        currentCovered: Boolean(win.covered),
+        currentHits: asArray(win.hits),
+        ...specialYearStats,
+      });
+      const stableWindows = fiveWindowCoverageSnapshots(cachedSourceRecords(source), special.stablePool || [], []);
+      const specialStableStats = fixedPatternStatsFromWindows(stableWindows, 'poolSnapshot');
+      items.push({
+        type: 'special',
+        stableRule: '&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;15&#30721;',
+        scope: '&#20840;&#37096;&#21382;&#21490;',
+        poolSize: 15,
+        preWindowPool: special.stablePool || specialStableStats.preWindowPool || [],
+        currentWindow: win,
+        currentCovered: Boolean(stableWindows.find(item => item.start === win.start)?.covered),
+        currentHits: asArray(stableWindows.find(item => item.start === win.start)?.hits),
+        ...specialStableStats,
+      });
+      asArray(three.compoundPools).forEach(poolItem => {
+        const stats = fixedPatternStatsFromWindows(poolItem.windows, 'poolSnapshot');
+        const current = asArray(poolItem.windows).find(item => item.start === three.currentWindow?.start) || {};
+        items.push({
+          type: 'three',
+          stableRule: `&#19977;&#20013;&#19977;&#22797;&#24335;${esc(poolItem.poolSize)}&#30721;`,
+          scope: '&#24403;&#24180;',
+          poolSize: poolItem.poolSize,
+          preWindowPool: poolItem.pool || stats.preWindowPool || [],
+          currentWindow: three.currentWindow || {},
+          currentCovered: Boolean(current.covered),
+          currentHits: asArray(current.hits),
+          ...stats,
+        });
+      });
+      return {source, currentWindow: win, items};
+    }
+    function fixedPatternRows(analysis) {
+      return asArray(analysis.items).map(item => {
+        const win = item.currentWindow || {};
+        const hitText = asArray(item.currentHits).map(hit => hit.matched ? `${esc(hit.issue)}&#26399; ${asArray(hit.matched).map(esc).join('/')}` : `${esc(hit.issue)}&#26399; ${esc(hit.num || '')}`).join('&#12289; ') || '-';
+        return `<tr><td>${item.stableRule}<br><span class="muted">${item.scope}</span></td><td>${numberChips(item.preWindowPool || [])}</td><td>${String(win.start || '').padStart(3, '0')}-${String(win.end || '').padStart(3, '0')}<br><span class="muted">&#24050;&#24320; ${esc(win.count || 0)} / 5</span></td><td>${esc(item.covered)} / ${esc(item.total)}<br>${esc(item.hitRate)}%</td><td>${esc(item.recentCovered)} / ${esc(item.recentTotal)}<br>${esc(item.recentHitRate)}%</td><td>${esc(item.currentMiss)} / ${esc(item.maxMiss)}</td><td class="${item.currentCovered ? 'result-hit' : 'result-miss'}">${item.currentCovered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</td><td>${hitText}</td></tr>`;
+      }).join('');
+    }
+    function fixedPatternMissRows(analysis) {
+      const rows = [];
+      asArray(analysis.items).forEach(item => asArray(item.misses).slice(-8).forEach(win => rows.push({item, win})));
+      const sorted = rows.sort((a, b) => Number(b.win.start || 0) - Number(a.win.start || 0)).slice(0, 20);
+      if (!sorted.length) return '<tr><td colspan="5">&#26242;&#26080;&#22266;&#23450;&#35268;&#24459;&#28431;&#31383;&#35760;&#24405;</td></tr>';
+      return sorted.map(row => {
+        const hitText = asArray(row.win.hits).map(hit => hit.matched ? `${esc(hit.issue)}&#26399; ${asArray(hit.matched).map(esc).join('/')}` : `${esc(hit.issue)}&#26399; ${esc(hit.num || '')}`).join('&#12289; ') || '-';
+        return `<tr><td>${row.item.stableRule}</td><td>${String(row.win.start).padStart(3, '0')}-${String(row.win.end).padStart(3, '0')}</td><td>${numberChips(row.win.poolSnapshot || row.item.preWindowPool || [])}</td><td>${esc(row.win.count || 0)} / 5</td><td>${hitText}</td></tr>`;
+      }).join('');
     }
     function recommendationLine(sourceName, analysis) {
-      const special = analysis.special || {};
-      const threePool = asArray(analysis.threePool);
+      const strategy = analysis.currentStrategy || {};
+      const win = analysis.currentWindow || {};
       const line = [];
       line.push(sourceName);
-      line.push(`&#25512;&#33616;&#26399;&#21495;&#65306; <strong>${esc(analysis.recommendIssue || '-')}&#26399;</strong>`);
+      line.push(`&#26465;&#20214;&#35302;&#21457;&#65306; <strong>${strategy.triggered ? '&#24050;&#35302;&#21457;' : '&#26410;&#35302;&#21457;'}</strong>`);
+      line.push(`&#24403;&#21069;&#31383;&#21475;&#65306; <strong>${win.start ? `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}` : '-'} 5&#26399;&#31383;&#21475;</strong>&#65292;&#24050;&#24320; ${esc(win.count || 0)} / 5`);
       line.push(`&#29983;&#25104;&#26102;&#38388;&#65306; ${esc(analysis.generatedAt || '-')}`);
       line.push(`&#20381;&#25454;&#24320;&#22870;&#65306; ${esc(analysis.basisIssue || '-')}&#26399;&#65292;${esc(analysis.basisDate || '-')}`);
-      line.push(`&#24403;&#21069;&#31639;&#27861;&#65306; &#29305;&#21495; ${analysis.specialAlgorithm?.algorithm?.name || '-'}&#65292;&#19977;&#20013;&#19977; ${analysis.threeAlgorithm?.algorithm?.name || '-'}`);
-      line.push(`&#22238;&#27979;&#33539;&#22260;&#65306; &#26368;&#36817;${esc(analysis.specialAlgorithm?.windowSize || 50)}&#26399;&#65292;&#22238;&#27979;&#21629;&#20013;&#29575;&#65306; &#29305;&#21495; ${esc(analysis.specialAlgorithm?.backtestHitRate ?? 0)}%&#65288;${esc(analysis.specialAlgorithm?.hits ?? 0)}/${esc(analysis.specialAlgorithm?.total ?? 0)}&#65289;&#65292;&#19977;&#20013;&#19977; ${esc(analysis.threeAlgorithm?.backtestHitRate ?? 0)}%&#65288;${esc(analysis.threeAlgorithm?.hits ?? 0)}/${esc(analysis.threeAlgorithm?.total ?? 0)}&#65289;`);
+      line.push(`&#31574;&#30053;&#65306; ${strategy.name || '-'}&#65292;&#35302;&#21457;&#26465;&#20214;&#65306;&#19978;&#27425;&#28431;&#31383; >= ${esc(strategy.minPrevMiss ?? '-')}`);
+      line.push(`&#19978;&#27425;&#28431;&#31383;&#65306; ${esc(strategy.prevMiss ?? 0)}&#65292;&#22238;&#27979;&#35206;&#30422;&#29575;&#65306; ${esc(strategy.backtestHitRate ?? 0)}%&#65288;${esc(strategy.hits ?? 0)}/${esc(strategy.total ?? 0)}&#65289;`);
       line.push('');
-      line.push(`&#29305;&#21035;&#21495;&#26368;&#20248;&#19968;&#30721;&#65306; <strong>${esc(special.numberText || '-')}</strong>`);
-      line.push(`&#32467;&#26500;&#65306; ${esc(special.zodiac || '-')}&#65292;&#23614;&#25968; <strong>${esc(special.tail || '-')}</strong>&#65292;${colorLabel(special.color)}&#12290;`);
+      line.push(`&#29305;&#21035;&#21495;5&#26399;&#31383;&#21475;&#35266;&#23519;&#27744;&#65306;`);
+      line.push(`<span class="accent">${numberChips(strategy.pool || [])}</span>`);
       line.push('');
-      line.push(`&#22791;&#36873;&#35266;&#23519;&#65306; <span class="accent">${analysis.specialAlternates.map(item => esc(item.numberText)).join('&#12289; ') || '-'}</span>`);
-      line.push('');
-      line.push(`&#19977;&#20013;&#19977;&#26368;&#20248; <strong>5</strong>&#30721;&#22797;&#24335;&#65306;`);
-      line.push(`<span class="accent">${threePool.map(item => esc(item.numberText)).join('&#12289; ') || '-'}</span>`);
-      line.push('');
-      line.push('&#32467;&#26500;&#65306;');
-      threePool.forEach(item => line.push(`- ${esc(item.numberText)} ${esc(item.zodiac || '-')}&#65292;&#23614;${esc(item.tail || '-')}&#65292;${colorLabel(item.color)}`));
+      line.push(`&#24403;&#21069;&#31383;&#21475;&#29366;&#24577;&#65306; ${strategy.currentCovered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}&#65292;&#21629;&#20013;&#65306; ${asArray(strategy.currentHits).map(item => `${esc(item.issue)}&#26399; ${esc(item.num)}`).join('&#12289; ') || '-'}`);
       return line.join('\n');
     }
-    function colorLabel(color) {
-      if (color === 'red') return '&#32418;&#27874;';
-      if (color === 'green') return '&#32511;&#27874;';
-      if (color === 'blue') return '&#34013;&#27874;';
-      return esc(color || '-');
-    }
-    function recommendationHistoryCells(item) {
-      return `<td>${esc(item.record.issue)}&#26399;</td><td>${esc(item.record.date)}</td><td>${esc(item.recommendation.special?.numberText || '-')}</td><td>${esc(item.specialNum)}</td><td class="${item.specialHit ? 'result-hit' : 'result-miss'}">${item.specialHit ? '&#21629;&#20013;' : '&#26410;&#20013;'}</td><td>${item.recommendation.threePool.map(row => esc(row.numberText)).join('&#12289; ')}</td><td class="${item.threeHit ? 'result-hit' : 'result-miss'}">${item.threeHit ? `&#21629;&#20013; ${item.threeHits.join('&#12289; ')}` : '&#26410;&#20013;'}</td>`;
+    function triggerStrategyRows(strategies) {
+      return asArray(strategies).map(item => `<tr><td>${item.triggered ? '&#24050;&#35302;&#21457;' : '&#26410;&#35302;&#21457;'}</td><td>${item.name}</td><td>${esc(item.poolSize)}&#30721;</td><td>${numberChips(item.pool || [])}</td><td>${esc(item.prevMiss ?? 0)} / ${esc(item.minPrevMiss ?? 0)}</td><td>${esc(item.backtestHitRate ?? 0)}%<br><span class="muted">${esc(item.hits ?? 0)} / ${esc(item.total ?? 0)}</span></td><td class="${item.currentCovered ? 'result-hit' : 'result-miss'}">${item.currentCovered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</td></tr>`).join('');
     }
     function recommendationHistoryRows(sourceName, history) {
-      if (!history.length) return `<tr><td>${sourceName}</td><td colspan="7">&#26242;&#26080;&#36275;&#22815;&#21382;&#21490;&#25512;&#33616;&#35760;&#24405;</td></tr>`;
-      return history.map(item => `<tr><td>${sourceName}</td>${recommendationHistoryCells(item)}</tr>`).join('');
+      if (!history.length) return `<tr><td>${sourceName}</td><td colspan="8">&#26242;&#26080;&#21382;&#21490;&#35302;&#21457;&#35760;&#24405;</td></tr>`;
+      return history.map(item => {
+        const record = item.record;
+        const strategy = item.strategy;
+        return `<tr><td>${sourceName}</td><td>${esc(record.year)}</td><td>${String(record.start).padStart(3, '0')}-${String(record.end).padStart(3, '0')}</td><td>${strategy.name}</td><td>${numberChips(record.pool || [])}</td><td>${esc(record.prevMiss ?? 0)}</td><td class="${record.covered ? 'result-hit' : 'result-miss'}">${record.covered ? '&#24050;&#35206;&#30422;' : '&#26410;&#35206;&#30422;'}</td><td>${asArray(record.hits).map(hit => `${esc(hit.issue)}&#26399; ${esc(hit.num)}`).join('&#12289; ') || '-'}</td></tr>`;
+      }).join('');
     }
     function renderRecommendationTrack() {
       const selected = document.getElementById('recommendation-track-source')?.value || 'am';
-      const analysis = recommendationTrackAnalysis(selected);
-      const history = recommendationTrackHistory(selected, analysis);
+      const analysis = fixedPatternTrackAnalysis(selected);
       const sourceName = selected === 'hk' ? '&#39321;&#28207;' : '&#28595;&#38376;';
       app.innerHTML = `<div class="grid">
         <section class="panel full">
@@ -2170,14 +2398,15 @@ function New-DashboardHtml {
             <label>&#26469;&#28304;<select id="recommendation-track-source">${sourceOptions(selected)}</select></label>
           </div>
           <h2>&#25512;&#33616;&#36319;&#36394;</h2>
-          <p class="muted">&#25353;&#29983;&#32918;&#12289;&#23614;&#25968;&#12289;&#39068;&#33394;&#19977;&#20010;&#32500;&#24230;&#35745;&#31639;&#65292;&#24403;&#21069;&#24180;&#26435;&#37325;&#26368;&#39640;&#65292;&#36817;30&#26399;&#20854;&#27425;&#65292;&#20840;&#37096;&#21382;&#21490;&#20828;&#24213;&#12290;</p>
+          <p class="muted">${sourceName}&#65292;&#22266;&#23450;&#35268;&#24459;&#36319;&#36394;&#65306;&#21482;&#30475;&#21487;&#25345;&#32493;&#36319;&#36394;&#30340;&#22266;&#23450;&#27744;&#65292;&#19981;&#20877;&#26174;&#31034;&#20020;&#26102;&#25512;&#33616;&#25110;&#20107;&#21518;&#31579;&#36873;&#35268;&#24459;&#12290;</p>
         </section>
-        <section class="panel full"><pre class="recommendation-copy">${recommendationLine(sourceName, analysis)}</pre></section>
         <section class="panel full">
-          <h2>&#21382;&#21490;&#25512;&#33616;&#21629;&#20013;&#35760;&#24405;</h2>
-          <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26469;&#28304;</th><th>&#26399;&#21495;</th><th>&#26085;&#26399;</th><th>&#29305;&#21495;&#25512;&#33616;</th><th>&#24320;&#20986;&#29305;&#21495;</th><th>&#29305;&#21495;&#32467;&#26524;</th><th>&#19977;&#20013;&#19977;&#25512;&#33616;</th><th>&#19977;&#20013;&#19977;&#32467;&#26524;</th></tr></thead><tbody>
-            ${recommendationHistoryRows(sourceName, history)}
-          </tbody></table></div>
+          <h2>&#22266;&#23450;&#35268;&#24459;&#36319;&#36394;</h2>
+          <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#24459;</th><th>&#24320;&#22870;&#21069;&#27744;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#21382;&#21490;&#35206;&#30422;</th><th>&#36817;10&#31383;&#21475;</th><th>&#26368;&#22823;&#28431;&#31383;</th><th>&#24403;&#21069;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${fixedPatternRows(analysis)}</tbody></table></div>
+        </section>
+        <section class="panel full">
+          <h2>&#22266;&#23450;&#35268;&#24459;&#28431;&#31383;&#35760;&#24405;</h2>
+          <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#24459;</th><th>&#31383;&#21475;</th><th>&#24403;&#26102;&#27744;</th><th>&#24050;&#24320;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${fixedPatternMissRows(analysis)}</tbody></table></div>
         </section>
       </div>`;
       document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack);
@@ -2274,6 +2503,9 @@ function New-DashboardHtml {
       document.getElementById('manual-fetch-source').addEventListener('change', renderManualFetch);
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
+    function renderWorldcupAnalysis() {
+      app.innerHTML = `<section class="panel full"><iframe class="embedded-page" src="worldcup2026-dashboard.html" title="2026 World Cup analysis"></iframe></section>`;
+    }
     let recordsDataPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
@@ -2359,7 +2591,8 @@ function New-DashboardHtml {
         historyPatternState = await ensureHistoryPatternData();
       },
       recommendationTrack: async () => {
-        await ensureRecordsData();
+        window5State = await ensureWindow5Data();
+        threeCompoundState = await ensureThreeCompoundData();
       },
       patternWatch: async () => {
         await ensureRecordsData();
@@ -2371,7 +2604,8 @@ function New-DashboardHtml {
       historyPattern: renderHistoryPattern,
       recommendationTrack: renderRecommendationTrack,
       patternWatch: renderPatternWatch,
-      manualFetch: renderManualFetch
+      manualFetch: renderManualFetch,
+      worldcupAnalysis: renderWorldcupAnalysis
     };
     function showLoading(tab) {
       const label = document.querySelector(`.tabs button[data-tab="${tab}"]`)?.textContent || '';
@@ -2397,7 +2631,7 @@ function New-DashboardHtml {
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
-      switchTab('historyPattern');
+      switchTab('worldcupAnalysis');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });
