@@ -1983,6 +1983,21 @@
         <td>${gateFormulaHtml(item)}</td>
       </tr>`).join('');
     }
+    function gateLegendHtml(rows) {
+      const labels = [
+        ['A', rows[rows.length - 1], '&#19978;&#19968;&#26399;'],
+        ['B', rows[rows.length - 2], '&#19978;&#19978;&#26399;'],
+        ['C', rows[rows.length - 3], '&#19978;&#19977;&#26399;'],
+        ['D', rows[rows.length - 4], '&#19978;&#22235;&#26399;']
+      ];
+      const latestRows = labels.map(([key, row, label]) => `<tr><td>${esc(key)}</td><td>${label}</td><td>${esc(row?.issue || '-')}&#26399;</td><td>${numberChips(asArray(row?.balls).map(ball => ball.numberText || ball.number))}</td><td>${numberChips([specialNum(row)])}</td></tr>`).join('');
+      return `<section class="panel full">
+        <h2>&#20844;&#24335;&#35828;&#26126;</h2>
+        <p class="muted">A/B/C/D &#20195;&#34920;&#26368;&#36817;4&#26399;&#65292;A1-A7 &#20195;&#34920;A&#26399;&#31532;1&#21040;&#31532;7&#20010;&#21495;&#65292;A7&#23601;&#26159;&#24403;&#26399;&#29305;&#21035;&#21495;&#12290;&#35745;&#31639;&#32467;&#26524;&#36229;&#36807;49&#23601;&#20943;49&#65292;&#23567;&#20110;1&#23601;&#21152;49&#65292;&#26368;&#32456;&#37117;&#33853;&#22312;01-49。</p>
+        <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#20195;&#21495;</th><th>&#21547;&#20041;</th><th>&#26399;&#21495;</th><th>&#24320;&#22870;&#21495;</th><th>&#29305;&#21035;&#21495;</th></tr></thead><tbody>${latestRows}</tbody></table></div>
+        <p class="muted">&#20363;&#22914;&#65306;A7+6 &#23601;&#26159;&#19978;&#19968;&#26399;&#29305;&#21035;&#21495; + 6&#65307;abs(A2-A7) &#37324;&#30340; abs &#26159;&#21462;&#32477;&#23545;&#20540;&#65292;&#20063;&#23601;&#26159;&#21482;&#30475;&#20004;&#20010;&#21495;&#30456;&#24046;&#22810;&#23569;&#65292;&#19981;&#20998;&#27491;&#36127;&#65292;&#22914; |41-32| = 09&#65307;A2+diff &#37324;&#30340; diff &#26159;&#21516;&#20301;&#24046;&#20540;&#39034;&#25512;&#65292;&#21363; A2 + (A2-B2)&#65292;&#22914; 41 + (41-40) = 42&#12290;</p>
+      </section>`;
+    }
     function gateTraceRows(rows, def, cache, count = 8) {
       const start = Math.max(4, rows.length - count);
       const items = [];
@@ -2006,6 +2021,7 @@
         </section>
         <section class="panel wide"><h2>&#24403;&#21069;&#21028;&#26029;</h2><div class="metric">${decision}</div><p class="muted">&#26368;&#26032;&#24320;&#22870;&#65306;${esc(analysis.latest.issue || '-')}&#26399;&#65292;&#29305;&#21035;&#21495; ${numberChips([specialNum(analysis.latest)])}</p></section>
         <section class="panel wide"><h2>&#24403;&#21069;&#20027;&#35266;&#23519;&#27744;</h2>${numberChips(active?.current?.nums || [])}<p class="muted">${active?.current?.formulas?.map(formula => `${esc(formula.expr)} = ${esc(formula.calc)} &#8594; ${esc(gateText(formula.value))}`).join('<br>') || '-'}</p></section>
+        ${gateLegendHtml(analysis.rows)}
         <section class="panel full"><h2>&#38383;&#20851;&#27744;&#29366;&#24577;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31867;&#22411;</th><th>&#19979;&#26399;&#27744;</th><th>&#24403;&#21069;&#38454;&#27573;</th><th>&#21382;&#21490;&#38383;&#20851;</th><th>&#20840;&#21382;&#21490;&#36827;&#20851;</th><th>2024+&#36827;&#20851;</th><th>&#36830;&#20013;</th><th>&#35745;&#31639;&#36807;&#31243;</th></tr></thead><tbody>${gateRowsHtml(analysis.items)}</tbody></table></div></section>
         <section class="panel full"><h2>&#20027;&#35266;&#23519;&#27744;&#26368;&#36817;&#36712;&#36857;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26399;&#21495;</th><th>&#24403;&#26399;&#27744;</th><th>&#23454;&#38469;&#29305;&#21495;</th><th>&#29366;&#24577;</th><th>&#20844;&#24335;</th></tr></thead><tbody>${gateTraceRows(analysis.rows, active || gatePoolDefs[0], analysis.formulaCache)}</tbody></table></div></section>
       </div>`;
