@@ -235,6 +235,11 @@ assert.ok(data.reliabilitySummary.finalPicks.main.every(item => item.betAction =
 assert.ok(data.reliabilitySummary.finalPicks.main.every(item => item.lineupStatus), "main final picks should expose lineup status");
 assert.ok(data.reliabilitySummary.finalPicks.main.every(item => item.confirmationLabel), "main final picks should expose confirmation label");
 assert.ok(data.reliabilitySummary.finalPicks.main.every(item => item.lineupStatus === "confirmed" || item.confirmationLabel !== "最终确认"), "unconfirmed lineup picks should not be labelled final confirmed");
+const comboEligibleRows = data.jcMatches.filter(item => item.model?.betAction === "可跟踪" && item.model?.marketCheck?.status !== "divergent");
+if (comboEligibleRows.length >= 4) {
+  assert.ok(data.scoreCombos.length > 0, "score combos should be generated when at least four trackable non-divergent matches exist");
+  assert.equal(data.scoreCombos[0].matches.length, 4, "generated score combo should include four matches");
+}
 for (const item of data.reliabilitySummary.bestReliableMatches) {
   assert.match(item.score, /^\d-\d$/, "reliable match row should include a main score");
   assert.notEqual(item.betAction, "回避", "best reliable match list should not include avoid picks");
@@ -374,6 +379,17 @@ for (const item of modelRows.slice(0, 8)) {
   assert.ok(Array.isArray(item.model.marketAnomaly.flags), `${item.matchId} market anomaly should include flags`);
   assert.equal(typeof item.model.marketAnomaly.penalty, "number", `${item.matchId} market anomaly should include score penalty`);
   assert.ok(item.model.marketAnomaly.reason, `${item.matchId} market anomaly should include reason`);
+  assert.ok(item.model.analystSubjective?.stance, `${item.matchId} should include subjective analyst stance`);
+  assert.ok(
+    ["顺势但降权", "反市场保护", "诱盘疑点", "纯模型判断"].includes(item.model.analystSubjective.stance),
+    `${item.matchId} subjective analyst stance should be explicit`
+  );
+  assert.ok(item.model.analystSubjective.reason?.length >= 12, `${item.matchId} subjective analyst stance should include reasoning`);
+  assert.equal(typeof item.model.analystSubjective.capitalNoiseRisk, "number", `${item.matchId} subjective stance should score public-data noise risk`);
+  assert.ok(item.model.analystSubjective.capitalNoiseRisk >= 0 && item.model.analystSubjective.capitalNoiseRisk <= 100, `${item.matchId} public-data noise risk should be 0-100`);
+  if (item.model.marketCheck.status === "divergent") {
+    assert.notEqual(item.model.analystSubjective.stance, "顺势但降权", `${item.matchId} divergent market should not be blindly followed`);
+  }
   assert.ok(item.model.scoreRationale?.main && item.model.scoreRationale?.upset, `${item.matchId} should include score rationale for main and upset picks`);
   assert.ok(item.model.scoreRationale?.backup, `${item.matchId} should include backup score rationale separately`);
   assert.ok(item.model.expertScenario, `${item.matchId} should include expert scenario`);
@@ -437,10 +453,10 @@ for (const item of modelRows.slice(0, 8)) {
 }
 
 assert.ok(Array.isArray(data.scoreCombos), "scoreCombos should be an array");
-if (data.reliabilitySummary.finalPicks.main.length < 4) {
-  assert.equal(data.scoreCombos.length, 0, "score combo should not be generated when fewer than four final main picks exist");
+if (comboEligibleRows.length < 4) {
+  assert.equal(data.scoreCombos.length, 0, "score combo should not be generated when fewer than four trackable non-divergent matches exist");
 } else {
-  assert.ok(data.scoreCombos.length >= 1, "expected at least one score combo when four final main picks exist");
+  assert.ok(data.scoreCombos.length >= 1, "expected at least one score combo when four trackable non-divergent matches exist");
 }
 for (const combo of data.scoreCombos) {
   assert.equal(combo.matches.length, 4, "each combo should contain four matches");
@@ -478,9 +494,16 @@ for (const combo of data.scoreCombos) {
     assert.ok(Array.isArray(item.dualScores) && item.dualScores.length === 2, "combo match should include two scores");
     assert.deepEqual(item.dualScores.map(row => row.role), ["主推", "备用"], "combo match dual scores should remain main and backup");
     assert.ok(item.upsetScore?.score, "combo match should include separate true upset score");
+    assert.equal(item.upsetScore.role, "博冷", "combo match true upset score should be labelled as upset");
     assert.ok(item.dualScoreCoverage > 0, "combo match should include dual score coverage");
     assert.ok(!("marketWatch" in item), "combo match should not include market watch");
   });
+  if (combo.coverageCombos?.length) {
+    assert.ok(
+      combo.coverageCombos.every(row => row.matches.every(match => match.upsetScore)),
+      "combo coverage score rows should carry true upset score next to every score pick"
+    );
+  }
 }
 
 console.log("worldcup model v9 independent shape ok");

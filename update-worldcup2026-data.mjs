@@ -2586,6 +2586,50 @@ function analystContextScore({quality, resultProbability, lineupContext, formCon
   return Math.round(Math.max(0, Math.min(100, score)));
 }
 
+function subjectiveAnalystLayer({match, strengthDiff, resultProbability, drawProbability, scoreProbability, marketCheck, marketAnomaly, strategyContext, tacticalContext, lineupStatus, newsSemanticContext}) {
+  const favoriteBias = Math.abs(strengthDiff) >= 18 && resultProbability >= 0.62;
+  const publicDataNoise = Math.round(Math.max(0, Math.min(100,
+    (marketCheck.status === "divergent" ? 36 : marketCheck.status === "caution" ? 22 : 10) +
+    (marketAnomaly.level === "high" ? 24 : marketAnomaly.level === "medium" ? 14 : marketAnomaly.level === "low" ? 7 : 0) +
+    (favoriteBias ? 12 : 0) +
+    (lineupStatus !== "confirmed" ? 10 : 0) +
+    (Number(strategyContext.rotationRisk || 0) * 45) +
+    (scoreProbability < 0.13 ? 8 : 0)
+  )));
+  let stance = "纯模型判断";
+  let reason = "公开数据只作为背景输入，最终按强弱结构、比赛节奏和冷门路径做人工过滤。";
+  let adjustment = 0;
+  if (marketCheck.status === "aligned" && favoriteBias) {
+    stance = "顺势但降权";
+    adjustment = -4;
+    reason = "市场与模型同向但强队热度集中，主观上不追大热，只保留控场比分并提高博冷权重。";
+  } else if (marketCheck.status === "divergent" && drawProbability >= 0.28) {
+    stance = "诱盘疑点";
+    adjustment = -8;
+    reason = "公开方向与模型冲突且平局权重不低，视为可能诱导单边判断，主观上转为防平和弱队进球。";
+  } else if (marketCheck.status === "divergent") {
+    stance = "反市场保护";
+    adjustment = -5;
+    reason = "市场方向与模型冲突，但足球逻辑仍支持原判断，主观上不盲从公开方向，只降低执行强度。";
+  } else if (marketCheck.status === "caution") {
+    stance = "诱盘疑点";
+    adjustment = -3;
+    reason = "公开方向与模型略有错位，主观上保留比分判断，但不把公开数据当作加分项。";
+  }
+  return {
+    stance,
+    capitalNoiseRisk: publicDataNoise,
+    adjustment,
+    reason,
+    protectedAngles: [
+      drawProbability >= 0.28 ? "防平" : "",
+      favoriteBias ? "防强队热度" : "",
+      tacticalContext.triggers?.some(item => /反击|定位球|低位/.test(item)) ? "防弱队进球" : "",
+      newsSemanticContext.tags?.some(item => /rotation|managed/.test(item)) ? "防轮换降速" : ""
+    ].filter(Boolean)
+  };
+}
+
 function buildMatchModel(match, context = {}) {
   const teamNews = {
     home: teamNewsFor(match.home, context.injuryReport || {}),
@@ -2665,10 +2709,23 @@ function buildMatchModel(match, context = {}) {
   const tacticalContext = tacticalContextFor(match, {strengthDiff, ratings: context.ratings || {}, recentResults: context.recentResults || {}, strategyContext});
   const scoreRationale = scoreRationaleFor({expertPick, tacticalContext, strategyContext, formContext, marketCheck});
   const matchContextScore = analystContextScore({quality, resultProbability, lineupContext, formContext, tacticalContext, marketCheck, strategyContext});
+  const analystSubjective = subjectiveAnalystLayer({
+    match,
+    strengthDiff,
+    resultProbability,
+    drawProbability,
+    scoreProbability,
+    marketCheck,
+    marketAnomaly,
+    strategyContext,
+    tacticalContext,
+    lineupStatus,
+    newsSemanticContext
+  });
   const baseBetScore = betScore({confidence, risk, scoreProbability, resultProbability, analysisQualityScore: quality});
   const marketPenalty = marketCheck.status === "divergent" ? 8 : marketCheck.status === "caution" ? 4 : 0;
   const contextBoost = matchContextScore >= 72 ? 3 : matchContextScore < 55 ? -5 : 0;
-  const scoreForBet = Math.max(0, Math.min(100, Math.round(baseBetScore - Number(strategyContext.score || 0) * 0.08 - marketPenalty - marketAnomaly.penalty + contextBoost)));
+  const scoreForBet = Math.max(0, Math.min(100, Math.round(baseBetScore - Number(strategyContext.score || 0) * 0.08 - marketPenalty - marketAnomaly.penalty + contextBoost + analystSubjective.adjustment)));
   const rawAction = betAction(scoreForBet, risk);
   const analystVerdict = analystVerdictForModel({
     betAction: rawAction,
@@ -2707,6 +2764,7 @@ function buildMatchModel(match, context = {}) {
     marketCheck,
     oddsMovementContext,
     marketAnomaly,
+    analystSubjective,
     scoreRationale,
     teamNews,
     lineupStatus,
@@ -2724,7 +2782,7 @@ function buildMatchModel(match, context = {}) {
     scoreCandidates,
     expectedGoals: {home: round2(homeLambda), away: round2(awayLambda)},
     strength: {home: homeStrength, away: awayStrength, diff: strengthDiff},
-    reason: `${expertPick.reason} 强度差${strengthDiff}，FIFA排名差${rankingContext.rankGap}，近期状态折算${formContext.diff}，${groupSituationContext.reason}，赛程${scheduleContext.home.status}/${scheduleContext.away.status}，场地${venueContext.reason}，参考期望进球${round2(homeLambda)}-${round2(awayLambda)}，胜平负可靠性${Math.round(resultProbability * 100)}%，平局概率${Math.round(drawProbability * 100)}%，${strategyContext.reason}，${newsSemanticContext.reason}，${marketCheck.reason}，SP变化${oddsMovementContext.status}，盘口异常${marketAnomaly.level}，${marketAnomaly.reason}，分析上下文${matchContextScore}，下注评分${scoreForBet}，建议${action}，情报质量${quality}`
+    reason: `${expertPick.reason} 强度差${strengthDiff}，FIFA排名差${rankingContext.rankGap}，近期状态折算${formContext.diff}，${groupSituationContext.reason}，赛程${scheduleContext.home.status}/${scheduleContext.away.status}，场地${venueContext.reason}，参考期望进球${round2(homeLambda)}-${round2(awayLambda)}，胜平负可靠性${Math.round(resultProbability * 100)}%，平局概率${Math.round(drawProbability * 100)}%，${strategyContext.reason}，${newsSemanticContext.reason}，${marketCheck.reason}，SP变化${oddsMovementContext.status}，盘口异常${marketAnomaly.level}，${marketAnomaly.reason}，主观判断${analystSubjective.stance}，${analystSubjective.reason}，公开噪声${analystSubjective.capitalNoiseRisk}，分析上下文${matchContextScore}，下注评分${scoreForBet}，建议${action}，情报质量${quality}`
   };
 }
 
@@ -2888,8 +2946,9 @@ function buildScoreCombos(jcMatches, finalMainPicks = null) {
       : "观察";
   const coverageCombos = selected.reduce((rows, item) => {
     const scores = item.jcMatch.model.dualScores || [];
+    const upsetScore = item.jcMatch.model.upsetScore?.score || "";
     return rows.flatMap(row => scores.map(score => ({
-      matches: [...row.matches, {matchId: item.jcMatch.matchId, teams: item.jcMatch.teams, score: score.score, role: score.role}],
+      matches: [...row.matches, {matchId: item.jcMatch.matchId, teams: item.jcMatch.teams, score: score.score, role: score.role, upsetScore}],
       probability: round4(row.probability * Number(score.probability || 0))
     })));
   }, [{matches: [], probability: 1}]);
@@ -3095,7 +3154,7 @@ const jcMatches = openMatchSource.matches.map(item => ({
 }));
 const jcSource = openMatchSource.source;
 const reliabilitySummary = buildReliabilitySummary(jcMatches);
-const scoreCombos = buildScoreCombos(jcMatches, reliabilitySummary.finalPicks?.main || []);
+const scoreCombos = buildScoreCombos(jcMatches);
 scoreCombos.forEach(combo => {
   combo.comboAnalysisQuality = Math.round(combo.matches.reduce((sum, item) => sum + Number(item.analysisQualityScore || 0), 0) / combo.matches.length);
 });

@@ -201,6 +201,13 @@
     function actionClass(value) { if (value === "可跟踪") return "action-bet"; if (value === "观察") return "action-watch"; return "action-avoid"; }
     function checkText(status) { if (status === "aligned") return "校验一致"; if (status === "caution") return "校验谨慎"; if (status === "divergent") return "校验分歧"; return "校验缺失"; }
     function pctText(value) { return `${Math.round(Number(value || 0) * 100)}%`; }
+    function scoreSummaryText(source) {
+      const model = source?.model || source || {};
+      const main = (model.dualScores || []).find(row => row.role === "主推")?.score || model.score || "-";
+      const backup = (model.dualScores || []).find(row => row.role === "备用")?.score || (model.dualScores || [])[1]?.score || "-";
+      const upset = model.upsetScore?.score || "-";
+      return `主推${main} / 备用${backup} / 博冷${upset}`;
+    }
     function scoreCandidateText(model) { return (model.scoreCandidates || []).slice(0, 4).map(row => `${row.score} ${pctText(row.probability)}`).join(" / ") || "-"; }
     function expectedGoalText(model) {
       const goals = model.expectedGoals || {};
@@ -226,6 +233,11 @@
       const suppression = strategy.goalSuppression !== undefined ? `${Math.round(Number(strategy.goalSuppression || 0) * 100)}%` : "-";
       return `节奏 平局收益${drawUtility} 压低进球${suppression}`;
     }
+    function subjectiveText(model) {
+      const subjective = model.analystSubjective || {};
+      const angles = (subjective.protectedAngles || []).join(" / ");
+      return `主观判断 ${subjective.stance || "-"} / 噪声${subjective.capitalNoiseRisk ?? "-"}${angles ? ` / ${angles}` : ""}`;
+    }
     function semanticText(context) {
       if (!context) return "情报待定";
       const tiers = context.sourceTierSummary || {};
@@ -250,7 +262,7 @@
       const mainRows = Array.isArray(finalPicks.main) ? finalPicks.main : [];
       const watchRows = Array.isArray(finalPicks.watch) ? finalPicks.watch : bestRows;
       const renderPickRow = item => {
-        const scores = (item.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ");
+        const scores = scoreSummaryText(item);
         return `<div class="market-best-row"><strong>${item.matchId || "-"}</strong><span>${item.teams || "-"}<br><small>${item.confirmationLabel || "等首发确认"} / 异动${item.marketAnomalyLevel || "none"}</small></span><span class="market-score">${scores || item.score || "-"}<br><small>比分</small></span><span>可靠 ${item.reliability ?? "-"}%</span><span>评分 ${item.betScore ?? "-"}</span></div>`;
       };
       if (!reliabilitySummary.matchCount) {
@@ -287,7 +299,7 @@
       target.innerHTML = `
         <div class="decision-summary-head">
           <strong>${reliabilitySummary.executionAdvice || "只观察"}</strong>
-          <span>${reliabilitySummary.summaryText || "等待更明确的比分优势和首发确认。"}${topMain ? ` 首选观察：${topMain.teams || "-"}，${(topMain.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ") || topMain.score || "-"}` : ""}</span>
+          <span>${reliabilitySummary.summaryText || "等待更明确的比分优势和首发确认。"}${topMain ? ` 首选观察：${topMain.teams || "-"}，${scoreSummaryText(topMain)}` : ""}</span>
         </div>
         <div class="decision-summary-grid">
           <div class="decision-summary-item"><strong>${reliabilitySummary.matchCount ?? 0}</strong><span>当前开售可分析场次</span></div>
@@ -310,7 +322,7 @@
           <span>${combo.analystVerdict || "只做比分参考"}：组合评分 ${combo.comboBetScore ?? "-"}，平均可靠性 ${combo.comboReliability ?? "-"}%，分散评分 ${combo.diversificationAudit?.score ?? "-"}。</span>
         </div>
         <div class="brief-list">
-          ${(combo.matches || []).map(item => `<div class="brief-row"><strong>${item.matchId || "-"}</strong><span>${item.teams || "-"}<br><small>${(item.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ")} / 战术场景 ${item.tacticalScenario || "-"} / ${checkText(item.marketCheckStatus)}</small></span><span>${item.analystVerdict || item.betAction || "-"}</span></div>`).join("")}
+          ${(combo.matches || []).map(item => `<div class="brief-row"><strong>${item.matchId || "-"}</strong><span>${item.teams || "-"}<br><small>${scoreSummaryText(item)} / 战术场景 ${item.tacticalScenario || "-"} / ${checkText(item.marketCheckStatus)}</small></span><span>${item.analystVerdict || item.betAction || "-"}</span></div>`).join("")}
         </div>
       `;
     }
@@ -323,13 +335,12 @@
         const model = jc?.model || item;
         const probability = model.resultProbability ? `可靠 ${Math.round(model.resultProbability * 100)}% / 平局 ${Math.round((model.drawProbability || 0) * 100)}%` : item.probability;
         const flags = [...(model.riskFlags || [])].slice(0, 4).join(" / ");
-        const dual = (model.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ");
         const weather = model.venueContext?.weather || {};
         const weatherText = `天气${weather.weatherRisk || "-"} ${weather.temperatureC ?? "-"}C / 雨${weather.precipitationMm ?? "-"}mm / 风${weather.windKph ?? "-"}km/h`;
         const mainScore = (model.dualScores || []).find(row => row.role === "主推")?.score || model.score || item.score || "-";
         const backupScore = (model.dualScores || []).find(row => row.role === "备用")?.score || (model.dualScores || [])[1]?.score || "-";
         const trueUpsetScore = model.upsetScore?.score || "-";
-        return `<article class="score-row"><div><strong>${matchId}</strong><div class="note">${jc?.startTime || ""}</div></div><div><div class="teams">${item.teams}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">结论 ${model.analystVerdict || model.pick || item.pick || "-"}</span><span class="model-chip">${checkText(model.marketCheck?.status)}</span></div><div class="context-lines"><span><b>首发</b> ${lineupText(model)}</span><span><b>战意</b> ${motivationText(model)}</span></div></div><div><div class="score-main">主推 ${mainScore}</div><div class="score-side">备用 ${backupScore}</div><div class="score-side">博冷 ${trueUpsetScore}</div><div class="score-candidates"><b>比分分布</b> ${scoreCandidateText(model)}</div></div><div class="score-risk">${probability || "-"}<br>${expectedGoalText(model)}<br><span class="${riskClass(model.risk)}">${model.risk ? `风险 ${model.risk}` : ""}</span><br>${weatherText}</div><div><div class="reason-lines"><span><b>主推理由</b> ${model.scoreRationale?.main || model.reason || item.note || "-"}</span><span><b>备用理由</b> ${model.scoreRationale?.backup || "-"}</span><span><b>博冷理由</b> ${model.scoreRationale?.upset || "-"}</span><span><b>战术场景</b> ${model.tacticalContext?.scenario || "-"}${flags ? ` / ${flags}` : ""}</span><span><b>节奏</b> ${tempoText(model)}</span></div></div></article>`;
+        return `<article class="score-row"><div><strong>${matchId}</strong><div class="note">${jc?.startTime || ""}</div></div><div><div class="teams">${item.teams}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">结论 ${model.analystVerdict || model.pick || item.pick || "-"}</span><span class="model-chip">${checkText(model.marketCheck?.status)}</span></div><div class="context-lines"><span><b>首发</b> ${lineupText(model)}</span><span><b>战意</b> ${motivationText(model)}</span></div></div><div><div class="score-main">主推 ${mainScore}</div><div class="score-side">备用 ${backupScore}</div><div class="score-side">博冷 ${trueUpsetScore}</div><div class="score-candidates"><b>比分分布</b> ${scoreCandidateText(model)}</div></div><div class="score-risk">${probability || "-"}<br>${expectedGoalText(model)}<br><span class="${riskClass(model.risk)}">${model.risk ? `风险 ${model.risk}` : ""}</span><br>${weatherText}</div><div><div class="reason-lines"><span><b>主推理由</b> ${model.scoreRationale?.main || model.reason || item.note || "-"}</span><span><b>备用理由</b> ${model.scoreRationale?.backup || "-"}</span><span><b>博冷理由</b> ${model.scoreRationale?.upset || "-"}</span><span><b>主观判断</b> ${subjectiveText(model)} / ${model.analystSubjective?.reason || "-"}</span><span><b>战术场景</b> ${model.tacticalContext?.scenario || "-"}${flags ? ` / ${flags}` : ""}</span><span><b>节奏</b> ${tempoText(model)}</span></div></div></article>`;
       }).join("");
     }
     function renderJcMatches() {
@@ -340,10 +351,10 @@
         const candidates = (model.scoreCandidates || []).slice(0, 3).map(row => `${row.score} ${Math.round(row.probability * 100)}%`).join(" / ");
         const flags = (model.riskFlags || []).slice(0, 4).join(" / ");
         const news = `${model.teamNews?.home?.injuryStatus || "unknown"} / ${model.teamNews?.away?.injuryStatus || "unknown"}`;
-        const dual = (model.dualScores || []).map(row => `${row.role}${row.score}`).join(" / ");
+        const scores = scoreSummaryText(model);
         const weather = model.venueContext?.weather || {};
         const weatherText = `天气${weather.weatherRisk || "-"} ${weather.temperatureC ?? "-"}C / 雨${weather.precipitationMm ?? "-"}mm / 风${weather.windKph ?? "-"}km/h`;
-        return `<article class="jc-match"><strong>${item.matchId || "-"}</strong><div><strong>${item.teams}</strong><div class="note">${item.league || "-"} ${item.startTime || ""}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">结论 ${model.analystVerdict || "-"}</span><span class="model-chip">战术场景 ${model.tacticalContext?.scenario || "-"}</span><span class="model-chip">场地 ${model.venueContext?.city || "-"} / ${weatherText}</span><span class="model-chip">${checkText(model.marketCheck?.status)}</span><span class="model-chip">异动 ${model.marketAnomaly?.level || "none"}</span><span class="model-chip">评分 ${model.betScore ?? "-"}</span><span class="model-chip">可靠 ${Math.round((model.resultProbability || 0) * 100)}%</span><span class="model-chip">平局 ${Math.round((model.drawProbability || 0) * 100)}%</span>${flags ? `<span class="model-chip">${flags}</span>` : ""}</div><div class="reason-lines"><span><b>主推理由</b> ${model.scoreRationale?.main || "-"}</span><span><b>博冷理由</b> ${model.scoreRationale?.upset || "-"}</span><span><b>情报证据</b> ${semanticText(model.newsSemanticContext)}</span></div></div><div>${dual || model.score || "-"}<br><small>覆盖 ${Math.round((model.dualScoreCoverage || 0) * 100)}%</small></div><div>${item.canParlay ? "可串关" : "不可串关"} / ${item.scoreSupported ? "比分" : "无比分"}<br><small>${candidates}</small></div></article>`;
+        return `<article class="jc-match"><strong>${item.matchId || "-"}</strong><div><strong>${item.teams}</strong><div class="note">${item.league || "-"} ${item.startTime || ""}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">结论 ${model.analystVerdict || "-"}</span><span class="model-chip">战术场景 ${model.tacticalContext?.scenario || "-"}</span><span class="model-chip">场地 ${model.venueContext?.city || "-"} / ${weatherText}</span><span class="model-chip">${checkText(model.marketCheck?.status)}</span><span class="model-chip">异动 ${model.marketAnomaly?.level || "none"}</span><span class="model-chip">评分 ${model.betScore ?? "-"}</span><span class="model-chip">可靠 ${Math.round((model.resultProbability || 0) * 100)}%</span><span class="model-chip">平局 ${Math.round((model.drawProbability || 0) * 100)}%</span><span class="model-chip">噪声 ${model.analystSubjective?.capitalNoiseRisk ?? "-"}</span>${flags ? `<span class="model-chip">${flags}</span>` : ""}</div><div class="reason-lines"><span><b>主推理由</b> ${model.scoreRationale?.main || "-"}</span><span><b>博冷理由</b> ${model.scoreRationale?.upset || "-"}</span><span><b>主观判断</b> ${subjectiveText(model)} / ${model.analystSubjective?.reason || "-"}</span><span><b>情报证据</b> ${semanticText(model.newsSemanticContext)}</span></div></div><div>${scores}<br><small>覆盖 ${Math.round((model.dualScoreCoverage || 0) * 100)}%</small></div><div>${item.canParlay ? "可串关" : "不可串关"} / ${item.scoreSupported ? "比分" : "无比分"}<br><small>${candidates}</small></div></article>`;
       }).join("");
     }
     document.querySelectorAll(".tab").forEach(button => button.addEventListener("click", () => { document.querySelectorAll(".tab").forEach(item => item.classList.remove("active")); button.classList.add("active"); renderMatches(button.dataset.filter); }));

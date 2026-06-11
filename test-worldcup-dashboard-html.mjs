@@ -63,4 +63,13 @@ assert.ok(html.includes('return "action-avoid"'), "avoid action should render wi
   assert.ok(!html.includes(text), `dashboard should not expose official-market wording: ${text}`);
 });
 
+assert.ok(html.includes("function scoreSummaryText"), "dashboard should centralize score rendering through a shared score summary helper");
+assert.ok((html.match(/scoreSummaryText\(/g) || []).length >= 5, "every compact score display should include main, backup, and true upset scores");
+assert.ok(html.includes("scoreSummaryText(topMain)"), "decision summary top pick should include true upset score");
+assert.ok(html.includes("scoreSummaryText(item)"), "reliability and combo rows should include true upset score");
+assert.ok(html.includes("scoreSummaryText(model)"), "current betting match rows should include true upset score");
+assert.ok(html.includes("analystSubjective"), "dashboard should expose subjective analyst judgement instead of only public data");
+assert.ok(html.includes("主观判断"), "dashboard should label subjective analyst judgement");
+assert.ok(html.includes("capitalNoiseRisk"), "dashboard should expose public-data noise risk");
+
 console.log("worldcup dashboard html shell ok");
