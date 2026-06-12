@@ -6,17 +6,19 @@
   <title>&#24320;&#22870;&#35760;&#24405;&#25968;&#25454;&#30475;&#26495;</title>
   <style>
     :root { color-scheme: light; font-family: "Microsoft YaHei", Arial, sans-serif; }
+    * { box-sizing: border-box; }
     body { margin: 0; background: #f4f5f7; color: #1f2933; }
     header { background: #0b42d8; color: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
     header h1 { margin: 0; font-size: 20px; font-weight: 700; }
     header a { color: #fff; text-decoration: none; font-size: 14px; }
-    main { max-width: 1180px; margin: 0 auto; padding: 16px; }
+    main { width: 100%; max-width: 1180px; margin: 0 auto; padding: 16px; }
     .tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
     .tabs button { border: 1px solid #cbd5e1; background: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
     .tabs button.active { background: #0b42d8; color: #fff; border-color: #0b42d8; }
     .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
     .grid.compact-grid { align-items: start; }
-    .panel { background: #fff; border: 1px solid #d9dee7; border-radius: 8px; padding: 14px; }
+    .panel { min-width: 0; background: #fff; border: 1px solid #d9dee7; border-radius: 8px; padding: 14px; }
+    .grid > * { min-width: 0; }
     .panel h2 { margin: 0 0 10px; font-size: 16px; }
     .metric { font-size: 28px; font-weight: 800; }
     .muted { color: #667085; font-size: 13px; }
@@ -98,6 +100,7 @@
       <button class="active" data-tab="worldcupAnalysis">&#19990;&#30028;&#26479;&#20998;&#26512;</button>
       <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
       <button data-tab="recommendationTrack">&#25512;&#33616;&#36319;&#36394;</button>
+      <button data-tab="gateChallenge">&#38383;&#19977;&#20851;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
@@ -1165,6 +1168,30 @@
       if (!added.length && !removed.length) return '';
       return `<div class="change-summary"><p>&#26368;&#26032;&#21464;&#26356;&#65306;${esc(latestYearPoolChange.issue || '-')}&#26399;</p><p>&#26032;&#22686;&#65306;${added.length ? numberChips(added) : '-'}</p><p>&#31227;&#38500;&#65306;${removed.length ? numberChips(removed) : '-'}</p></div>`;
     }
+    function syncStatusRow(label, latestIssue, lastRecalcIssue, nextRecalcIssue, included, reason) {
+      return `<tr><td>${label}</td><td>${esc(latestIssue || '-')}</td><td>${esc(lastRecalcIssue || '-')}</td><td>${esc(nextRecalcIssue || '-')}</td><td>${included ? '&#24050;&#32435;&#20837;' : '&#26410;&#32435;&#20837;'}</td><td>${reason || '-'}</td></tr>`;
+    }
+    function syncStatusPanel(page, analysis) {
+      const latestIssue = analysis?.latest?.issue || analysis?.latestIssue || analysis?.basisIssue || analysis?.latestDraw?.issue || '';
+      const currentWindow = analysis?.currentWindow || {};
+      const currentIncluded = Boolean(currentWindow.count || currentWindow.draws?.length || currentWindow.rows?.length || currentWindow.hits?.length);
+      let rows = [];
+      if (page === 'window5') {
+        rows = [
+          syncStatusRow('&#29305;&#21035;&#21495;&#24403;&#24180;8&#30721;', latestIssue, analysis?.yearPoolHistory?.[0]?.issue || latestIssue, latestIssue, true, statusText(analysis?.adjustmentReason || '')),
+          syncStatusRow('&#29305;&#21035;&#21495;&#36328;&#24180;&#31283;&#23450;15&#30721;', latestIssue, analysis?.stablePoolLastIssue, analysis?.stablePoolNextRecalcIssue, true, statusText(analysis?.stablePoolReason || ''))
+        ];
+      } else if (page === 'threeWindow5') {
+        rows = asArray(analysis?.compoundPools).slice(0, 4).map(item => syncStatusRow(`&#19977;&#20013;&#19977;&#22797;&#24335;${esc(item.poolSize)}&#30721;`, latestIssue, item.changeHistory?.[0]?.issue || latestIssue, latestIssue, true, statusText(item.status || item.healthReason || '')));
+      } else if (page === 'historyPattern') {
+        rows = [syncStatusRow('&#29305;&#21035;&#21495;&#28378;&#21160;8&#30721;', latestIssue, latestIssue, latestIssue, currentIncluded, '&#27599;&#20010;&#31383;&#21475;&#25353;&#24320;&#22870;&#21069;&#25968;&#25454;&#28378;&#21160;&#35745;&#31639;')];
+      } else if (page === 'recommendationTrack') {
+        rows = asArray(analysis?.items || analysis?.strategies).slice(0, 6).map(item => syncStatusRow(item.stableRule || item.label || '-', latestIssue || currentWindow.end, latestIssue || currentWindow.end, latestIssue || currentWindow.end, true, item.currentCovered ? '&#26412;&#26399;&#24050;&#21629;&#20013;' : '&#24050;&#32435;&#20837;&#24403;&#21069;&#31383;&#21475;&#35266;&#23519;'));
+      } else if (page === 'gateChallenge') {
+        rows = [syncStatusRow('&#38383;&#19977;&#20851;&#29305;&#21495;&#20844;&#24335;&#27744;', latestIssue || analysis?.latest?.issue, latestIssue || analysis?.latest?.issue, '&#27599;&#26399;&#21363;&#26102;&#35745;&#31639;', true, '&#20844;&#24335;&#27744;&#20381;&#25454;&#26368;&#36817;4&#26399;&#21363;&#26102;&#25512;&#23548;')];
+      }
+      return `<section class="panel full"><h2>&#31574;&#30053;&#21516;&#27493;&#29366;&#24577;</h2><p class="muted">&#29992;&#20110;&#21306;&#20998;&#65306;&#25968;&#25454;&#24050;&#21516;&#27493;&#20294;&#27744;&#23376;&#26410;&#21464;&#12289;&#26410;&#21040;&#37325;&#31639;&#26465;&#20214;&#65292;&#25110;&#24403;&#21069;&#31383;&#21475;&#24050;&#32435;&#20837;&#22238;&#27979;&#12290;</p><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#31574;&#30053;</th><th>&#26368;&#26032;&#25968;&#25454;&#26399;&#21495;</th><th>&#19978;&#27425;&#37325;&#31639;&#26399;&#21495;</th><th>&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;</th><th>&#26412;&#26399;&#26159;&#21542;&#24050;&#32435;&#20837;</th><th>&#27744;&#23376;&#26410;&#21464;&#21407;&#22240;</th></tr></thead><tbody>${rows.join('')}</tbody></table></div></section>`;
+    }
     async function renderWindow5Details(source) {
       await ensureRecordsData();
       const analysis = fiveWindowAnalysis(source);
@@ -1189,6 +1216,7 @@
             <section class="panel window5-pool-card"><h2>&#36328;&#24180;&#31283;&#23450;&#27744;</h2>${numberChips(analysis.stablePool)}<p>${statusText(analysis.stablePoolStatus)}</p><p class="muted">${statusText(analysis.stablePoolReason)}</p><p>&#20248;&#21270;&#65306;${statusText(analysis.stablePoolOptimizationStatus)}</p><p class="muted">${statusText(analysis.stablePoolOptimizationReason)}</p><p class="muted">&#21464;&#26356;&#26102;&#38388;&#65306;${esc(analysis.stablePoolChangeTime || '-')}</p><p class="muted">&#19979;&#27425;&#37325;&#31639;&#26399;&#21495;&#65306;${esc(analysis.stablePoolNextRecalcIssue || '-')}</p></section>
           </div>
         </section>
+        ${syncStatusPanel('window5', analysis)}
         <section class="panel full"><h2>&#26126;&#32454;&#25968;&#25454;</h2><div class="detail-placeholder"><button class="secondary window5-detail-toggle" type="button">&#23637;&#24320;&#21464;&#26356;&#35760;&#24405;&#12289;&#24403;&#24180;&#31383;&#21475;&#26126;&#32454;&#21644;&#24180;&#24230;&#22238;&#27979;</button></div><div id="window5-details"></div></section>
       </div>`;
       document.getElementById('window5-source').addEventListener('change', renderWindow5);
@@ -1278,6 +1306,7 @@
         <section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="three-window5-source">${sourceOptions(selected)}</select></label></div></section>
         <section class="panel wide"><h2>&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</h2><p>${esc(analysis.currentYear)}&#24180; ${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}&#31383;&#21475;</p><p>&#24050;&#24320;&#65306;${esc(win.count)}&#26399;&#65292;&#21097;&#20313;&#65306;${esc(Math.max(0, 5 - win.count))}&#26399;</p><p>&#29366;&#24577;&#65306;${win.covered ? '&#24050;&#21629;&#20013;' : '&#35266;&#23519;&#20013;'}</p><p>&#21629;&#20013;&#65306;${hitText}</p></section>
         <section class="panel"><h2>&#31383;&#21475;&#25112;&#32489;</h2><p>&#24403;&#21069;&#28431;&#31383;&#65306;${esc(analysis.stats.currentMiss)}</p><p>&#21382;&#21490;&#26368;&#22823;&#28431;&#31383;&#65306;${esc(analysis.stats.maxMiss)}</p><p>&#32479;&#35745;&#31383;&#21475;&#65306;${esc(analysis.stats.total)}&#65292;&#21629;&#20013;&#65306;${esc(analysis.stats.hits)}</p><p>&#31383;&#21475;&#21629;&#20013;&#29575;&#65306;${esc(analysis.stats.hitRate)}%</p></section>
+        ${syncStatusPanel('threeWindow5', analysis)}
         <section class="panel full"><h2>&#19977;&#20013;&#19977;&#22797;&#24335;&#27744;&#23545;&#27604;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#27169;</th><th>&#22797;&#24335;&#27744;</th><th>&#31383;&#21475;&#35206;&#30422;</th><th>&#35206;&#30422;&#29575;</th><th>&#36817;10&#31383;&#21475;</th><th>&#28431;&#31383;</th><th>&#20581;&#24247;&#29366;&#24577;</th><th>&#21629;&#20013;&#24320;&#22870;</th><th>&#23436;&#25972;&#28431;&#31383;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#24403;&#21069;&#21629;&#20013;</th></tr></thead><tbody>${poolRows}</tbody></table></div></section>
         <section class="panel full"><h2>&#26126;&#32454;&#25968;&#25454;</h2><div class="detail-placeholder"><button class="secondary three-window-detail-toggle" type="button">&#23637;&#24320;&#36328;&#24180;&#27744;&#12289;&#21464;&#26356;&#35760;&#24405;&#21644;8&#30721;&#31383;&#21475;&#26126;&#32454;</button></div><div id="three-window-details"></div></section>
       </div>`;
@@ -1360,6 +1389,7 @@
           </div>
         </section>
         ${latestDrawHtml}
+        ${syncStatusPanel('historyPattern', analysis)}
         <section class="panel full">
           <h2>&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</h2>
           <p class="muted">&#29305;&#21035;&#21495;&#22266;&#23450;8&#30721;&#65292;&#25353;001-005&#12289;006-010&#12289;011-015&#12289;016-020...&#22266;&#23450;5&#26399;&#31383;&#21475;&#22238;&#27979;&#35206;&#30422;&#29575;&#12290;</p>
@@ -1812,6 +1842,7 @@
           <h2>&#25512;&#33616;&#36319;&#36394;</h2>
           <p class="muted">${sourceName}&#65292;&#22266;&#23450;&#35268;&#24459;&#36319;&#36394;&#65306;&#21482;&#30475;&#21487;&#25345;&#32493;&#36319;&#36394;&#30340;&#22266;&#23450;&#27744;&#65292;&#19981;&#20877;&#26174;&#31034;&#20020;&#26102;&#25512;&#33616;&#25110;&#20107;&#21518;&#31579;&#36873;&#35268;&#24459;&#12290;</p>
         </section>
+        ${syncStatusPanel('recommendationTrack', analysis)}
         <section class="panel full">
           <h2>&#22266;&#23450;&#35268;&#24459;&#36319;&#36394;</h2>
           <div class="table-scroll"><table class="compact-table"><thead><tr><th>&#35268;&#24459;</th><th>&#24320;&#22870;&#21069;&#27744;</th><th>&#24403;&#21069;&#31383;&#21475;</th><th>&#21382;&#21490;&#35206;&#30422;</th><th>&#36817;10&#31383;&#21475;</th><th>&#26368;&#22823;&#28431;&#31383;</th><th>&#24403;&#21069;</th><th>&#21629;&#20013;</th></tr></thead><tbody>${fixedPatternRows(analysis)}</tbody></table></div>
@@ -1822,6 +1853,197 @@
         </section>
       </div>`;
       document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack);
+    }
+    function gateDecisionState(stage, recentPass3Rate) {
+      if (stage >= 2) return {label: '&#20914;&#31532;&#19977;&#20851;', level: 'hit', advice: '&#32487;&#32493; / &#38477;&#27880;&#35266;&#23519; / &#26242;&#20572;'};
+      if (stage === 1) return {label: '&#31532;&#20108;&#20851;&#35266;&#23519;', level: '', advice: '&#31532;1&#20851;&#24050;&#36807;&#65292;&#31532;2&#20851;&#35201;&#38477;&#27880;&#35266;&#23519;'};
+      if (recentPass3Rate >= 0.25) return {label: '&#21487;&#35266;&#23519;&#31532;&#19968;&#20851;', level: '', advice: '&#26412;&#26399;&#21482;&#33021;&#23567;&#27880;&#24320;&#31532;1&#20851;'};
+      return {label: '&#26242;&#20572;', level: 'miss', advice: '&#26242;&#20572;&#24320;&#31532;1&#20851;&#65292;&#31561;&#20808;&#20986;&#19968;&#27425;&#21629;&#20013;'};
+    }
+    function gateTierLabel(index, item) {
+      if (item.all.stage >= 2 || index === 0) return '&#20027;&#20844;&#24335;';
+      if (item.all.pass3 > 0 || item.recent.pass2 > 0) return '&#22791;&#29992;&#20844;&#24335;';
+      return '&#25490;&#38500;&#20844;&#24335;';
+    }
+    function gateNum(value) {
+      return ((Math.round(Number(value || 0)) - 1) % 49 + 49) % 49 + 1;
+    }
+    function gateText(value) {
+      return String(gateNum(value)).padStart(2, '0');
+    }
+    function gateBallValue(record, index) {
+      return Number(record?.balls?.[index]?.number || record?.balls?.[index]?.numberText || 0);
+    }
+    function gateSourceRows(source) {
+      return sourceRecords(source).slice().filter(row => row?.balls?.[6]).sort((a, b) => {
+        const dateCompare = String(a.date || '').localeCompare(String(b.date || ''));
+        return dateCompare || Number(a.issue || 0) - Number(b.issue || 0);
+      });
+    }
+    function gateAddFormula(items, expr, value, calc) {
+      items.push({expr, value: gateNum(value), calc});
+    }
+    function gateFormulaList(rows, index) {
+      const A = rows[index - 1], B = rows[index - 2], C = rows[index - 3], D = rows[index - 4];
+      if (!A || !B || !C || !D) return [];
+      const items = [];
+      const draws = [
+        ['A', A.balls.map(ball => Number(ball.number || ball.numberText || 0))],
+        ['B', B.balls.map(ball => Number(ball.number || ball.numberText || 0))],
+        ['C', C.balls.map(ball => Number(ball.number || ball.numberText || 0))]
+      ];
+      draws.forEach(([prefix, nums]) => {
+        for (let x = 0; x < 7; x++) {
+          for (let y = x + 1; y < 7; y++) {
+            gateAddFormula(items, `${prefix}${x + 1}+${prefix}${y + 1}`, nums[x] + nums[y], `${gateText(nums[x])}+${gateText(nums[y])}`);
+            gateAddFormula(items, `abs(${prefix}${x + 1}-${prefix}${y + 1})`, Math.abs(nums[x] - nums[y]) || 49, `|${gateText(nums[x])}-${gateText(nums[y])}|`);
+          }
+        }
+      });
+      for (let k = 0; k < 7; k++) {
+        const a = gateBallValue(A, k), b = gateBallValue(B, k), c = gateBallValue(C, k);
+        gateAddFormula(items, `A${k + 1}+B${k + 1}`, a + b, `${gateText(a)}+${gateText(b)}`);
+        gateAddFormula(items, `abs(A${k + 1}-B${k + 1})`, Math.abs(a - b) || 49, `|${gateText(a)}-${gateText(b)}|`);
+        gateAddFormula(items, `A${k + 1}+diff`, a + (a - b), `${gateText(a)}+(${gateText(a)}-${gateText(b)})`);
+        gateAddFormula(items, `A${k + 1}+B${k + 1}-C${k + 1}`, a + b - c, `${gateText(a)}+${gateText(b)}-${gateText(c)}`);
+      }
+      [
+        ['A7', gateBallValue(A, 6)],
+        ['B7', gateBallValue(B, 6)],
+        ['C7', gateBallValue(C, 6)],
+        ['D7', gateBallValue(D, 6)]
+      ].forEach(([name, num]) => {
+        [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,18,20,24].forEach(step => {
+          gateAddFormula(items, `${name}+${step}`, num + step, `${gateText(num)}+${step}`);
+          gateAddFormula(items, `${name}-${step}`, num - step, `${gateText(num)}-${step}`);
+        });
+        gateAddFormula(items, `50-${name}`, 50 - num, `50-${gateText(num)}`);
+      });
+      for (let k = 0; k < 6; k++) {
+        const a = gateBallValue(A, k);
+        const t = gateBallValue(A, 6);
+        gateAddFormula(items, `A${k + 1}+A7`, a + t, `${gateText(a)}+${gateText(t)}`);
+        gateAddFormula(items, `abs(A${k + 1}-A7)`, Math.abs(a - t) || 49, `|${gateText(a)}-${gateText(t)}|`);
+      }
+      return items;
+    }
+    const gatePoolDefs = [
+      {name: '&#24403;&#21069;&#31532;&#19977;&#20851;', exprs: ['A7+6', 'abs(A2-A7)'], note: '&#24403;&#21069;&#24050;&#36830;&#20013;2&#26399;&#30340;2&#30721;&#27744;'},
+      {name: '&#39640;&#36136;&#37327;&#35266;&#23519;', exprs: ['abs(B3-B6)', 'C3+C7'], note: '&#21382;&#21490;&#20108;&#36827;&#19977;&#36739;&#24378;&#65292;&#24403;&#21069;&#26410;&#21551;&#21160;'},
+      {name: '&#39640;&#36136;&#37327;&#35266;&#23519;', exprs: ['abs(A3-A5)', 'B7-18'], note: '&#36817;&#24180;&#34920;&#29616;&#36739;&#31283;&#65292;&#24403;&#21069;&#26410;&#21551;&#21160;'},
+      {name: '&#39640;&#36136;&#37327;&#35266;&#23519;', exprs: ['abs(C2-C7)', 'B7-16'], note: '&#21382;&#21490;&#26377;&#19977;&#36830;&#35760;&#24405;&#65292;&#24403;&#21069;&#26410;&#21551;&#21160;'},
+      {name: '&#39640;&#36136;&#37327;&#35266;&#23519;', exprs: ['B2+B4', 'A2+diff'], note: '&#36817;&#24180;&#20108;&#36827;&#19977;&#34920;&#29616;&#36739;&#22909;&#65292;&#24403;&#21069;&#26410;&#21551;&#21160;'},
+      {name: '&#31532;&#19968;&#20851;&#35266;&#23519;', exprs: ['C7-2', 'abs(A2-A7)'], note: '&#24403;&#21069;&#21482;&#26159;&#31532;&#19968;&#20851;&#29366;&#24577;'},
+      {name: '&#31532;&#19968;&#20851;&#35266;&#23519;', exprs: ['abs(A2-A7)', 'abs(B2-B7)'], note: '&#24403;&#21069;&#21482;&#26159;&#31532;&#19968;&#20851;&#29366;&#24577;'},
+      {name: '&#31532;&#19968;&#20851;&#35266;&#23519;', exprs: ['abs(C2-C6)', 'abs(A2-A7)'], note: '&#24403;&#21069;&#21482;&#26159;&#31532;&#19968;&#20851;&#29366;&#24577;'}
+    ];
+    function gateFormulaMapAt(rows, index, cache) {
+      if (cache?.has(index)) return cache.get(index);
+      const formulaMap = new Map(gateFormulaList(rows, index).map(item => [item.expr, item]));
+      if (cache) cache.set(index, formulaMap);
+      return formulaMap;
+    }
+    function gatePoolAt(rows, index, def, cache) {
+      const formulaMap = gateFormulaMapAt(rows, index, cache);
+      const formulas = def.exprs.map(expr => formulaMap.get(expr)).filter(Boolean);
+      const nums = [...new Set(formulas.map(item => gateText(item.value)))].sort((a, b) => Number(a) - Number(b));
+      return {formulas, nums, hit: index < rows.length && nums.includes(specialNum(rows[index]))};
+    }
+    function gateMetrics(rows, def, fromYear = '', cache) {
+      const hits = [];
+      let total = 0;
+      for (let i = 4; i < rows.length; i++) {
+        if (fromYear && displayYear(rows[i]) < String(fromYear)) continue;
+        const state = gatePoolAt(rows, i, def, cache);
+        hits[i] = state.hit;
+        if (state.hit) total++;
+      }
+      let starts = 0, pass2 = 0, pass3 = 0, best = 0, current = 0, runs = 0;
+      for (let i = 4; i < rows.length - 2; i++) {
+        if (fromYear && displayYear(rows[i]) < String(fromYear)) continue;
+        if (hits[i]) {
+          starts++;
+          if (hits[i + 1]) {
+            pass2++;
+            if (hits[i + 2]) pass3++;
+          }
+        }
+      }
+      for (let i = 4; i < rows.length; i++) {
+        if (fromYear && displayYear(rows[i]) < String(fromYear)) continue;
+        if (hits[i]) {
+          current++;
+          best = Math.max(best, current);
+        } else {
+          if (current >= 3) runs++;
+          current = 0;
+        }
+      }
+      if (current >= 3) runs++;
+      let stage = 0;
+      for (let i = rows.length - 1; i >= 4; i--) {
+        if (gatePoolAt(rows, i, def, cache).hit) stage++;
+        else break;
+      }
+      return {total, starts, pass2, pass3, pass2Rate: starts ? pass2 / starts : 0, pass3Rate: pass2 ? pass3 / pass2 : 0, best, runs, stage};
+    }
+    function gateAnalysis(source) {
+      const rows = gateSourceRows(source);
+      const latest = rows[rows.length - 1] || {};
+      const formulaCache = new Map();
+      const items = gatePoolDefs.map(def => {
+        const current = gatePoolAt(rows, rows.length, def, formulaCache);
+        const all = gateMetrics(rows, def, '', formulaCache);
+        const recent = gateMetrics(rows, def, 2024, formulaCache);
+        const score = (all.stage >= 2 ? 100 : all.stage === 1 ? 20 : 0) + all.runs * 15 + all.pass3 * 8 + all.pass3Rate * 40 + all.pass2Rate * 20;
+        return {...def, current, all, recent, score};
+      }).sort((a, b) => b.all.stage - a.all.stage || b.score - a.score);
+      const active = items.find(item => item.all.stage >= 2) || items[0];
+      return {source, rows, latest, items, active, formulaCache};
+    }
+    function gateRate(value) {
+      return `${(Number(value || 0) * 100).toFixed(1)}%`;
+    }
+    function gateFormulaHtml(item) {
+      return item.current.formulas.map(formula => `${esc(formula.expr)} = ${esc(formula.calc)} &#8594; ${numberChips([formula.value])}`).join('<br>');
+    }
+    function gateCurrentAdviceHtml(analysis) {
+      const active = analysis.active || analysis.items[0];
+      const decision = gateDecisionState(active?.all?.stage || 0, active?.recent?.pass3Rate || 0);
+      const mainNums = active?.current?.nums || [];
+      const backupNums = [...new Set(analysis.items.slice(1, 4).flatMap(item => item.current.nums || []))].filter(num => !mainNums.includes(num)).slice(0, 6);
+      return `<section class="panel full"><h2>&#26412;&#26399;&#25191;&#34892;&#24314;&#35758;</h2><table class="compact-table"><tbody><tr><th>&#26412;&#26399;&#26159;&#21542;&#36866;&#21512;&#24320;&#31532;&#19968;&#20851;</th><td>${decision.level === 'miss' ? '&#19981;&#24314;&#35758;' : '&#21487;&#35266;&#23519;'}</td></tr><tr><th>&#26159;&#21542;&#32493;&#31532;&#20108;&#20851;</th><td>${active?.all?.stage >= 1 ? '&#21487;&#32493;&#65292;&#20294;&#35201;&#38477;&#27880;' : '&#26242;&#19981;&#32493;'}</td></tr><tr><th>&#26159;&#21542;&#20914;&#31532;&#19977;&#20851;</th><td>${active?.all?.stage >= 2 ? '&#31532;&#19977;&#20851;&#35302;&#21457;' : '&#26410;&#35302;&#21457;'}</td></tr><tr><th>&#20027;&#35266;&#23519;&#21495;&#30721;</th><td>${numberChips(mainNums)}</td></tr><tr><th>&#25193;&#23637;&#38450;&#23432;&#21495;&#30721;</th><td>${numberChips(backupNums)}</td></tr><tr><th>&#35302;&#21457;&#26465;&#20214;</th><td>&#20808;&#21629;&#20013;&#31532;1&#20851;&#65292;&#20877;&#30475;&#26159;&#21542;&#36827;&#31532;2&#20851;&#65307;&#36830;&#20013;2&#26399;&#25165;&#35270;&#20026;&#31532;3&#20851;&#35302;&#21457;&#12290;</td></tr><tr><th>&#26242;&#20572;&#26465;&#20214;</th><td>&#20027;&#20844;&#24335;&#26029;&#28857;&#12289;&#26368;&#36817;&#36827;&#20851;&#29575;&#19979;&#38477;&#12289;&#25110;&#31532;1&#20851;&#26410;&#21629;&#20013;&#26102;&#26242;&#20572;&#12290;</td></tr></tbody></table><p class="muted">&#20915;&#31574;&#21475;&#24452;&#65306;${decision.advice}</p></section>`;
+    }
+    function gateFormulaTierRows(items) {
+      return items.map((item, index) => `<tr><td>${gateTierLabel(index, item)}<br><span class="muted">${item.name}</span></td><td>${numberChips(item.current.nums)}</td><td>${esc(item.all.starts)} / ${esc(item.all.pass2)} / ${esc(item.all.pass3)}</td><td>${gateRate(item.all.pass2Rate)} / ${gateRate(item.all.pass3Rate)}</td><td>${gateFormulaHtml(item)}</td></tr>`).join('');
+    }
+    function gateRunReplayRows(rows, def, cache, count = 10) {
+      const start = Math.max(4, rows.length - count);
+      const items = [];
+      for (let i = start; i < rows.length; i++) {
+        const state = gatePoolAt(rows, i, def, cache);
+        items.push(`<tr><td>${esc(rows[i].issue)}&#26399;<br><span class="muted">${esc(rows[i].date || '')}</span></td><td>${numberChips(state.nums)}</td><td>${numberChips([specialNum(rows[i])])}</td><td class="${state.hit ? 'result-hit' : 'result-miss'}">${state.hit ? '&#21629;&#20013;' : '&#26410;&#20013;'}</td><td>${state.formulas.map(formula => `${esc(formula.expr)} = ${esc(formula.calc)} &#8594; ${esc(gateText(formula.value))}`).join('<br>')}</td></tr>`);
+      }
+      return items.join('');
+    }
+    function gateLegendHtml(rows) {
+      const labels = [
+        ['A', rows[rows.length - 1], '&#19978;&#19968;&#26399;'],
+        ['B', rows[rows.length - 2], '&#19978;&#19978;&#26399;'],
+        ['C', rows[rows.length - 3], '&#19978;&#19977;&#26399;'],
+        ['D', rows[rows.length - 4], '&#19978;&#22235;&#26399;']
+      ];
+      const latestRows = labels.map(([key, row, label]) => `<tr><td>${esc(key)}</td><td>${label}</td><td>${esc(row?.issue || '-')}&#26399;</td><td>${numberChips(asArray(row?.balls).map(ball => ball.numberText || ball.number))}</td><td>${numberChips([specialNum(row)])}</td></tr>`).join('');
+      return `<section class="panel full"><h2>&#20844;&#24335;&#35828;&#26126;</h2><p class="muted">A/B/C/D &#20195;&#34920;&#26368;&#36817;4&#26399;&#65292;A1-A7 &#20195;&#34920;A&#26399;&#31532;1&#21040;&#31532;7&#20010;&#21495;&#65292;A7&#23601;&#26159;&#24403;&#26399;&#29305;&#21035;&#21495;&#12290;&#35745;&#31639;&#32467;&#26524;&#36229;&#36807;49&#23601;&#20943;49&#65292;&#23567;&#20110;1&#23601;&#21152;49&#65292;&#26368;&#32456;&#37117;&#33853;&#22312;01-49&#12290;</p><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#20195;&#21495;</th><th>&#21547;&#20041;</th><th>&#26399;&#21495;</th><th>&#24320;&#22870;&#21495;</th><th>&#29305;&#21035;&#21495;</th></tr></thead><tbody>${latestRows}</tbody></table></div><p class="muted">&#20363;&#22914;&#65306;A7+6 &#23601;&#26159;&#19978;&#19968;&#26399;&#29305;&#21035;&#21495; + 6&#65307;abs(A2-A7) &#37324;&#30340; abs &#26159;&#21462;&#32477;&#23545;&#20540;&#65292;&#20063;&#23601;&#26159;&#21482;&#30475;&#20004;&#20010;&#21495;&#30456;&#24046;&#22810;&#23569;&#65292;&#19981;&#20998;&#27491;&#36127;&#65292;&#22914; |41-32| = 09&#65307;A2+diff &#37324;&#30340; diff &#26159;&#21516;&#20301;&#24046;&#20540;&#39034;&#25512;&#65292;&#21363; A2 + (A2-B2)&#65292;&#22914; 41 + (41-40) = 42&#12290;</p></section>`;
+    }
+    function renderGateChallenge() {
+      const selected = document.getElementById('gate-source')?.value || 'am';
+      const analysis = gateAnalysis(selected);
+      const sourceName = selected === 'hk' ? '&#39321;&#28207;' : '&#28595;&#38376;';
+      const active = analysis.active || analysis.items[0];
+      const decision = gateDecisionState(active?.all?.stage || 0, active?.recent?.pass3Rate || 0);
+      app.innerHTML = `<div class="grid"><section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="gate-source">${sourceOptions(selected)}</select></label></div><h2>&#38383;&#19977;&#20851;</h2><p class="muted">${sourceName}&#65292;&#20165;&#35266;&#23519;&#29305;&#21035;&#21495;&#20844;&#24335;&#27744;&#30340;&#36830;&#20013;&#29366;&#24577;&#12290;&#31532;2&#20851;&#36830;&#20013;&#21518;&#25165;&#35270;&#20026;&#31532;3&#20851;&#35302;&#21457;&#65292;&#19981;&#29992;&#20110;&#25237;&#27880;&#20445;&#35777;&#12290;</p></section><section class="panel wide"><h2>&#24403;&#21069;&#38383;&#20851;&#21028;&#26029;</h2><div class="metric ${decision.level === 'miss' ? 'result-miss' : 'result-hit'}">${decision.label}</div><p class="muted">&#26368;&#26032;&#24320;&#22870;&#65306;${esc(analysis.latest.issue || '-')}&#26399;&#65292;&#29305;&#21035;&#21495; ${numberChips([specialNum(analysis.latest)])}</p></section><section class="panel wide"><h2>&#24403;&#21069;&#20027;&#35266;&#23519;&#27744;</h2>${numberChips(active?.current?.nums || [])}<p class="muted">${active?.current?.formulas?.map(formula => `${esc(formula.expr)} = ${esc(formula.calc)} &#8594; ${esc(gateText(formula.value))}`).join('<br>') || '-'}</p></section>${syncStatusPanel('gateChallenge', analysis)}${gateCurrentAdviceHtml(analysis)}${gateLegendHtml(analysis.rows)}<section class="panel full"><h2>&#20844;&#24335;&#20998;&#23618;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#20998;&#23618;</th><th>&#19979;&#26399;&#27744;</th><th>&#38383;&#20851;&#32467;&#26500;</th><th>&#36827;&#20851;&#29575;</th><th>&#35745;&#31639;&#36807;&#31243;</th></tr></thead><tbody>${gateFormulaTierRows(analysis.items)}</tbody></table></div></section><section class="panel full"><h2>&#21382;&#21490;&#38383;&#19977;&#20851;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26399;&#21495;</th><th>&#24403;&#26399;&#27744;</th><th>&#23454;&#38469;&#29305;&#21495;</th><th>&#29366;&#24577;</th><th>&#20844;&#24335;</th></tr></thead><tbody>${gateRunReplayRows(analysis.rows, active || gatePoolDefs[0], analysis.formulaCache)}</tbody></table></div></section></div>`;
+      document.getElementById('gate-source').addEventListener('change', renderGateChallenge);
     }
     function historyWindowLabel(win) {
       return `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`;
@@ -2003,9 +2225,11 @@
         historyPatternState = await ensureHistoryPatternData();
       },
       recommendationTrack: async () => {
-        await ensureRecordsData();
         window5State = await ensureWindow5Data();
         threeCompoundState = await ensureThreeCompoundData();
+      },
+      gateChallenge: async () => {
+        await ensureRecordsData();
       },
       patternWatch: async () => {
         await ensureRecordsData();
@@ -2016,6 +2240,7 @@
       threeWindow5: renderThreeWindow5,
       historyPattern: renderHistoryPattern,
       recommendationTrack: renderRecommendationTrack,
+      gateChallenge: renderGateChallenge,
       patternWatch: renderPatternWatch,
       manualFetch: renderManualFetch,
       worldcupAnalysis: renderWorldcupAnalysis
