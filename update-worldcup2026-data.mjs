@@ -2812,6 +2812,92 @@ const matches = [
   {teams: "荷兰 vs 瑞典", note: "F组排名分水岭，荷兰防守和转换质量略占优。", score: "2-1", pick: "荷兰胜", probability: "胜 54% / 平 27% / 负 19%", confidence: 60, type: "hot"}
 ];
 
+const completedWorldCupResults = [
+  {
+    matchId: "Match 1",
+    group: "A",
+    teams: "墨西哥 vs 南非",
+    home: "墨西哥",
+    away: "南非",
+    actualScore: "2-0",
+    finishedAtLocal: "2026-06-12 09:00",
+    source: "post-match-result"
+  },
+  {
+    matchId: "Match 2",
+    group: "A",
+    teams: "韩国 vs 捷克",
+    home: "韩国",
+    away: "捷克",
+    actualScore: "2-1",
+    finishedAtLocal: "2026-06-12 12:00",
+    source: "post-match-result"
+  }
+];
+
+function scoreResultValue(score) {
+  const [home, away] = String(score || "").split("-").map(value => Number(value));
+  if (!Number.isFinite(home) || !Number.isFinite(away)) return "";
+  if (home > away) return "home";
+  if (home < away) return "away";
+  return "draw";
+}
+
+function resultLabel(value) {
+  if (value === "home") return "主胜";
+  if (value === "away") return "客胜";
+  if (value === "draw") return "平局";
+  return "-";
+}
+
+function findStaticPredictionForTeams(home, away) {
+  const homeName = normalizeName(home);
+  const awayName = normalizeName(away);
+  return matches.find(item => {
+    const text = normalizeName(item.teams);
+    return text.includes(homeName) && text.includes(awayName);
+  });
+}
+
+function completedScoreHitStatus({actualScore, mainScore, backupScore, upsetScore, candidates = []}) {
+  const actualResult = scoreResultValue(actualScore);
+  if (mainScore && actualScore === mainScore) return {level: "main-exact", label: "主推比分命中", severity: "hit"};
+  if (backupScore && actualScore === backupScore) return {level: "backup-exact", label: "备用比分命中", severity: "hit"};
+  if (upsetScore && actualScore === upsetScore) return {level: "upset-exact", label: "博冷比分命中", severity: "hit"};
+  if (candidates.some(item => item.score === actualScore)) return {level: "candidate-exact", label: "比分分布命中", severity: "hit"};
+  if (mainScore && scoreResultValue(mainScore) === actualResult) return {level: "result-only", label: "方向命中，比分未中", severity: "partial"};
+  return {level: "miss", label: "未命中", severity: "miss"};
+}
+
+function buildCompletedScoreChecks(results = []) {
+  return results.map(result => {
+    const prediction = findStaticPredictionForTeams(result.home, result.away);
+    const mainScore = prediction?.score || "";
+    const backupScore = prediction?.backupScore || "";
+    const upsetScore = prediction?.upsetScore || "";
+    const candidates = Array.isArray(prediction?.scoreCandidates) ? prediction.scoreCandidates : [];
+    const hit = completedScoreHitStatus({actualScore: result.actualScore, mainScore, backupScore, upsetScore, candidates});
+    return {
+      ...result,
+      predictedPick: prediction?.pick || "-",
+      predictedProbability: prediction?.probability || "-",
+      predictedConfidence: prediction?.confidence ?? null,
+      mainScore: mainScore || "-",
+      backupScore: backupScore || "-",
+      upsetScore: upsetScore || "-",
+      scoreCandidates: candidates,
+      actualResult: resultLabel(scoreResultValue(result.actualScore)),
+      predictedResult: resultLabel(scoreResultValue(mainScore)),
+      hit,
+      review: hit.level === "result-only"
+        ? "方向判断成立，但净胜球和零封强度低估；后续同类主场揭幕战要提高主队零封权重。"
+        : hit.level === "miss"
+          ? "赛前比分未覆盖实际路径，需复盘弱队领先/反超、定位球和下半场节奏变化。"
+          : "比分路径覆盖有效，后续保留同类逻辑。"
+    };
+  });
+}
+
 function findAnalysisForJcMatch(jcMatch) {
   const home = normalizeName(jcMatch.home);
   const away = normalizeName(jcMatch.away);
@@ -3158,6 +3244,7 @@ const scoreCombos = buildScoreCombos(jcMatches);
 scoreCombos.forEach(combo => {
   combo.comboAnalysisQuality = Math.round(combo.matches.reduce((sum, item) => sum + Number(item.analysisQualityScore || 0), 0) / combo.matches.length);
 });
+const completedScoreChecks = buildCompletedScoreChecks(completedWorldCupResults);
 const sources = [
   fifaSource,
   sporttery500.source,
@@ -3198,6 +3285,7 @@ const data = {
   leaders,
   alerts,
   matches,
+  completedScoreChecks,
   jcMatches,
   scoreCombos,
   reliabilitySummary,

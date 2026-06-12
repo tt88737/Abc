@@ -2591,6 +2591,7 @@ function New-DashboardHtml {
         historyPatternState = await ensureHistoryPatternData();
       },
       recommendationTrack: async () => {
+        await ensureRecordsData();
         window5State = await ensureWindow5Data();
         threeCompoundState = await ensureThreeCompoundData();
       },

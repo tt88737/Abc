@@ -22,7 +22,7 @@ assert.ok(html.includes('id="comboBrief"'), "dashboard should include the compac
 assert.ok(html.includes("比赛级比分决策表"), "dashboard should expose a dense match-level score decision table");
 assert.ok(html.includes('id="scoreDecisionRows"'), "dashboard should render score decision rows in a dedicated container");
 assert.ok(html.includes(".score-row { display: grid;"), "score decision rows should use a dense grid layout");
-assert.ok(html.includes(".score-row, .decision-summary-grid"), "mobile breakpoint should collapse score rows and decision summary");
+assert.ok(html.includes(".score-row, .check-row, .decision-summary-grid"), "mobile breakpoint should collapse score rows, completed checks, and decision summary");
 assert.ok(html.includes("比分分布"), "score decision rows should expose compact score candidate distribution");
 assert.ok(html.includes("预期进球"), "score decision rows should expose expected-goal context");
 assert.ok(html.includes("首发"), "score decision rows should expose lineup context");

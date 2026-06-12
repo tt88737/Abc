@@ -55,7 +55,7 @@
     .tabs { display: flex; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
     .tab { border: 1px solid var(--line); background: var(--panel-deep); color: var(--muted); border-radius: 999px; padding: 7px 12px; font-weight: 700; cursor: pointer; }
     .tab.active { background: var(--gold); color: #1a1200; border-color: var(--gold); }
-    .matches, .jc-list, .score-decision-list { padding: 14px 16px 16px; display: grid; gap: 10px; }
+    .matches, .jc-list, .score-decision-list, .completed-check-list { padding: 14px 16px 16px; display: grid; gap: 10px; }
     .match { display: grid; grid-template-columns: minmax(190px, 1fr) 86px 142px 92px; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-deep); }
     .match .teams { font-weight: 800; line-height: 1.35; }
     .score-row { display: grid; grid-template-columns: 82px minmax(210px, 1.15fr) minmax(120px, 0.55fr) minmax(130px, 0.65fr) minmax(260px, 1.25fr); gap: 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-deep); font-size: 13px; }
@@ -66,6 +66,13 @@
     .score-side { color: #d9ecff; font-weight: 800; line-height: 1.35; }
     .score-risk { line-height: 1.55; color: var(--muted); }
     .score-candidates { margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .check-row { display: grid; grid-template-columns: 78px minmax(180px, 1fr) 112px minmax(220px, 1.1fr) minmax(240px, 1.15fr); gap: 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-deep); font-size: 13px; }
+    .check-row > * { min-width: 0; overflow-wrap: anywhere; }
+    .actual-score { color: var(--gold); font-size: 18px; font-weight: 900; line-height: 1.3; }
+    .hit-chip { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 900; }
+    .hit-chip.hit { background: var(--green); color: #04140e; }
+    .hit-chip.partial { background: var(--gold); color: #1a1200; }
+    .hit-chip.miss { background: var(--red); color: #fff; }
     .context-lines { display: grid; gap: 3px; color: var(--muted); font-size: 12px; line-height: 1.45; }
     .context-lines b { color: #d9ecff; font-weight: 800; }
     .decision-summary { padding: 16px; display: grid; gap: 12px; }
@@ -125,7 +132,7 @@
     .alert strong { display: block; margin-bottom: 4px; color: #ffd166; }
     .risk-box, .footer-note { margin: 16px; color: var(--muted); font-size: 13px; line-height: 1.6; }
     @media (max-width: 1080px) { .decision-grid { grid-template-columns: 1fr; } .stats, .market-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 720px) { .page { padding: 14px; } .topbar, .section-head { display: grid; } .stats, .groups, .match, .jc-match, .leader, .market-summary-grid, .market-best-row, .brief-action, .brief-row, .score-row, .decision-summary-grid { grid-template-columns: 1fr; } .score, .pick { text-align: left; } .champion-card { grid-template-columns: 34px 1fr 54px; } .champion-card .bar { grid-column: 1 / -1; } }
+    @media (max-width: 720px) { .page { padding: 14px; } .topbar, .section-head { display: grid; } .stats, .groups, .match, .jc-match, .leader, .market-summary-grid, .market-best-row, .brief-action, .brief-row, .score-row, .check-row, .decision-summary-grid { grid-template-columns: 1fr; } .score, .pick { text-align: left; } .champion-card { grid-template-columns: 34px 1fr 54px; } .champion-card .bar { grid-column: 1 / -1; } }
   </style>
 </head>
 <body>
@@ -158,6 +165,7 @@
 
     <div class="layout">
       <div class="main-stack">
+        <section class="section"><div class="section-head"><h2>完赛比分校验</h2><small>实际比分 vs 主推 / 备用 / 博冷</small></div><div class="completed-check-list" id="completedScoreChecks"></div></section>
         <section class="section"><div class="section-head"><h2>竞彩当前开售赛事</h2><small>只使用当前开售场次做比分判断</small></div><div class="jc-list" id="jcMatches"></div></section>
         <section class="section">
           <div class="section-head"><h2>比赛级比分决策表</h2><small>主推比分、备用比分、风险和关键理由同屏扫描</small></div>
@@ -192,6 +200,7 @@
     const leaders = Array.isArray(liveData.leaders) ? liveData.leaders : [];
     const alerts = Array.isArray(liveData.alerts) ? liveData.alerts : [];
     const matches = Array.isArray(liveData.matches) ? liveData.matches : [];
+    const completedScoreChecks = Array.isArray(liveData.completedScoreChecks) ? liveData.completedScoreChecks : [];
     const jcMatches = Array.isArray(liveData.jcMatches) ? liveData.jcMatches : [];
     const reliabilitySummary = liveData.reliabilitySummary || {};
     const tagText = { hot: "争冠", safe: "稳定", risk: "风险", "": "观察" };
@@ -326,6 +335,19 @@
         </div>
       `;
     }
+    function renderCompletedScoreChecks() {
+      const target = document.getElementById("completedScoreChecks");
+      if (!completedScoreChecks.length) {
+        target.innerHTML = `<div class="empty-state">暂无完赛比分可校验。完赛后会对比实际比分、主推、备用、博冷和比分分布。</div>`;
+        return;
+      }
+      target.innerHTML = completedScoreChecks.map(item => {
+        const hit = item.hit || {};
+        const candidates = (item.scoreCandidates || []).slice(0, 4).map(row => `${row.score} ${pctText(row.probability)}`).join(" / ") || "-";
+        const severity = hit.severity || "miss";
+        return `<article class="check-row"><div><strong>${item.matchId || "-"}</strong><div class="note">${item.finishedAtLocal || ""}</div></div><div><strong>${item.teams || "-"}</strong><div class="note">${item.group ? `Group ${item.group}` : ""} / ${item.predictedProbability || "-"}</div></div><div><div class="actual-score">${item.actualScore || "-"}</div><div class="note">实际 ${item.actualResult || "-"}</div></div><div><div class="score-main">主推 ${item.mainScore || "-"}</div><div class="score-side">备用 ${item.backupScore || "-"}</div><div class="score-side">博冷 ${item.upsetScore || "-"}</div><div class="score-candidates"><b>比分分布</b> ${candidates}</div></div><div><span class="hit-chip ${severity}">${hit.label || "未校验"}</span><div class="reason-lines"><span><b>预测方向</b> ${item.predictedPick || "-"} / ${item.predictedResult || "-"}</span><span><b>赛后复盘</b> ${item.review || "-"}</span></div></div></article>`;
+      }).join("");
+    }
     function renderMatches(filter = "all") {
       const list = filter === "all" ? matches : matches.filter(item => item.type === filter);
       const target = document.getElementById("scoreDecisionRows");
@@ -358,7 +380,7 @@
       }).join("");
     }
     document.querySelectorAll(".tab").forEach(button => button.addEventListener("click", () => { document.querySelectorAll(".tab").forEach(item => item.classList.remove("active")); button.classList.add("active"); renderMatches(button.dataset.filter); }));
-    renderLiveStatus(); renderChampionPrediction(); renderGroups(); renderLeaders(); renderAlerts(); renderReliabilitySummary(); renderDecisionSummary(); renderComboBrief(); renderMatches(); renderJcMatches();
+    renderLiveStatus(); renderChampionPrediction(); renderGroups(); renderLeaders(); renderAlerts(); renderReliabilitySummary(); renderDecisionSummary(); renderComboBrief(); renderCompletedScoreChecks(); renderMatches(); renderJcMatches();
   </script>
 </body>
 </html>
