@@ -101,6 +101,7 @@
       <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
       <button data-tab="recommendationTrack">&#25512;&#33616;&#36319;&#36394;</button>
       <button data-tab="gateChallenge">&#38383;&#19977;&#20851;</button>
+      <button data-tab="threeFormulaGate">&#19977;&#20013;&#19977;&#20844;&#24335;</button>
       <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
       <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
       <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
@@ -2045,6 +2046,122 @@
       app.innerHTML = `<div class="grid"><section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="gate-source">${sourceOptions(selected)}</select></label></div><h2>&#38383;&#19977;&#20851;</h2><p class="muted">${sourceName}&#65292;&#20165;&#35266;&#23519;&#29305;&#21035;&#21495;&#20844;&#24335;&#27744;&#30340;&#36830;&#20013;&#29366;&#24577;&#12290;&#31532;2&#20851;&#36830;&#20013;&#21518;&#25165;&#35270;&#20026;&#31532;3&#20851;&#35302;&#21457;&#65292;&#19981;&#29992;&#20110;&#25237;&#27880;&#20445;&#35777;&#12290;</p></section><section class="panel wide"><h2>&#24403;&#21069;&#38383;&#20851;&#21028;&#26029;</h2><div class="metric ${decision.level === 'miss' ? 'result-miss' : 'result-hit'}">${decision.label}</div><p class="muted">&#26368;&#26032;&#24320;&#22870;&#65306;${esc(analysis.latest.issue || '-')}&#26399;&#65292;&#29305;&#21035;&#21495; ${numberChips([specialNum(analysis.latest)])}</p></section><section class="panel wide"><h2>&#24403;&#21069;&#20027;&#35266;&#23519;&#27744;</h2>${numberChips(active?.current?.nums || [])}<p class="muted">${active?.current?.formulas?.map(formula => `${esc(formula.expr)} = ${esc(formula.calc)} &#8594; ${esc(gateText(formula.value))}`).join('<br>') || '-'}</p></section>${syncStatusPanel('gateChallenge', analysis)}${gateCurrentAdviceHtml(analysis)}${gateLegendHtml(analysis.rows)}<section class="panel full"><h2>&#20844;&#24335;&#20998;&#23618;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#20998;&#23618;</th><th>&#19979;&#26399;&#27744;</th><th>&#38383;&#20851;&#32467;&#26500;</th><th>&#36827;&#20851;&#29575;</th><th>&#35745;&#31639;&#36807;&#31243;</th></tr></thead><tbody>${gateFormulaTierRows(analysis.items)}</tbody></table></div></section><section class="panel full"><h2>&#21382;&#21490;&#38383;&#19977;&#20851;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26399;&#21495;</th><th>&#24403;&#26399;&#27744;</th><th>&#23454;&#38469;&#29305;&#21495;</th><th>&#29366;&#24577;</th><th>&#20844;&#24335;</th></tr></thead><tbody>${gateRunReplayRows(analysis.rows, active || gatePoolDefs[0], analysis.formulaCache)}</tbody></table></div></section></div>`;
       document.getElementById('gate-source').addEventListener('change', renderGateChallenge);
     }
+    function threeFormulaRegularNums(row) {
+      return asArray(row?.balls).slice(0, 6).map(ball => gateText(ball.number || ball.numberText || 0));
+    }
+    const threeFormulaGroupDefs = [
+      {id: 'same-position-drift', name: '&#21516;&#20301;&#28418;&#31227;&#32452;', exprs: ['A1+B1','A2+B2','A3+B3','A4+B4','A5+B5','A6+B6','A1+diff','A2+diff','A3+diff','A4+diff','A5+diff','A6+diff']},
+      {id: 'inner-pair-structure', name: '&#27491;&#30721;&#20869;&#37096;&#32467;&#26500;&#32452;', exprs: ['A1+A2','A2+A3','A3+A4','A4+A5','A5+A6','abs(A1-A2)','abs(A2-A3)','abs(A3-A4)','abs(A4-A5)','abs(A5-A6)']},
+      {id: 'special-anchor', name: '&#29305;&#30721;&#29301;&#24341;&#32452;', exprs: ['A1+A7','A2+A7','A3+A7','A4+A7','A5+A7','A6+A7','abs(A1-A7)','abs(A2-A7)','abs(A3-A7)','abs(A4-A7)','abs(A5-A7)','abs(A6-A7)']},
+      {id: 'cross-period-mix', name: '&#36328;&#26399;&#28151;&#21512;&#32452;', exprs: ['A1+B1-C1','A2+B2-C2','A3+B3-C3','A4+B4-C4','A5+B5-C5','A6+B6-C6','A1+C1-B1','A2+C2-B2','A3+C3-B3','A4+C4-B4','A5+C5-B5','A6+C6-B6']}
+    ];
+    function threeFormulaList(rows, index) {
+      const A = rows[index - 1], B = rows[index - 2], C = rows[index - 3], D = rows[index - 4];
+      if (!A || !B || !C || !D) return [];
+      const items = [];
+      const add = (expr, value, calc) => items.push({expr, value: gateNum(value), calc});
+      const numsA = asArray(A.balls).map(ball => Number(ball.number || ball.numberText || 0));
+      const numsB = asArray(B.balls).map(ball => Number(ball.number || ball.numberText || 0));
+      const numsC = asArray(C.balls).map(ball => Number(ball.number || ball.numberText || 0));
+      for (let k = 0; k < 6; k++) {
+        const a = numsA[k], b = numsB[k], c = numsC[k];
+        add(`A${k + 1}+B${k + 1}`, a + b, `${gateText(a)}+${gateText(b)}`);
+        add(`A${k + 1}+diff`, a + (a - b), `${gateText(a)}+(${gateText(a)}-${gateText(b)})`);
+        add(`A${k + 1}+B${k + 1}-C${k + 1}`, a + b - c, `${gateText(a)}+${gateText(b)}-${gateText(c)}`);
+        add(`A${k + 1}+C${k + 1}-B${k + 1}`, a + c - b, `${gateText(a)}+${gateText(c)}-${gateText(b)}`);
+        add(`A${k + 1}+A7`, a + numsA[6], `${gateText(a)}+${gateText(numsA[6])}`);
+        add(`abs(A${k + 1}-A7)`, Math.abs(a - numsA[6]) || 49, `|${gateText(a)}-${gateText(numsA[6])}|`);
+      }
+      for (let k = 0; k < 5; k++) {
+        add(`A${k + 1}+A${k + 2}`, numsA[k] + numsA[k + 1], `${gateText(numsA[k])}+${gateText(numsA[k + 1])}`);
+        add(`abs(A${k + 1}-A${k + 2})`, Math.abs(numsA[k] - numsA[k + 1]) || 49, `|${gateText(numsA[k])}-${gateText(numsA[k + 1])}|`);
+      }
+      return items;
+    }
+    function threeFormulaMapAt(rows, index, cache) {
+      if (cache?.has(index)) return cache.get(index);
+      const formulaMap = new Map(threeFormulaList(rows, index).map(item => [item.expr, item]));
+      if (cache) cache.set(index, formulaMap);
+      return formulaMap;
+    }
+    function threeFormulaGroupPoolAt(rows, index, def, cache) {
+      const formulaMap = threeFormulaMapAt(rows, index, cache);
+      const formulas = def.exprs.map(expr => formulaMap.get(expr)).filter(Boolean);
+      const nums = [...new Set(formulas.map(item => gateText(item.value)))].sort((a, b) => Number(a) - Number(b));
+      const target = index < rows.length ? new Set(threeFormulaRegularNums(rows[index])) : new Set();
+      const hits = nums.filter(num => target.has(num));
+      return {formulas, nums, hits, hit: hits.length >= 3};
+    }
+    function threeFormulaGroupMetrics(rows, def, cache) {
+      const flags = [];
+      let starts = 0, pass2 = 0, pass3 = 0, best = 0, run = 0, maxMiss = 0, currentMiss = 0;
+      for (let i = 4; i < rows.length; i++) {
+        const state = threeFormulaGroupPoolAt(rows, i, def, cache);
+        flags[i] = state.hit;
+        if (state.hit) {
+          run++;
+          best = Math.max(best, run);
+          maxMiss = Math.max(maxMiss, currentMiss);
+          currentMiss = 0;
+        } else {
+          run = 0;
+          currentMiss++;
+        }
+      }
+      maxMiss = Math.max(maxMiss, currentMiss);
+      for (let i = 4; i < rows.length - 2; i++) {
+        if (flags[i]) {
+          starts++;
+          if (flags[i + 1]) {
+            pass2++;
+            if (flags[i + 2]) pass3++;
+          }
+        }
+      }
+      let stage = 0;
+      for (let i = rows.length - 1; i >= 4; i--) {
+        if (threeFormulaGroupPoolAt(rows, i, def, cache).hit) stage++;
+        else break;
+      }
+      return {total: rows.length > 4 ? rows.length - 4 : 0, starts, pass2, pass3, pass2Rate: starts ? pass2 / starts : 0, pass3Rate: pass2 ? pass3 / pass2 : 0, best, maxMiss, currentMiss, stage};
+    }
+    function threeFormulaGateAnalysis(source) {
+      const rows = gateSourceRows(source);
+      const latest = rows[rows.length - 1] || {};
+      const formulaCache = new Map();
+      const items = threeFormulaGroupDefs.map(def => {
+        const current = threeFormulaGroupPoolAt(rows, rows.length, def, formulaCache);
+        const metrics = threeFormulaGroupMetrics(rows, def, formulaCache);
+        const score = metrics.stage * 80 + metrics.pass3 * 10 + metrics.pass3Rate * 50 + metrics.pass2Rate * 25 - metrics.currentMiss * 3;
+        return {...def, current, metrics, score};
+      }).sort((a, b) => b.metrics.stage - a.metrics.stage || b.score - a.score);
+      const active = items.find(item => item.metrics.stage >= 1) || items[0];
+      return {source, rows, latest, items, active, formulaCache};
+    }
+    function threeFormulaTierRows(items) {
+      return items.map((item, index) => `<tr><td>${index === 0 ? '&#20027;&#20844;&#24335;&#32452;' : item.metrics.pass3 ? '&#22791;&#29992;&#20844;&#24335;&#32452;' : '&#35266;&#23519;&#32452;'}<br><span class="muted">${item.id}</span></td><td>${item.name}</td><td>${numberChips(item.current.nums)}</td><td>${esc(item.metrics.starts)} / ${esc(item.metrics.pass2)} / ${esc(item.metrics.pass3)}</td><td>${gateRate(item.metrics.pass2Rate)} / ${gateRate(item.metrics.pass3Rate)}</td><td>${esc(item.metrics.currentMiss)} / ${esc(item.metrics.maxMiss)}</td></tr>`).join('');
+    }
+    function threeFormulaReplayRows(rows, def, cache, count = 12) {
+      const start = Math.max(4, rows.length - count);
+      const out = [];
+      for (let i = start; i < rows.length; i++) {
+        const state = threeFormulaGroupPoolAt(rows, i, def, cache);
+        out.push(`<tr><td>${esc(rows[i].issue)}&#26399;<br><span class="muted">${esc(rows[i].date || '')}</span></td><td>${numberChips(state.nums)}</td><td>${numberChips(threeFormulaRegularNums(rows[i]))}</td><td>${numberChips(state.hits)}</td><td class="${state.hit ? 'result-hit' : 'result-miss'}">${state.hit ? '&#20013;&#19977;' : '&#26410;&#20013;&#19977;'}</td></tr>`);
+      }
+      return out.join('');
+    }
+    function threeFormulaCurrentHtml(analysis) {
+      const active = analysis.active || analysis.items[0];
+      const backupNums = [...new Set(analysis.items.slice(1, 4).flatMap(item => item.current.nums || []))].filter(num => !active.current.nums.includes(num)).slice(0, 8);
+      return `<section class="panel full"><h2>&#24403;&#21069;&#20027;&#35266;&#23519;&#27744;</h2><table class="compact-table"><tbody><tr><th>&#20027;&#20844;&#24335;&#32452;</th><td>${active.name}<br><span class="muted">${esc(active.id)}</span></td></tr><tr><th>&#19979;&#26399;&#20844;&#24335;&#27744;</th><td>${numberChips(active.current.nums)}</td></tr><tr><th>&#25193;&#23637;&#38450;&#23432;</th><td>${numberChips(backupNums)}</td></tr><tr><th>&#31532;&#19968;&#20851; / &#31532;&#20108;&#20851; / &#31532;&#19977;&#20851;</th><td>${esc(active.metrics.starts)} / ${esc(active.metrics.pass2)} / ${esc(active.metrics.pass3)}</td></tr><tr><th>&#24403;&#21069;&#28431;&#26399; / &#26368;&#22823;&#28431;&#26399;</th><td>${esc(active.metrics.currentMiss)} / ${esc(active.metrics.maxMiss)}</td></tr></tbody></table></section>`;
+    }
+    function renderThreeFormulaGate() {
+      const selected = document.getElementById('three-formula-source')?.value || 'am';
+      const analysis = threeFormulaGateAnalysis(selected);
+      const sourceName = selected === 'hk' ? '&#39321;&#28207;' : '&#28595;&#38376;';
+      app.innerHTML = `<div class="grid"><section class="panel full"><div class="filters"><label>&#26469;&#28304;<select id="three-formula-source">${sourceOptions(selected)}</select></label></div><h2>&#19977;&#20013;&#19977;&#20844;&#24335;</h2><p class="muted">${sourceName}&#65292;&#22266;&#23450;&#20844;&#24335;&#32452;&#38383;&#20851;&#65306;&#19968;&#32452;&#20844;&#24335;&#29983;&#25104;&#19979;&#26399;&#27491;&#30721;&#27744;&#65292;&#19979;&#26399;6&#20010;&#27491;&#30721;&#21629;&#20013;3&#20010;&#21450;&#20197;&#19978;&#31639;&#36807;&#20851;&#12290;</p></section><section class="panel wide"><h2>&#24403;&#21069;&#38383;&#20851;&#21028;&#26029;</h2><div class="metric ${analysis.active?.metrics?.stage ? 'result-hit' : 'result-miss'}">${analysis.active?.metrics?.stage ? `&#31532;${esc(Math.min(3, analysis.active.metrics.stage + 1))}&#20851;&#35266;&#23519;` : '&#31532;&#19968;&#20851;&#35266;&#23519;'}</div><p class="muted">&#26368;&#26032;&#24320;&#22870;&#65306;${esc(analysis.latest.issue || '-')}&#26399;&#65292;&#27491;&#30721; ${numberChips(threeFormulaRegularNums(analysis.latest))}</p></section><section class="panel wide"><h2>&#22266;&#23450;&#20844;&#24335;&#32452;&#38383;&#20851;</h2><p>&#21629;&#20013;&#21475;&#24452;&#65306;&#19979;&#26399;&#27491;&#30721;&#21629;&#20013;3&#20010;&#21450;&#20197;&#19978;&#12290;</p><p class="muted">&#19981;&#25353;&#27599;&#26399;&#33258;&#21160;&#25442;&#20844;&#24335;&#65292;&#32780;&#26159;&#35266;&#23519;&#22266;&#23450;&#20844;&#24335;&#32452;&#30340;&#36830;&#20013;&#33410;&#22863;&#12290;</p></section>${threeFormulaCurrentHtml(analysis)}${gateLegendHtml(analysis.rows)}<section class="panel full"><h2>&#20844;&#24335;&#32452;&#20998;&#23618;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#20998;&#23618;</th><th>&#20844;&#24335;&#32452;</th><th>&#19979;&#26399;&#27744;</th><th>&#31532;&#19968;&#20851; / &#31532;&#20108;&#20851; / &#31532;&#19977;&#20851;</th><th>&#36827;&#20851;&#29575;</th><th>&#24403;&#21069; / &#26368;&#22823;&#28431;</th></tr></thead><tbody>${threeFormulaTierRows(analysis.items)}</tbody></table></div></section><section class="panel full"><h2>&#21382;&#21490;&#38383;&#20851;&#22797;&#30424;</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>&#26399;&#21495;</th><th>&#20844;&#24335;&#27744;</th><th>&#27491;&#30721;</th><th>&#21629;&#20013;</th><th>&#29366;&#24577;</th></tr></thead><tbody>${threeFormulaReplayRows(analysis.rows, analysis.active || threeFormulaGroupDefs[0], analysis.formulaCache)}</tbody></table></div></section></div>`;
+      document.getElementById('three-formula-source').addEventListener('change', renderThreeFormulaGate);
+    }
     function historyWindowLabel(win) {
       return `${String(win.start).padStart(3, '0')}-${String(win.end).padStart(3, '0')}`;
     }
@@ -2231,6 +2348,9 @@
       gateChallenge: async () => {
         await ensureRecordsData();
       },
+      threeFormulaGate: async () => {
+        await ensureRecordsData();
+      },
       patternWatch: async () => {
         await ensureRecordsData();
       }
@@ -2241,6 +2361,7 @@
       historyPattern: renderHistoryPattern,
       recommendationTrack: renderRecommendationTrack,
       gateChallenge: renderGateChallenge,
+      threeFormulaGate: renderThreeFormulaGate,
       patternWatch: renderPatternWatch,
       manualFetch: renderManualFetch,
       worldcupAnalysis: renderWorldcupAnalysis
