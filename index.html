@@ -123,6 +123,7 @@
     const threeWindowHtmlCache = new Map();
     const dashboardCacheVersion = String(Date.now());
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const htmlText = (value) => String(value ?? '').replace(/&(?!(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z][\w]+);)/g, '&amp;').replace(/[<>"']/g, (ch) => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const pct = (value, max) => max ? Math.round(value / max * 100) : 0;
     function rankHtml(items, limit = 10) {
       const top = (items || []).slice(0, limit);
@@ -1170,7 +1171,7 @@
       return `<div class="change-summary"><p>&#26368;&#26032;&#21464;&#26356;&#65306;${esc(latestYearPoolChange.issue || '-')}&#26399;</p><p>&#26032;&#22686;&#65306;${added.length ? numberChips(added) : '-'}</p><p>&#31227;&#38500;&#65306;${removed.length ? numberChips(removed) : '-'}</p></div>`;
     }
     function syncStatusRow(label, latestIssue, lastRecalcIssue, nextRecalcIssue, included, reason) {
-      return `<tr><td>${label}</td><td>${esc(latestIssue || '-')}</td><td>${esc(lastRecalcIssue || '-')}</td><td>${esc(nextRecalcIssue || '-')}</td><td>${included ? '&#24050;&#32435;&#20837;' : '&#26410;&#32435;&#20837;'}</td><td>${reason || '-'}</td></tr>`;
+      return `<tr><td>${label}</td><td>${esc(latestIssue || '-')}</td><td>${esc(lastRecalcIssue || '-')}</td><td>${htmlText(nextRecalcIssue || '-')}</td><td>${included ? '&#24050;&#32435;&#20837;' : '&#26410;&#32435;&#20837;'}</td><td>${reason || '-'}</td></tr>`;
     }
     function syncStatusPanel(page, analysis) {
       const latestIssue = analysis?.latest?.issue || analysis?.latestIssue || analysis?.basisIssue || analysis?.latestDraw?.issue || '';
@@ -2141,6 +2142,201 @@
     function threeFormulaTierRows(items) {
       return items.map((item, index) => `<tr><td>${index === 0 ? '&#20027;&#20844;&#24335;&#32452;' : item.metrics.pass3 ? '&#22791;&#29992;&#20844;&#24335;&#32452;' : '&#35266;&#23519;&#32452;'}<br><span class="muted">${item.id}</span></td><td>${item.name}</td><td>${numberChips(item.current.nums)}</td><td>${esc(item.metrics.starts)} / ${esc(item.metrics.pass2)} / ${esc(item.metrics.pass3)}</td><td>${gateRate(item.metrics.pass2Rate)} / ${gateRate(item.metrics.pass3Rate)}</td><td>${esc(item.metrics.currentMiss)} / ${esc(item.metrics.maxMiss)}</td></tr>`).join('');
     }
+    function threeFormulaNextRecommendation(analysis) {
+      const scoreMap = new Map();
+      asArray(analysis.items).forEach((item, index) => {
+        const base = 100 - index * 12 + item.metrics.stage * 35 + item.metrics.pass3Rate * 60 + item.metrics.pass2Rate * 25 - item.metrics.currentMiss * 4;
+        asArray(item.current.formulas).forEach(formula => {
+          const num = gateText(formula.value);
+          if (!num) return;
+          const prev = scoreMap.get(num) || {num, score: 0, formulas: [], groups: []};
+          prev.score += Math.max(5, base);
+          prev.formulas.push(`${item.id}: ${formula.expr} = ${formula.calc}`);
+          if (!prev.groups.includes(item.name)) prev.groups.push(item.name);
+          scoreMap.set(num, prev);
+        });
+      });
+      const ranked = [...scoreMap.values()].sort((a, b) => b.score - a.score || Number(a.num) - Number(b.num));
+      const compound = ranked.slice(0, 6).map(item => item.num).sort((a, b) => Number(a) - Number(b));
+      const singles = [];
+      for (const item of asArray(analysis.items)) {
+        const nums = asArray(item.current.nums).filter(num => compound.includes(num)).slice(0, 3);
+        if (nums.length === 3) singles.push({name: item.name, nums, source: item.id});
+        if (singles.length >= 5) break;
+      }
+      for (let i = 0; singles.length < 5 && i + 2 < compound.length; i++) {
+        singles.push({name: '&#22797;&#24335;&#32452;&#21512;', nums: compound.slice(i, i + 3), source: 'compound-split'});
+      }
+      return {compound, singles, ranked};
+    }
+    function threeFormulaCandidateDefs() {
+      const base = asArray(threeFormulaGroupDefs).map(def => ({id: def.id, name: def.name, exprs: def.exprs}));
+      const pairs = [];
+      for (let i = 0; i < base.length; i++) {
+        for (let j = i + 1; j < base.length; j++) {
+          pairs.push({
+            id: `${base[i].id}+${base[j].id}`,
+            name: `${base[i].name}+${base[j].name}`,
+            exprs: [...new Set([...base[i].exprs, ...base[j].exprs])]
+          });
+        }
+      }
+      return [...base, ...pairs];
+    }
+    function threeFormulaCandidatePoolAt(rows, index, def, cache) {
+      const formulaMap = threeFormulaMapAt(rows, index, cache);
+      const formulas = def.exprs.map(expr => formulaMap.get(expr)).filter(Boolean);
+      const nums = [...new Set(formulas.map(item => gateText(item.value)))].sort((a, b) => Number(a) - Number(b)).slice(0, 6);
+      const target = index < rows.length ? new Set(threeFormulaRegularNums(rows[index])) : new Set();
+      const hits = nums.filter(num => target.has(num));
+      return {formulas, nums, hits, hit: hits.length >= 3};
+    }
+    function threeFormulaCandidateLightPoolAt(rows, index, def, cache, targetSets) {
+      const formulaMap = threeFormulaMapAt(rows, index, cache);
+      const seen = new Set();
+      const nums = [];
+      for (const expr of def.exprs) {
+        const formula = formulaMap.get(expr);
+        if (!formula) continue;
+        const num = gateText(formula.value);
+        if (seen.has(num)) continue;
+        seen.add(num);
+        nums.push(num);
+      }
+      nums.sort((a, b) => Number(a) - Number(b));
+      const limitedNums = nums.slice(0, 6);
+      const target = targetSets?.[index] || (index < rows.length ? new Set(threeFormulaRegularNums(rows[index])) : new Set());
+      const hits = limitedNums.filter(num => target.has(num));
+      return {nums: limitedNums, hits, hit: hits.length >= 3};
+    }
+    function threeFormulaBacktestCandidateUntil(rows, def, cache, endIndex) {
+      let total = 0, hits = 0, currentMiss = 0, maxMiss = 0, recentTotal = 0, recentHits = 0, recent10Total = 0, recent10Hits = 0;
+      const limit = Math.min(endIndex, rows.length);
+      const recentStart = Math.max(4, limit - 100);
+      const recent10Start = Math.max(4, limit - 10);
+      for (let i = 4; i < limit; i++) {
+        const state = threeFormulaCandidatePoolAt(rows, i, def, cache);
+        total++;
+        if (i >= recentStart) recentTotal++;
+        if (i >= recent10Start) recent10Total++;
+        if (state.hit) {
+          hits++;
+          if (i >= recentStart) recentHits++;
+          if (i >= recent10Start) recent10Hits++;
+          maxMiss = Math.max(maxMiss, currentMiss);
+          currentMiss = 0;
+        } else {
+          currentMiss++;
+        }
+      }
+      maxMiss = Math.max(maxMiss, currentMiss);
+      return {total, hits, hitRate: total ? hits / total : 0, recentTotal, recentHits, recentHitRate: recentTotal ? recentHits / recentTotal : 0, recent10Total, recent10Hits, recent10HitRate: recent10Total ? recent10Hits / recent10Total : 0, currentMiss, maxMiss};
+    }
+    function threeFormulaBacktestCandidate(rows, def, cache) {
+      return threeFormulaBacktestCandidateUntil(rows, def, cache, rows.length);
+    }
+    function threeFormulaCandidateScore(def, metrics) {
+      return metrics.recent10HitRate * 2000 + metrics.recentHitRate * 500 + metrics.hitRate * 200 - metrics.currentMiss * 10 - metrics.maxMiss * 2 - def.exprs.length * 0.25;
+    }
+    function threeFormulaBuildCandidateStats(rows, defs, cache, startIndex = 4) {
+      const stats = new Map();
+      const targetSets = rows.map(row => new Set(threeFormulaRegularNums(row)));
+      const firstIndex = Math.max(4, startIndex);
+      asArray(defs).forEach(def => {
+        const states = [];
+        const prefixHits = Array(rows.length + 1).fill(0);
+        const currentMissAt = Array(rows.length + 1).fill(0);
+        const maxMissAt = Array(rows.length + 1).fill(0);
+        let currentMiss = 0;
+        let maxMiss = 0;
+        for (let i = firstIndex; i < rows.length; i++) {
+          prefixHits[i] = prefixHits[i] || prefixHits[i - 1] || 0;
+          const state = threeFormulaCandidateLightPoolAt(rows, i, def, cache, targetSets);
+          states[i] = state;
+          if (state.hit) {
+            prefixHits[i + 1] = prefixHits[i] + 1;
+            maxMiss = Math.max(maxMiss, currentMiss);
+            currentMiss = 0;
+          } else {
+            prefixHits[i + 1] = prefixHits[i];
+            currentMiss++;
+          }
+          currentMissAt[i + 1] = currentMiss;
+          maxMissAt[i + 1] = Math.max(maxMiss, currentMiss);
+        }
+        states[rows.length] = threeFormulaCandidatePoolAt(rows, rows.length, def, cache);
+        const metricsUntil = (endIndex) => {
+          const limit = Math.min(Math.max(firstIndex, endIndex), rows.length);
+          const total = Math.max(0, limit - firstIndex);
+          const hits = (prefixHits[limit] || 0) - (prefixHits[firstIndex] || 0);
+          const recentStart = Math.max(firstIndex, limit - 100);
+          const recent10Start = Math.max(firstIndex, limit - 10);
+          const recentTotal = Math.max(0, limit - recentStart);
+          const recent10Total = Math.max(0, limit - recent10Start);
+          const recentHits = (prefixHits[limit] || 0) - (prefixHits[recentStart] || 0);
+          const recent10Hits = (prefixHits[limit] || 0) - (prefixHits[recent10Start] || 0);
+          return {total, hits, hitRate: total ? hits / total : 0, recentTotal, recentHits, recentHitRate: recentTotal ? recentHits / recentTotal : 0, recent10Total, recent10Hits, recent10HitRate: recent10Total ? recent10Hits / recent10Total : 0, currentMiss: currentMissAt[limit] || 0, maxMiss: maxMissAt[limit] || 0};
+        };
+        stats.set(def.id, {def, states, metricsUntil});
+      });
+      return stats;
+    }
+    function threeFormulaSelectCandidateAt(rows, defs, endIndex, cache, stats = null) {
+      const statsMap = stats || threeFormulaBuildCandidateStats(rows, defs, cache);
+      const candidates = defs.map(def => {
+        const stat = statsMap.get(def.id);
+        const metrics = stat?.metricsUntil(endIndex) || threeFormulaBacktestCandidateUntil(rows, def, cache, endIndex);
+        const current = stat?.states?.[endIndex] || threeFormulaCandidatePoolAt(rows, endIndex, def, cache);
+        return {...def, metrics, current, score: threeFormulaCandidateScore(def, metrics)};
+      }).filter(item => item.current.nums.length >= 3).sort((a, b) => b.metrics.recent10HitRate - a.metrics.recent10HitRate || b.score - a.score || b.metrics.recentHitRate - a.metrics.recentHitRate || a.metrics.maxMiss - b.metrics.maxMiss);
+      return candidates[0] || {id: 'none', name: '-', exprs: [], metrics: {}, current: {nums: [], formulas: []}, score: 0};
+    }
+    function threeFormulaWalkForwardMetrics(rows, defs, cache, stats = null, startIndex = 5) {
+      const firstIndex = Math.max(5, startIndex);
+      const statsMap = stats || threeFormulaBuildCandidateStats(rows, defs, cache, Math.max(4, firstIndex - 1));
+      const flags = [];
+      let total = 0, hits = 0, currentMiss = 0, maxMiss = 0, recentTotal = 0, recentHits = 0, recent10Total = 0, recent10Hits = 0;
+      const recentStart = Math.max(firstIndex, rows.length - 100);
+      const recent10Start = Math.max(firstIndex, rows.length - 10);
+      for (let i = firstIndex; i < rows.length; i++) {
+        const picked = threeFormulaSelectCandidateAt(rows, defs, i, cache, statsMap);
+        const state = statsMap.get(picked.id)?.states?.[i] || threeFormulaCandidatePoolAt(rows, i, picked, cache);
+        total++;
+        if (i >= recentStart) recentTotal++;
+        if (i >= recent10Start) recent10Total++;
+        flags[i] = state.hit;
+        if (state.hit) {
+          hits++;
+          if (i >= recentStart) recentHits++;
+          if (i >= recent10Start) recent10Hits++;
+          maxMiss = Math.max(maxMiss, currentMiss);
+          currentMiss = 0;
+        } else {
+          currentMiss++;
+        }
+      }
+      maxMiss = Math.max(maxMiss, currentMiss);
+      return {total, hits, hitRate: total ? hits / total : 0, recentTotal, recentHits, recentHitRate: recentTotal ? recentHits / recentTotal : 0, recent10Total, recent10Hits, recent10HitRate: recent10Total ? recent10Hits / recent10Total : 0, currentMiss, maxMiss, flags};
+    }
+    function threeFormulaWalkForwardRecommendation(analysis) {
+      const rows = analysis.rows || [];
+      const cache = analysis.formulaCache || new Map();
+      const defs = threeFormulaCandidateDefs();
+      const statsStart = Math.max(4, rows.length - 120);
+      const stats = threeFormulaBuildCandidateStats(rows, defs, cache, statsStart);
+      const selected = threeFormulaSelectCandidateAt(rows, defs, rows.length, cache, stats);
+      const walkMetrics = threeFormulaWalkForwardMetrics(rows, defs, cache, stats, Math.max(5, statsStart + 1));
+      const best = {...selected, metrics: walkMetrics, selectedMetrics: selected.metrics};
+      const singles = [];
+      const compound = asArray(best.current.nums).slice(0, 6);
+      for (let i = 0; i + 2 < compound.length && singles.length < 5; i++) {
+        singles.push({name: best.name, nums: compound.slice(i, i + 3), source: best.id});
+      }
+      return {best, candidates: defs, compound, singles};
+    }
+    function threeFormulaOptimizedRecommendation(analysis) {
+      return threeFormulaWalkForwardRecommendation(analysis);
+    }
     function threeFormulaReplayRows(rows, def, cache, count = 12) {
       const start = Math.max(4, rows.length - count);
       const out = [];
@@ -2153,7 +2349,12 @@
     function threeFormulaCurrentHtml(analysis) {
       const active = analysis.active || analysis.items[0];
       const backupNums = [...new Set(analysis.items.slice(1, 4).flatMap(item => item.current.nums || []))].filter(num => !active.current.nums.includes(num)).slice(0, 8);
-      return `<section class="panel full"><h2>&#24403;&#21069;&#20027;&#35266;&#23519;&#27744;</h2><table class="compact-table"><tbody><tr><th>&#20027;&#20844;&#24335;&#32452;</th><td>${active.name}<br><span class="muted">${esc(active.id)}</span></td></tr><tr><th>&#19979;&#26399;&#20844;&#24335;&#27744;</th><td>${numberChips(active.current.nums)}</td></tr><tr><th>&#25193;&#23637;&#38450;&#23432;</th><td>${numberChips(backupNums)}</td></tr><tr><th>&#31532;&#19968;&#20851; / &#31532;&#20108;&#20851; / &#31532;&#19977;&#20851;</th><td>${esc(active.metrics.starts)} / ${esc(active.metrics.pass2)} / ${esc(active.metrics.pass3)}</td></tr><tr><th>&#24403;&#21069;&#28431;&#26399; / &#26368;&#22823;&#28431;&#26399;</th><td>${esc(active.metrics.currentMiss)} / ${esc(active.metrics.maxMiss)}</td></tr></tbody></table></section>`;
+      const recommendation = threeFormulaNextRecommendation(analysis);
+      const optimized = threeFormulaOptimizedRecommendation(analysis);
+      const singles = recommendation.singles.map(item => `<tr><td>${numberChips(item.nums)}</td><td>${item.name}<br><span class="muted">${esc(item.source)}</span></td></tr>`).join('');
+      const optimizedSingles = optimized.singles.map(item => `<tr><td>${numberChips(item.nums)}</td><td>${item.name}<br><span class="muted">${esc(item.source)}</span></td></tr>`).join('');
+      const topReasons = recommendation.ranked.slice(0, 6).map(item => `<tr><td>${numberChips([item.num])}</td><td>${esc(item.formulas.slice(0, 3).join(' / '))}</td></tr>`).join('');
+      return `<section class="panel full"><h2>&#19979;&#26399;&#19977;&#20013;&#19977;&#25512;&#33616;</h2><table class="compact-table"><tbody><tr><th>walk-forward 6&#30721;&#22797;&#24335;</th><td>${numberChips(optimized.compound)}</td></tr><tr><th>walk-forward &#36817;10&#26399;</th><td>${gateRate(optimized.best.metrics.recent10HitRate || 0)}&#65292;&#21629;&#20013; ${esc(optimized.best.metrics.recent10Hits || 0)} / ${esc(optimized.best.metrics.recent10Total || 0)}<br><span class="muted">&#27599;&#26399;&#21482;&#29992;&#24320;&#22870;&#21069;&#21382;&#21490;&#36873;&#20844;&#24335;&#65292;&#24320;&#22870;&#21518;&#21482;&#39564;&#25910;&#12290;</span></td></tr><tr><th>walk-forward &#22238;&#27979;</th><td>${gateRate(optimized.best.metrics.hitRate || 0)}&#65292;&#36817;100&#26399; ${gateRate(optimized.best.metrics.recentHitRate || 0)}&#65292;&#24403;&#21069;&#28431; ${esc(optimized.best.metrics.currentMiss || 0)} / &#26368;&#22823;&#36830;&#25346; ${esc(optimized.best.metrics.maxMiss || 0)}</td></tr><tr><th>&#20844;&#24335;&#21333;&#24335;&#25512;&#33616;</th><td><div class="table-scroll"><table class="compact-table"><tbody>${optimizedSingles || singles}</tbody></table></div></td></tr><tr><th>&#24403;&#21069;&#36873;&#20013;&#20844;&#24335;&#32452;</th><td>${optimized.best.name}<br><span class="muted">${esc(optimized.best.id)}</span></td></tr><tr><th>&#19979;&#26399;6&#30721;&#22797;&#24335;</th><td>${numberChips(recommendation.compound)}<br><span class="muted">&#26435;&#37325;&#22791;&#36873;</span></td></tr><tr><th>&#20027;&#20844;&#24335;&#32452;</th><td>${active.name}<br><span class="muted">${esc(active.id)}</span></td></tr><tr><th>&#19979;&#26399;&#20844;&#24335;&#27744;</th><td>${numberChips(active.current.nums)}</td></tr><tr><th>&#25193;&#23637;&#38450;&#23432;</th><td>${numberChips(backupNums)}</td></tr></tbody></table><details><summary>&#21495;&#30721;&#26469;&#28304;&#20844;&#24335;</summary><div class="table-scroll"><table class="compact-table"><tbody>${topReasons}</tbody></table></div></details></section>`;
     }
     function renderThreeFormulaGate() {
       const selected = document.getElementById('three-formula-source')?.value || 'am';

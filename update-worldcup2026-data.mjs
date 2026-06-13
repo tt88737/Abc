@@ -3,8 +3,10 @@ import path from "node:path";
 
 const workspace = process.cwd();
 const fifaUrl = "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums";
+const fifaScoresUrl = "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures";
 const fifaStandingsUrl = "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings";
 const sporttery500Url = "https://trade.500.com/jczq/";
+const sporttery500LiveUrl = "https://app-live-m.500.com/";
 const injuryUrl = "https://www.sportsgambler.com/injuries/football/fifa-world-cup/";
 const worldCupGoalSummaryUrl = "https://datahub.io/football/worldcup/_r/-/goal-timing-by-tournament-summary.csv";
 const worldCupAppearancesUrl = "https://datahub.io/football/worldcup/_r/-/tournament-appearances.csv";
@@ -2812,7 +2814,7 @@ const matches = [
   {teams: "荷兰 vs 瑞典", note: "F组排名分水岭，荷兰防守和转换质量略占优。", score: "2-1", pick: "荷兰胜", probability: "胜 54% / 平 27% / 负 19%", confidence: 60, type: "hot"}
 ];
 
-const completedWorldCupResults = [
+const completedWorldCupResultsFallback = [
   {
     matchId: "Match 1",
     group: "A",
@@ -2834,6 +2836,169 @@ const completedWorldCupResults = [
     source: "post-match-result"
   }
 ];
+
+function scoreTextFromRecord(record) {
+  const direct = pickField(record, ["score", "result", "fullTimeScore", "ftScore", "displayScore"]);
+  if (/^\d+\s*[-:]\s*\d+$/.test(direct)) return direct.replace(/\s*:\s*/, "-").replace(/\s+/g, "");
+  const home = pickField(record, ["homeScore", "homeGoals", "homeTeamScore", "scoreHome", "home_score", "home"]);
+  const away = pickField(record, ["awayScore", "awayGoals", "awayTeamScore", "scoreAway", "away_score", "away"]);
+  if (/^\d+$/.test(home) && /^\d+$/.test(away)) return `${home}-${away}`;
+  return "";
+}
+
+function teamNameFromRecord(record, side) {
+  const prefix = side === "home" ? "home" : "away";
+  const keys = side === "home"
+    ? ["homeTeamName", "homeName", "homeTeam", "home", "teamHome", "home_short_name"]
+    : ["awayTeamName", "awayName", "awayTeam", "away", "teamAway", "away_short_name"];
+  const value = pickField(record, keys);
+  if (value && !/^\d+$/.test(value)) return value;
+  const nested = record?.[`${prefix}Team`] || record?.[prefix] || record?.[`${prefix}_team`];
+  if (nested && typeof nested === "object") {
+    return pickField(nested, ["name", "shortName", "displayName", "countryName", "teamName", "description"]);
+  }
+  return "";
+}
+
+function isFinishedRecord(record) {
+  const text = JSON.stringify(record).toLowerCase();
+  return /finished|full.?time|after.?extra.?time|complete|closed|played|final|已完|完场|结束|全场/.test(text);
+}
+
+function parseCompletedResultsFromObjects(objects) {
+  const results = [];
+  for (const record of objects) {
+    const home = teamNameFromRecord(record, "home");
+    const away = teamNameFromRecord(record, "away");
+    const actualScore = scoreTextFromRecord(record);
+    if (!home || !away || home === away || !actualScore || !isFinishedRecord(record)) continue;
+    results.push({
+      matchId: pickField(record, ["matchId", "id", "matchNumber", "matchNo", "fixtureId"]) || `${home}-${away}`,
+      group: pickField(record, ["group", "groupName", "stageName", "competitionStage"]) || "",
+      teams: `${home} vs ${away}`,
+      home,
+      away,
+      actualScore,
+      finishedAtLocal: pickField(record, ["finishedAtLocal", "matchDate", "date", "startTime", "kickOff", "utcDate"]) || "",
+      source: "fifa-dynamic-result"
+    });
+  }
+  return results;
+}
+
+function parseCompletedResultsFromText(text) {
+  const objects = [];
+  for (const candidate of parseJsonCandidates(text)) {
+    try {
+      objects.push(...collectObjects(JSON.parse(candidate)));
+    } catch {
+      // Ignore non-JSON script blocks.
+    }
+  }
+  for (const match of String(text || "").matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    try {
+      objects.push(...collectObjects(JSON.parse(match[1])));
+    } catch {
+      // Ignore invalid structured data blocks.
+    }
+  }
+  return parseCompletedResultsFromObjects(objects);
+}
+
+function parse500CompletedResults(text) {
+  const objects = [];
+  for (const candidate of parseJsonCandidates(String(text || ""))) {
+    try {
+      objects.push(...collectObjects(JSON.parse(candidate)));
+    } catch {
+      // Ignore non-JSON script blocks.
+    }
+  }
+  const results = [];
+  for (const record of objects) {
+    const league = pickField(record, ["simpleleague", "league", "leagueName", "matchgbname"]);
+    const home = pickField(record, ["homesxname", "homename", "hometeamname", "homeTeamName", "homeName"]);
+    const away = pickField(record, ["awaysxname", "awayname", "awayteamname", "awayTeamName", "awayName"]);
+    const homeScore = pickField(record, ["homescore", "hscore", "homeScore", "home_score"]);
+    const awayScore = pickField(record, ["awayscore", "ascore", "awayScore", "away_score"]);
+    const status = pickField(record, ["status"]);
+    const statusDesc = pickField(record, ["status_desc", "statusDesc", "match_status"]);
+    const finished = status === "4" || /完场|结束|全场|finished|full.?time|final/i.test(statusDesc);
+    if (!isWorldCupMatch({league}) || !home || !away || home === away || !/^\d+$/.test(homeScore) || !/^\d+$/.test(awayScore) || !finished) continue;
+    results.push({
+      matchId: pickField(record, ["fid", "wid", "id", "matchid", "matchId", "order"]) || `${home}-${away}`,
+      group: pickField(record, ["matchround", "round", "group"]) || "",
+      teams: `${home} vs ${away}`,
+      home,
+      away,
+      actualScore: `${homeScore}-${awayScore}`,
+      finishedAtLocal: pickField(record, ["matchtime", "matchdate", "date"]) || "",
+      source: "500-live-result"
+    });
+  }
+  return [...new Map(results.map(item => [`${normalizeName(item.home)}-${normalizeName(item.away)}-${item.actualScore}`, item])).values()];
+}
+
+function mergeCompletedWorldCupResults(dynamicResults = [], fallbackResults = []) {
+  const rows = [...dynamicResults, ...fallbackResults];
+  const map = new Map();
+  for (const row of rows) {
+    const key = `${normalizeName(row.home)}-${normalizeName(row.away)}-${row.actualScore}`;
+    if (!normalizeName(row.home) || !normalizeName(row.away) || map.has(key)) continue;
+    map.set(key, row);
+  }
+  return [...map.values()];
+}
+
+async function fetch500CompletedWorldCupResults() {
+  try {
+    const {response, text} = await fetchText(sporttery500LiveUrl);
+    const results = response.ok ? parse500CompletedResults(text) : [];
+    return {
+      source: {
+        name: "500彩票网完赛比分",
+        url: sporttery500LiveUrl,
+        ok: response.ok && results.length > 0,
+        statusCode: response.status,
+        bytes: text.length,
+        note: response.ok
+          ? `解析到 ${results.length} 场世界杯完赛比分；为 0 时使用 FIFA/静态赛果兜底。`
+          : `HTTP ${response.status}；使用 FIFA/静态赛果兜底。`
+      },
+      results
+    };
+  } catch (error) {
+    return {
+      source: {name: "500彩票网完赛比分", url: sporttery500LiveUrl, ok: false, statusCode: 0, bytes: 0, note: `${error.message}；使用 FIFA/静态赛果兜底。`},
+      results: []
+    };
+  }
+}
+
+async function fetchCompletedWorldCupResults() {
+  try {
+    const {response, text} = await fetchText(fifaScoresUrl);
+    const results = response.ok ? parseCompletedResultsFromText(text) : [];
+    return {
+      source: {
+        name: "FIFA官方完赛比分",
+        url: fifaScoresUrl,
+        ok: response.ok,
+        statusCode: response.status,
+        bytes: text.length,
+        note: results.length
+          ? `动态解析到 ${results.length} 场完赛比分。`
+          : "页面可访问，但未解析到结构化完赛比分；使用静态赛果兜底。"
+      },
+      results
+    };
+  } catch (error) {
+    return {
+      source: {name: "FIFA官方完赛比分", url: fifaScoresUrl, ok: false, statusCode: 0, bytes: 0, note: `${error.message}；使用静态赛果兜底。`},
+      results: []
+    };
+  }
+}
 
 function scoreResultValue(score) {
   const [home, away] = String(score || "").split("-").map(value => Number(value));
@@ -3168,8 +3333,10 @@ function buildReliabilitySummary(jcMatches) {
   };
 }
 
-const [fifaSource, fifaGroupStandings, sporttery500, injuries, historicalWorldCup, footballRatings, fifaRankings, projectedLineups, lineupNewsSources, weatherForecasts, footballDataApi, recentInternationalResults] = await Promise.all([
+const [fifaSource, completed500ResultSource, completedResultSource, fifaGroupStandings, sporttery500, injuries, historicalWorldCup, footballRatings, fifaRankings, projectedLineups, lineupNewsSources, weatherForecasts, footballDataApi, recentInternationalResults] = await Promise.all([
   checkSource("FIFA 官方赛程", fifaUrl),
+  fetch500CompletedWorldCupResults(),
+  fetchCompletedWorldCupResults(),
   fetchFifaGroupStandings(),
   fetch500SportteryMatches(),
   fetchInjuryReport(),
@@ -3244,9 +3411,12 @@ const scoreCombos = buildScoreCombos(jcMatches);
 scoreCombos.forEach(combo => {
   combo.comboAnalysisQuality = Math.round(combo.matches.reduce((sum, item) => sum + Number(item.analysisQualityScore || 0), 0) / combo.matches.length);
 });
-const completedScoreChecks = buildCompletedScoreChecks(completedWorldCupResults);
+const mergedCompletedWorldCupResults = mergeCompletedWorldCupResults([...completed500ResultSource.results, ...completedResultSource.results], completedWorldCupResultsFallback);
+const completedScoreChecks = buildCompletedScoreChecks(mergedCompletedWorldCupResults);
 const sources = [
   fifaSource,
+  completed500ResultSource.source,
+  completedResultSource.source,
   sporttery500.source,
   ...(jcSource.name === sporttery500.source.name && jcSource.url === sporttery500.source.url ? [] : [jcSource]),
   injuries.source,
