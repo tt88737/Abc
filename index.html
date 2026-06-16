@@ -2650,10 +2650,11 @@
         return {
           title: '三中三最近表现',
           state: `${esc(metrics.recent10Hits || 0)} / ${esc(metrics.recent10Total || 0)}`,
-          detail: `近 10 期 ${gateRate(metrics.recent10HitRate || 0)}；当前漏 ${esc(metrics.currentMiss || 0)} / 最大连挂 ${esc(metrics.maxMiss || 0)}。`
+          detail: `近 10 期 ${gateRate(metrics.recent10HitRate || 0)}；当前漏 ${esc(metrics.currentMiss || 0)} / 最大连挂 ${esc(metrics.maxMiss || 0)}。`,
+          sample: '最近 10 期 walk-forward 复盘'
         };
       } catch {
-        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。'};
+        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。', sample: '最近 10 期'};
       }
     }
     function gateChallengeReviewSummary() {
@@ -2664,10 +2665,11 @@
         return {
           title: '闯三关过关记录',
           state: `${esc(all.runs || 0)} 次`,
-          detail: `当前连续命中 ${esc(all.stage || 0)} 关；第二关 ${gateRate(all.pass2Rate || 0)}，第三关 ${gateRate(all.pass3Rate || 0)}。`
+          detail: `当前连续命中 ${esc(all.stage || 0)} 关；第二关 ${gateRate(all.pass2Rate || 0)}，第三关 ${gateRate(all.pass3Rate || 0)}。`,
+          sample: '全部已识别闯关记录'
         };
       } catch {
-        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。'};
+        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。', sample: '全部已识别闯关记录'};
       }
     }
     function worldcupReviewSummary() {
@@ -2682,7 +2684,8 @@
       return {
         title: '世界杯完赛复盘',
         state: `命中 ${counts.hit} / 半中 ${counts.partial}`,
-        detail: `已校验 ${completedScoreChecks.length} 场；未中 ${counts.miss} 场。`
+        detail: `已校验 ${completedScoreChecks.length} 场；未中 ${counts.miss} 场。`,
+        sample: '已完赛比分校验'
       };
     }
     function buildReviewSummaryCards() {
@@ -2741,6 +2744,7 @@
         <h2>${esc(card.title)}</h2>
         <div class="metric">${esc(card.state || '-')}</div>
         <p class="muted">${card.detail || '-'}</p>
+        ${card.sample ? `<p class="mini">复盘口径：${esc(card.sample)}</p>` : ''}
       </article>`;
     }
     function dataReviewCards() {

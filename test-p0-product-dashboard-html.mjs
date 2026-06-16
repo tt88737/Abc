@@ -77,6 +77,11 @@ for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes("function renderDataReview"), `${name} should render the data review hub`);
   assert.ok(text.includes("reviewOnlyReason"), `${name} should carry review-only reasons on data review cards`);
   assert.ok(text.includes("仅复盘原因"), `${name} should show why low-frequency tools are review-only`);
+  assert.ok(text.includes("sample:"), `${name} review summaries should carry sample context`);
+  assert.ok(text.includes("复盘口径"), `${name} should render review sample context`);
+  assert.ok(text.includes("最近 10 期"), `${name} should label three-in-three review sample`);
+  assert.ok(text.includes("全部已识别闯关记录"), `${name} should label gate review sample`);
+  assert.ok(text.includes("已完赛比分校验"), `${name} should label World Cup review sample`);
 }
 
 console.log("p0 product dashboard html ok");
