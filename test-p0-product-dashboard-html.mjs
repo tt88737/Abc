@@ -3,12 +3,35 @@ import fs from "node:fs";
 
 const html = fs.readFileSync("index.html", "utf8");
 
+function topNavHtml() {
+  const match = html.match(/<nav class="tabs">([\s\S]*?)<\/nav>/);
+  assert.ok(match, "dashboard should render a top tab nav");
+  return match[1];
+}
+
+const navHtml = topNavHtml();
+
 assert.ok(html.includes("renderDecisionHome"), "homepage should define a decision-first home renderer");
 assert.ok(html.includes("今日重点"), "homepage should expose today's focus");
 assert.ok(html.includes("数据健康"), "homepage should expose data health");
 assert.ok(html.includes("三中三推荐"), "homepage should expose three-in-three recommendation entry");
 assert.ok(html.includes("闯三关判断"), "homepage should expose gate challenge decision entry");
 assert.ok(html.includes("世界杯比分"), "homepage should expose World Cup score entry");
+assert.equal((navHtml.match(/data-tab=/g) || []).length, 5, "top nav should expose only five primary menus");
+assert.ok(navHtml.includes('data-tab="decisionHome"'), "top nav should keep decision home");
+assert.ok(navHtml.includes('data-tab="threeFormulaGate"'), "top nav should expose three-in-three recommendation");
+assert.ok(navHtml.includes('data-tab="gateChallenge"'), "top nav should expose gate challenge decision");
+assert.ok(navHtml.includes('data-tab="worldcupAnalysis"'), "top nav should expose World Cup scores");
+assert.ok(navHtml.includes('data-tab="dataReview"'), "top nav should expose data review hub");
+assert.ok(!navHtml.includes('data-tab="historyPattern"'), "history pattern should move under data review");
+assert.ok(!navHtml.includes('data-tab="recommendationTrack"'), "recommendation tracking should move under data review");
+assert.ok(!navHtml.includes('data-tab="window5"'), "5-period window should move under data review");
+assert.ok(!navHtml.includes('data-tab="threeWindow5"'), "three-in-three 5-period window should move under data review");
+assert.ok(!navHtml.includes('data-tab="patternWatch"'), "advanced analysis should move under data review");
+assert.ok(!navHtml.includes('data-tab="manualFetch"'), "manual fetch should move under data review");
+assert.ok(html.includes("renderDataReview"), "dashboard should define a data review hub renderer");
+assert.ok(html.includes("dataReviewCards"), "data review hub should list legacy review and data tools");
+assert.ok(html.includes("topLevelTabFor"), "dashboard should map hidden legacy tabs to top-level nav state");
 assert.ok(html.includes("buildDataHealthCards"), "homepage should calculate data health cards");
 assert.ok(html.includes("dataFreshnessState"), "homepage should classify data freshness");
 assert.ok(html.includes("sourceHealthCard"), "homepage should derive lottery source health from latest draw date");
