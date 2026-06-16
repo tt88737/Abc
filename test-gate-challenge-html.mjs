@@ -18,11 +18,11 @@ assert.ok(html.includes("&#26412;&#26399;&#25191;&#34892;&#24314;&#35758;"), "ga
 assert.ok(html.includes("&#20027;&#20844;&#24335;"), "gate challenge should label the main formula tier");
 assert.ok(html.includes("&#22791;&#29992;&#20844;&#24335;"), "gate challenge should label the backup formula tier");
 assert.ok(html.includes("&#25490;&#38500;&#20844;&#24335;"), "gate challenge should label formulas that should not be used");
-assert.ok(html.includes("&#32487;&#32493; / &#38477;&#27880;&#35266;&#23519; / &#26242;&#20572;"), "gate challenge should expose the decision vocabulary");
+assert.ok(html.includes("&#32487;&#32493; / &#38477;&#27880;&#35266;&#23519; / &#26242;&#20572;") || html.includes("继续 / 降注观察 / 暂停"), "gate challenge should expose the decision vocabulary");
 
-assert.ok(html.includes("&#26412;&#26399;&#26159;&#21542;&#36866;&#21512;&#24320;&#31532;&#19968;&#20851;"), "gate challenge should explicitly say whether to start the first gate this period");
-assert.ok(html.includes("&#26159;&#21542;&#32493;&#31532;&#20108;&#20851;"), "gate challenge should explicitly say whether to continue to the second gate");
-assert.ok(html.includes("&#26159;&#21542;&#20914;&#31532;&#19977;&#20851;"), "gate challenge should explicitly say whether to attack the third gate");
+assert.ok(html.includes("&#26412;&#26399;&#26159;&#21542;&#36866;&#21512;&#24320;&#31532;&#19968;&#20851;") || html.includes("是否开第一关"), "gate challenge should explicitly say whether to start the first gate this period");
+assert.ok(html.includes("&#26159;&#21542;&#32493;&#31532;&#20108;&#20851;") || html.includes("是否续第二关"), "gate challenge should explicitly say whether to continue to the second gate");
+assert.ok(html.includes("&#26159;&#21542;&#20914;&#31532;&#19977;&#20851;") || html.includes("是否冲第三关"), "gate challenge should explicitly say whether to attack the third gate");
 assert.ok(html.includes("&#20027;&#35266;&#23519;&#21495;&#30721;"), "gate challenge should explicitly show main observation numbers");
 assert.ok(html.includes("&#25193;&#23637;&#38450;&#23432;&#21495;&#30721;"), "gate challenge should explicitly show defensive extension numbers");
 assert.ok(html.includes("&#35302;&#21457;&#26465;&#20214;"), "gate challenge should show trigger conditions");

@@ -2239,8 +2239,63 @@
     function threeFormulaBacktestCandidate(rows, def, cache) {
       return threeFormulaBacktestCandidateUntil(rows, def, cache, rows.length);
     }
-    function threeFormulaCandidateScore(def, metrics) {
-      return metrics.recent10HitRate * 2000 + metrics.recentHitRate * 500 + metrics.hitRate * 200 - metrics.currentMiss * 10 - metrics.maxMiss * 2 - def.exprs.length * 0.25;
+    function threeFormulaCombination(n, k) {
+      if (k < 0 || k > n) return 0;
+      const pick = Math.min(k, n - k);
+      let out = 1;
+      for (let i = 1; i <= pick; i++) out = out * (n - pick + i) / i;
+      return out;
+    }
+    function threeFormulaRandomBaseline() {
+      const total = threeFormulaCombination(49, 6);
+      let hit = 0;
+      for (let k = 3; k <= 6; k++) hit += threeFormulaCombination(6, k) * threeFormulaCombination(43, 6 - k);
+      return total ? hit / total : 0;
+    }
+    function threeFormulaClampScore(value) {
+      return Math.max(0, Math.min(100, Math.round(Number(value || 0))));
+    }
+    function threeFormulaObservationScore(metrics, nums) {
+      const baseline = threeFormulaRandomBaseline();
+      const hitRate = Number(metrics?.hitRate || 0);
+      const recentHitRate = Number(metrics?.recentHitRate || 0);
+      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
+      const recent10Hits = Number(metrics?.recent10Hits || 0);
+      const currentMiss = Number(metrics?.currentMiss || 0);
+      const maxMiss = Number(metrics?.maxMiss || 0);
+      const count = asArray(nums).length;
+      const edge = hitRate - baseline;
+      const recentEdge = recentHitRate - baseline;
+      const edgeScore = threeFormulaClampScore(50 + edge * 500);
+      const recentScore = threeFormulaClampScore(recent10HitRate * 180 + recentEdge * 300 + recent10Hits * 6);
+      const riskRatio = maxMiss > 0 ? currentMiss / maxMiss : 0;
+      const riskScore = threeFormulaClampScore(100 - riskRatio * 100);
+      const stabilityGap = Math.abs(recentHitRate - hitRate);
+      const stabilityScore = threeFormulaClampScore(100 - stabilityGap * 250);
+      const coverageScore = threeFormulaClampScore(count >= 6 ? 100 : count >= 3 ? 55 : 0);
+      const observationScore = threeFormulaClampScore(edgeScore * 0.28 + recentScore * 0.28 + riskScore * 0.22 + stabilityScore * 0.12 + coverageScore * 0.10);
+      return {baseline, edge, recentEdge, edgeScore, recentScore, riskScore, stabilityScore, coverageScore, observationScore};
+    }
+    function threeFormulaObservationDecision(metrics, nums) {
+      const score = threeFormulaObservationScore(metrics, nums);
+      const count = asArray(nums).length;
+      const recent10Total = Number(metrics?.recent10Total || 0);
+      const recent10Hits = Number(metrics?.recent10Hits || 0);
+      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
+      const recentHitRate = Number(metrics?.recentHitRate || 0);
+      const currentMiss = Number(metrics?.currentMiss || 0);
+      const maxMiss = Number(metrics?.maxMiss || 0);
+      if (count < 3) return {...score, level: '暂停', reason: '有效候选号不足 3 个'};
+      if (maxMiss > 0 && currentMiss >= maxMiss) return {...score, level: '暂停', reason: '当前连挂达到历史风险上沿'};
+      if (recent10Total >= 10 && recent10Hits === 0) return {...score, level: '仅复盘', reason: '最近窗口 0 命中'};
+      if (recentHitRate <= score.baseline && recent10HitRate < 0.2) return {...score, level: '仅复盘', reason: '低于随机基线'};
+      if (score.observationScore >= 70 && score.edge > 0 && recent10HitRate >= 0.2) return {...score, level: '强观察', reason: '高于随机基线且风险可控'};
+      return {...score, level: '弱观察', reason: '有候选号码但观察价值不足'};
+    }
+    function threeFormulaCandidateScore(def, metrics, nums = []) {
+      const decision = threeFormulaObservationDecision(metrics, nums);
+      const levelBonus = decision.level === '强观察' ? 500 : decision.level === '弱观察' ? 180 : decision.level === '仅复盘' ? -120 : -500;
+      return decision.observationScore * 10 + levelBonus + metrics.recentHitRate * 200 - metrics.currentMiss * 8 - def.exprs.length * 0.25;
     }
     function threeFormulaBuildCandidateStats(rows, defs, cache, startIndex = 4) {
       const stats = new Map();
@@ -2291,8 +2346,9 @@
         const stat = statsMap.get(def.id);
         const metrics = stat?.metricsUntil(endIndex) || threeFormulaBacktestCandidateUntil(rows, def, cache, endIndex);
         const current = stat?.states?.[endIndex] || threeFormulaCandidatePoolAt(rows, endIndex, def, cache);
-        return {...def, metrics, current, score: threeFormulaCandidateScore(def, metrics)};
-      }).filter(item => item.current.nums.length >= 3).sort((a, b) => b.metrics.recent10HitRate - a.metrics.recent10HitRate || b.score - a.score || b.metrics.recentHitRate - a.metrics.recentHitRate || a.metrics.maxMiss - b.metrics.maxMiss);
+        const observation = threeFormulaObservationDecision(metrics, current.nums);
+        return {...def, metrics, current, observation, score: threeFormulaCandidateScore(def, metrics, current.nums)};
+      }).filter(item => item.current.nums.length >= 3).sort((a, b) => b.score - a.score || b.observation.observationScore - a.observation.observationScore || b.metrics.recentHitRate - a.metrics.recentHitRate || a.metrics.maxMiss - b.metrics.maxMiss);
       return candidates[0] || {id: 'none', name: '-', exprs: [], metrics: {}, current: {nums: [], formulas: []}, score: 0};
     }
     function threeFormulaWalkForwardMetrics(rows, defs, cache, stats = null, startIndex = 5) {
@@ -2330,7 +2386,8 @@
       const stats = threeFormulaBuildCandidateStats(rows, defs, cache, statsStart);
       const selected = threeFormulaSelectCandidateAt(rows, defs, rows.length, cache, stats);
       const walkMetrics = threeFormulaWalkForwardMetrics(rows, defs, cache, stats, Math.max(5, statsStart + 1));
-      const best = {...selected, metrics: walkMetrics, selectedMetrics: selected.metrics};
+      const observation = threeFormulaObservationDecision(walkMetrics, selected.current.nums);
+      const best = {...selected, metrics: walkMetrics, selectedMetrics: selected.metrics, observation};
       const singles = [];
       const compound = asArray(best.current.nums).slice(0, 6);
       for (let i = 0; i + 2 < compound.length && singles.length < 5; i++) {
@@ -2351,24 +2408,13 @@
       return out.join('');
     }
     function threeFormulaDecisionLevel(metrics, nums) {
-      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
-      const recent10Hits = Number(metrics?.recent10Hits || 0);
-      const recent10Total = Number(metrics?.recent10Total || 0);
-      const currentMiss = Number(metrics?.currentMiss || 0);
-      const maxMiss = Number(metrics?.maxMiss || 0);
-      if (!asArray(nums).length) return '暂停';
-      if (maxMiss > 0 && currentMiss >= maxMiss) return '暂停';
-      if (recent10HitRate >= 0.3 && currentMiss < maxMiss) return '强观察';
-      if (recent10Total >= 10 && recent10Hits === 0) return '仅复盘';
-      return '弱观察';
+      return threeFormulaObservationDecision(metrics, nums).level;
     }
-    function threeFormulaRiskText(metrics) {
+    function threeFormulaRiskText(metrics, nums = []) {
+      const observation = threeFormulaObservationDecision(metrics, nums);
       const currentMiss = Number(metrics?.currentMiss || 0);
       const maxMiss = Number(metrics?.maxMiss || 0);
-      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
-      if (maxMiss > 0 && currentMiss >= maxMiss) return `当前漏 ${esc(currentMiss)} 已达到最大连挂 ${esc(maxMiss)}，暂停强推荐。`;
-      if (recent10HitRate >= 0.3) return `近 10 期 ${gateRate(recent10HitRate)}，当前漏 ${esc(currentMiss)} / 最大连挂 ${esc(maxMiss)}。`;
-      return `近 10 期 ${gateRate(recent10HitRate)}，只做弱观察，不做强推荐。`;
+      return `降级原因：${esc(observation.reason)}；观察价值 ${esc(observation.observationScore)} / 100；随机基线 ${gateRate(observation.baseline)}；当前连挂 ${esc(currentMiss)} / ${esc(maxMiss)}。`;
     }
     function threeFormulaSourceRows(ranked) {
       return asArray(ranked).slice(0, 6).map(item => `<tr><td>${numberChips([item.num])}</td><td>${esc(asArray(item.formulas).slice(0, 3).join(' / '))}</td></tr>`).join('');
@@ -2382,11 +2428,13 @@
       const optimizedSingles = optimized.singles.map(item => `<tr><td>${numberChips(item.nums)}</td><td>${item.name}<br><span class="muted">${esc(item.source)}</span></td></tr>`).join('');
       const metrics = optimized.best?.metrics || {};
       const decisionLevel = threeFormulaDecisionLevel(metrics, optimized.compound);
+      const observation = optimized.best?.observation || threeFormulaObservationDecision(metrics, optimized.compound);
       const topReasons = threeFormulaSourceRows(recommendation.ranked);
       return `<section class="panel full"><h2>三中三推荐</h2><div class="grid compact-grid">
         <section class="panel wide">
           <h2>推荐</h2>
           <div class="mini ${signalLevelClass(decisionLevel)}">信号等级：${esc(decisionLevel)}</div>
+          <p class="mini">观察价值：${esc(observation.observationScore)} / 100；优势：${gateRate(Math.max(0, observation.edge))}</p>
           <p class="mini">下期 6 码复式</p>
           <div class="metric">${numberChips(optimized.compound)}</div>
           <p class="muted">walk-forward 只使用开奖前历史选择公式；下期最多 6 码复式。</p>
@@ -2397,7 +2445,7 @@
           <h2>风险</h2>
           <div class="metric ${signalLevelClass(decisionLevel)}">${esc(decisionLevel)}</div>
           <p class="mini">近期表现：近 10 期 ${gateRate(metrics.recent10HitRate || 0)}</p>
-          <p class="muted">${threeFormulaRiskText(metrics)}</p>
+          <p class="muted">${threeFormulaRiskText(metrics, optimized.compound)}</p>
           <p class="mini">完整回测 ${gateRate(metrics.hitRate || 0)}；近 100 期 ${gateRate(metrics.recentHitRate || 0)}。</p>
         </section>
         <section class="panel">

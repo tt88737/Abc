@@ -44,6 +44,13 @@ for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes("recent10HitRate"), `${name} should compute recent 10-draw metrics`);
   assert.ok(text.includes("&#26368;&#22823;&#36830;&#25346;") || text.includes("最大连挂"), `${name} should show optimized max miss streak`);
   assert.ok(text.includes(".slice(0, 6)"), `${name} should cap compound recommendations to six numbers`);
+  assert.ok(text.includes("function threeFormulaRandomBaseline"), `${name} should calculate the random six-number three-hit baseline`);
+  assert.ok(text.includes("function threeFormulaObservationScore"), `${name} should calculate observation value scoring`);
+  assert.ok(text.includes("function threeFormulaObservationDecision"), `${name} should classify observation scoring into signal levels`);
+  assert.ok(text.includes("observationScore"), `${name} should expose observationScore metrics`);
+  assert.ok(text.includes("随机基线") || text.includes("&#38543;&#26426;&#22522;&#32447;"), `${name} should explain the random baseline`);
+  assert.ok(text.includes("观察价值") || text.includes("&#35266;&#23519;&#20215;&#20540;"), `${name} should show observation value`);
+  assert.ok(text.includes("降级原因") || text.includes("&#38477;&#32423;&#21407;&#22240;"), `${name} should show downgrade reason`);
   assert.ok(text.includes("&#20844;&#24335;&#32452;&#20998;&#23618;"), `${name} should show formula group tiers`);
   assert.ok(text.includes("&#21382;&#21490;&#38383;&#20851;&#22797;&#30424;"), `${name} should show historical gate replay`);
   assert.ok(text.includes("&#31532;&#19968;&#20851; / &#31532;&#20108;&#20851; / &#31532;&#19977;&#20851;"), `${name} should show gate progression metrics`);
