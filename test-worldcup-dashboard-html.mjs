@@ -21,6 +21,8 @@ assert.ok(html.includes("四串一简报"), "dashboard should retain the compact
 assert.ok(html.includes('id="comboBrief"'), "dashboard should include the compact combo brief container");
 assert.ok(html.includes("比赛级比分决策表"), "dashboard should expose a dense match-level score decision table");
 assert.ok(html.includes('id="scoreDecisionRows"'), "dashboard should render score decision rows in a dedicated container");
+assert.ok(html.includes("今日可跟踪比赛"), "World Cup dashboard should front-load trackable matches");
+assert.ok(html.includes("renderTrackableMatches"), "World Cup dashboard should render trackable matches separately");
 assert.ok(html.includes(".score-row { display: grid;"), "score decision rows should use a dense grid layout");
 assert.ok(html.includes(".score-row, .check-row, .decision-summary-grid"), "mobile breakpoint should collapse score rows, completed checks, and decision summary");
 assert.ok(html.includes("比分分布"), "score decision rows should expose compact score candidate distribution");

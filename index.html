@@ -88,7 +88,7 @@
     .result-miss { color: #dc2626; font-weight: 800; }
     .recommendation-copy { margin: 0; white-space: pre-wrap; line-height: 1.45; font-family: Consolas, "Microsoft YaHei", monospace; font-size: 15px; color: #dbeafe; background: #062f63; border-radius: 8px; padding: 14px; }
     .recommendation-copy strong, .recommendation-copy .accent { color: #38bdf8; }
-    .embedded-page { width: 100%; min-height: calc(100vh - 190px); border: 1px solid #d9dee7; border-radius: 8px; background: #fff; }
+    .embedded-page { width: 100%; min-height: 1200px; border: 1px solid #d9dee7; border-radius: 8px; background: #fff; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .latest-draw-grid { grid-template-columns: 1fr; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -2459,7 +2459,17 @@
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
     function renderWorldcupAnalysis() {
-      app.innerHTML = `<section class="panel full"><iframe class="embedded-page" src="worldcup2026-dashboard.html" title="2026 World Cup analysis"></iframe></section>`;
+      app.innerHTML = `<section class="panel full worldcup-embed-panel"><iframe class="embedded-page" src="worldcup2026-dashboard.html" title="2026 World Cup analysis"></iframe></section>`;
+      const frame = app.querySelector('.embedded-page');
+      const resizeFrame = () => {
+        try {
+          const child = frame.contentDocument || frame.contentWindow?.document;
+          if (child?.documentElement?.scrollHeight) frame.style.height = `${child.documentElement.scrollHeight + 24}px`;
+        } catch {
+          frame.style.height = '1200px';
+        }
+      };
+      frame.addEventListener('load', resizeFrame);
     }
     function sourceLatestText(sourceKey) {
       const bySource = summary?.bySource || {};

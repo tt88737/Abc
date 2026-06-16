@@ -165,6 +165,7 @@
 
     <div class="layout">
       <div class="main-stack">
+        <section class="section"><div class="section-head"><h2>今日可跟踪比赛</h2><small>可跟踪 / 观察 / 回避</small></div><div class="score-decision-list" id="trackableMatches"></div></section>
         <section class="section"><div class="section-head"><h2>完赛比分校验</h2><small>实际比分 vs 主推 / 备用 / 博冷</small></div><div class="completed-check-list" id="completedScoreChecks"></div></section>
         <section class="section"><div class="section-head"><h2>竞彩当前开售赛事</h2><small>只使用当前开售场次做比分判断</small></div><div class="jc-list" id="jcMatches"></div></section>
         <section class="section">
@@ -348,6 +349,22 @@
         return `<article class="check-row"><div><strong>${item.matchId || "-"}</strong><div class="note">${item.finishedAtLocal || ""}</div></div><div><strong>${item.teams || "-"}</strong><div class="note">${item.group ? `Group ${item.group}` : ""} / ${item.predictedProbability || "-"}</div></div><div><div class="actual-score">${item.actualScore || "-"}</div><div class="note">实际 ${item.actualResult || "-"}</div></div><div><div class="score-main">主推 ${item.mainScore || "-"}</div><div class="score-side">备用 ${item.backupScore || "-"}</div><div class="score-side">博冷 ${item.upsetScore || "-"}</div><div class="score-candidates"><b>比分分布</b> ${candidates}</div></div><div><span class="hit-chip ${severity}">${hit.label || "未校验"}</span><div class="reason-lines"><span><b>预测方向</b> ${item.predictedPick || "-"} / ${item.predictedResult || "-"}</span><span><b>赛后复盘</b> ${item.review || "-"}</span></div></div></article>`;
       }).join("");
     }
+    function renderTrackableMatches() {
+      const target = document.getElementById("trackableMatches");
+      if (!target) return;
+      const rows = jcMatches
+        .filter(item => item.model && item.model.betAction !== "回避")
+        .sort((a, b) => Number(b.model?.betScore || 0) - Number(a.model?.betScore || 0))
+        .slice(0, 5);
+      if (!rows.length) {
+        target.innerHTML = `<div class="market-tier-empty">暂无达到可跟踪条件的世界杯比分，当前以观察为主。</div>`;
+        return;
+      }
+      target.innerHTML = rows.map(item => {
+        const model = item.model || {};
+        return `<article class="score-row"><div><strong>${item.matchId || "-"}</strong><div class="note">${item.startTime || ""}</div></div><div><div class="teams">${item.teams || "-"}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">评分 ${model.betScore ?? "-"}</span></div></div><div>${scoreSummaryText(item)}</div><div class="score-risk">可靠 ${model.reliability ?? "-"}%<br>平局 ${Math.round((model.drawProbability || 0) * 100)}%</div><div><div class="reason-lines"><span><b>主因</b> ${model.scoreRationale?.main || model.reason || "-"}</span><span><b>风险</b> ${model.risk || "-"}</span></div></div></article>`;
+      }).join("");
+    }
     function renderMatches(filter = "all") {
       const list = filter === "all" ? matches : matches.filter(item => item.type === filter);
       const target = document.getElementById("scoreDecisionRows");
@@ -380,7 +397,7 @@
       }).join("");
     }
     document.querySelectorAll(".tab").forEach(button => button.addEventListener("click", () => { document.querySelectorAll(".tab").forEach(item => item.classList.remove("active")); button.classList.add("active"); renderMatches(button.dataset.filter); }));
-    renderLiveStatus(); renderChampionPrediction(); renderGroups(); renderLeaders(); renderAlerts(); renderReliabilitySummary(); renderDecisionSummary(); renderComboBrief(); renderCompletedScoreChecks(); renderMatches(); renderJcMatches();
+    renderLiveStatus(); renderChampionPrediction(); renderGroups(); renderLeaders(); renderAlerts(); renderReliabilitySummary(); renderDecisionSummary(); renderComboBrief(); renderCompletedScoreChecks(); renderTrackableMatches(); renderMatches(); renderJcMatches();
   </script>
 </body>
 </html>
