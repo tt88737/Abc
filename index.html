@@ -2680,6 +2680,7 @@
     let window5Promise = null;
     let threeCompoundPromise = null;
     let historyPatternPromise = null;
+    let worldcupLiveDataPromise = null;
     function cacheBustUrl(src) {
       const separator = src.includes('?') ? '&' : '?';
       return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
@@ -2750,9 +2751,22 @@
       }
       return historyPatternPromise;
     }
+    async function ensureWorldcupLiveData() {
+      if (window.WORLDCUP2026_LIVE_DATA?.status) return window.WORLDCUP2026_LIVE_DATA;
+      if (!worldcupLiveDataPromise) {
+        worldcupLiveDataPromise = loadJsonOrScript('worldcup2026-live-data.json', 'worldcup2026-live-data.js', 'WORLDCUP2026_LIVE_DATA').then(data => {
+          window.WORLDCUP2026_LIVE_DATA = data || {};
+          return window.WORLDCUP2026_LIVE_DATA;
+        }).catch(err => {
+          window.WORLDCUP2026_LIVE_DATA = {status: {lastError: err.message}};
+          return window.WORLDCUP2026_LIVE_DATA;
+        });
+      }
+      return worldcupLiveDataPromise;
+    }
     const tabDataLoaders = {
       decisionHome: async () => {
-        await ensureRecordsData();
+        await Promise.all([ensureRecordsData(), ensureWorldcupLiveData()]);
       },
       window5: async () => {
         window5State = await ensureWindow5Data();

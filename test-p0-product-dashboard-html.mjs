@@ -13,6 +13,9 @@ assert.ok(html.includes("buildDataHealthCards"), "homepage should calculate data
 assert.ok(html.includes("dataFreshnessState"), "homepage should classify data freshness");
 assert.ok(html.includes("sourceHealthCard"), "homepage should derive lottery source health from latest draw date");
 assert.ok(html.includes("worldcupHealthCard"), "homepage should derive World Cup health from generated status");
+assert.ok(html.includes("ensureWorldcupLiveData"), "homepage should load World Cup live data before rendering summary cards");
+assert.ok(html.includes("worldcup2026-live-data.json"), "homepage should load World Cup JSON data directly");
+assert.ok(html.includes("worldcup2026-live-data.js"), "homepage should fall back to World Cup script data");
 assert.ok(html.includes("可能过期"), "homepage should expose stale data state");
 assert.ok(html.includes("未加载"), "homepage should expose unloaded data state");
 assert.ok(html.includes("数据源异常"), "homepage should expose data source error state");
