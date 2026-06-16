@@ -1860,10 +1860,10 @@
       document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack);
     }
     function gateDecisionState(stage, recentPass3Rate) {
-      if (stage >= 2) return {label: '&#20914;&#31532;&#19977;&#20851;', level: 'hit', advice: '&#32487;&#32493; / &#38477;&#27880;&#35266;&#23519; / &#26242;&#20572;'};
-      if (stage === 1) return {label: '&#31532;&#20108;&#20851;&#35266;&#23519;', level: '', advice: '&#31532;1&#20851;&#24050;&#36807;&#65292;&#31532;2&#20851;&#35201;&#38477;&#27880;&#35266;&#23519;'};
-      if (recentPass3Rate >= 0.25) return {label: '&#21487;&#35266;&#23519;&#31532;&#19968;&#20851;', level: '', advice: '&#26412;&#26399;&#21482;&#33021;&#23567;&#27880;&#24320;&#31532;1&#20851;'};
-      return {label: '&#26242;&#20572;', level: 'miss', advice: '&#26242;&#20572;&#24320;&#31532;1&#20851;&#65292;&#31561;&#20808;&#20986;&#19968;&#27425;&#21629;&#20013;'};
+      if (stage >= 2) return {label: '冲第三关', level: 'hit', advice: '继续 / 降注观察 / 暂停'};
+      if (stage === 1) return {label: '第二关观察', level: '', advice: '第1关已过，第2关要降注观察'};
+      if (recentPass3Rate >= 0.25) return {label: '可观察第一关', level: '', advice: '本期只能小注开第1关'};
+      return {label: '暂停', level: 'miss', advice: '暂停开第1关，等先出一次命中'};
     }
     function gateTierLabel(index, item) {
       if (item.all.stage >= 2 || index === 0) return '&#20027;&#20844;&#24335;';

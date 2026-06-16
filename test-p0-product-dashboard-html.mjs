@@ -19,6 +19,7 @@ assert.ok(html.includes("数据源异常"), "homepage should expose data source 
 assert.ok(html.includes("buildTodayFocusCards"), "homepage should calculate today's focus cards");
 assert.ok(html.includes("threeFormulaHomeSummary"), "homepage should summarize real three-in-three recommendation data");
 assert.ok(html.includes("gateChallengeHomeSummary"), "homepage should summarize real gate challenge state");
+assert.ok(html.includes("return {label: '暂停'"), "gate challenge decision label should render as Chinese text, not escaped HTML entities");
 assert.ok(html.includes("worldcupHomeSummary"), "homepage should summarize real World Cup pick counts");
 assert.ok(html.includes("threeFormulaGateAnalysis('am')"), "homepage should derive three-in-three summary from existing formula analysis");
 assert.ok(html.includes("gateAnalysis('am')"), "homepage should derive gate summary from existing gate analysis");
