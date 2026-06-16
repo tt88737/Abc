@@ -1465,6 +1465,14 @@ function buildNewsSemanticContexts(matches, {lineupNewsSources = {}, projectedLi
   return Object.fromEntries(teams.map(team => [team, semanticNewsForTeam(team, lineupNewsSources, projectedLineups, injuryReport, teamSearches[team])]));
 }
 
+function capTrustedSemanticValue(raw, trusted, limit) {
+  const rawValue = Number(raw || 0);
+  const trustedValue = Number(trusted || 0);
+  if (!rawValue) return 0;
+  const capped = Math.min(Math.abs(trustedValue), Math.abs(rawValue), Math.abs(limit));
+  return round4(Math.sign(trustedValue || rawValue) * capped);
+}
+
 function newsSemanticContextFor(match, contexts = {}) {
   const emptyContext = team => ({team, tags: [], confidence: 0, scoreImpact: 0, goalBias: 0, trustedImpact: 0, trustedGoalBias: 0, evidence: [], sourceTierSummary: {}, sourceCoverageTierSummary: {}, conflict: false});
   const home = contexts[match.home] || emptyContext(match.home);
@@ -1472,8 +1480,10 @@ function newsSemanticContextFor(match, contexts = {}) {
   const tags = [...new Set([...(home.tags || []).map(tag => `home:${tag}`), ...(away.tags || []).map(tag => `away:${tag}`)])].slice(0, 10);
   const scoreImpact = Math.max(-12, Math.min(12, Number(home.scoreImpact || 0) + Number(away.scoreImpact || 0)));
   const goalBias = Math.max(-0.22, Math.min(0.22, round4(Number(home.goalBias || 0) + Number(away.goalBias || 0))));
-  const trustedImpact = Math.max(-12, Math.min(12, round4(Number(home.trustedImpact || 0) + Number(away.trustedImpact || 0))));
-  const trustedGoalBias = Math.max(-0.22, Math.min(0.22, round4(Number(home.trustedGoalBias || 0) + Number(away.trustedGoalBias || 0))));
+  const trustedImpactRaw = Math.max(-12, Math.min(12, round4(Number(home.trustedImpact || 0) + Number(away.trustedImpact || 0))));
+  const trustedGoalBiasRaw = Math.max(-0.22, Math.min(0.22, round4(Number(home.trustedGoalBias || 0) + Number(away.trustedGoalBias || 0))));
+  const trustedImpact = capTrustedSemanticValue(scoreImpact, trustedImpactRaw, 12);
+  const trustedGoalBias = capTrustedSemanticValue(goalBias, trustedGoalBiasRaw, 0.22);
   const confidence = Math.round((Number(home.confidence || 0) + Number(away.confidence || 0)) / 2);
   const evidence = [
     ...(home.evidence || []).map(item => ({...item, side: "home", team: match.home})),
