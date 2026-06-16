@@ -28,6 +28,13 @@ for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes("&#20844;&#24335;&#21333;&#24335;&#25512;&#33616;") || text.includes("单式组合"), `${name} should show formula-based single-ticket recommendations`);
   assert.ok(text.includes("walk-forward &#22238;&#27979;") || text.includes("完整回测"), `${name} should show walk-forward backtest hit rate`);
   assert.ok(text.includes("walk-forward &#36817;10&#26399;") || text.includes("近期表现"), `${name} should prioritize recent 10-draw walk-forward hit rate`);
+  assert.ok(text.includes("function threeFormulaDecisionLevel"), `${name} should classify three-in-three recommendation signal level`);
+  assert.ok(text.includes("function threeFormulaRiskText"), `${name} should explain recommendation risk`);
+  assert.ok(text.includes("function threeFormulaSourceRows"), `${name} should render formula source rows`);
+  assert.ok(text.includes("推荐"), `${name} should expose a recommendation-first section`);
+  assert.ok(text.includes("风险"), `${name} should expose a risk section`);
+  assert.ok(text.includes("公式来源"), `${name} should expose a formula-source section`);
+  assert.ok(text.includes("信号等级"), `${name} should show recommendation signal level`);
   assert.ok(text.includes("recent10HitRate"), `${name} should compute recent 10-draw metrics`);
   assert.ok(text.includes("&#26368;&#22823;&#36830;&#25346;") || text.includes("最大连挂"), `${name} should show optimized max miss streak`);
   assert.ok(text.includes(".slice(0, 6)"), `${name} should cap compound recommendations to six numbers`);

@@ -2342,6 +2342,29 @@
       }
       return out.join('');
     }
+    function threeFormulaDecisionLevel(metrics, nums) {
+      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
+      const recent10Hits = Number(metrics?.recent10Hits || 0);
+      const recent10Total = Number(metrics?.recent10Total || 0);
+      const currentMiss = Number(metrics?.currentMiss || 0);
+      const maxMiss = Number(metrics?.maxMiss || 0);
+      if (!asArray(nums).length) return '暂停';
+      if (maxMiss > 0 && currentMiss >= maxMiss) return '暂停';
+      if (recent10HitRate >= 0.3 && currentMiss < maxMiss) return '强观察';
+      if (recent10Total >= 10 && recent10Hits === 0) return '仅复盘';
+      return '弱观察';
+    }
+    function threeFormulaRiskText(metrics) {
+      const currentMiss = Number(metrics?.currentMiss || 0);
+      const maxMiss = Number(metrics?.maxMiss || 0);
+      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
+      if (maxMiss > 0 && currentMiss >= maxMiss) return `当前漏 ${esc(currentMiss)} 已达到最大连挂 ${esc(maxMiss)}，暂停强推荐。`;
+      if (recent10HitRate >= 0.3) return `近 10 期 ${gateRate(recent10HitRate)}，当前漏 ${esc(currentMiss)} / 最大连挂 ${esc(maxMiss)}。`;
+      return `近 10 期 ${gateRate(recent10HitRate)}，只做弱观察，不做强推荐。`;
+    }
+    function threeFormulaSourceRows(ranked) {
+      return asArray(ranked).slice(0, 6).map(item => `<tr><td>${numberChips([item.num])}</td><td>${esc(asArray(item.formulas).slice(0, 3).join(' / '))}</td></tr>`).join('');
+    }
     function threeFormulaCurrentHtml(analysis) {
       const active = analysis.active || analysis.items[0];
       const backupNums = [...new Set(analysis.items.slice(1, 4).flatMap(item => item.current.nums || []))].filter(num => !active.current.nums.includes(num)).slice(0, 8);
@@ -2349,8 +2372,32 @@
       const optimized = threeFormulaOptimizedRecommendation(analysis);
       const singles = recommendation.singles.map(item => `<tr><td>${numberChips(item.nums)}</td><td>${item.name}<br><span class="muted">${esc(item.source)}</span></td></tr>`).join('');
       const optimizedSingles = optimized.singles.map(item => `<tr><td>${numberChips(item.nums)}</td><td>${item.name}<br><span class="muted">${esc(item.source)}</span></td></tr>`).join('');
-      const topReasons = recommendation.ranked.slice(0, 6).map(item => `<tr><td>${numberChips([item.num])}</td><td>${esc(item.formulas.slice(0, 3).join(' / '))}</td></tr>`).join('');
-      return `<section class="panel full"><h2>&#19979;&#26399;&#19977;&#20013;&#19977;&#25512;&#33616;</h2><table class="compact-table"><tbody><tr><th>walk-forward 6&#30721;&#22797;&#24335;</th><td>${numberChips(optimized.compound)}</td></tr><tr><th>walk-forward &#36817;10&#26399;</th><td>${gateRate(optimized.best.metrics.recent10HitRate || 0)}&#65292;&#21629;&#20013; ${esc(optimized.best.metrics.recent10Hits || 0)} / ${esc(optimized.best.metrics.recent10Total || 0)}<br><span class="muted">&#27599;&#26399;&#21482;&#29992;&#24320;&#22870;&#21069;&#21382;&#21490;&#36873;&#20844;&#24335;&#65292;&#24320;&#22870;&#21518;&#21482;&#39564;&#25910;&#12290;</span></td></tr><tr><th>walk-forward &#22238;&#27979;</th><td>${gateRate(optimized.best.metrics.hitRate || 0)}&#65292;&#36817;100&#26399; ${gateRate(optimized.best.metrics.recentHitRate || 0)}&#65292;&#24403;&#21069;&#28431; ${esc(optimized.best.metrics.currentMiss || 0)} / &#26368;&#22823;&#36830;&#25346; ${esc(optimized.best.metrics.maxMiss || 0)}</td></tr><tr><th>&#20844;&#24335;&#21333;&#24335;&#25512;&#33616;</th><td><div class="table-scroll"><table class="compact-table"><tbody>${optimizedSingles || singles}</tbody></table></div></td></tr><tr><th>&#24403;&#21069;&#36873;&#20013;&#20844;&#24335;&#32452;</th><td>${optimized.best.name}<br><span class="muted">${esc(optimized.best.id)}</span></td></tr><tr><th>&#19979;&#26399;6&#30721;&#22797;&#24335;</th><td>${numberChips(recommendation.compound)}<br><span class="muted">&#26435;&#37325;&#22791;&#36873;</span></td></tr><tr><th>&#20027;&#20844;&#24335;&#32452;</th><td>${active.name}<br><span class="muted">${esc(active.id)}</span></td></tr><tr><th>&#19979;&#26399;&#20844;&#24335;&#27744;</th><td>${numberChips(active.current.nums)}</td></tr><tr><th>&#25193;&#23637;&#38450;&#23432;</th><td>${numberChips(backupNums)}</td></tr></tbody></table><details><summary>&#21495;&#30721;&#26469;&#28304;&#20844;&#24335;</summary><div class="table-scroll"><table class="compact-table"><tbody>${topReasons}</tbody></table></div></details></section>`;
+      const metrics = optimized.best?.metrics || {};
+      const decisionLevel = threeFormulaDecisionLevel(metrics, optimized.compound);
+      const topReasons = threeFormulaSourceRows(recommendation.ranked);
+      return `<section class="panel full"><h2>三中三推荐</h2><div class="grid compact-grid">
+        <section class="panel wide">
+          <h2>推荐</h2>
+          <div class="mini ${signalLevelClass(decisionLevel)}">信号等级：${esc(decisionLevel)}</div>
+          <p class="mini">下期 6 码复式</p>
+          <div class="metric">${numberChips(optimized.compound)}</div>
+          <p class="muted">walk-forward 只使用开奖前历史选择公式；下期最多 6 码复式。</p>
+          <h3>单式组合</h3>
+          <div class="table-scroll"><table class="compact-table"><tbody>${optimizedSingles || singles}</tbody></table></div>
+        </section>
+        <section class="panel">
+          <h2>风险</h2>
+          <div class="metric ${signalLevelClass(decisionLevel)}">${esc(decisionLevel)}</div>
+          <p class="mini">近期表现：近 10 期 ${gateRate(metrics.recent10HitRate || 0)}</p>
+          <p class="muted">${threeFormulaRiskText(metrics)}</p>
+          <p class="mini">完整回测 ${gateRate(metrics.hitRate || 0)}；近 100 期 ${gateRate(metrics.recentHitRate || 0)}。</p>
+        </section>
+        <section class="panel">
+          <h2>公式来源</h2>
+          <p class="muted">${optimized.best.name}<br>${esc(optimized.best.id)}</p>
+          <details open><summary>号码来源公式</summary><div class="table-scroll"><table class="compact-table"><tbody>${topReasons}</tbody></table></div></details>
+        </section>
+      </div></section>`;
     }
     function renderThreeFormulaGate() {
       const selected = document.getElementById('three-formula-source')?.value || 'am';
