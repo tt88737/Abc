@@ -3140,14 +3140,14 @@ function New-DashboardHtml {
     function sourceHealthCard(sourceKey, title) {
       const latest = summary?.bySource?.[sourceKey]?.latest || null;
       const health = dataFreshnessState(latest?.date, 2);
-      return {title, state: health.state, detail: `${sourceLatestText(sourceKey)}；${healthAgeText(health)}`};
+      return {title, state: health.state, detail: `${sourceLatestText(sourceKey)}；${healthAgeText(health)}`, diagnosis: '最新开奖日期，超过 2 天标记可能过期'};
     }
     function worldcupHealthCard() {
       const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
       const health = dataFreshnessState(status.updatedAtLocal, 1);
       const state = status.error || status.lastError ? '数据源异常' : health.state;
       const detailSuffix = status.error || status.lastError ? esc(status.error || status.lastError) : healthAgeText(health);
-      return {title: '世界杯数据', state, detail: `${worldcupHealthText()}；${detailSuffix}`};
+      return {title: '世界杯数据', state, detail: `${worldcupHealthText()}；${detailSuffix}`, diagnosis: '世界杯更新时间，超过 1 天标记可能过期'};
     }
     function buildDataHealthCards() {
       return [
@@ -3325,6 +3325,7 @@ function New-DashboardHtml {
         <h2>${esc(card.title)}</h2>
         <div class="metric ${levelClass}">${esc(card.state)}</div>
         <p class="muted">${card.detail || '-'}</p>
+        ${card.diagnosis ? `<p class="mini">诊断口径：${esc(card.diagnosis)}</p>` : ''}
       </article>`;
     }
     function reviewCardHtml(card) {
