@@ -31,6 +31,12 @@ for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes("function threeFormulaDecisionLevel"), `${name} should classify three-in-three recommendation signal level`);
   assert.ok(text.includes("function threeFormulaRiskText"), `${name} should explain recommendation risk`);
   assert.ok(text.includes("function threeFormulaSourceRows"), `${name} should render formula source rows`);
+  assert.ok(text.includes("function gateChallengeDecisionRows"), `${name} should render gate action rows for each checkpoint`);
+  assert.ok(text.includes("&#26159;&#21542;&#24320;&#31532;&#19968;&#20851;") || text.includes("是否开第一关"), `${name} should show whether to open the first gate`);
+  assert.ok(text.includes("&#26159;&#21542;&#32493;&#31532;&#20108;&#20851;") || text.includes("是否续第二关"), `${name} should show whether to continue the second gate`);
+  assert.ok(text.includes("&#26159;&#21542;&#20914;&#31532;&#19977;&#20851;") || text.includes("是否冲第三关"), `${name} should show whether to attempt the third gate`);
+  assert.ok(text.includes("&#24403;&#21069;&#21160;&#20316;") || text.includes("当前动作"), `${name} should show the current action`);
+  assert.ok(text.includes("&#26242;&#20572;&#65292;&#19981;&#24320;&#31532;&#19968;&#20851;") || text.includes("暂停，不开第一关"), `${name} should expose an explicit first-gate pause action`);
   assert.ok(text.includes("推荐"), `${name} should expose a recommendation-first section`);
   assert.ok(text.includes("风险"), `${name} should expose a risk section`);
   assert.ok(text.includes("公式来源"), `${name} should expose a formula-source section`);
