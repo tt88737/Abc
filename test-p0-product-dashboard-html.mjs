@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 const html = fs.readFileSync("index.html", "utf8");
+const build = fs.readFileSync("build-data.ps1", "utf8");
 
 function topNavHtml() {
   const match = html.match(/<nav class="tabs">([\s\S]*?)<\/nav>/);
@@ -69,5 +70,13 @@ assert.ok(html.includes("threeFormulaReviewSummary"), "homepage should summarize
 assert.ok(html.includes("gateChallengeReviewSummary"), "homepage should summarize gate challenge review");
 assert.ok(html.includes("worldcupReviewSummary"), "homepage should summarize World Cup hit review");
 assert.ok(html.includes("completedScoreChecks"), "homepage should use World Cup completed score checks for review");
+
+for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
+  assert.ok(text.includes('data-tab="decisionHome"'), `${name} should keep the five-menu decision home`);
+  assert.ok(text.includes('data-tab="dataReview"'), `${name} should keep the data review hub`);
+  assert.ok(text.includes("function renderDataReview"), `${name} should render the data review hub`);
+  assert.ok(text.includes("reviewOnlyReason"), `${name} should carry review-only reasons on data review cards`);
+  assert.ok(text.includes("仅复盘原因"), `${name} should show why low-frequency tools are review-only`);
+}
 
 console.log("p0 product dashboard html ok");

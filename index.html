@@ -2723,6 +2723,7 @@
         ${card.signalLevel ? signalBadgeHtml(card.signalLevel) : ''}
         <div class="metric ${signalLevelClass(card.signalLevel)}">${esc(card.action || '-')}</div>
         <p class="muted">${card.detail || '-'}</p>
+        ${card.reviewOnlyReason ? `<p class="mini">仅复盘原因：${esc(card.reviewOnlyReason)}</p>` : ''}
         ${card.reason ? `<p class="mini">${esc(card.reason)}</p>` : ''}
         ${card.tab ? `<button class="primary decision-jump" type="button" data-target-tab="${esc(card.tab)}">${buttonText}</button>` : ''}
       </article>`;
@@ -2744,12 +2745,12 @@
     }
     function dataReviewCards() {
       return [
-        {title: '历史规律观察', action: '查看长期规律', detail: '查看长期规律、历史分布和时间段筛选。', tab: 'historyPattern'},
-        {title: '推荐跟踪', action: '复盘推荐表现', detail: '跟踪既有推荐在开奖后的命中和遗漏。', tab: 'recommendationTrack'},
-        {title: '5期窗口', action: '查看特别号窗口', detail: '查看特别号 5 期窗口覆盖表现。', tab: 'window5'},
-        {title: '三中三5期窗口', action: '查看复式池窗口', detail: '查看三中三复式池窗口表现。', tab: 'threeWindow5'},
-        {title: '高级分析', action: '查看统计分析', detail: '查看更复杂的规律统计和分布分析。', tab: 'patternWatch'},
-        {title: '手动采集', action: '触发数据采集', detail: '生成或触发开奖记录采集任务。', tab: 'manualFetch'}
+        {title: '历史规律观察', action: '查看长期规律', detail: '查看长期规律、历史分布和时间段筛选。', reviewOnlyReason: '偏长期样本，不直接给下期动作。', tab: 'historyPattern'},
+        {title: '推荐跟踪', action: '复盘推荐表现', detail: '跟踪既有推荐在开奖后的命中和遗漏。', reviewOnlyReason: '只校验历史建议，不产生新推荐。', tab: 'recommendationTrack'},
+        {title: '5期窗口', action: '查看特别号窗口', detail: '查看特别号 5 期窗口覆盖表现。', reviewOnlyReason: '窗口覆盖用于观察节奏，不作为单独推荐入口。', tab: 'window5'},
+        {title: '三中三5期窗口', action: '查看复式池窗口', detail: '查看三中三复式池窗口表现。', reviewOnlyReason: '用于验证复式池稳定性，不替代三中三推荐页。', tab: 'threeWindow5'},
+        {title: '高级分析', action: '查看统计分析', detail: '查看更复杂的规律统计和分布分析。', reviewOnlyReason: '指标较多，适合查原因，不适合首页决策。', tab: 'patternWatch'},
+        {title: '手动采集', action: '触发数据采集', detail: '生成或触发开奖记录采集任务。', reviewOnlyReason: '属于数据维护动作，不参与推荐排序。', tab: 'manualFetch'}
       ];
     }
     function renderDataReview() {

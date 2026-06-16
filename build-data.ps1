@@ -674,7 +674,7 @@ function New-DashboardHtml {
     .result-miss { color: #dc2626; font-weight: 800; }
     .recommendation-copy { margin: 0; white-space: pre-wrap; line-height: 1.45; font-family: Consolas, "Microsoft YaHei", monospace; font-size: 15px; color: #dbeafe; background: #062f63; border-radius: 8px; padding: 14px; }
     .recommendation-copy strong, .recommendation-copy .accent { color: #38bdf8; }
-    .embedded-page { width: 100%; min-height: calc(100vh - 190px); border: 1px solid #d9dee7; border-radius: 8px; background: #fff; }
+    .embedded-page { width: 100%; min-height: 1200px; border: 1px solid #d9dee7; border-radius: 8px; background: #fff; }
     @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .latest-draw-grid { grid-template-columns: 1fr; } .copy-qr { grid-template-columns: 1fr; } .history-group summary { grid-template-columns: 1fr; } .change-summary-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -685,15 +685,11 @@ function New-DashboardHtml {
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="worldcupAnalysis">&#19990;&#30028;&#26479;&#20998;&#26512;</button>
-      <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
-      <button data-tab="recommendationTrack">&#25512;&#33616;&#36319;&#36394;</button>
-      <button data-tab="gateChallenge">&#38383;&#19977;&#20851;</button>
-      <button data-tab="threeFormulaGate">&#19977;&#20013;&#19977;&#20844;&#24335;</button>
-      <button data-tab="window5">5&#26399;&#31383;&#21475;</button>
-      <button data-tab="threeWindow5">&#19977;&#20013;&#19977;5&#26399;&#31383;&#21475;</button>
-      <button data-tab="patternWatch">&#39640;&#32423;&#20998;&#26512;</button>
-      <button data-tab="manualFetch">&#25163;&#21160;&#37319;&#38598;</button>
+      <button class="active" data-tab="decisionHome">总控台</button>
+      <button data-tab="threeFormulaGate">三中三推荐</button>
+      <button data-tab="gateChallenge">闯三关判断</button>
+      <button data-tab="worldcupAnalysis">世界杯比分</button>
+      <button data-tab="dataReview">数据与复盘</button>
     </nav>
     <section id="app"></section>
   </main>
@@ -2445,10 +2441,10 @@ function New-DashboardHtml {
       document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack);
     }
     function gateDecisionState(stage, recentPass3Rate) {
-      if (stage >= 2) return {label: '&#20914;&#31532;&#19977;&#20851;', level: 'hit', advice: '&#32487;&#32493; / &#38477;&#27880;&#35266;&#23519; / &#26242;&#20572;'};
-      if (stage === 1) return {label: '&#31532;&#20108;&#20851;&#35266;&#23519;', level: '', advice: '&#31532;1&#20851;&#24050;&#36807;&#65292;&#31532;2&#20851;&#35201;&#38477;&#27880;&#35266;&#23519;'};
-      if (recentPass3Rate >= 0.25) return {label: '&#21487;&#35266;&#23519;&#31532;&#19968;&#20851;', level: '', advice: '&#26412;&#26399;&#21482;&#33021;&#23567;&#27880;&#24320;&#31532;1&#20851;'};
-      return {label: '&#26242;&#20572;', level: 'miss', advice: '&#26242;&#20572;&#24320;&#31532;1&#20851;&#65292;&#31561;&#20808;&#20986;&#19968;&#27425;&#21629;&#20013;'};
+      if (stage >= 2) return {label: '冲第三关', level: 'hit', advice: '继续 / 降注观察 / 暂停'};
+      if (stage === 1) return {label: '第二关观察', level: '', advice: '第1关已过，第2关要降注观察'};
+      if (recentPass3Rate >= 0.25) return {label: '可观察第一关', level: '', advice: '本期只能小注开第1关'};
+      return {label: '暂停', level: 'miss', advice: '暂停开第1关，等先出一次命中'};
     }
     function gateTierLabel(index, item) {
       if (item.all.stage >= 2 || index === 0) return '&#20027;&#20844;&#24335;';
@@ -2599,11 +2595,11 @@ function New-DashboardHtml {
     }
     function gateChallengeDecisionRows(active, decision) {
       const stage = Number(active?.all?.stage || 0);
-      const openFirst = decision.level === 'miss' ? '&#26242;&#20572;&#65292;&#19981;&#24320;&#31532;&#19968;&#20851;' : '&#21487;&#23567;&#27880;&#24320;&#31532;&#19968;&#20851;';
-      const continueSecond = stage >= 1 ? '&#21487;&#32493;&#31532;&#20108;&#20851;&#65292;&#20294;&#35201;&#38477;&#27880;' : '&#26410;&#36807;&#31532;&#19968;&#20851;&#65292;&#26242;&#19981;&#32493;';
-      const pushThird = stage >= 2 ? '&#31532;&#19977;&#20851;&#35302;&#21457;&#65292;&#21482;&#20570;&#35266;&#23519;&#20914;&#20851;' : '&#26410;&#36830;&#20013;&#20004;&#20851;&#65292;&#19981;&#20914;&#31532;&#19977;&#20851;';
+      const openFirst = decision.level === 'miss' ? '暂停，不开第一关' : '可小注开第一关';
+      const continueSecond = stage >= 1 ? '可续第二关，但要降注' : '未过第一关，暂不续';
+      const pushThird = stage >= 2 ? '第三关触发，只做观察冲关' : '未连中两关，不冲第三关';
       const currentAction = stage >= 2 ? pushThird : (stage >= 1 ? continueSecond : openFirst);
-      return `<tr><th>&#26159;&#21542;&#24320;&#31532;&#19968;&#20851;</th><td>${openFirst}</td></tr><tr><th>&#26159;&#21542;&#32493;&#31532;&#20108;&#20851;</th><td>${continueSecond}</td></tr><tr><th>&#26159;&#21542;&#20914;&#31532;&#19977;&#20851;</th><td>${pushThird}</td></tr><tr><th>&#24403;&#21069;&#21160;&#20316;</th><td>${currentAction}</td></tr>`;
+      return `<tr><th>是否开第一关</th><td>${openFirst}</td></tr><tr><th>是否续第二关</th><td>${continueSecond}</td></tr><tr><th>是否冲第三关</th><td>${pushThird}</td></tr><tr><th>当前动作</th><td>${currentAction}</td></tr>`;
     }
     function gateCurrentAdviceHtml(analysis) {
       const active = analysis.active || analysis.items[0];
@@ -3099,12 +3095,305 @@ function New-DashboardHtml {
       document.getElementById('manual-fetch-submit').addEventListener('click', triggerManualFetch);
     }
     function renderWorldcupAnalysis() {
-      app.innerHTML = `<section class="panel full"><iframe class="embedded-page" src="worldcup2026-dashboard.html" title="2026 World Cup analysis"></iframe></section>`;
+      app.innerHTML = `<section class="panel full worldcup-embed-panel"><iframe class="embedded-page" src="worldcup2026-dashboard.html" title="2026 World Cup analysis"></iframe></section>`;
+      const frame = app.querySelector('.embedded-page');
+      const resizeFrame = () => {
+        try {
+          const child = frame.contentDocument || frame.contentWindow?.document;
+          if (child?.documentElement?.scrollHeight) frame.style.height = `${child.documentElement.scrollHeight + 24}px`;
+        } catch {
+          frame.style.height = '1200px';
+        }
+      };
+      frame.addEventListener('load', resizeFrame);
+    }
+    function sourceLatestText(sourceKey) {
+      const bySource = summary?.bySource || {};
+      const latest = bySource[sourceKey]?.latest || {};
+      return latest.issue ? `${esc(latest.sourceName || sourceKey)} ${esc(latest.issue)}期 / ${esc(latest.date || '-')}` : `${esc(sourceKey)} 暂无最新记录`;
+    }
+    function worldcupHealthText() {
+      const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
+      return status.updatedAtLocal ? `世界杯 ${esc(status.updatedAtLocal)} / ${esc(status.summary || '-')}` : '世界杯数据未加载';
+    }
+    function parseHealthDate(value) {
+      const text = String(value || '').trim();
+      if (!text) return null;
+      const normalized = text.includes('T') ? text : text.replace(' ', 'T');
+      const parsed = new Date(normalized);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    function dataFreshnessState(dateValue, maxAgeDays = 2) {
+      const parsed = parseHealthDate(dateValue);
+      if (!parsed) return {state: '未加载', ageDays: null};
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - parsed.getTime()) / 86400000);
+      if (diffDays < 0) return {state: '数据源异常', ageDays: diffDays};
+      if (diffDays > maxAgeDays) return {state: '可能过期', ageDays: diffDays};
+      return {state: '正常', ageDays: diffDays};
+    }
+    function healthAgeText(health) {
+      if (health.state === '未加载') return '未加载最新时间';
+      if (health.state === '数据源异常') return '时间晚于当前设备时间';
+      return `距今约 ${esc(health.ageDays)} 天`;
+    }
+    function sourceHealthCard(sourceKey, title) {
+      const latest = summary?.bySource?.[sourceKey]?.latest || null;
+      const health = dataFreshnessState(latest?.date, 2);
+      return {title, state: health.state, detail: `${sourceLatestText(sourceKey)}；${healthAgeText(health)}`};
+    }
+    function worldcupHealthCard() {
+      const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
+      const health = dataFreshnessState(status.updatedAtLocal, 1);
+      const state = status.error || status.lastError ? '数据源异常' : health.state;
+      const detailSuffix = status.error || status.lastError ? esc(status.error || status.lastError) : healthAgeText(health);
+      return {title: '世界杯数据', state, detail: `${worldcupHealthText()}；${detailSuffix}`};
+    }
+    function buildDataHealthCards() {
+      return [
+        sourceHealthCard('am', '澳门数据'),
+        sourceHealthCard('hk', '香港数据'),
+        worldcupHealthCard()
+      ];
+    }
+    function signalLevelClass(level) {
+      if (level === '强观察') return 'result-hit';
+      if (level === '暂停') return 'result-miss';
+      if (level === '仅复盘') return 'muted';
+      return '';
+    }
+    function signalBadgeHtml(level) {
+      return `<div class="mini ${signalLevelClass(level)}">信号等级：${esc(level || '弱观察')}</div>`;
+    }
+    function threeFormulaHomeSummary() {
+      try {
+        const analysis = threeFormulaGateAnalysis('am');
+        const optimized = threeFormulaOptimizedRecommendation(analysis);
+        const nums = asArray(optimized.compound).slice(0, 6);
+        const metrics = optimized.best?.metrics || {};
+        const recent10HitRate = Number(metrics.recent10HitRate || 0);
+        const recent10Hits = Number(metrics.recent10Hits || 0);
+        const recent10Total = Number(metrics.recent10Total || 0);
+        const currentMiss = Number(metrics.currentMiss || 0);
+        const maxMiss = Number(metrics.maxMiss || 0);
+        let signalLevel = '弱观察';
+        if (maxMiss > 0 && currentMiss >= maxMiss) signalLevel = '暂停';
+        else if (recent10HitRate >= 0.3 && currentMiss < maxMiss) signalLevel = '强观察';
+        else if (recent10Total >= 10 && recent10Hits === 0) signalLevel = '仅复盘';
+        else if (!nums.length) signalLevel = '暂停';
+        return {
+          signalLevel,
+          action: nums.length ? `下期 6 码：${nums.join(' ')}` : '查看下期 6 码复式',
+          detail: `当前公式组：${optimized.best?.name || '-'}；近 10 期 ${gateRate(recent10HitRate)}，命中 ${esc(recent10Hits)} / ${esc(recent10Total)}`,
+          reason: `当前漏 ${esc(currentMiss)} / 最大连挂 ${esc(maxMiss)}`
+        };
+      } catch {
+        return {signalLevel: '暂停', action: '查看下期 6 码复式', detail: '进入专项页查看下期 6 码复式、单式组合和当前公式组。', reason: '三中三数据或公式暂不可用'};
+      }
+    }
+    function gateChallengeHomeSummary() {
+      try {
+        const analysis = gateAnalysis('am');
+        const active = analysis.active || analysis.items[0];
+        const decision = gateDecisionState(active?.all?.stage || 0, active?.recent?.pass3Rate || 0);
+        const nums = asArray(active?.current?.nums).slice(0, 6);
+        const stage = Number(active?.all?.stage || 0);
+        const recentPass3Rate = Number(active?.recent?.pass3Rate || 0);
+        let signalLevel = '暂停';
+        if (stage >= 2) signalLevel = '强观察';
+        else if (stage >= 1 || recentPass3Rate >= 0.25) signalLevel = '弱观察';
+        return {
+          signalLevel,
+          action: decision.label || '查看当前关卡',
+          detail: `本关号码池：${nums.join(' ') || '-'}；命中进下一关，未中重置观察。`,
+          reason: `当前连续命中 ${esc(stage)} 关；近期第三关 ${gateRate(recentPass3Rate)}`
+        };
+      } catch {
+        return {signalLevel: '暂停', action: '查看当前关卡', detail: '按当前关卡判断第一关、第二关、第三关，未中后重置观察。', reason: '闯三关数据或公式暂不可用'};
+      }
+    }
+    function worldcupHomeSummary() {
+      const data = window.WORLDCUP2026_LIVE_DATA || {};
+      const summary = data.reliabilitySummary || {};
+      const trackedCount = Number(summary.trackedCount || summary.finalPicks?.main?.length || 0);
+      const watchCount = Number(summary.watchCount || summary.finalPicks?.watch?.length || 0);
+      const avoidCount = Number(summary.avoidCount || summary.finalPicks?.avoid?.length || 0);
+      const status = data.status || {};
+      let signalLevel = '仅复盘';
+      if (!status.updatedAtLocal || status.error || status.lastError) signalLevel = '暂停';
+      else if (trackedCount > 0) signalLevel = '强观察';
+      else if (watchCount > 0) signalLevel = '弱观察';
+      return {
+        signalLevel,
+        action: `可跟踪 ${trackedCount} 场 / 观察 ${watchCount} 场`,
+        detail: `${summary.summaryText || data.status?.summary || '等待世界杯数据刷新'}；回避 ${avoidCount} 场。`,
+        reason: `可跟踪 ${trackedCount}，观察 ${watchCount}，回避 ${avoidCount}`
+      };
+    }
+    function threeFormulaReviewSummary() {
+      try {
+        const analysis = threeFormulaGateAnalysis('am');
+        const optimized = threeFormulaOptimizedRecommendation(analysis);
+        const metrics = optimized.best?.metrics || {};
+        return {
+          title: '三中三最近表现',
+          state: `${esc(metrics.recent10Hits || 0)} / ${esc(metrics.recent10Total || 0)}`,
+          detail: `近 10 期 ${gateRate(metrics.recent10HitRate || 0)}；当前漏 ${esc(metrics.currentMiss || 0)} / 最大连挂 ${esc(metrics.maxMiss || 0)}。`
+        };
+      } catch {
+        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。'};
+      }
+    }
+    function gateChallengeReviewSummary() {
+      try {
+        const analysis = gateAnalysis('am');
+        const active = analysis.active || analysis.items[0];
+        const all = active?.all || {};
+        return {
+          title: '闯三关过关记录',
+          state: `${esc(all.runs || 0)} 次`,
+          detail: `当前连续命中 ${esc(all.stage || 0)} 关；第二关 ${gateRate(all.pass2Rate || 0)}，第三关 ${gateRate(all.pass3Rate || 0)}。`
+        };
+      } catch {
+        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。'};
+      }
+    }
+    function worldcupReviewSummary() {
+      const completedScoreChecks = window.WORLDCUP2026_LIVE_DATA?.completedScoreChecks || [];
+      const counts = completedScoreChecks.reduce((acc, item) => {
+        const level = item.hit?.level || 'miss';
+        if (level === 'hit') acc.hit++;
+        else if (level === 'partial') acc.partial++;
+        else acc.miss++;
+        return acc;
+      }, {hit: 0, partial: 0, miss: 0});
+      return {
+        title: '世界杯完赛复盘',
+        state: `命中 ${counts.hit} / 半中 ${counts.partial}`,
+        detail: `已校验 ${completedScoreChecks.length} 场；未中 ${counts.miss} 场。`
+      };
+    }
+    function buildReviewSummaryCards() {
+      return [threeFormulaReviewSummary(), gateChallengeReviewSummary(), worldcupReviewSummary()];
+    }
+    function threeFormulaFocusText() {
+      return threeFormulaHomeSummary().detail;
+    }
+    function gateFocusText() {
+      return gateChallengeHomeSummary().detail;
+    }
+    function worldcupFocusText() {
+      return esc(worldcupHomeSummary().detail);
+    }
+    function buildTodaySignalAdvice(cards) {
+      const strong = cards.filter(card => card.signalLevel === '强观察');
+      const weak = cards.filter(card => card.signalLevel === '弱观察');
+      const paused = cards.filter(card => card.signalLevel === '暂停');
+      if (strong.length) return {level: '强观察', text: `今日优先观察：${strong.map(card => card.title).join('、')}`};
+      if (weak.length) return {level: '弱观察', text: `今日仅弱观察：${weak.map(card => card.title).join('、')}`};
+      if (paused.length) return {level: '暂停', text: '数据异常或条件不足，暂停推荐判断'};
+      return {level: '仅复盘', text: '今日无强信号，建议只看复盘'};
+    }
+    function buildTodayFocusCards() {
+      const threeSummary = threeFormulaHomeSummary();
+      const gateSummary = gateChallengeHomeSummary();
+      const cupSummary = worldcupHomeSummary();
+      return [
+        {title: '三中三推荐', signalLevel: threeSummary.signalLevel, action: threeSummary.action, detail: threeSummary.detail, reason: threeSummary.reason, tab: 'threeFormulaGate'},
+        {title: '闯三关判断', signalLevel: gateSummary.signalLevel, action: gateSummary.action, detail: gateSummary.detail, reason: gateSummary.reason, tab: 'gateChallenge'},
+        {title: '世界杯比分', signalLevel: cupSummary.signalLevel, action: cupSummary.action, detail: cupSummary.detail, reason: cupSummary.reason, tab: 'worldcupAnalysis'}
+      ];
+    }
+    function decisionCardHtml(card) {
+      const buttonText = card.signalLevel === '暂停' ? '查看原因' : '进入';
+      return `<article class="panel decision-card">
+        <h2>${esc(card.title)}</h2>
+        ${card.signalLevel ? signalBadgeHtml(card.signalLevel) : ''}
+        <div class="metric ${signalLevelClass(card.signalLevel)}">${esc(card.action || '-')}</div>
+        <p class="muted">${card.detail || '-'}</p>
+        ${card.reviewOnlyReason ? `<p class="mini">仅复盘原因：${esc(card.reviewOnlyReason)}</p>` : ''}
+        ${card.reason ? `<p class="mini">${esc(card.reason)}</p>` : ''}
+        ${card.tab ? `<button class="primary decision-jump" type="button" data-target-tab="${esc(card.tab)}">${buttonText}</button>` : ''}
+      </article>`;
+    }
+    function healthCardHtml(card) {
+      const levelClass = card.state === '正常' ? 'result-hit' : 'result-miss';
+      return `<article class="panel">
+        <h2>${esc(card.title)}</h2>
+        <div class="metric ${levelClass}">${esc(card.state)}</div>
+        <p class="muted">${card.detail || '-'}</p>
+      </article>`;
+    }
+    function reviewCardHtml(card) {
+      return `<article class="panel">
+        <h2>${esc(card.title)}</h2>
+        <div class="metric">${esc(card.state || '-')}</div>
+        <p class="muted">${card.detail || '-'}</p>
+      </article>`;
+    }
+    function dataReviewCards() {
+      return [
+        {title: '历史规律观察', action: '查看长期规律', detail: '查看长期规律、历史分布和时间段筛选。', reviewOnlyReason: '偏长期样本，不直接给下期动作。', tab: 'historyPattern'},
+        {title: '推荐跟踪', action: '复盘推荐表现', detail: '跟踪既有推荐在开奖后的命中和遗漏。', reviewOnlyReason: '只校验历史建议，不产生新推荐。', tab: 'recommendationTrack'},
+        {title: '5期窗口', action: '查看特别号窗口', detail: '查看特别号 5 期窗口覆盖表现。', reviewOnlyReason: '窗口覆盖用于观察节奏，不作为单独推荐入口。', tab: 'window5'},
+        {title: '三中三5期窗口', action: '查看复式池窗口', detail: '查看三中三复式池窗口表现。', reviewOnlyReason: '用于验证复式池稳定性，不替代三中三推荐页。', tab: 'threeWindow5'},
+        {title: '高级分析', action: '查看统计分析', detail: '查看更复杂的规律统计和分布分析。', reviewOnlyReason: '指标较多，适合查原因，不适合首页决策。', tab: 'patternWatch'},
+        {title: '手动采集', action: '触发数据采集', detail: '生成或触发开奖记录采集任务。', reviewOnlyReason: '属于数据维护动作，不参与推荐排序。', tab: 'manualFetch'}
+      ];
+    }
+    function renderDataReview() {
+      const cards = dataReviewCards();
+      app.innerHTML = `<div class="grid">
+        <section class="panel full">
+          <h2>数据与复盘</h2>
+          <p class="muted">低频验证、窗口观察、高级分析和数据采集集中在这里。日常判断优先看总控台、三中三、闯三关和世界杯。</p>
+        </section>
+        ${cards.map(decisionCardHtml).join('')}
+      </div>`;
+      document.querySelectorAll('.decision-jump').forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.targetTab));
+      });
+    }
+    function renderDecisionHome() {
+      const focusCards = buildTodayFocusCards();
+      const healthCards = buildDataHealthCards();
+      const reviewCards = buildReviewSummaryCards();
+      const todayAdvice = buildTodaySignalAdvice(focusCards);
+      app.innerHTML = `<div class="grid">
+        <section class="panel full">
+          <h2>今日总建议</h2>
+          <div class="metric ${signalLevelClass(todayAdvice.level)}">${esc(todayAdvice.text)}</div>
+          <p class="muted">先看信号等级，再进专项页。首页只做决策入口，不展开完整复盘。</p>
+        </section>
+        <section class="panel full">
+          <h2>今日重点</h2>
+          <p class="muted">强观察优先，弱观察谨慎，仅复盘和暂停不做强推荐。</p>
+        </section>
+        ${focusCards.map(decisionCardHtml).join('')}
+        <section class="panel full">
+          <h2>数据健康</h2>
+          <p class="muted">数据异常时，推荐结果降级为观察，避免使用旧数据做判断。</p>
+        </section>
+        ${healthCards.map(healthCardHtml).join('')}
+        <section class="panel full">
+          <h2>复盘摘要</h2>
+          <p class="muted">只展示关键复盘指标，完整历史明细进入专项页查看。</p>
+        </section>
+        ${reviewCards.map(reviewCardHtml).join('')}
+        <section class="panel full">
+          <h2>风险提醒</h2>
+          <p class="muted">三中三最多展示 6 码复式；闯三关命中后进入下一关，未中重置；世界杯比分只做跟踪和复盘，不保证命中。</p>
+        </section>
+      </div>`;
+      document.querySelectorAll('.decision-jump').forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.targetTab));
+      });
     }
     let recordsDataPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
     let historyPatternPromise = null;
+    let worldcupLiveDataPromise = null;
     function cacheBustUrl(src) {
       const separator = src.includes('?') ? '&' : '?';
       return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
@@ -3175,7 +3464,23 @@ function New-DashboardHtml {
       }
       return historyPatternPromise;
     }
+    async function ensureWorldcupLiveData() {
+      if (window.WORLDCUP2026_LIVE_DATA?.status) return window.WORLDCUP2026_LIVE_DATA;
+      if (!worldcupLiveDataPromise) {
+        worldcupLiveDataPromise = loadJsonOrScript('worldcup2026-live-data.json', 'worldcup2026-live-data.js', 'WORLDCUP2026_LIVE_DATA').then(data => {
+          window.WORLDCUP2026_LIVE_DATA = data || {};
+          return window.WORLDCUP2026_LIVE_DATA;
+        }).catch(err => {
+          window.WORLDCUP2026_LIVE_DATA = {status: {lastError: err.message}};
+          return window.WORLDCUP2026_LIVE_DATA;
+        });
+      }
+      return worldcupLiveDataPromise;
+    }
     const tabDataLoaders = {
+      decisionHome: async () => {
+        await Promise.all([ensureRecordsData(), ensureWorldcupLiveData()]);
+      },
       window5: async () => {
         window5State = await ensureWindow5Data();
       },
@@ -3200,6 +3505,8 @@ function New-DashboardHtml {
       }
     };
     const renderers = {
+      decisionHome: renderDecisionHome,
+      dataReview: renderDataReview,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       historyPattern: renderHistoryPattern,
@@ -3214,8 +3521,17 @@ function New-DashboardHtml {
       const label = document.querySelector(`.tabs button[data-tab="${tab}"]`)?.textContent || '';
       app.innerHTML = `<section class="panel"><h2>${esc(label)}</h2><p class="muted">&#21152;&#36733;&#20013;...</p></section>`;
     }
+    const topLevelTabFor = {
+      historyPattern: 'dataReview',
+      recommendationTrack: 'dataReview',
+      window5: 'dataReview',
+      threeWindow5: 'dataReview',
+      patternWatch: 'dataReview',
+      manualFetch: 'dataReview'
+    };
     function switchTab(tab) {
-      tabs.forEach(item => item.classList.toggle('active', item.dataset.tab === tab));
+      const activeTopTab = topLevelTabFor[tab] || tab;
+      tabs.forEach(item => item.classList.toggle('active', item.dataset.tab === activeTopTab));
       showLoading(tab);
       setTimeout(async () => {
         try {
@@ -3234,13 +3550,14 @@ function New-DashboardHtml {
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
-      switchTab('worldcupAnalysis');
+      switchTab('decisionHome');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });
   </script>
 </body>
 </html>
+
 '@
     return $html
 }
