@@ -7,6 +7,7 @@ const fifaScoresUrl = "https://www.fifa.com/en/tournaments/mens/worldcup/canadam
 const fifaStandingsUrl = "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings";
 const sporttery500Url = "https://trade.500.com/jczq/";
 const sporttery500LiveUrl = "https://app-live-m.500.com/";
+const espnWorldCupScoreboardUrl = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611-20260719";
 const injuryUrl = "https://www.sportsgambler.com/injuries/football/fifa-world-cup/";
 const worldCupGoalSummaryUrl = "https://datahub.io/football/worldcup/_r/-/goal-timing-by-tournament-summary.csv";
 const worldCupAppearancesUrl = "https://datahub.io/football/worldcup/_r/-/tournament-appearances.csv";
@@ -244,8 +245,40 @@ function parseJsonCandidates(text) {
   const candidates = [];
   const trimmed = text.trim();
   if (trimmed.startsWith("{") || trimmed.startsWith("[")) candidates.push(trimmed);
+  const extractBalancedJson = (script, start) => {
+    let depth = 0;
+    let inString = false;
+    let quote = "";
+    let escaped = false;
+    for (let i = start; i < script.length; i++) {
+      const ch = script[i];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (ch === "\\") escaped = true;
+        else if (ch === quote) inString = false;
+        continue;
+      }
+      if (ch === '"' || ch === "'") {
+        inString = true;
+        quote = ch;
+        continue;
+      }
+      if (ch === "{" || ch === "[") depth++;
+      if (ch === "}" || ch === "]") {
+        depth--;
+        if (depth === 0) return script.slice(start, i + 1);
+      }
+    }
+    return "";
+  };
   for (const match of text.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)) {
-    const jsonLike = match[1].match(/(\{[\s\S]{200,}\})/);
+    const script = match[1];
+    for (const assignment of script.matchAll(/(?:window\.)?[\w$.[\]'"]+\s*=\s*([\[{])/g)) {
+      const start = assignment.index + assignment[0].lastIndexOf(assignment[1]);
+      const jsonLike = extractBalancedJson(script, start);
+      if (jsonLike && jsonLike.length > 20) candidates.push(jsonLike);
+    }
+    const jsonLike = script.match(/(\{[\s\S]{200,}\})/);
     if (jsonLike) candidates.push(jsonLike[1]);
   }
   return candidates;
@@ -1025,6 +1058,7 @@ const teamAliasNames = {
   "韩国": ["South Korea", "Korea Republic"],
   "捷克": ["Czech Republic", "Czechia"],
   "波黑": ["Bosnia and Herzegovina", "Bosnia-Herzegovina"],
+  "土耳其": ["Turkey", "Türkiye"],
   "库拉索": ["Curacao", "Curaçao"],
   "科特迪瓦": ["Ivory Coast", "Cote d'Ivoire"],
   "佛得角": ["Cape Verde", "Cabo Verde"]
@@ -2939,6 +2973,42 @@ function parse500CompletedResults(text) {
   return [...new Map(results.map(item => [`${normalizeName(item.home)}-${normalizeName(item.away)}-${item.actualScore}`, item])).values()];
 }
 
+function parseEspnCompletedResults(text) {
+  let data;
+  try {
+    data = typeof text === "string" ? JSON.parse(text) : text;
+  } catch {
+    return [];
+  }
+  const results = [];
+  for (const event of data?.events || []) {
+    const competition = event?.competitions?.[0] || {};
+    const status = competition?.status?.type || event?.status?.type || {};
+    if (!status.completed && !/full.?time|final|complete|closed|played|finished/i.test(String(status.name || status.description || ""))) continue;
+    const competitors = competition.competitors || [];
+    const homeRow = competitors.find(item => item.homeAway === "home") || competitors[0];
+    const awayRow = competitors.find(item => item.homeAway === "away") || competitors[1];
+    const homeScore = String(homeRow?.score ?? "").trim();
+    const awayScore = String(awayRow?.score ?? "").trim();
+    const homeRaw = homeRow?.team?.displayName || homeRow?.team?.shortDisplayName || homeRow?.team?.name || "";
+    const awayRaw = awayRow?.team?.displayName || awayRow?.team?.shortDisplayName || awayRow?.team?.name || "";
+    const home = canonicalTeamName(homeRaw);
+    const away = canonicalTeamName(awayRaw);
+    if (!home || !away || home === away || !/^\d+$/.test(homeScore) || !/^\d+$/.test(awayScore)) continue;
+    results.push({
+      matchId: event.id || competition.id || `${home}-${away}`,
+      group: event.group?.name || event.season?.slug || "",
+      teams: `${home} vs ${away}`,
+      home,
+      away,
+      actualScore: `${homeScore}-${awayScore}`,
+      finishedAtLocal: event.date || competition.date || "",
+      source: "espn-scoreboard-result"
+    });
+  }
+  return [...new Map(results.map(item => [`${normalizeName(item.home)}-${normalizeName(item.away)}-${item.actualScore}`, item])).values()];
+}
+
 function mergeCompletedWorldCupResults(dynamicResults = [], fallbackResults = []) {
   const rows = [...dynamicResults, ...fallbackResults];
   const map = new Map();
@@ -2970,6 +3040,31 @@ async function fetch500CompletedWorldCupResults() {
   } catch (error) {
     return {
       source: {name: "500彩票网完赛比分", url: sporttery500LiveUrl, ok: false, statusCode: 0, bytes: 0, note: `${error.message}；使用 FIFA/静态赛果兜底。`},
+      results: []
+    };
+  }
+}
+
+async function fetchEspnCompletedWorldCupResults() {
+  try {
+    const {response, text} = await fetchText(espnWorldCupScoreboardUrl);
+    const results = response.ok ? parseEspnCompletedResults(text) : [];
+    return {
+      source: {
+        name: "ESPN世界杯完赛比分",
+        url: espnWorldCupScoreboardUrl,
+        ok: response.ok && results.length > 0,
+        statusCode: response.status,
+        bytes: text.length,
+        note: response.ok
+          ? `解析到 ${results.length} 场世界杯完赛比分；为 0 时使用 FIFA/500/静态赛果兜底。`
+          : `HTTP ${response.status}；使用 FIFA/500/静态赛果兜底。`
+      },
+      results
+    };
+  } catch (error) {
+    return {
+      source: {name: "ESPN世界杯完赛比分", url: espnWorldCupScoreboardUrl, ok: false, statusCode: 0, bytes: 0, note: `${error.message}；使用 FIFA/500/静态赛果兜底。`},
       results: []
     };
   }
@@ -3333,9 +3428,10 @@ function buildReliabilitySummary(jcMatches) {
   };
 }
 
-const [fifaSource, completed500ResultSource, completedResultSource, fifaGroupStandings, sporttery500, injuries, historicalWorldCup, footballRatings, fifaRankings, projectedLineups, lineupNewsSources, weatherForecasts, footballDataApi, recentInternationalResults] = await Promise.all([
+const [fifaSource, completed500ResultSource, completedEspnResultSource, completedResultSource, fifaGroupStandings, sporttery500, injuries, historicalWorldCup, footballRatings, fifaRankings, projectedLineups, lineupNewsSources, weatherForecasts, footballDataApi, recentInternationalResults] = await Promise.all([
   checkSource("FIFA 官方赛程", fifaUrl),
   fetch500CompletedWorldCupResults(),
+  fetchEspnCompletedWorldCupResults(),
   fetchCompletedWorldCupResults(),
   fetchFifaGroupStandings(),
   fetch500SportteryMatches(),
@@ -3411,11 +3507,12 @@ const scoreCombos = buildScoreCombos(jcMatches);
 scoreCombos.forEach(combo => {
   combo.comboAnalysisQuality = Math.round(combo.matches.reduce((sum, item) => sum + Number(item.analysisQualityScore || 0), 0) / combo.matches.length);
 });
-const mergedCompletedWorldCupResults = mergeCompletedWorldCupResults([...completed500ResultSource.results, ...completedResultSource.results], completedWorldCupResultsFallback);
+const mergedCompletedWorldCupResults = mergeCompletedWorldCupResults([...completedEspnResultSource.results, ...completed500ResultSource.results, ...completedResultSource.results], completedWorldCupResultsFallback);
 const completedScoreChecks = buildCompletedScoreChecks(mergedCompletedWorldCupResults);
 const sources = [
   fifaSource,
   completed500ResultSource.source,
+  completedEspnResultSource.source,
   completedResultSource.source,
   sporttery500.source,
   ...(jcSource.name === sporttery500.source.name && jcSource.url === sporttery500.source.url ? [] : [jcSource]),
