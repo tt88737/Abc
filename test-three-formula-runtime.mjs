@@ -41,7 +41,7 @@ vm.runInContext(`${script}
 };`, context, {filename: 'index.html'});
 
 const baseline = context.__threeFormulaRuntime.threeFormulaRandomBaseline();
-assert.ok(baseline > 0.02 && baseline < 0.03, `random baseline should be around 2.4%, got ${baseline}`);
+assert.ok(baseline > 0.018 && baseline < 0.019, `random baseline should be around 1.86%, got ${baseline}`);
 
 const strongScore = context.__threeFormulaRuntime.threeFormulaObservationDecision({
   total: 120,
@@ -92,6 +92,6 @@ context.__threeFormulaRuntime.renderThreeFormulaGate();
 const elapsed = Date.now() - started;
 
 assert.ok(!app.innerHTML.includes('&#21152;&#36733;&#20013;'), 'three formula page should not remain in loading state');
-assert.ok(app.innerHTML.includes('walk-forward 只使用开奖前历史选择公式') || app.innerHTML.includes('下期 6 码复式'), 'three formula page should render walk-forward recommendation');
+assert.ok(app.innerHTML.includes('walk-forward 只使用开奖前历史选择公式'), 'three formula page should render walk-forward recommendation rationale');
 assert.ok(elapsed < 2000, `three formula page should render quickly, took ${elapsed}ms`);
 console.log(`three formula runtime render ok: ${elapsed}ms`);
