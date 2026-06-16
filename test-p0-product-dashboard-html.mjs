@@ -17,5 +17,11 @@ assert.ok(html.includes("worldcupHomeSummary"), "homepage should summarize real 
 assert.ok(html.includes("threeFormulaGateAnalysis('am')"), "homepage should derive three-in-three summary from existing formula analysis");
 assert.ok(html.includes("gateAnalysis('am')"), "homepage should derive gate summary from existing gate analysis");
 assert.ok(html.includes("trackedCount"), "homepage should expose World Cup tracked count");
+assert.ok(html.includes("复盘摘要"), "homepage should expose review summary");
+assert.ok(html.includes("buildReviewSummaryCards"), "homepage should calculate review summary cards");
+assert.ok(html.includes("threeFormulaReviewSummary"), "homepage should summarize recent three-in-three review");
+assert.ok(html.includes("gateChallengeReviewSummary"), "homepage should summarize gate challenge review");
+assert.ok(html.includes("worldcupReviewSummary"), "homepage should summarize World Cup hit review");
+assert.ok(html.includes("completedScoreChecks"), "homepage should use World Cup completed score checks for review");
 
 console.log("p0 product dashboard html ok");

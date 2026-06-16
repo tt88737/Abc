@@ -2526,6 +2526,52 @@
         detail: `${summary.summaryText || data.status?.summary || '等待世界杯数据刷新'}；回避 ${avoidCount} 场。`
       };
     }
+    function threeFormulaReviewSummary() {
+      try {
+        const analysis = threeFormulaGateAnalysis('am');
+        const optimized = threeFormulaOptimizedRecommendation(analysis);
+        const metrics = optimized.best?.metrics || {};
+        return {
+          title: '三中三最近表现',
+          state: `${esc(metrics.recent10Hits || 0)} / ${esc(metrics.recent10Total || 0)}`,
+          detail: `近 10 期 ${gateRate(metrics.recent10HitRate || 0)}；当前漏 ${esc(metrics.currentMiss || 0)} / 最大连挂 ${esc(metrics.maxMiss || 0)}。`
+        };
+      } catch {
+        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。'};
+      }
+    }
+    function gateChallengeReviewSummary() {
+      try {
+        const analysis = gateAnalysis('am');
+        const active = analysis.active || analysis.items[0];
+        const all = active?.all || {};
+        return {
+          title: '闯三关过关记录',
+          state: `${esc(all.runs || 0)} 次`,
+          detail: `当前连续命中 ${esc(all.stage || 0)} 关；第二关 ${gateRate(all.pass2Rate || 0)}，第三关 ${gateRate(all.pass3Rate || 0)}。`
+        };
+      } catch {
+        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。'};
+      }
+    }
+    function worldcupReviewSummary() {
+      const completedScoreChecks = window.WORLDCUP2026_LIVE_DATA?.completedScoreChecks || [];
+      const counts = completedScoreChecks.reduce((acc, item) => {
+        const level = item.hit?.level || 'miss';
+        if (level === 'hit') acc.hit++;
+        else if (level === 'partial') acc.partial++;
+        else acc.miss++;
+        return acc;
+      }, {hit: 0, partial: 0, miss: 0});
+      return {
+        title: '世界杯完赛复盘',
+        state: `命中 ${counts.hit} / 半中 ${counts.partial}`,
+        detail: `已校验 ${completedScoreChecks.length} 场；未中 ${counts.miss} 场。`
+      };
+    }
+    function buildReviewSummaryCards() {
+      return [threeFormulaReviewSummary(), gateChallengeReviewSummary(), worldcupReviewSummary()];
+    }
     function threeFormulaFocusText() {
       return threeFormulaHomeSummary().detail;
     }
@@ -2561,9 +2607,17 @@
         <p class="muted">${card.detail || '-'}</p>
       </article>`;
     }
+    function reviewCardHtml(card) {
+      return `<article class="panel">
+        <h2>${esc(card.title)}</h2>
+        <div class="metric">${esc(card.state || '-')}</div>
+        <p class="muted">${card.detail || '-'}</p>
+      </article>`;
+    }
     function renderDecisionHome() {
       const focusCards = buildTodayFocusCards();
       const healthCards = buildDataHealthCards();
+      const reviewCards = buildReviewSummaryCards();
       app.innerHTML = `<div class="grid">
         <section class="panel full">
           <h2>今日重点</h2>
@@ -2575,6 +2629,11 @@
           <p class="muted">数据异常时，推荐结果降级为观察，避免使用旧数据做判断。</p>
         </section>
         ${healthCards.map(healthCardHtml).join('')}
+        <section class="panel full">
+          <h2>复盘摘要</h2>
+          <p class="muted">只展示关键复盘指标，完整历史明细进入专项页查看。</p>
+        </section>
+        ${reviewCards.map(reviewCardHtml).join('')}
         <section class="panel full">
           <h2>风险提醒</h2>
           <p class="muted">三中三最多展示 6 码复式；闯三关命中后进入下一关，未中重置；世界杯比分只做跟踪和复盘，不保证命中。</p>
