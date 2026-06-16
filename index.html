@@ -81,6 +81,8 @@
     .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
     .primary { border:1px solid #0b42d8; background:#0b42d8; color:#fff; padding:9px 14px; border-radius:6px; cursor:pointer; }
     .secondary { border:1px solid #cbd5e1; background:#fff; color:#1f2933; padding:9px 14px; border-radius:6px; cursor:pointer; }
+    .decision-card .metric { margin: 8px 0; font-size: 22px; line-height: 1.25; }
+    .decision-jump { margin-top: 8px; }
     .detail-placeholder { padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; }
     .result-hit { color: #07860a; font-weight: 800; }
     .result-miss { color: #dc2626; font-weight: 800; }
@@ -97,7 +99,8 @@
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="worldcupAnalysis">&#19990;&#30028;&#26479;&#20998;&#26512;</button>
+      <button class="active" data-tab="decisionHome">总控台</button>
+      <button data-tab="worldcupAnalysis">&#19990;&#30028;&#26479;&#20998;&#26512;</button>
       <button data-tab="historyPattern">&#21382;&#21490;&#35268;&#24459;&#35266;&#23519;</button>
       <button data-tab="recommendationTrack">&#25512;&#33616;&#36319;&#36394;</button>
       <button data-tab="gateChallenge">&#38383;&#19977;&#20851;</button>
@@ -2458,6 +2461,78 @@
     function renderWorldcupAnalysis() {
       app.innerHTML = `<section class="panel full"><iframe class="embedded-page" src="worldcup2026-dashboard.html" title="2026 World Cup analysis"></iframe></section>`;
     }
+    function sourceLatestText(sourceKey) {
+      const bySource = summary?.bySource || {};
+      const latest = bySource[sourceKey]?.latest || {};
+      return latest.issue ? `${esc(latest.sourceName || sourceKey)} ${esc(latest.issue)}期 / ${esc(latest.date || '-')}` : `${esc(sourceKey)} 暂无最新记录`;
+    }
+    function worldcupHealthText() {
+      const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
+      return status.updatedAtLocal ? `世界杯 ${esc(status.updatedAtLocal)} / ${esc(status.summary || '-')}` : '世界杯数据未加载';
+    }
+    function buildDataHealthCards() {
+      return [
+        {title: '澳门数据', state: summary?.bySource?.am?.latest ? '正常' : '待检查', detail: sourceLatestText('am')},
+        {title: '香港数据', state: summary?.bySource?.hk?.latest ? '正常' : '待检查', detail: sourceLatestText('hk')},
+        {title: '世界杯数据', state: window.WORLDCUP2026_LIVE_DATA?.status?.updatedAtLocal ? '正常' : '待检查', detail: worldcupHealthText()}
+      ];
+    }
+    function threeFormulaFocusText() {
+      return '进入专项页查看下期 6 码复式、单式组合和当前公式组。';
+    }
+    function gateFocusText() {
+      return '按当前关卡判断第一关、第二关、第三关，未中后重置观察。';
+    }
+    function worldcupFocusText() {
+      const data = window.WORLDCUP2026_LIVE_DATA || {};
+      return esc(data.reliabilitySummary?.summaryText || data.status?.summary || '等待世界杯数据刷新');
+    }
+    function buildTodayFocusCards() {
+      return [
+        {title: '三中三推荐', action: '查看下期 6 码复式', detail: threeFormulaFocusText(), tab: 'threeFormulaGate'},
+        {title: '闯三关判断', action: '查看当前关卡', detail: gateFocusText(), tab: 'gateChallenge'},
+        {title: '世界杯比分', action: '查看可跟踪比赛', detail: worldcupFocusText(), tab: 'worldcupAnalysis'}
+      ];
+    }
+    function decisionCardHtml(card) {
+      return `<article class="panel decision-card">
+        <h2>${esc(card.title)}</h2>
+        <div class="metric">${esc(card.action || '-')}</div>
+        <p class="muted">${card.detail || '-'}</p>
+        ${card.tab ? `<button class="primary decision-jump" type="button" data-target-tab="${esc(card.tab)}">进入</button>` : ''}
+      </article>`;
+    }
+    function healthCardHtml(card) {
+      const levelClass = card.state === '正常' ? 'result-hit' : 'result-miss';
+      return `<article class="panel">
+        <h2>${esc(card.title)}</h2>
+        <div class="metric ${levelClass}">${esc(card.state)}</div>
+        <p class="muted">${card.detail || '-'}</p>
+      </article>`;
+    }
+    function renderDecisionHome() {
+      const focusCards = buildTodayFocusCards();
+      const healthCards = buildDataHealthCards();
+      app.innerHTML = `<div class="grid">
+        <section class="panel full">
+          <h2>今日重点</h2>
+          <p class="muted">先看状态，再进专项页。首页只做决策入口，不展开完整复盘。</p>
+        </section>
+        ${focusCards.map(decisionCardHtml).join('')}
+        <section class="panel full">
+          <h2>数据健康</h2>
+          <p class="muted">数据异常时，推荐结果降级为观察，避免使用旧数据做判断。</p>
+        </section>
+        ${healthCards.map(healthCardHtml).join('')}
+        <section class="panel full">
+          <h2>风险提醒</h2>
+          <p class="muted">三中三最多展示 6 码复式；闯三关命中后进入下一关，未中重置；世界杯比分只做跟踪和复盘，不保证命中。</p>
+        </section>
+      </div>`;
+      document.querySelectorAll('.decision-jump').forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.targetTab));
+      });
+    }
     let recordsDataPromise = null;
     let window5Promise = null;
     let threeCompoundPromise = null;
@@ -2533,6 +2608,9 @@
       return historyPatternPromise;
     }
     const tabDataLoaders = {
+      decisionHome: async () => {
+        await ensureRecordsData();
+      },
       window5: async () => {
         window5State = await ensureWindow5Data();
       },
@@ -2557,6 +2635,7 @@
       }
     };
     const renderers = {
+      decisionHome: renderDecisionHome,
       window5: renderWindow5,
       threeWindow5: renderThreeWindow5,
       historyPattern: renderHistoryPattern,
@@ -2591,7 +2670,7 @@
     loadDashboardData().then(data => {
       recentRecords = (data.recentRecords || []).flatMap(item => item.records || []);
       summary = data.summary || {};
-      switchTab('worldcupAnalysis');
+      switchTab('decisionHome');
     }).catch(err => {
       app.innerHTML = `<section class="panel"><h2>&#25968;&#25454;&#21152;&#36733;&#22833;&#36133;</h2><p>${esc(err.message)}</p></section>`;
     });
