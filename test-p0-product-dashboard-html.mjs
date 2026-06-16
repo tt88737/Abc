@@ -90,6 +90,10 @@ for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes("复盘判断"), `${name} should render review judgement text`);
   assert.ok(text.includes("未中原因"), `${name} should explain miss reason in World Cup review`);
   assert.ok(text.includes("半中原因"), `${name} should explain partial-hit reason in World Cup review`);
+  assert.ok(text.includes("threeFormulaReviewReason"), `${name} should derive a three-in-three review judgement`);
+  assert.ok(text.includes("gateChallengeReviewReason"), `${name} should derive a gate challenge review judgement`);
+  assert.ok(text.includes("三中三复盘判断"), `${name} should explain three-in-three review judgement`);
+  assert.ok(text.includes("闯三关复盘判断"), `${name} should explain gate review judgement`);
 }
 
 console.log("p0 product dashboard html ok");

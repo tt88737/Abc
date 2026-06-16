@@ -2642,6 +2642,16 @@
         reason: `可跟踪 ${trackedCount}，观察 ${watchCount}，回避 ${avoidCount}`
       };
     }
+    function threeFormulaReviewReason(metrics) {
+      const currentMiss = Number(metrics?.currentMiss || 0);
+      const maxMiss = Number(metrics?.maxMiss || 0);
+      const recent10HitRate = Number(metrics?.recent10HitRate || 0);
+      const recent10Hits = Number(metrics?.recent10Hits || 0);
+      if (maxMiss > 0 && currentMiss >= maxMiss) return '三中三复盘判断：当前漏接近历史风险上沿，优先暂停强推荐。';
+      if (recent10HitRate >= 0.3) return '三中三复盘判断：近 10 期表现达标，可继续观察 6 码复式。';
+      if (recent10Hits > 0) return '三中三复盘判断：有命中但强度不足，只做弱观察。';
+      return '三中三复盘判断：近 10 期未形成命中优势，只保留复盘。';
+    }
     function threeFormulaReviewSummary() {
       try {
         const analysis = threeFormulaGateAnalysis('am');
@@ -2651,11 +2661,22 @@
           title: '三中三最近表现',
           state: `${esc(metrics.recent10Hits || 0)} / ${esc(metrics.recent10Total || 0)}`,
           detail: `近 10 期 ${gateRate(metrics.recent10HitRate || 0)}；当前漏 ${esc(metrics.currentMiss || 0)} / 最大连挂 ${esc(metrics.maxMiss || 0)}。`,
-          sample: '最近 10 期 walk-forward 复盘'
+          sample: '最近 10 期 walk-forward 复盘',
+          reason: threeFormulaReviewReason(metrics)
         };
       } catch {
-        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。', sample: '最近 10 期'};
+        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。', sample: '最近 10 期', reason: '三中三复盘判断：数据暂不可用，不能判断近期表现。'};
       }
+    }
+    function gateChallengeReviewReason(all) {
+      const stage = Number(all?.stage || 0);
+      const pass3Rate = Number(all?.pass3Rate || 0);
+      const pass2Rate = Number(all?.pass2Rate || 0);
+      if (stage >= 2) return '闯三关复盘判断：已进入第三关节奏，后续重点看是否命中后重置。';
+      if (stage >= 1) return '闯三关复盘判断：第一关已过，第二关只适合降注观察。';
+      if (pass3Rate >= 0.25) return '闯三关复盘判断：历史第三关通过率尚可，可小注观察第一关。';
+      if (pass2Rate > 0) return '闯三关复盘判断：有第二关基础但第三关不足，暂不强冲。';
+      return '闯三关复盘判断：过关连续性不足，优先暂停第一关。';
     }
     function gateChallengeReviewSummary() {
       try {
@@ -2666,10 +2687,11 @@
           title: '闯三关过关记录',
           state: `${esc(all.runs || 0)} 次`,
           detail: `当前连续命中 ${esc(all.stage || 0)} 关；第二关 ${gateRate(all.pass2Rate || 0)}，第三关 ${gateRate(all.pass3Rate || 0)}。`,
-          sample: '全部已识别闯关记录'
+          sample: '全部已识别闯关记录',
+          reason: gateChallengeReviewReason(all)
         };
       } catch {
-        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。', sample: '全部已识别闯关记录'};
+        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。', sample: '全部已识别闯关记录', reason: '闯三关复盘判断：数据暂不可用，不能判断当前关卡。'};
       }
     }
     function worldcupReviewReason(completedScoreChecks, counts) {
