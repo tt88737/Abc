@@ -86,6 +86,10 @@ for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes("诊断口径"), `${name} should render data health diagnosis context`);
   assert.ok(text.includes("最新开奖日期，超过 2 天标记可能过期"), `${name} should explain lottery freshness diagnosis`);
   assert.ok(text.includes("世界杯更新时间，超过 1 天标记可能过期"), `${name} should explain World Cup freshness diagnosis`);
+  assert.ok(text.includes("worldcupReviewReason"), `${name} should derive a World Cup review reason`);
+  assert.ok(text.includes("复盘判断"), `${name} should render review judgement text`);
+  assert.ok(text.includes("未中原因"), `${name} should explain miss reason in World Cup review`);
+  assert.ok(text.includes("半中原因"), `${name} should explain partial-hit reason in World Cup review`);
 }
 
 console.log("p0 product dashboard html ok");

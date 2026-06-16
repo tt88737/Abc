@@ -2672,6 +2672,13 @@
         return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。', sample: '全部已识别闯关记录'};
       }
     }
+    function worldcupReviewReason(completedScoreChecks, counts) {
+      const rows = asArray(completedScoreChecks);
+      if (!rows.length) return '暂无已完赛场次，等待比分校验。';
+      if (counts.miss > 0) return '未中原因：实际路径偏离主推/备用/博冷，重点复盘弱队进球、反超和下半场节奏。';
+      if (counts.partial > 0) return '半中原因：方向判断成立但比分细节偏差，重点复盘净胜球和零封强度。';
+      return '主推或备用比分路径有效，继续复核同类比赛条件。';
+    }
     function worldcupReviewSummary() {
       const completedScoreChecks = window.WORLDCUP2026_LIVE_DATA?.completedScoreChecks || [];
       const counts = completedScoreChecks.reduce((acc, item) => {
@@ -2685,7 +2692,8 @@
         title: '世界杯完赛复盘',
         state: `命中 ${counts.hit} / 半中 ${counts.partial}`,
         detail: `已校验 ${completedScoreChecks.length} 场；未中 ${counts.miss} 场。`,
-        sample: '已完赛比分校验'
+        sample: '已完赛比分校验',
+        reason: worldcupReviewReason(completedScoreChecks, counts)
       };
     }
     function buildReviewSummaryCards() {
@@ -2745,6 +2753,7 @@
         <h2>${esc(card.title)}</h2>
         <div class="metric">${esc(card.state || '-')}</div>
         <p class="muted">${card.detail || '-'}</p>
+        ${card.reason ? `<p class="mini">复盘判断：${esc(card.reason)}</p>` : ''}
         ${card.sample ? `<p class="mini">复盘口径：${esc(card.sample)}</p>` : ''}
       </article>`;
     }
