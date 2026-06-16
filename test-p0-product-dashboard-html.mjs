@@ -11,5 +11,11 @@ assert.ok(html.includes("闯三关判断"), "homepage should expose gate challen
 assert.ok(html.includes("世界杯比分"), "homepage should expose World Cup score entry");
 assert.ok(html.includes("buildDataHealthCards"), "homepage should calculate data health cards");
 assert.ok(html.includes("buildTodayFocusCards"), "homepage should calculate today's focus cards");
+assert.ok(html.includes("threeFormulaHomeSummary"), "homepage should summarize real three-in-three recommendation data");
+assert.ok(html.includes("gateChallengeHomeSummary"), "homepage should summarize real gate challenge state");
+assert.ok(html.includes("worldcupHomeSummary"), "homepage should summarize real World Cup pick counts");
+assert.ok(html.includes("threeFormulaGateAnalysis('am')"), "homepage should derive three-in-three summary from existing formula analysis");
+assert.ok(html.includes("gateAnalysis('am')"), "homepage should derive gate summary from existing gate analysis");
+assert.ok(html.includes("trackedCount"), "homepage should expose World Cup tracked count");
 
 console.log("p0 product dashboard html ok");

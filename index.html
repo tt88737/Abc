@@ -2487,21 +2487,62 @@
         {title: '世界杯数据', state: window.WORLDCUP2026_LIVE_DATA?.status?.updatedAtLocal ? '正常' : '待检查', detail: worldcupHealthText()}
       ];
     }
+    function threeFormulaHomeSummary() {
+      try {
+        const analysis = threeFormulaGateAnalysis('am');
+        const optimized = threeFormulaOptimizedRecommendation(analysis);
+        const nums = asArray(optimized.compound).slice(0, 6);
+        const metrics = optimized.best?.metrics || {};
+        return {
+          action: nums.length ? `下期 6 码：${nums.join(' ')}` : '查看下期 6 码复式',
+          detail: `当前公式组：${optimized.best?.name || '-'}；近 10 期 ${gateRate(metrics.recent10HitRate || 0)}，命中 ${esc(metrics.recent10Hits || 0)} / ${esc(metrics.recent10Total || 0)}`
+        };
+      } catch {
+        return {action: '查看下期 6 码复式', detail: '进入专项页查看下期 6 码复式、单式组合和当前公式组。'};
+      }
+    }
+    function gateChallengeHomeSummary() {
+      try {
+        const analysis = gateAnalysis('am');
+        const active = analysis.active || analysis.items[0];
+        const decision = gateDecisionState(active?.all?.stage || 0, active?.recent?.pass3Rate || 0);
+        const nums = asArray(active?.current?.nums).slice(0, 6);
+        return {
+          action: decision.label || '查看当前关卡',
+          detail: `本关号码池：${nums.join(' ') || '-'}；命中进下一关，未中重置观察。`
+        };
+      } catch {
+        return {action: '查看当前关卡', detail: '按当前关卡判断第一关、第二关、第三关，未中后重置观察。'};
+      }
+    }
+    function worldcupHomeSummary() {
+      const data = window.WORLDCUP2026_LIVE_DATA || {};
+      const summary = data.reliabilitySummary || {};
+      const trackedCount = Number(summary.trackedCount || summary.finalPicks?.main?.length || 0);
+      const watchCount = Number(summary.watchCount || summary.finalPicks?.watch?.length || 0);
+      const avoidCount = Number(summary.avoidCount || summary.finalPicks?.avoid?.length || 0);
+      return {
+        action: `可跟踪 ${trackedCount} 场 / 观察 ${watchCount} 场`,
+        detail: `${summary.summaryText || data.status?.summary || '等待世界杯数据刷新'}；回避 ${avoidCount} 场。`
+      };
+    }
     function threeFormulaFocusText() {
-      return '进入专项页查看下期 6 码复式、单式组合和当前公式组。';
+      return threeFormulaHomeSummary().detail;
     }
     function gateFocusText() {
-      return '按当前关卡判断第一关、第二关、第三关，未中后重置观察。';
+      return gateChallengeHomeSummary().detail;
     }
     function worldcupFocusText() {
-      const data = window.WORLDCUP2026_LIVE_DATA || {};
-      return esc(data.reliabilitySummary?.summaryText || data.status?.summary || '等待世界杯数据刷新');
+      return esc(worldcupHomeSummary().detail);
     }
     function buildTodayFocusCards() {
+      const threeSummary = threeFormulaHomeSummary();
+      const gateSummary = gateChallengeHomeSummary();
+      const cupSummary = worldcupHomeSummary();
       return [
-        {title: '三中三推荐', action: '查看下期 6 码复式', detail: threeFormulaFocusText(), tab: 'threeFormulaGate'},
-        {title: '闯三关判断', action: '查看当前关卡', detail: gateFocusText(), tab: 'gateChallenge'},
-        {title: '世界杯比分', action: '查看可跟踪比赛', detail: worldcupFocusText(), tab: 'worldcupAnalysis'}
+        {title: '三中三推荐', action: threeSummary.action, detail: threeSummary.detail, tab: 'threeFormulaGate'},
+        {title: '闯三关判断', action: gateSummary.action, detail: gateSummary.detail, tab: 'gateChallenge'},
+        {title: '世界杯比分', action: cupSummary.action, detail: cupSummary.detail, tab: 'worldcupAnalysis'}
       ];
     }
     function decisionCardHtml(card) {
