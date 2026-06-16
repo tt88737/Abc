@@ -165,7 +165,18 @@
 
     <div class="layout">
       <div class="main-stack">
-        <section class="section"><div class="section-head"><h2>今日可跟踪比赛</h2><small>可跟踪 / 观察 / 回避</small></div><div class="score-decision-list" id="trackableMatches"></div></section>
+        <section class="section">
+          <div class="section-head"><h2>今日可跟踪比赛</h2><small>默认只看可跟踪，观察和回避收起</small></div>
+          <div class="score-decision-list" id="trackableOnlyMatches"></div>
+          <details class="reference-panel worldcup-secondary-tier">
+            <summary>观察比赛<small>默认收起，只在复盘或等待首发时查看</small></summary>
+            <div class="score-decision-list" id="watchMatches"></div>
+          </details>
+          <details class="reference-panel worldcup-secondary-tier">
+            <summary>回避比赛<small>默认收起，只看风险原因</small></summary>
+            <div class="score-decision-list" id="avoidMatches"></div>
+          </details>
+        </section>
         <section class="section"><div class="section-head"><h2>完赛比分校验</h2><small>实际比分 vs 主推 / 备用 / 博冷</small></div><div class="completed-check-list" id="completedScoreChecks"></div></section>
         <section class="section"><div class="section-head"><h2>竞彩当前开售赛事</h2><small>只使用当前开售场次做比分判断</small></div><div class="jc-list" id="jcMatches"></div></section>
         <section class="section">
@@ -350,20 +361,27 @@
       }).join("");
     }
     function renderTrackableMatches() {
-      const target = document.getElementById("trackableMatches");
-      if (!target) return;
-      const rows = jcMatches
-        .filter(item => item.model && item.model.betAction !== "回避")
-        .sort((a, b) => Number(b.model?.betScore || 0) - Number(a.model?.betScore || 0))
-        .slice(0, 5);
-      if (!rows.length) {
-        target.innerHTML = `<div class="market-tier-empty">暂无达到可跟踪条件的世界杯比分，当前以观察为主。</div>`;
-        return;
-      }
-      target.innerHTML = rows.map(item => {
+      const renderRows = (targetId, rows, emptyText) => {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        if (!rows.length) {
+          target.innerHTML = `<div class="market-tier-empty">${emptyText}</div>`;
+          return;
+        }
+        target.innerHTML = rows.map(item => {
         const model = item.model || {};
         return `<article class="score-row"><div><strong>${item.matchId || "-"}</strong><div class="note">${item.startTime || ""}</div></div><div><div class="teams">${item.teams || "-"}</div><div class="model-meta"><span class="model-chip action-chip ${actionClass(model.betAction)}">${model.betAction || "观察"}</span><span class="model-chip">评分 ${model.betScore ?? "-"}</span></div></div><div>${scoreSummaryText(item)}</div><div class="score-risk">可靠 ${model.reliability ?? "-"}%<br>平局 ${Math.round((model.drawProbability || 0) * 100)}%</div><div><div class="reason-lines"><span><b>主因</b> ${model.scoreRationale?.main || model.reason || "-"}</span><span><b>风险</b> ${model.risk || "-"}</span></div></div></article>`;
-      }).join("");
+        }).join("");
+      };
+      const ordered = jcMatches
+        .filter(item => item.model)
+        .sort((a, b) => Number(b.model?.betScore || 0) - Number(a.model?.betScore || 0));
+      const trackableRows = ordered.filter(item => item.model && item.model.betAction === "可跟踪").slice(0, 5);
+      const watchRows = ordered.filter(item => item.model && item.model.betAction === "观察").slice(0, 8);
+      const avoidRows = ordered.filter(item => item.model && item.model.betAction === "回避").slice(0, 8);
+      renderRows("trackableOnlyMatches", trackableRows, "暂无达到可跟踪条件的世界杯比分，当前以观察为主。");
+      renderRows("watchMatches", watchRows, "暂无观察比赛。");
+      renderRows("avoidMatches", avoidRows, "暂无回避比赛。");
     }
     function renderMatches(filter = "all") {
       const list = filter === "all" ? matches : matches.filter(item => item.type === filter);

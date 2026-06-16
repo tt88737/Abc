@@ -23,6 +23,13 @@ assert.ok(html.includes("比赛级比分决策表"), "dashboard should expose a 
 assert.ok(html.includes('id="scoreDecisionRows"'), "dashboard should render score decision rows in a dedicated container");
 assert.ok(html.includes("今日可跟踪比赛"), "World Cup dashboard should front-load trackable matches");
 assert.ok(html.includes("renderTrackableMatches"), "World Cup dashboard should render trackable matches separately");
+assert.ok(html.includes('id="trackableOnlyMatches"'), "dashboard should use a dedicated visible container for trackable matches");
+assert.ok(html.includes('id="watchMatches"'), "dashboard should keep watch matches in a secondary container");
+assert.ok(html.includes('id="avoidMatches"'), "dashboard should keep avoid matches in a secondary container");
+assert.ok(html.includes('<details class="reference-panel worldcup-secondary-tier">'), "watch and avoid tiers should be folded by default");
+assert.ok(html.includes('model.betAction === "可跟踪"'), "top trackable list should only show trackable matches");
+assert.ok(html.includes('model.betAction === "观察"'), "watch list should only show watch matches");
+assert.ok(html.includes('model.betAction === "回避"'), "avoid list should only show avoid matches");
 assert.ok(html.includes(".score-row { display: grid;"), "score decision rows should use a dense grid layout");
 assert.ok(html.includes(".score-row, .check-row, .decision-summary-grid"), "mobile breakpoint should collapse score rows, completed checks, and decision summary");
 assert.ok(html.includes("比分分布"), "score decision rows should expose compact score candidate distribution");
