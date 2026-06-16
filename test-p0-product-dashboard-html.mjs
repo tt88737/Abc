@@ -10,6 +10,12 @@ assert.ok(html.includes("三中三推荐"), "homepage should expose three-in-thr
 assert.ok(html.includes("闯三关判断"), "homepage should expose gate challenge decision entry");
 assert.ok(html.includes("世界杯比分"), "homepage should expose World Cup score entry");
 assert.ok(html.includes("buildDataHealthCards"), "homepage should calculate data health cards");
+assert.ok(html.includes("dataFreshnessState"), "homepage should classify data freshness");
+assert.ok(html.includes("sourceHealthCard"), "homepage should derive lottery source health from latest draw date");
+assert.ok(html.includes("worldcupHealthCard"), "homepage should derive World Cup health from generated status");
+assert.ok(html.includes("可能过期"), "homepage should expose stale data state");
+assert.ok(html.includes("未加载"), "homepage should expose unloaded data state");
+assert.ok(html.includes("数据源异常"), "homepage should expose data source error state");
 assert.ok(html.includes("buildTodayFocusCards"), "homepage should calculate today's focus cards");
 assert.ok(html.includes("threeFormulaHomeSummary"), "homepage should summarize real three-in-three recommendation data");
 assert.ok(html.includes("gateChallengeHomeSummary"), "homepage should summarize real gate challenge state");

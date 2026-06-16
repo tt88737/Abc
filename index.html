@@ -2480,11 +2480,44 @@
       const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
       return status.updatedAtLocal ? `世界杯 ${esc(status.updatedAtLocal)} / ${esc(status.summary || '-')}` : '世界杯数据未加载';
     }
+    function parseHealthDate(value) {
+      const text = String(value || '').trim();
+      if (!text) return null;
+      const normalized = text.includes('T') ? text : text.replace(' ', 'T');
+      const parsed = new Date(normalized);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+    function dataFreshnessState(dateValue, maxAgeDays = 2) {
+      const parsed = parseHealthDate(dateValue);
+      if (!parsed) return {state: '未加载', ageDays: null};
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - parsed.getTime()) / 86400000);
+      if (diffDays < 0) return {state: '数据源异常', ageDays: diffDays};
+      if (diffDays > maxAgeDays) return {state: '可能过期', ageDays: diffDays};
+      return {state: '正常', ageDays: diffDays};
+    }
+    function healthAgeText(health) {
+      if (health.state === '未加载') return '未加载最新时间';
+      if (health.state === '数据源异常') return '时间晚于当前设备时间';
+      return `距今约 ${esc(health.ageDays)} 天`;
+    }
+    function sourceHealthCard(sourceKey, title) {
+      const latest = summary?.bySource?.[sourceKey]?.latest || null;
+      const health = dataFreshnessState(latest?.date, 2);
+      return {title, state: health.state, detail: `${sourceLatestText(sourceKey)}；${healthAgeText(health)}`};
+    }
+    function worldcupHealthCard() {
+      const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
+      const health = dataFreshnessState(status.updatedAtLocal, 1);
+      const state = status.error || status.lastError ? '数据源异常' : health.state;
+      const detailSuffix = status.error || status.lastError ? esc(status.error || status.lastError) : healthAgeText(health);
+      return {title: '世界杯数据', state, detail: `${worldcupHealthText()}；${detailSuffix}`};
+    }
     function buildDataHealthCards() {
       return [
-        {title: '澳门数据', state: summary?.bySource?.am?.latest ? '正常' : '待检查', detail: sourceLatestText('am')},
-        {title: '香港数据', state: summary?.bySource?.hk?.latest ? '正常' : '待检查', detail: sourceLatestText('hk')},
-        {title: '世界杯数据', state: window.WORLDCUP2026_LIVE_DATA?.status?.updatedAtLocal ? '正常' : '待检查', detail: worldcupHealthText()}
+        sourceHealthCard('am', '澳门数据'),
+        sourceHealthCard('hk', '香港数据'),
+        worldcupHealthCard()
       ];
     }
     function threeFormulaHomeSummary() {
