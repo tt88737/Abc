@@ -1,155 +1,6 @@
 {
   "snapshots": [
     {
-      "capturedAt": "2026-06-16T06:00:27.542Z",
-      "matches": [
-        {
-          "matchId": "周二017",
-          "teams": "法国 vs 塞内加尔",
-          "startTime": "2026-06-17 03:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 2.15,
-            "draw": 3.37,
-            "away": 2.72,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周二018",
-          "teams": "伊拉克 vs 挪威",
-          "startTime": "2026-06-17 06:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 2.35,
-            "draw": 3.74,
-            "away": 2.29,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周二019",
-          "teams": "阿根廷 vs 阿尔及利亚",
-          "startTime": "2026-06-17 09:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 1.9,
-            "draw": 3.5,
-            "away": 3.15,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周二020",
-          "teams": "奥地利 vs 约旦",
-          "startTime": "2026-06-17 12:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 1.8,
-            "draw": 3.62,
-            "away": 3.36,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周三021",
-          "teams": "葡萄牙 vs 刚果(金)",
-          "startTime": "2026-06-18 01:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 2.66,
-            "draw": 3.94,
-            "away": 2,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周三022",
-          "teams": "英格兰 vs 克罗地亚",
-          "startTime": "2026-06-18 04:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 2.84,
-            "draw": 3.2,
-            "away": 2.15,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周三023",
-          "teams": "加纳 vs 巴拿马",
-          "startTime": "2026-06-18 07:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 4.25,
-            "draw": 3.52,
-            "away": 1.64,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周三024",
-          "teams": "乌兹别克 vs 哥伦比亚",
-          "startTime": "2026-06-18 10:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 3.12,
-            "draw": 3.44,
-            "away": 1.93,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周四025",
-          "teams": "捷克 vs 南非",
-          "startTime": "2026-06-19 00:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 3.36,
-            "draw": 3.4,
-            "away": 1.86,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周四026",
-          "teams": "瑞士 vs 波黑",
-          "startTime": "2026-06-19 03:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 2.23,
-            "draw": 3.35,
-            "away": 2.62,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周四027",
-          "teams": "加拿大 vs 卡塔尔",
-          "startTime": "2026-06-19 06:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 1.87,
-            "draw": 3.45,
-            "away": 3.28,
-            "source": "spf"
-          }
-        },
-        {
-          "matchId": "周四028",
-          "teams": "墨西哥 vs 韩国",
-          "startTime": "2026-06-19 09:00",
-          "capturedAt": "2026-06-16T06:00:27.542Z",
-          "marketOdds": {
-            "home": 3.78,
-            "draw": 3.45,
-            "away": 1.74,
-            "source": "spf"
-          }
-        }
-      ]
-    },
-    {
       "capturedAt": "2026-06-16T06:30:28.476Z",
       "matches": [
         {
@@ -2935,6 +2786,119 @@
           "teams": "墨西哥 vs 韩国",
           "startTime": "2026-06-19 09:00",
           "capturedAt": "2026-06-16T14:00:29.073Z",
+          "marketOdds": {
+            "home": 3.78,
+            "draw": 3.45,
+            "away": 1.74,
+            "source": "spf"
+          }
+        }
+      ]
+    },
+    {
+      "capturedAt": "2026-06-16T14:30:34.828Z",
+      "matches": [
+        {
+          "matchId": "周二020",
+          "teams": "奥地利 vs 约旦",
+          "startTime": "2026-06-17 12:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 1.8,
+            "draw": 3.88,
+            "away": 3.16,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周三021",
+          "teams": "葡萄牙 vs 刚果(金)",
+          "startTime": "2026-06-18 01:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 2.66,
+            "draw": 3.94,
+            "away": 2,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周三022",
+          "teams": "英格兰 vs 克罗地亚",
+          "startTime": "2026-06-18 04:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 2.84,
+            "draw": 3.2,
+            "away": 2.15,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周三023",
+          "teams": "加纳 vs 巴拿马",
+          "startTime": "2026-06-18 07:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 4.25,
+            "draw": 3.52,
+            "away": 1.64,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周三024",
+          "teams": "乌兹别克 vs 哥伦比亚",
+          "startTime": "2026-06-18 10:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 3.2,
+            "draw": 3.44,
+            "away": 1.9,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周四025",
+          "teams": "捷克 vs 南非",
+          "startTime": "2026-06-19 00:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 3.36,
+            "draw": 3.4,
+            "away": 1.86,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周四026",
+          "teams": "瑞士 vs 波黑",
+          "startTime": "2026-06-19 03:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 2.23,
+            "draw": 3.35,
+            "away": 2.62,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周四027",
+          "teams": "加拿大 vs 卡塔尔",
+          "startTime": "2026-06-19 06:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
+          "marketOdds": {
+            "home": 1.87,
+            "draw": 3.45,
+            "away": 3.28,
+            "source": "spf"
+          }
+        },
+        {
+          "matchId": "周四028",
+          "teams": "墨西哥 vs 韩国",
+          "startTime": "2026-06-19 09:00",
+          "capturedAt": "2026-06-16T14:30:34.828Z",
           "marketOdds": {
             "home": 3.78,
             "draw": 3.45,
