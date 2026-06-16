@@ -2346,8 +2346,9 @@
         const stat = statsMap.get(def.id);
         const metrics = stat?.metricsUntil(endIndex) || threeFormulaBacktestCandidateUntil(rows, def, cache, endIndex);
         const current = stat?.states?.[endIndex] || threeFormulaCandidatePoolAt(rows, endIndex, def, cache);
-        return {...def, metrics, current, score: threeFormulaCandidateScore(def, metrics, current.nums)};
-      }).filter(item => item.current.nums.length >= 3).sort((a, b) => b.metrics.recent10HitRate - a.metrics.recent10HitRate || b.score - a.score || b.metrics.recentHitRate - a.metrics.recentHitRate || a.metrics.maxMiss - b.metrics.maxMiss);
+        const observation = threeFormulaObservationDecision(metrics, current.nums);
+        return {...def, metrics, current, observation, score: threeFormulaCandidateScore(def, metrics, current.nums)};
+      }).filter(item => item.current.nums.length >= 3).sort((a, b) => b.score - a.score || b.observation.observationScore - a.observation.observationScore || b.metrics.recentHitRate - a.metrics.recentHitRate || a.metrics.maxMiss - b.metrics.maxMiss);
       return candidates[0] || {id: 'none', name: '-', exprs: [], metrics: {}, current: {nums: [], formulas: []}, score: 0};
     }
     function threeFormulaWalkForwardMetrics(rows, defs, cache, stats = null, startIndex = 5) {
@@ -2385,7 +2386,8 @@
       const stats = threeFormulaBuildCandidateStats(rows, defs, cache, statsStart);
       const selected = threeFormulaSelectCandidateAt(rows, defs, rows.length, cache, stats);
       const walkMetrics = threeFormulaWalkForwardMetrics(rows, defs, cache, stats, Math.max(5, statsStart + 1));
-      const best = {...selected, metrics: walkMetrics, selectedMetrics: selected.metrics};
+      const observation = threeFormulaObservationDecision(walkMetrics, selected.current.nums);
+      const best = {...selected, metrics: walkMetrics, selectedMetrics: selected.metrics, observation};
       const singles = [];
       const compound = asArray(best.current.nums).slice(0, 6);
       for (let i = 0; i + 2 < compound.length && singles.length < 5; i++) {
