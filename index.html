@@ -97,11 +97,11 @@
   </header>
   <main>
     <nav class="tabs">
-      <button class="active" data-tab="decisionHome">总控台</button>
-      <button data-tab="threeFormulaGate">三中三推荐</button>
-      <button data-tab="gateChallenge">闯三关判断</button>
-      <button data-tab="worldcupAnalysis">世界杯比分</button>
-      <button data-tab="dataReview">数据与复盘</button>
+      <button class="active" data-tab="decisionHome">æ€»æŽ§å°</button>
+      <button data-tab="threeFormulaGate">ä¸‰ä¸­ä¸‰æŽ¨è</button>
+      <button data-tab="gateChallenge">é—¯ä¸‰å…³åˆ¤æ–­</button>
+      <button data-tab="worldcupAnalysis">ä¸–ç•Œæ¯æ¯”åˆ†</button>
+      <button data-tab="dataReview">æ•°æ®ä¸Žå¤ç›˜</button>
     </nav>
     <section id="app"></section>
   </main>
@@ -1853,10 +1853,10 @@
       document.getElementById('recommendation-track-source').addEventListener('change', renderRecommendationTrack);
     }
     function gateDecisionState(stage, recentPass3Rate) {
-      if (stage >= 2) return {label: '冲第三关', level: 'hit', advice: '继续 / 降注观察 / 暂停'};
-      if (stage === 1) return {label: '第二关观察', level: '', advice: '第1关已过，第2关要降注观察'};
-      if (recentPass3Rate >= 0.25) return {label: '可观察第一关', level: '', advice: '本期只能小注开第1关'};
-      return {label: '暂停', level: 'miss', advice: '暂停开第1关，等先出一次命中'};
+      if (stage >= 2) return {label: 'å†²ç¬¬ä¸‰å…³', level: 'hit', advice: 'ç»§ç»­ / é™æ³¨è§‚å¯Ÿ / æš‚åœ'};
+      if (stage === 1) return {label: 'ç¬¬äºŒå…³è§‚å¯Ÿ', level: '', advice: 'ç¬¬1å…³å·²è¿‡ï¼Œç¬¬2å…³è¦é™æ³¨è§‚å¯Ÿ'};
+      if (recentPass3Rate >= 0.25) return {label: 'å¯è§‚å¯Ÿç¬¬ä¸€å…³', level: '', advice: 'æœ¬æœŸåªèƒ½å°æ³¨å¼€ç¬¬1å…³'};
+      return {label: 'æš‚åœ', level: 'miss', advice: 'æš‚åœå¼€ç¬¬1å…³ï¼Œç­‰å…ˆå‡ºä¸€æ¬¡å‘½ä¸­'};
     }
     function gateTierLabel(index, item) {
       if (item.all.stage >= 2 || index === 0) return '&#20027;&#20844;&#24335;';
@@ -2007,11 +2007,11 @@
     }
     function gateChallengeDecisionRows(active, decision) {
       const stage = Number(active?.all?.stage || 0);
-      const openFirst = decision.level === 'miss' ? '暂停，不开第一关' : '可小注开第一关';
-      const continueSecond = stage >= 1 ? '可续第二关，但要降注' : '未过第一关，暂不续';
-      const pushThird = stage >= 2 ? '第三关触发，只做观察冲关' : '未连中两关，不冲第三关';
+      const openFirst = decision.level === 'miss' ? 'æš‚åœï¼Œä¸å¼€ç¬¬ä¸€å…³' : 'å¯å°æ³¨å¼€ç¬¬ä¸€å…³';
+      const continueSecond = stage >= 1 ? 'å¯ç»­ç¬¬äºŒå…³ï¼Œä½†è¦é™æ³¨' : 'æœªè¿‡ç¬¬ä¸€å…³ï¼Œæš‚ä¸ç»­';
+      const pushThird = stage >= 2 ? 'ç¬¬ä¸‰å…³è§¦å‘ï¼Œåªåšè§‚å¯Ÿå†²å…³' : 'æœªè¿žä¸­ä¸¤å…³ï¼Œä¸å†²ç¬¬ä¸‰å…³';
       const currentAction = stage >= 2 ? pushThird : (stage >= 1 ? continueSecond : openFirst);
-      return `<tr><th>是否开第一关</th><td>${openFirst}</td></tr><tr><th>是否续第二关</th><td>${continueSecond}</td></tr><tr><th>是否冲第三关</th><td>${pushThird}</td></tr><tr><th>当前动作</th><td>${currentAction}</td></tr>`;
+      return `<tr><th>æ˜¯å¦å¼€ç¬¬ä¸€å…³</th><td>${openFirst}</td></tr><tr><th>æ˜¯å¦ç»­ç¬¬äºŒå…³</th><td>${continueSecond}</td></tr><tr><th>æ˜¯å¦å†²ç¬¬ä¸‰å…³</th><td>${pushThird}</td></tr><tr><th>å½“å‰åŠ¨ä½œ</th><td>${currentAction}</td></tr>`;
     }
     function gateCurrentAdviceHtml(analysis) {
       const active = analysis.active || analysis.items[0];
@@ -2285,16 +2285,16 @@
       const recentHitRate = Number(metrics?.recentHitRate || 0);
       const currentMiss = Number(metrics?.currentMiss || 0);
       const maxMiss = Number(metrics?.maxMiss || 0);
-      if (count < 3) return {...score, level: '暂停', reason: '有效候选号不足 3 个'};
-      if (maxMiss > 0 && currentMiss >= maxMiss) return {...score, level: '暂停', reason: '当前连挂达到历史风险上沿'};
-      if (recent10Total >= 10 && recent10Hits === 0) return {...score, level: '仅复盘', reason: '最近窗口 0 命中'};
-      if (recentHitRate <= score.baseline && recent10HitRate < 0.2) return {...score, level: '仅复盘', reason: '低于随机基线'};
-      if (score.observationScore >= 70 && score.edge > 0 && recent10HitRate >= 0.2) return {...score, level: '强观察', reason: '高于随机基线且风险可控'};
-      return {...score, level: '弱观察', reason: '有候选号码但观察价值不足'};
+      if (count < 3) return {...score, level: 'æš‚åœ', reason: 'æœ‰æ•ˆå€™é€‰å·ä¸è¶³ 3 ä¸ª'};
+      if (maxMiss > 0 && currentMiss >= maxMiss) return {...score, level: 'æš‚åœ', reason: 'å½“å‰è¿žæŒ‚è¾¾åˆ°åŽ†å²é£Žé™©ä¸Šæ²¿'};
+      if (recent10Total >= 10 && recent10Hits === 0) return {...score, level: 'ä»…å¤ç›˜', reason: 'æœ€è¿‘çª—å£ 0 å‘½ä¸­'};
+      if (recentHitRate <= score.baseline && recent10HitRate < 0.2) return {...score, level: 'ä»…å¤ç›˜', reason: 'ä½ŽäºŽéšæœºåŸºçº¿'};
+      if (score.observationScore >= 70 && score.edge > 0 && recent10HitRate >= 0.2) return {...score, level: 'å¼ºè§‚å¯Ÿ', reason: 'é«˜äºŽéšæœºåŸºçº¿ä¸”é£Žé™©å¯æŽ§'};
+      return {...score, level: 'å¼±è§‚å¯Ÿ', reason: 'æœ‰å€™é€‰å·ç ä½†è§‚å¯Ÿä»·å€¼ä¸è¶³'};
     }
     function threeFormulaCandidateScore(def, metrics, nums = []) {
       const decision = threeFormulaObservationDecision(metrics, nums);
-      const levelBonus = decision.level === '强观察' ? 500 : decision.level === '弱观察' ? 180 : decision.level === '仅复盘' ? -120 : -500;
+      const levelBonus = decision.level === 'å¼ºè§‚å¯Ÿ' ? 500 : decision.level === 'å¼±è§‚å¯Ÿ' ? 180 : decision.level === 'ä»…å¤ç›˜' ? -120 : -500;
       return decision.observationScore * 10 + levelBonus + metrics.recentHitRate * 200 - metrics.currentMiss * 8 - def.exprs.length * 0.25;
     }
     function threeFormulaBuildCandidateStats(rows, defs, cache, startIndex = 4) {
@@ -2414,7 +2414,7 @@
       const observation = threeFormulaObservationDecision(metrics, nums);
       const currentMiss = Number(metrics?.currentMiss || 0);
       const maxMiss = Number(metrics?.maxMiss || 0);
-      return `降级原因：${esc(observation.reason)}；观察价值 ${esc(observation.observationScore)} / 100；随机基线 ${gateRate(observation.baseline)}；当前连挂 ${esc(currentMiss)} / ${esc(maxMiss)}。`;
+      return `é™çº§åŽŸå› ï¼š${esc(observation.reason)}ï¼›è§‚å¯Ÿä»·å€¼ ${esc(observation.observationScore)} / 100ï¼›éšæœºåŸºçº¿ ${gateRate(observation.baseline)}ï¼›å½“å‰è¿žæŒ‚ ${esc(currentMiss)} / ${esc(maxMiss)}ã€‚`;
     }
     function threeFormulaSourceRows(ranked) {
       return asArray(ranked).slice(0, 6).map(item => `<tr><td>${numberChips([item.num])}</td><td>${esc(asArray(item.formulas).slice(0, 3).join(' / '))}</td></tr>`).join('');
@@ -2430,28 +2430,28 @@
       const decisionLevel = threeFormulaDecisionLevel(metrics, optimized.compound);
       const observation = optimized.best?.observation || threeFormulaObservationDecision(metrics, optimized.compound);
       const topReasons = threeFormulaSourceRows(recommendation.ranked);
-      return `<section class="panel full"><h2>三中三推荐</h2><div class="grid compact-grid">
+      return `<section class="panel full"><h2>ä¸‰ä¸­ä¸‰æŽ¨è</h2><div class="grid compact-grid">
         <section class="panel wide">
-          <h2>推荐</h2>
-          <div class="mini ${signalLevelClass(decisionLevel)}">信号等级：${esc(decisionLevel)}</div>
-          <p class="mini">观察价值：${esc(observation.observationScore)} / 100；优势：${gateRate(Math.max(0, observation.edge))}</p>
-          <p class="mini">下期 6 码复式</p>
+          <h2>æŽ¨è</h2>
+          <div class="mini ${signalLevelClass(decisionLevel)}">ä¿¡å·ç­‰çº§ï¼š${esc(decisionLevel)}</div>
+          <p class="mini">è§‚å¯Ÿä»·å€¼ï¼š${esc(observation.observationScore)} / 100ï¼›ä¼˜åŠ¿ï¼š${gateRate(Math.max(0, observation.edge))}</p>
+          <p class="mini">ä¸‹æœŸ 6 ç å¤å¼</p>
           <div class="metric">${numberChips(optimized.compound)}</div>
-          <p class="muted">walk-forward 只使用开奖前历史选择公式；下期最多 6 码复式。</p>
-          <h3>单式组合</h3>
+          <p class="muted">walk-forward åªä½¿ç”¨å¼€å¥–å‰åŽ†å²é€‰æ‹©å…¬å¼ï¼›ä¸‹æœŸæœ€å¤š 6 ç å¤å¼ã€‚</p>
+          <h3>å•å¼ç»„åˆ</h3>
           <div class="table-scroll"><table class="compact-table"><tbody>${optimizedSingles || singles}</tbody></table></div>
         </section>
         <section class="panel">
-          <h2>风险</h2>
+          <h2>é£Žé™©</h2>
           <div class="metric ${signalLevelClass(decisionLevel)}">${esc(decisionLevel)}</div>
-          <p class="mini">近期表现：近 10 期 ${gateRate(metrics.recent10HitRate || 0)}</p>
+          <p class="mini">è¿‘æœŸè¡¨çŽ°ï¼šè¿‘ 10 æœŸ ${gateRate(metrics.recent10HitRate || 0)}</p>
           <p class="muted">${threeFormulaRiskText(metrics, optimized.compound)}</p>
-          <p class="mini">完整回测 ${gateRate(metrics.hitRate || 0)}；近 100 期 ${gateRate(metrics.recentHitRate || 0)}。</p>
+          <p class="mini">å®Œæ•´å›žæµ‹ ${gateRate(metrics.hitRate || 0)}ï¼›è¿‘ 100 æœŸ ${gateRate(metrics.recentHitRate || 0)}ã€‚</p>
         </section>
         <section class="panel">
-          <h2>公式来源</h2>
+          <h2>å…¬å¼æ¥æº</h2>
           <p class="muted">${optimized.best.name}<br>${esc(optimized.best.id)}</p>
-          <details open><summary>号码来源公式</summary><div class="table-scroll"><table class="compact-table"><tbody>${topReasons}</tbody></table></div></details>
+          <details open><summary>å·ç æ¥æºå…¬å¼</summary><div class="table-scroll"><table class="compact-table"><tbody>${topReasons}</tbody></table></div></details>
         </section>
       </div></section>`;
     }
@@ -2570,11 +2570,11 @@
     function sourceLatestText(sourceKey) {
       const bySource = summary?.bySource || {};
       const latest = bySource[sourceKey]?.latest || {};
-      return latest.issue ? `${esc(latest.sourceName || sourceKey)} ${esc(latest.issue)}期 / ${esc(latest.date || '-')}` : `${esc(sourceKey)} 暂无最新记录`;
+      return latest.issue ? `${esc(latest.sourceName || sourceKey)} ${esc(latest.issue)}æœŸ / ${esc(latest.date || '-')}` : `${esc(sourceKey)} æš‚æ— æœ€æ–°è®°å½•`;
     }
     function worldcupHealthText() {
       const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
-      return status.updatedAtLocal ? `世界杯 ${esc(status.updatedAtLocal)} / ${esc(status.summary || '-')}` : '世界杯数据未加载';
+      return status.updatedAtLocal ? `ä¸–ç•Œæ¯ ${esc(status.updatedAtLocal)} / ${esc(status.summary || '-')}` : 'ä¸–ç•Œæ¯æ•°æ®æœªåŠ è½½';
     }
     function parseHealthDate(value) {
       const text = String(value || '').trim();
@@ -2585,45 +2585,45 @@
     }
     function dataFreshnessState(dateValue, maxAgeDays = 2) {
       const parsed = parseHealthDate(dateValue);
-      if (!parsed) return {state: '未加载', ageDays: null};
+      if (!parsed) return {state: 'æœªåŠ è½½', ageDays: null};
       const now = new Date();
       const diffDays = Math.floor((now.getTime() - parsed.getTime()) / 86400000);
-      if (diffDays < 0) return {state: '数据源异常', ageDays: diffDays};
-      if (diffDays > maxAgeDays) return {state: '可能过期', ageDays: diffDays};
-      return {state: '正常', ageDays: diffDays};
+      if (diffDays < 0) return {state: 'æ•°æ®æºå¼‚å¸¸', ageDays: diffDays};
+      if (diffDays > maxAgeDays) return {state: 'å¯èƒ½è¿‡æœŸ', ageDays: diffDays};
+      return {state: 'æ­£å¸¸', ageDays: diffDays};
     }
     function healthAgeText(health) {
-      if (health.state === '未加载') return '未加载最新时间';
-      if (health.state === '数据源异常') return '时间晚于当前设备时间';
-      return `距今约 ${esc(health.ageDays)} 天`;
+      if (health.state === 'æœªåŠ è½½') return 'æœªåŠ è½½æœ€æ–°æ—¶é—´';
+      if (health.state === 'æ•°æ®æºå¼‚å¸¸') return 'æ—¶é—´æ™šäºŽå½“å‰è®¾å¤‡æ—¶é—´';
+      return `è·ä»Šçº¦ ${esc(health.ageDays)} å¤©`;
     }
     function sourceHealthCard(sourceKey, title) {
       const latest = summary?.bySource?.[sourceKey]?.latest || null;
       const health = dataFreshnessState(latest?.date, 2);
-      return {title, state: health.state, detail: `${sourceLatestText(sourceKey)}；${healthAgeText(health)}`, diagnosis: '最新开奖日期，超过 2 天标记可能过期'};
+      return {title, state: health.state, detail: `${sourceLatestText(sourceKey)}ï¼›${healthAgeText(health)}`, diagnosis: 'æœ€æ–°å¼€å¥–æ—¥æœŸï¼Œè¶…è¿‡ 2 å¤©æ ‡è®°å¯èƒ½è¿‡æœŸ'};
     }
     function worldcupHealthCard() {
       const status = window.WORLDCUP2026_LIVE_DATA?.status || {};
       const health = dataFreshnessState(status.updatedAtLocal, 1);
-      const state = status.error || status.lastError ? '数据源异常' : health.state;
+      const state = status.error || status.lastError ? 'æ•°æ®æºå¼‚å¸¸' : health.state;
       const detailSuffix = status.error || status.lastError ? esc(status.error || status.lastError) : healthAgeText(health);
-      return {title: '世界杯数据', state, detail: `${worldcupHealthText()}；${detailSuffix}`, diagnosis: '世界杯更新时间，超过 1 天标记可能过期'};
+      return {title: 'ä¸–ç•Œæ¯æ•°æ®', state, detail: `${worldcupHealthText()}ï¼›${detailSuffix}`, diagnosis: 'ä¸–ç•Œæ¯æ›´æ–°æ—¶é—´ï¼Œè¶…è¿‡ 1 å¤©æ ‡è®°å¯èƒ½è¿‡æœŸ'};
     }
     function buildDataHealthCards() {
       return [
-        sourceHealthCard('am', '澳门数据'),
-        sourceHealthCard('hk', '香港数据'),
+        sourceHealthCard('am', 'æ¾³é—¨æ•°æ®'),
+        sourceHealthCard('hk', 'é¦™æ¸¯æ•°æ®'),
         worldcupHealthCard()
       ];
     }
     function signalLevelClass(level) {
-      if (level === '强观察') return 'result-hit';
-      if (level === '暂停') return 'result-miss';
-      if (level === '仅复盘') return 'muted';
+      if (level === 'å¼ºè§‚å¯Ÿ') return 'result-hit';
+      if (level === 'æš‚åœ') return 'result-miss';
+      if (level === 'ä»…å¤ç›˜') return 'muted';
       return '';
     }
     function signalBadgeHtml(level) {
-      return `<div class="mini ${signalLevelClass(level)}">信号等级：${esc(level || '弱观察')}</div>`;
+      return `<div class="mini ${signalLevelClass(level)}">ä¿¡å·ç­‰çº§ï¼š${esc(level || 'å¼±è§‚å¯Ÿ')}</div>`;
     }
     function threeFormulaHomeSummary() {
       try {
@@ -2636,19 +2636,19 @@
         const recent10Total = Number(metrics.recent10Total || 0);
         const currentMiss = Number(metrics.currentMiss || 0);
         const maxMiss = Number(metrics.maxMiss || 0);
-        let signalLevel = '弱观察';
-        if (maxMiss > 0 && currentMiss >= maxMiss) signalLevel = '暂停';
-        else if (recent10HitRate >= 0.3 && currentMiss < maxMiss) signalLevel = '强观察';
-        else if (recent10Total >= 10 && recent10Hits === 0) signalLevel = '仅复盘';
-        else if (!nums.length) signalLevel = '暂停';
+        let signalLevel = 'å¼±è§‚å¯Ÿ';
+        if (maxMiss > 0 && currentMiss >= maxMiss) signalLevel = 'æš‚åœ';
+        else if (recent10HitRate >= 0.3 && currentMiss < maxMiss) signalLevel = 'å¼ºè§‚å¯Ÿ';
+        else if (recent10Total >= 10 && recent10Hits === 0) signalLevel = 'ä»…å¤ç›˜';
+        else if (!nums.length) signalLevel = 'æš‚åœ';
         return {
           signalLevel,
-          action: nums.length ? `下期 6 码：${nums.join(' ')}` : '查看下期 6 码复式',
-          detail: `当前公式组：${optimized.best?.name || '-'}；近 10 期 ${gateRate(recent10HitRate)}，命中 ${esc(recent10Hits)} / ${esc(recent10Total)}`,
-          reason: `当前漏 ${esc(currentMiss)} / 最大连挂 ${esc(maxMiss)}`
+          action: nums.length ? `ä¸‹æœŸ 6 ç ï¼š${nums.join(' ')}` : 'æŸ¥çœ‹ä¸‹æœŸ 6 ç å¤å¼',
+          detail: `å½“å‰å…¬å¼ç»„ï¼š${optimized.best?.name || '-'}ï¼›è¿‘ 10 æœŸ ${gateRate(recent10HitRate)}ï¼Œå‘½ä¸­ ${esc(recent10Hits)} / ${esc(recent10Total)}`,
+          reason: `å½“å‰æ¼ ${esc(currentMiss)} / æœ€å¤§è¿žæŒ‚ ${esc(maxMiss)}`
         };
       } catch {
-        return {signalLevel: '暂停', action: '查看下期 6 码复式', detail: '进入专项页查看下期 6 码复式、单式组合和当前公式组。', reason: '三中三数据或公式暂不可用'};
+        return {signalLevel: 'æš‚åœ', action: 'æŸ¥çœ‹ä¸‹æœŸ 6 ç å¤å¼', detail: 'è¿›å…¥ä¸“é¡¹é¡µæŸ¥çœ‹ä¸‹æœŸ 6 ç å¤å¼ã€å•å¼ç»„åˆå’Œå½“å‰å…¬å¼ç»„ã€‚', reason: 'ä¸‰ä¸­ä¸‰æ•°æ®æˆ–å…¬å¼æš‚ä¸å¯ç”¨'};
       }
     }
     function gateChallengeHomeSummary() {
@@ -2659,17 +2659,17 @@
         const nums = asArray(active?.current?.nums).slice(0, 6);
         const stage = Number(active?.all?.stage || 0);
         const recentPass3Rate = Number(active?.recent?.pass3Rate || 0);
-        let signalLevel = '暂停';
-        if (stage >= 2) signalLevel = '强观察';
-        else if (stage >= 1 || recentPass3Rate >= 0.25) signalLevel = '弱观察';
+        let signalLevel = 'æš‚åœ';
+        if (stage >= 2) signalLevel = 'å¼ºè§‚å¯Ÿ';
+        else if (stage >= 1 || recentPass3Rate >= 0.25) signalLevel = 'å¼±è§‚å¯Ÿ';
         return {
           signalLevel,
-          action: decision.label || '查看当前关卡',
-          detail: `本关号码池：${nums.join(' ') || '-'}；命中进下一关，未中重置观察。`,
-          reason: `当前连续命中 ${esc(stage)} 关；近期第三关 ${gateRate(recentPass3Rate)}`
+          action: decision.label || 'æŸ¥çœ‹å½“å‰å…³å¡',
+          detail: `æœ¬å…³å·ç æ± ï¼š${nums.join(' ') || '-'}ï¼›å‘½ä¸­è¿›ä¸‹ä¸€å…³ï¼Œæœªä¸­é‡ç½®è§‚å¯Ÿã€‚`,
+          reason: `å½“å‰è¿žç»­å‘½ä¸­ ${esc(stage)} å…³ï¼›è¿‘æœŸç¬¬ä¸‰å…³ ${gateRate(recentPass3Rate)}`
         };
       } catch {
-        return {signalLevel: '暂停', action: '查看当前关卡', detail: '按当前关卡判断第一关、第二关、第三关，未中后重置观察。', reason: '闯三关数据或公式暂不可用'};
+        return {signalLevel: 'æš‚åœ', action: 'æŸ¥çœ‹å½“å‰å…³å¡', detail: 'æŒ‰å½“å‰å…³å¡åˆ¤æ–­ç¬¬ä¸€å…³ã€ç¬¬äºŒå…³ã€ç¬¬ä¸‰å…³ï¼Œæœªä¸­åŽé‡ç½®è§‚å¯Ÿã€‚', reason: 'é—¯ä¸‰å…³æ•°æ®æˆ–å…¬å¼æš‚ä¸å¯ç”¨'};
       }
     }
     function worldcupHomeSummary() {
@@ -2679,15 +2679,15 @@
       const watchCount = Number(summary.watchCount || summary.finalPicks?.watch?.length || 0);
       const avoidCount = Number(summary.avoidCount || summary.finalPicks?.avoid?.length || 0);
       const status = data.status || {};
-      let signalLevel = '仅复盘';
-      if (!status.updatedAtLocal || status.error || status.lastError) signalLevel = '暂停';
-      else if (trackedCount > 0) signalLevel = '强观察';
-      else if (watchCount > 0) signalLevel = '弱观察';
+      let signalLevel = 'ä»…å¤ç›˜';
+      if (!status.updatedAtLocal || status.error || status.lastError) signalLevel = 'æš‚åœ';
+      else if (trackedCount > 0) signalLevel = 'å¼ºè§‚å¯Ÿ';
+      else if (watchCount > 0) signalLevel = 'å¼±è§‚å¯Ÿ';
       return {
         signalLevel,
-        action: `可跟踪 ${trackedCount} 场 / 观察 ${watchCount} 场`,
-        detail: `${summary.summaryText || data.status?.summary || '等待世界杯数据刷新'}；回避 ${avoidCount} 场。`,
-        reason: `可跟踪 ${trackedCount}，观察 ${watchCount}，回避 ${avoidCount}`
+        action: `å¯è·Ÿè¸ª ${trackedCount} åœº / è§‚å¯Ÿ ${watchCount} åœº`,
+        detail: `${summary.summaryText || data.status?.summary || 'ç­‰å¾…ä¸–ç•Œæ¯æ•°æ®åˆ·æ–°'}ï¼›å›žé¿ ${avoidCount} åœºã€‚`,
+        reason: `å¯è·Ÿè¸ª ${trackedCount}ï¼Œè§‚å¯Ÿ ${watchCount}ï¼Œå›žé¿ ${avoidCount}`
       };
     }
     function threeFormulaReviewReason(metrics) {
@@ -2695,10 +2695,10 @@
       const maxMiss = Number(metrics?.maxMiss || 0);
       const recent10HitRate = Number(metrics?.recent10HitRate || 0);
       const recent10Hits = Number(metrics?.recent10Hits || 0);
-      if (maxMiss > 0 && currentMiss >= maxMiss) return '三中三复盘判断：当前漏接近历史风险上沿，优先暂停强推荐。';
-      if (recent10HitRate >= 0.3) return '三中三复盘判断：近 10 期表现达标，可继续观察 6 码复式。';
-      if (recent10Hits > 0) return '三中三复盘判断：有命中但强度不足，只做弱观察。';
-      return '三中三复盘判断：近 10 期未形成命中优势，只保留复盘。';
+      if (maxMiss > 0 && currentMiss >= maxMiss) return 'ä¸‰ä¸­ä¸‰å¤ç›˜åˆ¤æ–­ï¼šå½“å‰æ¼æŽ¥è¿‘åŽ†å²é£Žé™©ä¸Šæ²¿ï¼Œä¼˜å…ˆæš‚åœå¼ºæŽ¨èã€‚';
+      if (recent10HitRate >= 0.3) return 'ä¸‰ä¸­ä¸‰å¤ç›˜åˆ¤æ–­ï¼šè¿‘ 10 æœŸè¡¨çŽ°è¾¾æ ‡ï¼Œå¯ç»§ç»­è§‚å¯Ÿ 6 ç å¤å¼ã€‚';
+      if (recent10Hits > 0) return 'ä¸‰ä¸­ä¸‰å¤ç›˜åˆ¤æ–­ï¼šæœ‰å‘½ä¸­ä½†å¼ºåº¦ä¸è¶³ï¼Œåªåšå¼±è§‚å¯Ÿã€‚';
+      return 'ä¸‰ä¸­ä¸‰å¤ç›˜åˆ¤æ–­ï¼šè¿‘ 10 æœŸæœªå½¢æˆå‘½ä¸­ä¼˜åŠ¿ï¼Œåªä¿ç•™å¤ç›˜ã€‚';
     }
     function threeFormulaReviewSummary() {
       try {
@@ -2706,25 +2706,25 @@
         const optimized = threeFormulaOptimizedRecommendation(analysis);
         const metrics = optimized.best?.metrics || {};
         return {
-          title: '三中三最近表现',
+          title: 'ä¸‰ä¸­ä¸‰æœ€è¿‘è¡¨çŽ°',
           state: `${esc(metrics.recent10Hits || 0)} / ${esc(metrics.recent10Total || 0)}`,
-          detail: `近 10 期 ${gateRate(metrics.recent10HitRate || 0)}；当前漏 ${esc(metrics.currentMiss || 0)} / 最大连挂 ${esc(metrics.maxMiss || 0)}。`,
-          sample: '最近 10 期 walk-forward 复盘',
+          detail: `è¿‘ 10 æœŸ ${gateRate(metrics.recent10HitRate || 0)}ï¼›å½“å‰æ¼ ${esc(metrics.currentMiss || 0)} / æœ€å¤§è¿žæŒ‚ ${esc(metrics.maxMiss || 0)}ã€‚`,
+          sample: 'æœ€è¿‘ 10 æœŸ walk-forward å¤ç›˜',
           reason: threeFormulaReviewReason(metrics)
         };
       } catch {
-        return {title: '三中三最近表现', state: '-', detail: '暂无可用复盘数据。', sample: '最近 10 期', reason: '三中三复盘判断：数据暂不可用，不能判断近期表现。'};
+        return {title: 'ä¸‰ä¸­ä¸‰æœ€è¿‘è¡¨çŽ°', state: '-', detail: 'æš‚æ— å¯ç”¨å¤ç›˜æ•°æ®ã€‚', sample: 'æœ€è¿‘ 10 æœŸ', reason: 'ä¸‰ä¸­ä¸‰å¤ç›˜åˆ¤æ–­ï¼šæ•°æ®æš‚ä¸å¯ç”¨ï¼Œä¸èƒ½åˆ¤æ–­è¿‘æœŸè¡¨çŽ°ã€‚'};
       }
     }
     function gateChallengeReviewReason(all) {
       const stage = Number(all?.stage || 0);
       const pass3Rate = Number(all?.pass3Rate || 0);
       const pass2Rate = Number(all?.pass2Rate || 0);
-      if (stage >= 2) return '闯三关复盘判断：已进入第三关节奏，后续重点看是否命中后重置。';
-      if (stage >= 1) return '闯三关复盘判断：第一关已过，第二关只适合降注观察。';
-      if (pass3Rate >= 0.25) return '闯三关复盘判断：历史第三关通过率尚可，可小注观察第一关。';
-      if (pass2Rate > 0) return '闯三关复盘判断：有第二关基础但第三关不足，暂不强冲。';
-      return '闯三关复盘判断：过关连续性不足，优先暂停第一关。';
+      if (stage >= 2) return 'é—¯ä¸‰å…³å¤ç›˜åˆ¤æ–­ï¼šå·²è¿›å…¥ç¬¬ä¸‰å…³èŠ‚å¥ï¼ŒåŽç»­é‡ç‚¹çœ‹æ˜¯å¦å‘½ä¸­åŽé‡ç½®ã€‚';
+      if (stage >= 1) return 'é—¯ä¸‰å…³å¤ç›˜åˆ¤æ–­ï¼šç¬¬ä¸€å…³å·²è¿‡ï¼Œç¬¬äºŒå…³åªé€‚åˆé™æ³¨è§‚å¯Ÿã€‚';
+      if (pass3Rate >= 0.25) return 'é—¯ä¸‰å…³å¤ç›˜åˆ¤æ–­ï¼šåŽ†å²ç¬¬ä¸‰å…³é€šè¿‡çŽ‡å°šå¯ï¼Œå¯å°æ³¨è§‚å¯Ÿç¬¬ä¸€å…³ã€‚';
+      if (pass2Rate > 0) return 'é—¯ä¸‰å…³å¤ç›˜åˆ¤æ–­ï¼šæœ‰ç¬¬äºŒå…³åŸºç¡€ä½†ç¬¬ä¸‰å…³ä¸è¶³ï¼Œæš‚ä¸å¼ºå†²ã€‚';
+      return 'é—¯ä¸‰å…³å¤ç›˜åˆ¤æ–­ï¼šè¿‡å…³è¿žç»­æ€§ä¸è¶³ï¼Œä¼˜å…ˆæš‚åœç¬¬ä¸€å…³ã€‚';
     }
     function gateChallengeReviewSummary() {
       try {
@@ -2732,22 +2732,22 @@
         const active = analysis.active || analysis.items[0];
         const all = active?.all || {};
         return {
-          title: '闯三关过关记录',
-          state: `${esc(all.runs || 0)} 次`,
-          detail: `当前连续命中 ${esc(all.stage || 0)} 关；第二关 ${gateRate(all.pass2Rate || 0)}，第三关 ${gateRate(all.pass3Rate || 0)}。`,
-          sample: '全部已识别闯关记录',
+          title: 'é—¯ä¸‰å…³è¿‡å…³è®°å½•',
+          state: `${esc(all.runs || 0)} æ¬¡`,
+          detail: `å½“å‰è¿žç»­å‘½ä¸­ ${esc(all.stage || 0)} å…³ï¼›ç¬¬äºŒå…³ ${gateRate(all.pass2Rate || 0)}ï¼Œç¬¬ä¸‰å…³ ${gateRate(all.pass3Rate || 0)}ã€‚`,
+          sample: 'å…¨éƒ¨å·²è¯†åˆ«é—¯å…³è®°å½•',
           reason: gateChallengeReviewReason(all)
         };
       } catch {
-        return {title: '闯三关过关记录', state: '-', detail: '暂无可用闯关复盘。', sample: '全部已识别闯关记录', reason: '闯三关复盘判断：数据暂不可用，不能判断当前关卡。'};
+        return {title: 'é—¯ä¸‰å…³è¿‡å…³è®°å½•', state: '-', detail: 'æš‚æ— å¯ç”¨é—¯å…³å¤ç›˜ã€‚', sample: 'å…¨éƒ¨å·²è¯†åˆ«é—¯å…³è®°å½•', reason: 'é—¯ä¸‰å…³å¤ç›˜åˆ¤æ–­ï¼šæ•°æ®æš‚ä¸å¯ç”¨ï¼Œä¸èƒ½åˆ¤æ–­å½“å‰å…³å¡ã€‚'};
       }
     }
     function worldcupReviewReason(completedScoreChecks, counts) {
       const rows = asArray(completedScoreChecks);
-      if (!rows.length) return '暂无已完赛场次，等待比分校验。';
-      if (counts.miss > 0) return '未中原因：实际路径偏离主推/备用/博冷，重点复盘弱队进球、反超和下半场节奏。';
-      if (counts.partial > 0) return '半中原因：方向判断成立但比分细节偏差，重点复盘净胜球和零封强度。';
-      return '主推或备用比分路径有效，继续复核同类比赛条件。';
+      if (!rows.length) return 'æš‚æ— å·²å®Œèµ›åœºæ¬¡ï¼Œç­‰å¾…æ¯”åˆ†æ ¡éªŒã€‚';
+      if (counts.miss > 0) return 'æœªä¸­åŽŸå› ï¼šå®žé™…è·¯å¾„åç¦»ä¸»æŽ¨/å¤‡ç”¨/åšå†·ï¼Œé‡ç‚¹å¤ç›˜å¼±é˜Ÿè¿›çƒã€åè¶…å’Œä¸‹åŠåœºèŠ‚å¥ã€‚';
+      if (counts.partial > 0) return 'åŠä¸­åŽŸå› ï¼šæ–¹å‘åˆ¤æ–­æˆç«‹ä½†æ¯”åˆ†ç»†èŠ‚åå·®ï¼Œé‡ç‚¹å¤ç›˜å‡€èƒœçƒå’Œé›¶å°å¼ºåº¦ã€‚';
+      return 'ä¸»æŽ¨æˆ–å¤‡ç”¨æ¯”åˆ†è·¯å¾„æœ‰æ•ˆï¼Œç»§ç»­å¤æ ¸åŒç±»æ¯”èµ›æ¡ä»¶ã€‚';
     }
     function worldcupReviewSummary() {
       const completedScoreChecks = window.WORLDCUP2026_LIVE_DATA?.completedScoreChecks || [];
@@ -2759,10 +2759,10 @@
         return acc;
       }, {hit: 0, partial: 0, miss: 0});
       return {
-        title: '世界杯完赛复盘',
-        state: `命中 ${counts.hit} / 半中 ${counts.partial}`,
-        detail: `已校验 ${completedScoreChecks.length} 场；未中 ${counts.miss} 场。`,
-        sample: '已完赛比分校验',
+        title: 'ä¸–ç•Œæ¯å®Œèµ›å¤ç›˜',
+        state: `å‘½ä¸­ ${counts.hit} / åŠä¸­ ${counts.partial}`,
+        detail: `å·²æ ¡éªŒ ${completedScoreChecks.length} åœºï¼›æœªä¸­ ${counts.miss} åœºã€‚`,
+        sample: 'å·²å®Œèµ›æ¯”åˆ†æ ¡éªŒ',
         reason: worldcupReviewReason(completedScoreChecks, counts)
       };
     }
@@ -2779,43 +2779,43 @@
       return esc(worldcupHomeSummary().detail);
     }
     function buildTodaySignalAdvice(cards) {
-      const strong = cards.filter(card => card.signalLevel === '强观察');
-      const weak = cards.filter(card => card.signalLevel === '弱观察');
-      const paused = cards.filter(card => card.signalLevel === '暂停');
-      if (strong.length) return {level: '强观察', text: `今日优先观察：${strong.map(card => card.title).join('、')}`};
-      if (weak.length) return {level: '弱观察', text: `今日仅弱观察：${weak.map(card => card.title).join('、')}`};
-      if (paused.length) return {level: '暂停', text: '数据异常或条件不足，暂停推荐判断'};
-      return {level: '仅复盘', text: '今日无强信号，建议只看复盘'};
+      const strong = cards.filter(card => card.signalLevel === 'å¼ºè§‚å¯Ÿ');
+      const weak = cards.filter(card => card.signalLevel === 'å¼±è§‚å¯Ÿ');
+      const paused = cards.filter(card => card.signalLevel === 'æš‚åœ');
+      if (strong.length) return {level: 'å¼ºè§‚å¯Ÿ', text: `ä»Šæ—¥ä¼˜å…ˆè§‚å¯Ÿï¼š${strong.map(card => card.title).join('ã€')}`};
+      if (weak.length) return {level: 'å¼±è§‚å¯Ÿ', text: `ä»Šæ—¥ä»…å¼±è§‚å¯Ÿï¼š${weak.map(card => card.title).join('ã€')}`};
+      if (paused.length) return {level: 'æš‚åœ', text: 'æ•°æ®å¼‚å¸¸æˆ–æ¡ä»¶ä¸è¶³ï¼Œæš‚åœæŽ¨èåˆ¤æ–­'};
+      return {level: 'ä»…å¤ç›˜', text: 'ä»Šæ—¥æ— å¼ºä¿¡å·ï¼Œå»ºè®®åªçœ‹å¤ç›˜'};
     }
     function buildTodayFocusCards() {
       const threeSummary = threeFormulaHomeSummary();
       const gateSummary = gateChallengeHomeSummary();
       const cupSummary = worldcupHomeSummary();
       return [
-        {title: '三中三推荐', signalLevel: threeSummary.signalLevel, action: threeSummary.action, detail: threeSummary.detail, reason: threeSummary.reason, tab: 'threeFormulaGate'},
-        {title: '闯三关判断', signalLevel: gateSummary.signalLevel, action: gateSummary.action, detail: gateSummary.detail, reason: gateSummary.reason, tab: 'gateChallenge'},
-        {title: '世界杯比分', signalLevel: cupSummary.signalLevel, action: cupSummary.action, detail: cupSummary.detail, reason: cupSummary.reason, tab: 'worldcupAnalysis'}
+        {title: 'ä¸‰ä¸­ä¸‰æŽ¨è', signalLevel: threeSummary.signalLevel, action: threeSummary.action, detail: threeSummary.detail, reason: threeSummary.reason, tab: 'threeFormulaGate'},
+        {title: 'é—¯ä¸‰å…³åˆ¤æ–­', signalLevel: gateSummary.signalLevel, action: gateSummary.action, detail: gateSummary.detail, reason: gateSummary.reason, tab: 'gateChallenge'},
+        {title: 'ä¸–ç•Œæ¯æ¯”åˆ†', signalLevel: cupSummary.signalLevel, action: cupSummary.action, detail: cupSummary.detail, reason: cupSummary.reason, tab: 'worldcupAnalysis'}
       ];
     }
     function decisionCardHtml(card) {
-      const buttonText = card.signalLevel === '暂停' ? '查看原因' : '进入';
+      const buttonText = card.signalLevel === 'æš‚åœ' ? 'æŸ¥çœ‹åŽŸå› ' : 'è¿›å…¥';
       return `<article class="panel decision-card">
         <h2>${esc(card.title)}</h2>
         ${card.signalLevel ? signalBadgeHtml(card.signalLevel) : ''}
         <div class="metric ${signalLevelClass(card.signalLevel)}">${esc(card.action || '-')}</div>
         <p class="muted">${card.detail || '-'}</p>
-        ${card.reviewOnlyReason ? `<p class="mini">仅复盘原因：${esc(card.reviewOnlyReason)}</p>` : ''}
+        ${card.reviewOnlyReason ? `<p class="mini">ä»…å¤ç›˜åŽŸå› ï¼š${esc(card.reviewOnlyReason)}</p>` : ''}
         ${card.reason ? `<p class="mini">${esc(card.reason)}</p>` : ''}
         ${card.tab ? `<button class="primary decision-jump" type="button" data-target-tab="${esc(card.tab)}">${buttonText}</button>` : ''}
       </article>`;
     }
     function healthCardHtml(card) {
-      const levelClass = card.state === '正常' ? 'result-hit' : 'result-miss';
+      const levelClass = card.state === 'æ­£å¸¸' ? 'result-hit' : 'result-miss';
       return `<article class="panel">
         <h2>${esc(card.title)}</h2>
         <div class="metric ${levelClass}">${esc(card.state)}</div>
         <p class="muted">${card.detail || '-'}</p>
-        ${card.diagnosis ? `<p class="mini">诊断口径：${esc(card.diagnosis)}</p>` : ''}
+        ${card.diagnosis ? `<p class="mini">è¯Šæ–­å£å¾„ï¼š${esc(card.diagnosis)}</p>` : ''}
       </article>`;
     }
     function reviewCardHtml(card) {
@@ -2823,26 +2823,26 @@
         <h2>${esc(card.title)}</h2>
         <div class="metric">${esc(card.state || '-')}</div>
         <p class="muted">${card.detail || '-'}</p>
-        ${card.reason ? `<p class="mini">复盘判断：${esc(card.reason)}</p>` : ''}
-        ${card.sample ? `<p class="mini">复盘口径：${esc(card.sample)}</p>` : ''}
+        ${card.reason ? `<p class="mini">å¤ç›˜åˆ¤æ–­ï¼š${esc(card.reason)}</p>` : ''}
+        ${card.sample ? `<p class="mini">å¤ç›˜å£å¾„ï¼š${esc(card.sample)}</p>` : ''}
       </article>`;
     }
     function dataReviewCards() {
       return [
-        {title: '历史规律观察', action: '查看长期规律', detail: '查看长期规律、历史分布和时间段筛选。', reviewOnlyReason: '偏长期样本，不直接给下期动作。', tab: 'historyPattern'},
-        {title: '推荐跟踪', action: '复盘推荐表现', detail: '跟踪既有推荐在开奖后的命中和遗漏。', reviewOnlyReason: '只校验历史建议，不产生新推荐。', tab: 'recommendationTrack'},
-        {title: '5期窗口', action: '查看特别号窗口', detail: '查看特别号 5 期窗口覆盖表现。', reviewOnlyReason: '窗口覆盖用于观察节奏，不作为单独推荐入口。', tab: 'window5'},
-        {title: '三中三5期窗口', action: '查看复式池窗口', detail: '查看三中三复式池窗口表现。', reviewOnlyReason: '用于验证复式池稳定性，不替代三中三推荐页。', tab: 'threeWindow5'},
-        {title: '高级分析', action: '查看统计分析', detail: '查看更复杂的规律统计和分布分析。', reviewOnlyReason: '指标较多，适合查原因，不适合首页决策。', tab: 'patternWatch'},
-        {title: '手动采集', action: '触发数据采集', detail: '生成或触发开奖记录采集任务。', reviewOnlyReason: '属于数据维护动作，不参与推荐排序。', tab: 'manualFetch'}
+        {title: 'åŽ†å²è§„å¾‹è§‚å¯Ÿ', action: 'æŸ¥çœ‹é•¿æœŸè§„å¾‹', detail: 'æŸ¥çœ‹é•¿æœŸè§„å¾‹ã€åŽ†å²åˆ†å¸ƒå’Œæ—¶é—´æ®µç­›é€‰ã€‚', reviewOnlyReason: 'åé•¿æœŸæ ·æœ¬ï¼Œä¸ç›´æŽ¥ç»™ä¸‹æœŸåŠ¨ä½œã€‚', tab: 'historyPattern'},
+        {title: 'æŽ¨èè·Ÿè¸ª', action: 'å¤ç›˜æŽ¨èè¡¨çŽ°', detail: 'è·Ÿè¸ªæ—¢æœ‰æŽ¨èåœ¨å¼€å¥–åŽçš„å‘½ä¸­å’Œé—æ¼ã€‚', reviewOnlyReason: 'åªæ ¡éªŒåŽ†å²å»ºè®®ï¼Œä¸äº§ç”Ÿæ–°æŽ¨èã€‚', tab: 'recommendationTrack'},
+        {title: '5æœŸçª—å£', action: 'æŸ¥çœ‹ç‰¹åˆ«å·çª—å£', detail: 'æŸ¥çœ‹ç‰¹åˆ«å· 5 æœŸçª—å£è¦†ç›–è¡¨çŽ°ã€‚', reviewOnlyReason: 'çª—å£è¦†ç›–ç”¨äºŽè§‚å¯ŸèŠ‚å¥ï¼Œä¸ä½œä¸ºå•ç‹¬æŽ¨èå…¥å£ã€‚', tab: 'window5'},
+        {title: 'ä¸‰ä¸­ä¸‰5æœŸçª—å£', action: 'æŸ¥çœ‹å¤å¼æ± çª—å£', detail: 'æŸ¥çœ‹ä¸‰ä¸­ä¸‰å¤å¼æ± çª—å£è¡¨çŽ°ã€‚', reviewOnlyReason: 'ç”¨äºŽéªŒè¯å¤å¼æ± ç¨³å®šæ€§ï¼Œä¸æ›¿ä»£ä¸‰ä¸­ä¸‰æŽ¨èé¡µã€‚', tab: 'threeWindow5'},
+        {title: 'é«˜çº§åˆ†æž', action: 'æŸ¥çœ‹ç»Ÿè®¡åˆ†æž', detail: 'æŸ¥çœ‹æ›´å¤æ‚çš„è§„å¾‹ç»Ÿè®¡å’Œåˆ†å¸ƒåˆ†æžã€‚', reviewOnlyReason: 'æŒ‡æ ‡è¾ƒå¤šï¼Œé€‚åˆæŸ¥åŽŸå› ï¼Œä¸é€‚åˆé¦–é¡µå†³ç­–ã€‚', tab: 'patternWatch'},
+        {title: 'æ‰‹åŠ¨é‡‡é›†', action: 'è§¦å‘æ•°æ®é‡‡é›†', detail: 'ç”Ÿæˆæˆ–è§¦å‘å¼€å¥–è®°å½•é‡‡é›†ä»»åŠ¡ã€‚', reviewOnlyReason: 'å±žäºŽæ•°æ®ç»´æŠ¤åŠ¨ä½œï¼Œä¸å‚ä¸ŽæŽ¨èæŽ’åºã€‚', tab: 'manualFetch'}
       ];
     }
     function renderDataReview() {
       const cards = dataReviewCards();
       app.innerHTML = `<div class="grid">
         <section class="panel full">
-          <h2>数据与复盘</h2>
-          <p class="muted">低频验证、窗口观察、高级分析和数据采集集中在这里。日常判断优先看总控台、三中三、闯三关和世界杯。</p>
+          <h2>æ•°æ®ä¸Žå¤ç›˜</h2>
+          <p class="muted">ä½Žé¢‘éªŒè¯ã€çª—å£è§‚å¯Ÿã€é«˜çº§åˆ†æžå’Œæ•°æ®é‡‡é›†é›†ä¸­åœ¨è¿™é‡Œã€‚æ—¥å¸¸åˆ¤æ–­ä¼˜å…ˆçœ‹æ€»æŽ§å°ã€ä¸‰ä¸­ä¸‰ã€é—¯ä¸‰å…³å’Œä¸–ç•Œæ¯ã€‚</p>
         </section>
         ${cards.map(decisionCardHtml).join('')}
       </div>`;
@@ -2857,28 +2857,28 @@
       const todayAdvice = buildTodaySignalAdvice(focusCards);
       app.innerHTML = `<div class="grid">
         <section class="panel full">
-          <h2>今日总建议</h2>
+          <h2>ä»Šæ—¥æ€»å»ºè®®</h2>
           <div class="metric ${signalLevelClass(todayAdvice.level)}">${esc(todayAdvice.text)}</div>
-          <p class="muted">先看信号等级，再进专项页。首页只做决策入口，不展开完整复盘。</p>
+          <p class="muted">å…ˆçœ‹ä¿¡å·ç­‰çº§ï¼Œå†è¿›ä¸“é¡¹é¡µã€‚é¦–é¡µåªåšå†³ç­–å…¥å£ï¼Œä¸å±•å¼€å®Œæ•´å¤ç›˜ã€‚</p>
         </section>
         <section class="panel full">
-          <h2>今日重点</h2>
-          <p class="muted">强观察优先，弱观察谨慎，仅复盘和暂停不做强推荐。</p>
+          <h2>ä»Šæ—¥é‡ç‚¹</h2>
+          <p class="muted">å¼ºè§‚å¯Ÿä¼˜å…ˆï¼Œå¼±è§‚å¯Ÿè°¨æ…Žï¼Œä»…å¤ç›˜å’Œæš‚åœä¸åšå¼ºæŽ¨èã€‚</p>
         </section>
         ${focusCards.map(decisionCardHtml).join('')}
         <section class="panel full">
-          <h2>数据健康</h2>
-          <p class="muted">数据异常时，推荐结果降级为观察，避免使用旧数据做判断。</p>
+          <h2>æ•°æ®å¥åº·</h2>
+          <p class="muted">æ•°æ®å¼‚å¸¸æ—¶ï¼ŒæŽ¨èç»“æžœé™çº§ä¸ºè§‚å¯Ÿï¼Œé¿å…ä½¿ç”¨æ—§æ•°æ®åšåˆ¤æ–­ã€‚</p>
         </section>
         ${healthCards.map(healthCardHtml).join('')}
         <section class="panel full">
-          <h2>复盘摘要</h2>
-          <p class="muted">只展示关键复盘指标，完整历史明细进入专项页查看。</p>
+          <h2>å¤ç›˜æ‘˜è¦</h2>
+          <p class="muted">åªå±•ç¤ºå…³é”®å¤ç›˜æŒ‡æ ‡ï¼Œå®Œæ•´åŽ†å²æ˜Žç»†è¿›å…¥ä¸“é¡¹é¡µæŸ¥çœ‹ã€‚</p>
         </section>
         ${reviewCards.map(reviewCardHtml).join('')}
         <section class="panel full">
-          <h2>风险提醒</h2>
-          <p class="muted">三中三最多展示 6 码复式；闯三关命中后进入下一关，未中重置；世界杯比分只做跟踪和复盘，不保证命中。</p>
+          <h2>é£Žé™©æé†’</h2>
+          <p class="muted">ä¸‰ä¸­ä¸‰æœ€å¤šå±•ç¤º 6 ç å¤å¼ï¼›é—¯ä¸‰å…³å‘½ä¸­åŽè¿›å…¥ä¸‹ä¸€å…³ï¼Œæœªä¸­é‡ç½®ï¼›ä¸–ç•Œæ¯æ¯”åˆ†åªåšè·Ÿè¸ªå’Œå¤ç›˜ï¼Œä¸ä¿è¯å‘½ä¸­ã€‚</p>
         </section>
       </div>`;
       document.querySelectorAll('.decision-jump').forEach(button => {
