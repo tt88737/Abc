@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-19 15:09:47",
+  "generatedAt": "2026-06-19 16:22:58",
   "items": [
     {
       "source": "am",
       "year": "2026",
       "latestIssue": 170,
-      "computedAt": "2026-06-19 15:09:47",
-      "status": "changed",
+      "computedAt": "2026-06-19 16:22:58",
+      "status": "cached",
       "pools": [
         {
           "poolSize": 5,
@@ -600,7 +600,7 @@
           "hitDraws": 10,
           "hitRate": 29.41,
           "computedBy": "python-local-search",
-          "status": "no-change",
+          "status": "cached",
           "changeTime": "2026-06-03 14:51:55",
           "recentCovered": 2,
           "recentTotal": 10,
@@ -1295,7 +1295,7 @@
           "healthStatus": "downrank-observe",
           "healthReason": "two-completed-window-misses",
           "computedBy": "python-local-search",
-          "status": "no-change",
+          "status": "cached",
           "changeTime": "2026-06-09 21:46:00",
           "changeHistory": [
             {
@@ -2106,7 +2106,7 @@
           "healthStatus": "downrank-observe",
           "healthReason": "two-completed-window-misses",
           "computedBy": "python-local-search",
-          "status": "no-change",
+          "status": "cached",
           "changeTime": "2026-06-09 21:46:00",
           "changeHistory": [
             {
@@ -3015,7 +3015,7 @@
           "healthStatus": "normal-observe",
           "healthReason": "compound-window-stable",
           "computedBy": "python-local-search",
-          "status": "changed",
+          "status": "cached",
           "changeTime": "2026-06-19 15:09:47",
           "changeHistory": [
             {
@@ -5660,7 +5660,7 @@
             "48"
           ],
           "computedBy": "python-local-search",
-          "status": "no-change",
+          "status": "cached",
           "changeTime": "2026-06-04 23:09:50",
           "changeHistory": [
             {
@@ -8703,7 +8703,7 @@
             "46"
           ],
           "computedBy": "python-local-search",
-          "status": "no-change",
+          "status": "cached",
           "changeTime": "2026-06-04 23:09:50",
           "changeHistory": [
             {
@@ -12364,7 +12364,7 @@
             "46"
           ],
           "computedBy": "python-local-search",
-          "status": "changed",
+          "status": "cached",
           "changeTime": "2026-06-19 15:09:47",
           "changeHistory": [
             {
@@ -17233,7 +17233,7 @@
             "49"
           ],
           "computedBy": "python-local-search",
-          "status": "changed",
+          "status": "cached",
           "changeTime": "2026-06-19 15:09:47",
           "changeHistory": [
             {
@@ -18075,7 +18075,7 @@
       "source": "hk",
       "year": "2026",
       "latestIssue": 65,
-      "computedAt": "2026-06-19 15:09:47",
+      "computedAt": "2026-06-19 16:22:58",
       "status": "cached",
       "pools": [
         {
