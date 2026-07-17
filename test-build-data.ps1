@@ -157,20 +157,14 @@ try {
     if ($dashboard.Contains('data-tab="overview"') -or $dashboard.Contains('data-tab="daily"') -or $dashboard.Contains('function renderOverview') -or $dashboard.Contains('function renderDaily')) {
         throw 'dashboard should not expose overview or daily modules after cleanup'
     }
-    if (-not $dashboard.Contains('data-tab="window5"') -or -not $dashboard.Contains('data-tab="threeWindow5"') -or -not $dashboard.Contains('data-tab="historyPattern"') -or -not $dashboard.Contains('data-tab="recommendationTrack"') -or -not $dashboard.Contains('data-tab="patternWatch"') -or -not $dashboard.Contains('data-tab="manualFetch"') -or -not $dashboard.Contains('data-tab="worldcupAnalysis"')) {
-        throw 'dashboard should expose five-window, three-hit five-window, history pattern, recommendation tracking, advanced analysis, manual fetch, and world cup tabs'
+    if (-not $dashboard.Contains('data-target-tab="${esc(card.tab)}"') -or -not $dashboard.Contains("tab: 'window5'") -or -not $dashboard.Contains("tab: 'threeWindow5'") -or -not $dashboard.Contains("tab: 'historyPattern'") -or -not $dashboard.Contains("tab: 'recommendationTrack'") -or -not $dashboard.Contains("tab: 'patternWatch'") -or -not $dashboard.Contains("tab: 'manualFetch'")) {
+        throw 'dashboard should expose five-window, three-hit five-window, history pattern, recommendation tracking, advanced analysis, and manual fetch in data review cards'
     }
-    if ($dashboard.Contains('data-tab="worldcupAnalysis" data-href=') -or $dashboard.Contains('window.location.href = btn.dataset.href')) {
-        throw 'world cup analysis should switch as a dashboard tab instead of navigating to a standalone page'
-    }
-    if (-not $dashboard.Contains('function renderWorldcupAnalysis()') -or -not $dashboard.Contains('worldcup2026-dashboard.html') -or -not $dashboard.Contains('worldcupAnalysis: renderWorldcupAnalysis')) {
-        throw 'dashboard should render world cup analysis inside the current tab content'
+    if ($dashboard.Contains('data-tab="worldcupAnalysis"') -or $dashboard.Contains('function renderWorldcupAnalysis') -or $dashboard.Contains('worldcup2026-dashboard.html') -or $dashboard.Contains('ensureWorldcupLiveData') -or $dashboard.Contains('WORLDCUP2026_LIVE_DATA')) {
+        throw 'dashboard should not expose world cup modules after cleanup'
     }
     if (-not $dashboard.Contains('function showLoading') -or -not $dashboard.Contains('setTimeout(async () =>') -or -not $dashboard.Contains('showLoading(tab)')) {
         throw 'dashboard tab switches should show loading before expensive renders'
-    }
-    if (-not $dashboard.Contains("switchTab('worldcupAnalysis')")) {
-        throw 'dashboard should open the world cup tab first'
     }
     if ($dashboard.Contains('data-tab="trend"') -or $dashboard.Contains('data-tab="picker"') -or $dashboard.Contains('data-tab="sandbox"') -or $dashboard.Contains('data-tab="forecast"')) {
         throw 'dashboard should not expose trend, picker, sandbox, or forecast modules'
