@@ -28,7 +28,7 @@ if (Test-Path -LiteralPath $obsoleteCronPath) {
 }
 
 $script = [IO.File]::ReadAllText($cronPath, [Text.Encoding]::UTF8)
-foreach ($marker in @('CRON_SECRET', 'GITHUB_TOKEN', 'manual-fetch.yml', 'workflow_dispatch', 'am_source_url', 'hk_source_url')) {
+foreach ($marker in @('CRON_SECRET', 'MANUAL_FETCH_SECRET', 'GITHUB_TOKEN', 'manual-fetch.yml', 'workflow_dispatch', 'am_source_url', 'hk_source_url')) {
     if (-not $script.Contains($marker)) {
         throw "cron fetch api should contain $marker"
     }
@@ -42,8 +42,30 @@ if (-not $script.Contains("req.headers['authorization']") -or -not $script.Conta
     throw 'manual fetch cron mode should validate bearer authorization'
 }
 
+if (-not $script.Contains('Unauthorized manual fetch request')) {
+    throw 'manual fetch POST should require MANUAL_FETCH_SECRET authorization'
+}
+
 if (-not $script.Contains('2025kj.zkclhb.com:2025/am.html') -or -not $script.Contains('2025kj.zkclhb.com:2025/hk.html')) {
     throw 'cron fetch api should dispatch default Macau and Hong Kong collection URLs'
+}
+
+if ($script.Contains("Access-Control-Allow-Origin', '*'")) {
+    throw 'manual fetch api should not allow wildcard CORS because POST can trigger GitHub Actions'
+}
+
+foreach ($marker in @('function requestOrigin', 'function isSameOriginRequest', 'function isAllowedCollectionUrl')) {
+    if (-not $script.Contains($marker)) {
+        throw "manual fetch api should define $marker"
+    }
+}
+
+if (-not $script.Contains('Forbidden cross-origin manual fetch request')) {
+    throw 'manual fetch POST should reject cross-origin browser requests'
+}
+
+if (-not $script.Contains('Unsupported collection URL host')) {
+    throw 'manual fetch API should reject unsupported collection hosts before dispatching workflow'
 }
 
 Write-Host 'vercel cron fetch shape ok'

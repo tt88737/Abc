@@ -96,8 +96,47 @@ export function bestFixedPool(windows, poolSize = DEFAULT_POOL_SIZE) {
   let bestPool = [];
   let bestCovered = -1;
 
+  function coveredMaskForPool(pool) {
+    return pool.reduce((mask, num) => mask | (masks.get(num) || 0n), 0n);
+  }
+
+  function poolRecentScore(coveredMask) {
+    return windows.reduce((score, _win, idx) => {
+      const bit = 1n << BigInt(idx);
+      return score + ((coveredMask & bit) ? idx + 1 : 0);
+    }, 0);
+  }
+
+  function poolHitStrength(pool) {
+    const poolSet = new Set(pool);
+    return windows.reduce((score, win, idx) => {
+      const hits = win.nums.filter(num => poolSet.has(num)).length;
+      return score + hits * (idx + 1);
+    }, 0);
+  }
+
+  function poolSpreadScore(pool) {
+    const zones = new Set(pool.map(num => Math.floor((Number(num) - 1) / 10)));
+    const tails = new Set(pool.map(num => Number(num) % 10));
+    return zones.size * 10 + tails.size;
+  }
+
+  function tieScore(pool) {
+    const coveredMask = coveredMaskForPool(pool);
+    return [
+      poolRecentScore(coveredMask),
+      poolHitStrength(pool),
+      poolSpreadScore(pool),
+    ];
+  }
+
   function better(pool, covered) {
     if (covered !== bestCovered) return covered > bestCovered;
+    const currentScore = tieScore(pool);
+    const bestScore = tieScore(bestPool);
+    for (let idx = 0; idx < currentScore.length; idx += 1) {
+      if (currentScore[idx] !== bestScore[idx]) return currentScore[idx] > bestScore[idx];
+    }
     const current = pool.map(Number).sort((a, b) => a - b);
     const best = bestPool.map(Number).sort((a, b) => a - b);
     if (!best.length) return true;
@@ -461,12 +500,13 @@ function currentWindowState(rows, windows, phasePlan, fallbackPool, options = {}
       poolSize: options.poolSize || DEFAULT_POOL_SIZE,
     })
     : null;
-  const recommendedPool = crossYearPool?.pool?.length ? crossYearPool.pool : pool;
+  const recommendedPool = pool;
   const sameYearSet = new Set(pool);
-  const crossYearSet = new Set(recommendedPool);
+  const crossYearReferencePool = crossYearPool?.pool?.length ? crossYearPool.pool : pool;
+  const crossYearSet = new Set(crossYearReferencePool);
   const comparePools = {
     sameYearOnly: pool.filter(num => !crossYearSet.has(num)),
-    crossYearOnly: recommendedPool.filter(num => !sameYearSet.has(num)),
+    crossYearOnly: crossYearReferencePool.filter(num => !sameYearSet.has(num)),
     intersection: pool.filter(num => crossYearSet.has(num)),
   };
   const poolSet = new Set(recommendedPool);
@@ -504,11 +544,11 @@ function currentWindowState(rows, windows, phasePlan, fallbackPool, options = {}
     pool,
     crossYearPool,
     recommendedPool,
-    recommendationMode: crossYearPool?.pool?.length ? 'cross-year-stage' : 'same-year-stage',
+    recommendationMode: 'same-year-stage',
     comparePools,
     tracking: {
       status: trackingStatus,
-      rule: crossYearPool?.pool?.length ? 'fixed-8-cross-year-stage' : 'fixed-8-same-year-stage',
+      rule: 'fixed-8-same-year-stage',
       noChangeBeforeWindowEnd: true,
       recalcWhen: 'completed-window-miss',
       stageDecayWhen: 'two-completed-window-misses',
@@ -608,7 +648,7 @@ export function analyzePattern(records, options = {}) {
 
 function markdownReport(report) {
   const lines = [
-    '# 固定8码五期窗口规律验证',
+    '# 固定8码阶段窗口规律验证',
     '',
     `生成时间：${report.generatedAt}`,
     '',

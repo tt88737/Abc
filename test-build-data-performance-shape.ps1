@@ -44,7 +44,7 @@ if (-not $text.Contains('function Invoke-Profiled')) {
     throw 'build-data.ps1 should define Invoke-Profiled'
 }
 
-foreach ($stage in @('parse-pages', 'records-json-serialize', 'three-compound-python')) {
+foreach ($stage in @('parse-pages', 'records-json-serialize', 'fixed8-pattern-node')) {
     if (-not $text.Contains("'$stage'")) {
         throw "build profile should include stage $stage"
     }

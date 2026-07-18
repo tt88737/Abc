@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-07-17T15:25:24.834Z",
+  "generatedAt": "2026-07-18T09:45:56.182Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -105,14 +105,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230,
             "windowCount": 20,
             "pool": [
-              "01",
+              "04",
               "05",
-              "06",
               "08",
+              "17",
               "24",
-              "31",
               "35",
-              "48"
+              "37",
+              "39"
             ],
             "coveredWindows": 20,
             "missCount": 0,
@@ -124,14 +124,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 365,
             "windowCount": 25,
             "pool": [
-              "01",
               "03",
-              "19",
-              "21",
+              "04",
+              "05",
               "24",
               "34",
               "39",
-              "41"
+              "41",
+              "46"
             ],
             "coveredWindows": 25,
             "missCount": 0,
@@ -2061,14 +2061,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "basisEnd": 355,
         "basisWindowCount": 25,
         "pool": [
-          "01",
           "03",
-          "19",
-          "21",
+          "04",
+          "05",
           "24",
           "34",
           "39",
-          "41"
+          "41",
+          "46"
         ],
         "crossYearPool": {
           "phase": {
@@ -2076,14 +2076,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 365
           },
           "pool": [
-            "01",
             "03",
-            "19",
-            "21",
+            "04",
+            "05",
             "24",
             "34",
             "39",
-            "41"
+            "41",
+            "46"
           ],
           "basis": {
             "historyYearCount": 0,
@@ -2093,33 +2093,33 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
           "03",
-          "19",
-          "21",
+          "04",
+          "05",
           "24",
           "34",
           "39",
-          "41"
+          "41",
+          "46"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [],
           "crossYearOnly": [],
           "intersection": [
-            "01",
             "03",
-            "19",
-            "21",
+            "04",
+            "05",
             "24",
             "34",
             "39",
-            "41"
+            "41",
+            "46"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -2553,14 +2553,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "01",
-              "02",
               "03",
-              "10",
+              "08",
+              "09",
               "14",
+              "16",
               "23",
-              "31",
-              "33"
+              "33",
+              "49"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -2573,13 +2573,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 23,
             "pool": [
               "01",
-              "03",
               "04",
-              "05",
-              "09",
-              "11",
-              "33",
-              "48"
+              "12",
+              "14",
+              "36",
+              "39",
+              "48",
+              "49"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -2591,14 +2591,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 365,
             "windowCount": 27,
             "pool": [
-              "01",
-              "05",
-              "11",
-              "24",
+              "08",
+              "19",
               "25",
-              "26",
+              "37",
               "39",
-              "44"
+              "44",
+              "45",
+              "46"
             ],
             "coveredWindows": 27,
             "missCount": 0,
@@ -5772,7 +5772,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
           "37",
           "39"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [],
           "crossYearOnly": [],
@@ -5789,7 +5789,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -5808,10 +5808,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "rolling-contiguous",
       "poolSize": 8,
       "pool": [
-        "01",
         "05",
         "08",
         "14",
+        "30",
         "33",
         "37",
         "45",
@@ -5832,6 +5832,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "22",
             "26",
             "41"
+          ]
+        },
+        {
+          "start": 13,
+          "end": 17,
+          "nums": [
+            "01",
+            "03",
+            "17",
+            "29",
+            "35"
           ]
         },
         {
@@ -5856,36 +5867,36 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 62,
-          "end": 66,
+          "start": 57,
+          "end": 61,
           "nums": [
-            "03",
-            "16",
-            "27",
-            "30",
+            "01",
+            "28",
+            "31",
+            "32",
+            "41"
+          ]
+        },
+        {
+          "start": 58,
+          "end": 62,
+          "nums": [
+            "01",
+            "28",
+            "31",
+            "32",
             "40"
           ]
         },
         {
-          "start": 63,
-          "end": 67,
+          "start": 59,
+          "end": 63,
           "nums": [
+            "01",
             "03",
-            "16",
-            "27",
-            "30",
-            "31"
-          ]
-        },
-        {
-          "start": 64,
-          "end": 68,
-          "nums": [
-            "10",
-            "16",
-            "27",
-            "30",
-            "31"
+            "28",
+            "32",
+            "40"
           ]
         },
         {
@@ -5973,6 +5984,28 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 118,
+          "end": 122,
+          "nums": [
+            "01",
+            "27",
+            "31",
+            "35",
+            "36"
+          ]
+        },
+        {
+          "start": 119,
+          "end": 123,
+          "nums": [
+            "01",
+            "04",
+            "31",
+            "35",
+            "36"
+          ]
+        },
+        {
           "start": 138,
           "end": 142,
           "nums": [
@@ -6025,61 +6058,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 174,
-          "end": 178,
-          "nums": [
-            "04",
-            "06",
-            "09",
-            "30",
-            "41"
-          ]
-        },
-        {
-          "start": 175,
-          "end": 179,
-          "nums": [
-            "04",
-            "06",
-            "09",
-            "30",
-            "49"
-          ]
-        },
-        {
-          "start": 176,
-          "end": 180,
-          "nums": [
-            "04",
-            "06",
-            "10",
-            "30",
-            "49"
-          ]
-        },
-        {
-          "start": 177,
-          "end": 181,
-          "nums": [
-            "04",
-            "06",
-            "10",
-            "30",
-            "49"
-          ]
-        },
-        {
-          "start": 178,
-          "end": 182,
-          "nums": [
-            "06",
-            "10",
-            "30",
-            "47",
-            "49"
-          ]
-        },
-        {
           "start": 179,
           "end": 183,
           "nums": [
@@ -6099,6 +6077,80 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "26",
             "28",
             "47"
+          ]
+        },
+        {
+          "start": 181,
+          "end": 185,
+          "nums": [
+            "01",
+            "06",
+            "26",
+            "28",
+            "47"
+          ]
+        },
+        {
+          "start": 182,
+          "end": 186,
+          "nums": [
+            "01",
+            "20",
+            "26",
+            "28",
+            "47"
+          ]
+        },
+        {
+          "start": 183,
+          "end": 187,
+          "nums": [
+            "01",
+            "20",
+            "26",
+            "28"
+          ]
+        },
+        {
+          "start": 184,
+          "end": 188,
+          "nums": [
+            "01",
+            "18",
+            "20",
+            "26"
+          ]
+        },
+        {
+          "start": 185,
+          "end": 189,
+          "nums": [
+            "01",
+            "17",
+            "18",
+            "20"
+          ]
+        },
+        {
+          "start": 186,
+          "end": 190,
+          "nums": [
+            "01",
+            "02",
+            "17",
+            "18",
+            "20"
+          ]
+        },
+        {
+          "start": 187,
+          "end": 191,
+          "nums": [
+            "01",
+            "02",
+            "17",
+            "18",
+            "23"
           ]
         },
         {
@@ -6168,6 +6220,39 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 251,
+          "end": 255,
+          "nums": [
+            "01",
+            "02",
+            "31",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 252,
+          "end": 256,
+          "nums": [
+            "01",
+            "02",
+            "19",
+            "31",
+            "43"
+          ]
+        },
+        {
+          "start": 253,
+          "end": 257,
+          "nums": [
+            "01",
+            "02",
+            "19",
+            "43",
+            "47"
+          ]
+        },
+        {
           "start": 297,
           "end": 301,
           "nums": [
@@ -6205,39 +6290,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "25",
             "34",
             "36",
-            "42"
-          ]
-        },
-        {
-          "start": 301,
-          "end": 305,
-          "nums": [
-            "03",
-            "25",
-            "30",
-            "34",
-            "42"
-          ]
-        },
-        {
-          "start": 302,
-          "end": 306,
-          "nums": [
-            "11",
-            "25",
-            "30",
-            "34",
-            "42"
-          ]
-        },
-        {
-          "start": 303,
-          "end": 307,
-          "nums": [
-            "11",
-            "30",
-            "34",
-            "35",
             "42"
           ]
         },
@@ -6292,61 +6344,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "22",
             "38",
             "44"
-          ]
-        },
-        {
-          "start": 324,
-          "end": 328,
-          "nums": [
-            "09",
-            "22",
-            "30",
-            "38",
-            "44"
-          ]
-        },
-        {
-          "start": 325,
-          "end": 329,
-          "nums": [
-            "09",
-            "30",
-            "35",
-            "38",
-            "44"
-          ]
-        },
-        {
-          "start": 326,
-          "end": 330,
-          "nums": [
-            "06",
-            "30",
-            "35",
-            "38",
-            "44"
-          ]
-        },
-        {
-          "start": 327,
-          "end": 331,
-          "nums": [
-            "06",
-            "30",
-            "35",
-            "39",
-            "44"
-          ]
-        },
-        {
-          "start": 328,
-          "end": 332,
-          "nums": [
-            "03",
-            "06",
-            "30",
-            "35",
-            "39"
           ]
         },
         {
@@ -6439,12 +6436,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "02",
-        "16",
+        "03",
+        "08",
         "19",
         "20",
-        "21",
-        "22",
+        "26",
+        "46",
         "47",
         "49"
       ],
@@ -6455,14 +6452,46 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 81,
-          "end": 85,
+          "start": 51,
+          "end": 55,
           "nums": [
-            "04",
-            "06",
+            "02",
+            "10",
             "13",
-            "26",
-            "45"
+            "27",
+            "40"
+          ]
+        },
+        {
+          "start": 106,
+          "end": 110,
+          "nums": [
+            "14",
+            "16",
+            "34",
+            "40",
+            "43"
+          ]
+        },
+        {
+          "start": 111,
+          "end": 115,
+          "nums": [
+            "09",
+            "10",
+            "11",
+            "21",
+            "27"
+          ]
+        },
+        {
+          "start": 141,
+          "end": 145,
+          "nums": [
+            "02",
+            "06",
+            "27",
+            "28"
           ]
         },
         {
@@ -6476,55 +6505,34 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 211,
-          "end": 215,
+          "start": 231,
+          "end": 235,
           "nums": [
-            "26",
-            "39",
-            "41",
-            "42",
-            "44"
+            "15",
+            "22",
+            "31",
+            "41"
           ]
         },
         {
-          "start": 296,
-          "end": 300,
+          "start": 266,
+          "end": 270,
           "nums": [
-            "03",
-            "14",
-            "17",
-            "39",
-            "42"
+            "04",
+            "09",
+            "21",
+            "45"
           ]
         },
         {
-          "start": 306,
-          "end": 310,
+          "start": 301,
+          "end": 305,
           "nums": [
-            "30",
-            "33",
-            "36",
-            "46"
-          ]
-        },
-        {
-          "start": 316,
-          "end": 320,
-          "nums": [
-            "03",
-            "11",
-            "38",
-            "44"
-          ]
-        },
-        {
-          "start": 321,
-          "end": 325,
-          "nums": [
-            "01",
-            "05",
-            "08",
-            "17"
+            "02",
+            "09",
+            "23",
+            "44",
+            "48"
           ]
         },
         {
@@ -6538,24 +6546,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 341,
-          "end": 345,
+          "start": 336,
+          "end": 340,
           "nums": [
-            "03",
-            "07",
-            "25",
-            "38"
-          ]
-        },
-        {
-          "start": 346,
-          "end": 350,
-          "nums": [
-            "26",
-            "33",
-            "36",
-            "41",
-            "45"
+            "01",
+            "06",
+            "21",
+            "29",
+            "37"
           ]
         }
       ],
@@ -6619,14 +6617,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "02",
-              "04",
-              "09",
-              "16",
+              "06",
+              "08",
+              "11",
               "19",
               "22",
               "32",
-              "35"
+              "40",
+              "49"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -6638,14 +6636,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230,
             "windowCount": 23,
             "pool": [
-              "01",
               "02",
-              "05",
-              "13",
+              "04",
               "16",
               "19",
+              "39",
               "41",
-              "47"
+              "47",
+              "49"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -6657,14 +6655,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 365,
             "windowCount": 27,
             "pool": [
-              "02",
               "06",
               "15",
               "17",
               "18",
               "38",
               "45",
-              "46"
+              "46",
+              "48"
             ],
             "coveredWindows": 27,
             "missCount": 0,
@@ -9838,12 +9836,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "basisEnd": null,
         "basisWindowCount": 0,
         "pool": [
-          "02",
-          "16",
+          "03",
+          "08",
           "19",
           "20",
-          "21",
-          "22",
+          "26",
+          "46",
           "47",
           "49"
         ],
@@ -9853,12 +9851,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115
           },
           "pool": [
-            "02",
-            "16",
+            "03",
+            "08",
             "19",
             "20",
-            "21",
-            "22",
+            "26",
+            "46",
             "47",
             "49"
           ],
@@ -9870,33 +9868,33 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "02",
-          "16",
+          "03",
+          "08",
           "19",
           "20",
-          "21",
-          "22",
+          "26",
+          "46",
           "47",
           "49"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [],
           "crossYearOnly": [],
           "intersection": [
-            "02",
-            "16",
+            "03",
+            "08",
             "19",
             "20",
-            "21",
-            "22",
+            "26",
+            "46",
             "47",
             "49"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -10603,13 +10601,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "poolSize": 8,
       "pool": [
         "01",
-        "03",
+        "04",
         "06",
-        "09",
         "10",
         "23",
-        "32",
-        "48"
+        "28",
+        "29",
+        "32"
       ],
       "totalWindows": 73,
       "coveredWindows": 63,
@@ -10629,6 +10627,28 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 21,
+          "end": 25,
+          "nums": [
+            "07",
+            "09",
+            "36",
+            "40",
+            "45"
+          ]
+        },
+        {
+          "start": 66,
+          "end": 70,
+          "nums": [
+            "08",
+            "20",
+            "40",
+            "42",
+            "48"
+          ]
+        },
+        {
           "start": 76,
           "end": 80,
           "nums": [
@@ -10637,16 +10657,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "19",
             "21",
             "37"
-          ]
-        },
-        {
-          "start": 106,
-          "end": 110,
-          "nums": [
-            "16",
-            "20",
-            "28",
-            "36"
           ]
         },
         {
@@ -10672,46 +10682,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 156,
-          "end": 160,
+          "start": 151,
+          "end": 155,
           "nums": [
-            "04",
-            "14",
-            "42",
-            "43",
-            "44"
-          ]
-        },
-        {
-          "start": 206,
-          "end": 210,
-          "nums": [
+            "03",
             "07",
-            "28",
-            "38",
-            "40",
-            "49"
-          ]
-        },
-        {
-          "start": 211,
-          "end": 215,
-          "nums": [
-            "14",
-            "28",
-            "34",
-            "42",
-            "49"
-          ]
-        },
-        {
-          "start": 231,
-          "end": 235,
-          "nums": [
-            "04",
             "12",
-            "13",
-            "45"
+            "19",
+            "30"
           ]
         },
         {
@@ -10722,6 +10700,28 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "20",
             "25",
             "37"
+          ]
+        },
+        {
+          "start": 261,
+          "end": 265,
+          "nums": [
+            "09",
+            "20",
+            "25",
+            "31",
+            "39"
+          ]
+        },
+        {
+          "start": 291,
+          "end": 295,
+          "nums": [
+            "20",
+            "25",
+            "35",
+            "44",
+            "48"
           ]
         }
       ],
@@ -10800,11 +10800,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 23,
             "pool": [
               "01",
-              "02",
-              "05",
               "06",
               "09",
-              "16",
+              "13",
+              "21",
+              "36",
               "39",
               "48"
             ],
@@ -10818,14 +10818,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230,
             "windowCount": 23,
             "pool": [
-              "01",
-              "02",
               "03",
               "06",
-              "08",
               "10",
+              "31",
+              "36",
               "38",
-              "42"
+              "42",
+              "44"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -10838,13 +10838,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 27,
             "pool": [
               "01",
-              "04",
-              "08",
+              "10",
+              "13",
               "19",
               "20",
-              "28",
-              "29",
-              "41"
+              "34",
+              "41",
+              "46"
             ],
             "coveredWindows": 27,
             "missCount": 0,
@@ -14005,13 +14005,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "basisWindowCount": 0,
         "pool": [
           "01",
-          "03",
+          "04",
           "06",
-          "09",
           "10",
           "23",
-          "32",
-          "48"
+          "28",
+          "29",
+          "32"
         ],
         "crossYearPool": {
           "phase": {
@@ -14020,13 +14020,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
           },
           "pool": [
             "01",
-            "02",
-            "03",
             "06",
-            "09",
+            "08",
             "10",
             "23",
-            "32"
+            "28",
+            "32",
+            "49"
           ],
           "basis": {
             "historyYearCount": 2,
@@ -14037,35 +14037,36 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "recommendedPool": [
           "01",
-          "02",
-          "03",
+          "04",
           "06",
-          "09",
           "10",
           "23",
+          "28",
+          "29",
           "32"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
-            "48"
+            "04",
+            "29"
           ],
           "crossYearOnly": [
-            "02"
+            "08",
+            "49"
           ],
           "intersection": [
             "01",
-            "03",
             "06",
-            "09",
             "10",
             "23",
+            "28",
             "32"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -14849,7 +14850,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "02",
+        "04",
         "05",
         "16",
         "20",
@@ -14872,6 +14873,28 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "23",
             "29",
             "47"
+          ]
+        },
+        {
+          "start": 41,
+          "end": 45,
+          "nums": [
+            "02",
+            "15",
+            "28",
+            "41",
+            "42"
+          ]
+        },
+        {
+          "start": 46,
+          "end": 50,
+          "nums": [
+            "02",
+            "09",
+            "30",
+            "35",
+            "39"
           ]
         },
         {
@@ -14907,6 +14930,28 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 121,
+          "end": 125,
+          "nums": [
+            "02",
+            "12",
+            "21",
+            "22",
+            "36"
+          ]
+        },
+        {
+          "start": 126,
+          "end": 130,
+          "nums": [
+            "02",
+            "07",
+            "17",
+            "48",
+            "49"
+          ]
+        },
+        {
           "start": 166,
           "end": 170,
           "nums": [
@@ -14917,17 +14962,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 206,
-          "end": 210,
-          "nums": [
-            "04",
-            "14",
-            "18",
-            "19",
-            "33"
-          ]
-        },
-        {
           "start": 216,
           "end": 220,
           "nums": [
@@ -14935,39 +14969,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "15",
             "21",
             "37"
-          ]
-        },
-        {
-          "start": 241,
-          "end": 245,
-          "nums": [
-            "01",
-            "03",
-            "04",
-            "17",
-            "30"
-          ]
-        },
-        {
-          "start": 306,
-          "end": 310,
-          "nums": [
-            "03",
-            "04",
-            "08",
-            "09",
-            "22"
-          ]
-        },
-        {
-          "start": 346,
-          "end": 350,
-          "nums": [
-            "01",
-            "04",
-            "17",
-            "28",
-            "41"
           ]
         }
       ],
@@ -15032,13 +15033,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "02",
+              "05",
               "06",
               "17",
               "30",
               "31",
               "34",
-              "35",
+              "41",
               "43"
             ],
             "coveredWindows": 23,
@@ -15052,13 +15053,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 23,
             "pool": [
               "01",
-              "02",
-              "04",
+              "05",
               "14",
-              "16",
-              "20",
-              "25",
-              "46"
+              "21",
+              "27",
+              "37",
+              "43",
+              "49"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -15071,8 +15072,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 27,
             "pool": [
               "01",
-              "02",
-              "03",
+              "04",
+              "21",
               "24",
               "27",
               "40",
@@ -18196,7 +18197,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "basisEnd": null,
         "basisWindowCount": 0,
         "pool": [
-          "02",
+          "04",
           "05",
           "16",
           "20",
@@ -18211,14 +18212,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115
           },
           "pool": [
-            "01",
-            "02",
             "05",
+            "06",
+            "08",
             "09",
             "16",
-            "27",
             "40",
-            "46"
+            "46",
+            "49"
           ],
           "basis": {
             "historyYearCount": 3,
@@ -18228,37 +18229,39 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
-          "02",
+          "04",
           "05",
-          "09",
           "16",
+          "20",
+          "24",
           "27",
           "40",
           "46"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
+            "04",
             "20",
-            "24"
+            "24",
+            "27"
           ],
           "crossYearOnly": [
-            "01",
-            "09"
+            "06",
+            "08",
+            "09",
+            "49"
           ],
           "intersection": [
-            "02",
             "05",
             "16",
-            "27",
             "40",
             "46"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -18282,8 +18285,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "21",
         "24",
         "27",
-        "30",
         "40",
+        "44",
         "46"
       ],
       "totalWindows": 362,
@@ -18304,6 +18307,39 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 24,
+          "end": 28,
+          "nums": [
+            "01",
+            "09",
+            "28",
+            "30",
+            "32"
+          ]
+        },
+        {
+          "start": 25,
+          "end": 29,
+          "nums": [
+            "09",
+            "16",
+            "28",
+            "30",
+            "32"
+          ]
+        },
+        {
+          "start": 26,
+          "end": 30,
+          "nums": [
+            "03",
+            "09",
+            "16",
+            "28",
+            "30"
+          ]
+        },
+        {
           "start": 27,
           "end": 31,
           "nums": [
@@ -18312,28 +18348,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "09",
             "16",
             "28"
-          ]
-        },
-        {
-          "start": 34,
-          "end": 38,
-          "nums": [
-            "06",
-            "10",
-            "11",
-            "29",
-            "44"
-          ]
-        },
-        {
-          "start": 35,
-          "end": 39,
-          "nums": [
-            "06",
-            "10",
-            "19",
-            "29",
-            "44"
           ]
         },
         {
@@ -18365,6 +18379,60 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "09",
             "28",
             "42"
+          ]
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "nums": [
+            "02",
+            "09",
+            "28",
+            "30"
+          ]
+        },
+        {
+          "start": 45,
+          "end": 49,
+          "nums": [
+            "02",
+            "09",
+            "28",
+            "30",
+            "35"
+          ]
+        },
+        {
+          "start": 46,
+          "end": 50,
+          "nums": [
+            "02",
+            "09",
+            "30",
+            "35",
+            "39"
+          ]
+        },
+        {
+          "start": 47,
+          "end": 51,
+          "nums": [
+            "09",
+            "12",
+            "30",
+            "35",
+            "39"
+          ]
+        },
+        {
+          "start": 48,
+          "end": 52,
+          "nums": [
+            "09",
+            "12",
+            "30",
+            "35",
+            "39"
           ]
         },
         {
@@ -18438,38 +18506,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "16",
             "19",
             "34"
-          ]
-        },
-        {
-          "start": 77,
-          "end": 81,
-          "nums": [
-            "05",
-            "13",
-            "32",
-            "38",
-            "44"
-          ]
-        },
-        {
-          "start": 78,
-          "end": 82,
-          "nums": [
-            "05",
-            "13",
-            "22",
-            "38",
-            "44"
-          ]
-        },
-        {
-          "start": 79,
-          "end": 83,
-          "nums": [
-            "13",
-            "22",
-            "38",
-            "44"
           ]
         },
         {
@@ -18602,16 +18638,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 136,
-          "end": 140,
-          "nums": [
-            "14",
-            "16",
-            "35",
-            "44"
-          ]
-        },
-        {
           "start": 137,
           "end": 141,
           "nums": [
@@ -18629,16 +18655,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "12",
             "16",
             "43"
-          ]
-        },
-        {
-          "start": 164,
-          "end": 168,
-          "nums": [
-            "03",
-            "14",
-            "32",
-            "44"
           ]
         },
         {
@@ -18800,6 +18816,38 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 221,
+          "end": 225,
+          "nums": [
+            "01",
+            "05",
+            "19",
+            "22",
+            "30"
+          ]
+        },
+        {
+          "start": 222,
+          "end": 226,
+          "nums": [
+            "05",
+            "19",
+            "22",
+            "30",
+            "34"
+          ]
+        },
+        {
+          "start": 272,
+          "end": 276,
+          "nums": [
+            "29",
+            "30",
+            "41",
+            "49"
+          ]
+        },
+        {
           "start": 273,
           "end": 277,
           "nums": [
@@ -18818,17 +18866,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "29",
             "41",
             "49"
-          ]
-        },
-        {
-          "start": 288,
-          "end": 292,
-          "nums": [
-            "04",
-            "11",
-            "14",
-            "26",
-            "44"
           ]
         },
         {
@@ -18851,50 +18888,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "08",
             "09",
             "22"
-          ]
-        },
-        {
-          "start": 314,
-          "end": 318,
-          "nums": [
-            "05",
-            "13",
-            "18",
-            "35",
-            "44"
-          ]
-        },
-        {
-          "start": 315,
-          "end": 319,
-          "nums": [
-            "05",
-            "13",
-            "35",
-            "41",
-            "44"
-          ]
-        },
-        {
-          "start": 316,
-          "end": 320,
-          "nums": [
-            "05",
-            "12",
-            "13",
-            "41",
-            "44"
-          ]
-        },
-        {
-          "start": 317,
-          "end": 321,
-          "nums": [
-            "12",
-            "13",
-            "36",
-            "41",
-            "44"
           ]
         },
         {
@@ -18940,6 +18933,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "47",
             "49"
           ]
+        },
+        {
+          "start": 362,
+          "end": 366,
+          "nums": [
+            "01",
+            "02",
+            "04",
+            "06",
+            "30"
+          ]
         }
       ],
       "phasePlan": null,
@@ -18954,14 +18958,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "03",
-        "06",
-        "10",
+        "14",
+        "16",
         "18",
         "23",
-        "25",
-        "41",
-        "42"
+        "24",
+        "38",
+        "40",
+        "44"
       ],
       "totalWindows": 71,
       "coveredWindows": 62,
@@ -18980,89 +18984,90 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 66,
-          "end": 70,
-          "nums": [
-            "12",
-            "29",
-            "43",
-            "44"
-          ]
-        },
-        {
-          "start": 81,
-          "end": 85,
-          "nums": [
-            "20",
-            "28",
-            "34",
-            "35",
-            "38"
-          ]
-        },
-        {
-          "start": 86,
-          "end": 90,
-          "nums": [
-            "14",
-            "15",
-            "30",
-            "35"
-          ]
-        },
-        {
-          "start": 171,
-          "end": 175,
-          "nums": [
-            "30",
-            "36",
-            "38",
-            "39",
-            "47"
-          ]
-        },
-        {
-          "start": 176,
-          "end": 180,
+          "start": 6,
+          "end": 10,
           "nums": [
             "04",
-            "24",
-            "27",
-            "29",
-            "36"
+            "15",
+            "25",
+            "30",
+            "46"
           ]
         },
         {
-          "start": 226,
-          "end": 230,
+          "start": 11,
+          "end": 15,
+          "nums": [
+            "06",
+            "07",
+            "27",
+            "36",
+            "39"
+          ]
+        },
+        {
+          "start": 41,
+          "end": 45,
+          "nums": [
+            "07",
+            "28",
+            "30",
+            "37",
+            "42"
+          ]
+        },
+        {
+          "start": 96,
+          "end": 100,
+          "nums": [
+            "03",
+            "20",
+            "31",
+            "34",
+            "42"
+          ]
+        },
+        {
+          "start": 246,
+          "end": 250,
           "nums": [
             "02",
-            "15",
-            "31",
-            "39",
-            "40"
+            "06",
+            "12",
+            "25"
           ]
         },
         {
-          "start": 336,
-          "end": 340,
+          "start": 266,
+          "end": 270,
           "nums": [
-            "08",
-            "09",
-            "16",
-            "17",
+            "10",
+            "29",
+            "31",
+            "35",
+            "41"
+          ]
+        },
+        {
+          "start": 301,
+          "end": 305,
+          "nums": [
+            "05",
+            "15",
+            "22",
+            "42",
             "48"
           ]
         },
         {
-          "start": 351,
-          "end": 355,
+          "start": 326,
+          "end": 330,
           "nums": [
-            "01",
-            "04",
-            "08",
-            "30",
-            "44"
+            "03",
+            "17",
+            "19",
+            "36",
+            "37"
           ]
         }
       ],
@@ -19128,14 +19133,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "01",
               "03",
               "10",
-              "12",
               "20",
               "30",
               "37",
-              "39"
+              "38",
+              "39",
+              "43"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -19147,13 +19152,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230,
             "windowCount": 23,
             "pool": [
-              "01",
               "02",
-              "04",
-              "05",
+              "08",
               "09",
-              "25",
-              "45",
+              "10",
+              "15",
+              "23",
+              "24",
               "47"
             ],
             "coveredWindows": 23,
@@ -19166,14 +19171,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 365,
             "windowCount": 25,
             "pool": [
-              "01",
               "03",
-              "05",
+              "04",
               "06",
-              "09",
-              "23",
-              "38",
-              "41"
+              "16",
+              "24",
+              "41",
+              "42",
+              "44"
             ],
             "coveredWindows": 25,
             "missCount": 0,
@@ -22174,14 +22179,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "basisEnd": null,
         "basisWindowCount": 0,
         "pool": [
-          "03",
-          "06",
-          "10",
+          "14",
+          "16",
           "18",
           "23",
-          "25",
-          "41",
-          "42"
+          "24",
+          "38",
+          "40",
+          "44"
         ],
         "crossYearPool": {
           "phase": {
@@ -22189,14 +22194,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115
           },
           "pool": [
-            "02",
-            "03",
             "06",
+            "08",
             "09",
-            "10",
+            "14",
             "16",
             "23",
-            "35"
+            "40",
+            "49"
           ],
           "basis": {
             "historyYearCount": 4,
@@ -22206,39 +22211,39 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "02",
-          "03",
-          "06",
-          "09",
-          "10",
+          "14",
           "16",
+          "18",
           "23",
-          "35"
+          "24",
+          "38",
+          "40",
+          "44"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
             "18",
-            "25",
-            "41",
-            "42"
+            "24",
+            "38",
+            "44"
           ],
           "crossYearOnly": [
-            "02",
+            "06",
+            "08",
             "09",
-            "16",
-            "35"
+            "49"
           ],
           "intersection": [
-            "03",
-            "06",
-            "10",
-            "23"
+            "14",
+            "16",
+            "23",
+            "40"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -22892,10 +22897,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "pool": [
         "01",
         "03",
-        "05",
         "09",
-        "12",
         "16",
+        "18",
+        "33",
         "37",
         "41"
       ],
@@ -22906,25 +22911,25 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 71,
-          "end": 75,
+          "start": 16,
+          "end": 20,
           "nums": [
-            "10",
-            "33",
-            "34",
-            "46",
-            "48"
+            "06",
+            "12",
+            "32",
+            "39",
+            "46"
           ]
         },
         {
-          "start": 176,
-          "end": 180,
+          "start": 86,
+          "end": 90,
           "nums": [
-            "10",
-            "14",
-            "15",
-            "18",
-            "21"
+            "12",
+            "26",
+            "27",
+            "36",
+            "49"
           ]
         }
       ],
@@ -22976,13 +22981,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 23,
             "pool": [
               "01",
-              "02",
-              "06",
-              "18",
-              "22",
-              "23",
+              "09",
+              "16",
+              "17",
+              "24",
               "27",
-              "33"
+              "28",
+              "46"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -22995,11 +23000,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 16,
             "pool": [
               "01",
-              "02",
-              "05",
               "09",
               "15",
               "16",
+              "23",
+              "26",
               "37",
               "41"
             ],
@@ -24676,11 +24681,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "basisWindowCount": 16,
         "pool": [
           "01",
-          "02",
-          "05",
           "09",
           "15",
           "16",
+          "23",
+          "26",
           "37",
           "41"
         ],
@@ -24691,13 +24696,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
           },
           "pool": [
             "01",
-            "02",
             "04",
-            "05",
-            "09",
+            "15",
             "16",
+            "37",
+            "39",
             "41",
-            "48"
+            "49"
           ],
           "basis": {
             "historyYearCount": 6,
@@ -24708,36 +24713,37 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "recommendedPool": [
           "01",
-          "02",
-          "04",
-          "05",
           "09",
+          "15",
           "16",
-          "41",
-          "48"
+          "23",
+          "26",
+          "37",
+          "41"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
-            "15",
-            "37"
+            "09",
+            "23",
+            "26"
           ],
           "crossYearOnly": [
             "04",
-            "48"
+            "39",
+            "49"
           ],
           "intersection": [
             "01",
-            "02",
-            "05",
-            "09",
+            "15",
             "16",
+            "37",
             "41"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -24967,14 +24973,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "01",
-        "02",
-        "06",
-        "08",
-        "13",
         "14",
+        "21",
         "22",
-        "24"
+        "23",
+        "28",
+        "39",
+        "45",
+        "49"
       ],
       "totalWindows": 6,
       "coveredWindows": 6,
@@ -25008,14 +25014,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 6,
             "pool": [
-              "01",
-              "02",
-              "06",
-              "08",
-              "13",
               "14",
+              "21",
               "22",
-              "24"
+              "23",
+              "28",
+              "39",
+              "45",
+              "49"
             ],
             "coveredWindows": 6,
             "missCount": 0,
@@ -25277,14 +25283,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115
           },
           "pool": [
-            "01",
-            "02",
-            "06",
-            "08",
-            "13",
             "14",
+            "21",
             "22",
-            "24"
+            "23",
+            "28",
+            "39",
+            "45",
+            "49"
           ],
           "basis": {
             "historyYearCount": 0,
@@ -25294,37 +25300,31 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
           "02",
-          "06",
-          "08",
-          "13",
-          "14",
-          "22",
-          "24"
+          "39",
+          "45"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
-            "39",
-            "45"
+            "02"
           ],
           "crossYearOnly": [
-            "01",
-            "06",
-            "08",
-            "13",
             "14",
+            "21",
             "22",
-            "24"
+            "23",
+            "28",
+            "49"
           ],
           "intersection": [
-            "02"
+            "39",
+            "45"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -25343,14 +25343,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "rolling-contiguous",
       "poolSize": 8,
       "pool": [
-        "01",
-        "02",
-        "06",
-        "13",
         "14",
-        "20",
         "22",
-        "24"
+        "23",
+        "24",
+        "39",
+        "42",
+        "44",
+        "45"
       ],
       "totalWindows": 26,
       "coveredWindows": 26,
@@ -25370,14 +25370,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "01",
         "06",
+        "08",
+        "12",
         "14",
-        "20",
         "21",
         "22",
         "35",
-        "40"
+        "41"
       ],
       "totalWindows": 24,
       "coveredWindows": 24,
@@ -25426,14 +25426,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "01",
+              "02",
               "06",
               "08",
               "12",
-              "14",
-              "21",
               "22",
-              "38"
+              "27",
+              "41",
+              "42"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -26482,13 +26482,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "09",
-          "23",
-          "35",
-          "39",
+          "08",
           "41"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
             "08"
@@ -26505,7 +26502,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -26574,13 +26571,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "01",
-        "02",
-        "07",
+        "05",
+        "10",
+        "13",
         "20",
-        "25",
         "34",
         "42",
+        "44",
         "46"
       ],
       "totalWindows": 22,
@@ -26619,13 +26616,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 22,
             "pool": [
-              "01",
-              "02",
-              "07",
+              "05",
+              "10",
+              "13",
               "20",
-              "25",
               "34",
               "42",
+              "44",
               "46"
             ],
             "coveredWindows": 22,
@@ -27601,13 +27598,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115
           },
           "pool": [
-            "01",
-            "02",
-            "06",
-            "08",
-            "14",
+            "05",
+            "10",
+            "20",
             "22",
+            "34",
             "42",
+            "44",
             "46"
           ],
           "basis": {
@@ -27618,40 +27615,36 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
-          "02",
-          "06",
-          "08",
-          "14",
-          "22",
+          "10",
+          "13",
+          "20",
+          "36",
           "42",
+          "44",
           "46"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
-            "10",
             "13",
-            "20",
-            "36",
-            "44"
+            "36"
           ],
           "crossYearOnly": [
-            "01",
-            "02",
-            "06",
-            "08",
-            "14",
-            "22"
+            "05",
+            "22",
+            "34"
           ],
           "intersection": [
+            "10",
+            "20",
             "42",
+            "44",
             "46"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -27734,11 +27727,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "01",
         "03",
         "07",
-        "08",
         "11",
         "20",
         "26",
-        "40"
+        "40",
+        "44"
       ],
       "totalWindows": 29,
       "coveredWindows": 29,
@@ -27787,14 +27780,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "01",
-              "02",
               "03",
               "04",
               "06",
-              "14",
+              "07",
+              "11",
+              "12",
               "16",
-              "39"
+              "40"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -27806,13 +27799,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230,
             "windowCount": 6,
             "pool": [
-              "01",
-              "04",
-              "05",
               "06",
-              "07",
               "08",
-              "11"
+              "20",
+              "24",
+              "28",
+              "32",
+              "36",
+              "48"
             ],
             "coveredWindows": 6,
             "missCount": 0,
@@ -29027,14 +29021,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230
           },
           "pool": [
-            "01",
-            "04",
-            "05",
             "06",
-            "07",
             "08",
-            "09",
-            "11"
+            "20",
+            "24",
+            "28",
+            "32",
+            "36",
+            "48"
           ],
           "basis": {
             "historyYearCount": 1,
@@ -29044,25 +29038,19 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
-          "04",
-          "05",
           "06",
-          "07",
-          "08",
-          "09",
-          "11"
+          "08"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [],
           "crossYearOnly": [
-            "01",
-            "04",
-            "05",
-            "07",
-            "09",
-            "11"
+            "20",
+            "24",
+            "28",
+            "32",
+            "36",
+            "48"
           ],
           "intersection": [
             "06",
@@ -29071,7 +29059,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -29092,12 +29080,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "pool": [
         "01",
         "03",
-        "04",
         "06",
         "07",
         "11",
         "12",
-        "40"
+        "40",
+        "44"
       ],
       "totalWindows": 142,
       "coveredWindows": 137,
@@ -29113,6 +29101,28 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "13",
             "18",
             "23"
+          ]
+        },
+        {
+          "start": 36,
+          "end": 40,
+          "nums": [
+            "04",
+            "20",
+            "22",
+            "24",
+            "25"
+          ]
+        },
+        {
+          "start": 73,
+          "end": 77,
+          "nums": [
+            "04",
+            "13",
+            "18",
+            "27",
+            "36"
           ]
         },
         {
@@ -29136,27 +29146,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "42",
             "47"
           ]
-        },
-        {
-          "start": 90,
-          "end": 94,
-          "nums": [
-            "16",
-            "41",
-            "42",
-            "44"
-          ]
-        },
-        {
-          "start": 91,
-          "end": 95,
-          "nums": [
-            "08",
-            "16",
-            "41",
-            "42",
-            "44"
-          ]
         }
       ],
       "phasePlan": null,
@@ -29172,9 +29161,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "poolSize": 8,
       "pool": [
         "02",
-        "04",
         "08",
         "13",
+        "14",
         "23",
         "25",
         "38",
@@ -29229,14 +29218,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "01",
               "02",
-              "06",
-              "09",
-              "15",
+              "08",
+              "13",
+              "14",
               "23",
-              "27",
-              "44"
+              "25",
+              "38",
+              "45"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -29248,12 +29237,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230,
             "windowCount": 5,
             "pool": [
-              "01",
-              "02",
-              "04",
-              "06",
-              "07",
-              "10"
+              "10",
+              "14",
+              "18",
+              "22",
+              "28",
+              "29",
+              "35",
+              "38"
             ],
             "coveredWindows": 5,
             "missCount": 0,
@@ -30453,14 +30444,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 230
           },
           "pool": [
-            "01",
-            "02",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "10"
+            "10",
+            "14",
+            "18",
+            "22",
+            "28",
+            "29",
+            "35",
+            "38"
           ],
           "basis": {
             "historyYearCount": 2,
@@ -30470,36 +30461,34 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
-          "02",
           "04",
-          "05",
           "06",
-          "07",
-          "08",
-          "10"
+          "10",
+          "23"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
+            "04",
+            "06",
             "23"
           ],
           "crossYearOnly": [
-            "01",
-            "02",
-            "05",
-            "07",
-            "08"
+            "14",
+            "18",
+            "22",
+            "28",
+            "29",
+            "35",
+            "38"
           ],
           "intersection": [
-            "04",
-            "06",
             "10"
           ]
         },
         "tracking": {
           "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
@@ -30610,13 +30599,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "01",
         "02",
         "04",
         "08",
         "26",
         "30",
         "32",
+        "39",
         "43"
       ],
       "totalWindows": 26,
@@ -30656,13 +30645,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 23,
             "pool": [
-              "01",
               "02",
-              "04",
-              "08",
-              "26",
+              "13",
               "30",
               "32",
+              "33",
+              "39",
+              "42",
               "43"
             ],
             "coveredWindows": 23,
@@ -30676,8 +30665,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 3,
             "pool": [
               "01",
-              "04",
-              "05"
+              "07",
+              "08",
+              "15",
+              "25",
+              "39",
+              "43",
+              "49"
             ],
             "coveredWindows": 3,
             "missCount": 0,
@@ -31800,13 +31794,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
           },
           "pool": [
             "01",
-            "02",
-            "04",
-            "05",
-            "06",
             "07",
             "08",
-            "09"
+            "15",
+            "25",
+            "28",
+            "39",
+            "43"
           ],
           "basis": {
             "historyYearCount": 3,
@@ -31816,51 +31810,55 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
-          "02",
           "04",
-          "05",
-          "06",
-          "07",
           "08",
-          "09"
+          "11",
+          "15",
+          "20",
+          "26",
+          "32",
+          "39"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
+            "04",
             "11",
-            "15",
             "20",
             "26",
-            "32",
-            "39"
+            "32"
           ],
           "crossYearOnly": [
             "01",
-            "02",
-            "05",
-            "06",
             "07",
-            "09"
+            "25",
+            "28",
+            "43"
           ],
           "intersection": [
-            "04",
-            "08"
+            "08",
+            "15",
+            "39"
           ]
         },
         "tracking": {
-          "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "status": "continue-current-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [],
-        "covered": false,
+        "hits": [
+          {
+            "issue": 131,
+            "num": "11"
+          }
+        ],
+        "covered": true,
         "remainingDraws": 1,
-        "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "nextAction": "continue-current-stage",
+        "switchSignal": "current-window-covered"
       }
     },
     {
@@ -31869,10 +31867,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "rolling-contiguous",
       "poolSize": 8,
       "pool": [
-        "01",
         "02",
-        "13",
         "15",
+        "24",
+        "26",
         "30",
         "32",
         "33",
@@ -31884,6 +31882,47 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "hitRate": 93.08,
       "fullCovered": false,
       "missWindows": [
+        {
+          "start": 22,
+          "end": 26,
+          "nums": [
+            "01",
+            "04",
+            "09",
+            "23",
+            "45"
+          ]
+        },
+        {
+          "start": 23,
+          "end": 27,
+          "nums": [
+            "01",
+            "04",
+            "23",
+            "45"
+          ]
+        },
+        {
+          "start": 24,
+          "end": 28,
+          "nums": [
+            "04",
+            "13",
+            "23",
+            "45"
+          ]
+        },
+        {
+          "start": 25,
+          "end": 29,
+          "nums": [
+            "04",
+            "13",
+            "14",
+            "45"
+          ]
+        },
         {
           "start": 35,
           "end": 39,
@@ -31900,17 +31939,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           "end": 50,
           "nums": [
             "08",
-            "28",
-            "42",
-            "44",
-            "47"
-          ]
-        },
-        {
-          "start": 47,
-          "end": 51,
-          "nums": [
-            "24",
             "28",
             "42",
             "44",
@@ -31940,16 +31968,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 60,
-          "end": 64,
-          "nums": [
-            "03",
-            "19",
-            "26",
-            "27"
-          ]
-        },
-        {
           "start": 73,
           "end": 77,
           "nums": [
@@ -31958,28 +31976,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "36",
             "38",
             "41"
-          ]
-        },
-        {
-          "start": 89,
-          "end": 93,
-          "nums": [
-            "03",
-            "06",
-            "07",
-            "14",
-            "26"
-          ]
-        },
-        {
-          "start": 116,
-          "end": 120,
-          "nums": [
-            "04",
-            "24",
-            "31",
-            "41",
-            "49"
           ]
         }
       ],
@@ -31995,14 +31991,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "01",
-        "02",
-        "03",
-        "04",
-        "16",
-        "34",
+        "08",
+        "27",
+        "28",
+        "29",
+        "40",
         "44",
-        "46"
+        "46",
+        "49"
       ],
       "totalWindows": 15,
       "coveredWindows": 15,
@@ -32039,14 +32035,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115,
             "windowCount": 15,
             "pool": [
-              "01",
-              "02",
-              "03",
-              "04",
-              "16",
-              "34",
+              "08",
+              "27",
+              "28",
+              "29",
+              "40",
               "44",
-              "46"
+              "46",
+              "49"
             ],
             "coveredWindows": 15,
             "missCount": 0,
@@ -32715,12 +32711,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 115
           },
           "pool": [
-            "01",
             "02",
-            "04",
-            "06",
             "08",
-            "14",
+            "13",
+            "27",
+            "40",
+            "42",
             "44",
             "46"
           ],
@@ -32732,50 +32728,51 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         },
         "recommendedPool": [
-          "01",
-          "02",
-          "04",
-          "06",
-          "08",
-          "14",
-          "44",
-          "46"
+          "11",
+          "13",
+          "19",
+          "20",
+          "27",
+          "40"
         ],
-        "recommendationMode": "cross-year-stage",
+        "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
             "11",
-            "13",
             "19",
-            "20",
-            "27",
-            "40"
+            "20"
           ],
           "crossYearOnly": [
-            "01",
             "02",
-            "04",
-            "06",
             "08",
-            "14",
+            "42",
             "44",
             "46"
           ],
-          "intersection": []
+          "intersection": [
+            "13",
+            "27",
+            "40"
+          ]
         },
         "tracking": {
-          "status": "watch-current-window",
-          "rule": "fixed-8-cross-year-stage",
+          "status": "continue-current-stage",
+          "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [],
-        "covered": false,
+        "hits": [
+          {
+            "issue": 77,
+            "num": "27"
+          }
+        ],
+        "covered": true,
         "remainingDraws": 3,
-        "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "nextAction": "continue-current-stage",
+        "switchSignal": "current-window-covered"
       }
     },
     {
@@ -32784,13 +32781,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "rolling-contiguous",
       "poolSize": 8,
       "pool": [
-        "03",
-        "04",
-        "11",
-        "13",
-        "28",
-        "33",
+        "08",
+        "24",
+        "27",
+        "29",
+        "34",
         "40",
+        "44",
         "46"
       ],
       "totalWindows": 73,

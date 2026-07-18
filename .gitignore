@@ -2,6 +2,7 @@ logs/
 snapshots/
 test-output/
 test-data-output/
+test-page-parse-cache-output/
 test-sanzhong-output/
 .chrome-v9-*/
 worldcup*.png

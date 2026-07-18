@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   analyzePattern,
   buildWindows,
+  bestFixedPool,
   buildPhasePlan,
   buildPresetPhasePlan,
   buildCrossYearWalkForwardPlan,
@@ -48,12 +49,20 @@ assert.equal(rollingWindows.length, 6);
 assert.equal(rollingWindows[0].start, 1);
 assert.equal(rollingWindows[5].start, 6);
 
+assert.deepEqual(
+  bestFixedPool([
+    {start: 1, end: 5, nums: ['01']},
+    {start: 6, end: 10, nums: ['09']},
+  ], 1),
+  {pool: ['09'], covered: 1},
+);
+
 const analysis = analyzePattern(rows, {poolSize: 1});
 const fixed = analysis.items.find(item => item.source === 'am' && item.year === '2026' && item.mode === 'fixed-block');
 assert.equal(fixed.pool.length, 1);
 assert.equal(fixed.fullCovered, false);
 assert.equal(fixed.missCount, 1);
-assert.deepEqual(fixed.missWindows, [{start: 6, end: 10, nums: ['06', '07', '08', '09', '10']}]);
+assert.deepEqual(fixed.missWindows, [{start: 1, end: 5, nums: ['01', '02', '03', '04', '05']}]);
 assert.deepEqual(fixed.currentWindow, {
   start: 11,
   end: 15,
@@ -62,10 +71,10 @@ assert.deepEqual(fixed.currentWindow, {
   basisStart: 1,
   basisEnd: 10,
   basisWindowCount: 2,
-  pool: ['01'],
+  pool: ['06'],
   crossYearPool: {
     phase: {start: 1, end: 115},
-    pool: ['01'],
+    pool: ['06'],
     basis: {
       historyYearCount: 0,
       currentWindowCount: 2,
@@ -73,20 +82,20 @@ assert.deepEqual(fixed.currentWindow, {
       currentBasisEnd: 10,
     },
   },
-  recommendedPool: ['01'],
-  recommendationMode: 'cross-year-stage',
+  recommendedPool: ['06'],
+  recommendationMode: 'same-year-stage',
   comparePools: {
     sameYearOnly: [],
     crossYearOnly: [],
-    intersection: ['01'],
+    intersection: ['06'],
   },
   tracking: {
     status: 'watch-current-window',
-    rule: 'fixed-8-cross-year-stage',
+    rule: 'fixed-8-same-year-stage',
     noChangeBeforeWindowEnd: true,
     recalcWhen: 'completed-window-miss',
     stageDecayWhen: 'two-completed-window-misses',
-    completedMissStreak: 1,
+    completedMissStreak: 0,
   },
   hits: [],
   covered: false,
@@ -189,5 +198,29 @@ assert.deepEqual(
 );
 assert.equal(crossYearWalkForward.coveredWindows, 0);
 assert.equal(crossYearWalkForward.totalWindows, 1);
+
+const crossYearReferenceRows = [];
+for (const year of [2023, 2024, 2025]) {
+  crossYearReferenceRows.push(
+    ...[1, 2, 3, 4, 5].map((issue, idx) => record('am', year, issue, ['02', '03', '04', '05', '06'][idx])),
+    ...[6, 7, 8, 9, 10].map((issue, idx) => record('am', year, issue, ['07', '08', '09', '10', '11'][idx])),
+  );
+}
+const referenceOnlyAnalysis = analyzePattern([
+  ...crossYearReferenceRows,
+  ...[1, 2, 3, 4, 5].map((issue, idx) => record('am', 2026, issue, ['21', '22', '23', '24', '25'][idx])),
+  ...[6, 7, 8, 9, 10].map((issue, idx) => record('am', 2026, issue, ['31', '32', '33', '34', '35'][idx])),
+], {poolSize: 3});
+const referenceOnlyCurrent = referenceOnlyAnalysis.items.find(item => item.source === 'am' && item.year === '2026' && item.mode === 'fixed-block').currentWindow;
+assert.deepEqual(referenceOnlyCurrent.pool, ['21', '22', '33']);
+assert.deepEqual(referenceOnlyCurrent.crossYearPool.pool, ['02', '03', '11']);
+assert.deepEqual(referenceOnlyCurrent.recommendedPool, referenceOnlyCurrent.pool);
+assert.equal(referenceOnlyCurrent.recommendationMode, 'same-year-stage');
+assert.equal(referenceOnlyCurrent.tracking.rule, 'fixed-8-same-year-stage');
+assert.deepEqual(referenceOnlyCurrent.comparePools, {
+  sameYearOnly: ['21', '22', '33'],
+  crossYearOnly: ['02', '03', '11'],
+  intersection: [],
+});
 
 console.log('fixed 8 window pattern analysis ok');
