@@ -1,0 +1,788 @@
+{
+  "generatedAt": "2026-07-18T13:57:52.158Z",
+  "source": "am",
+  "sourceName": "澳门",
+  "rule": "反向发现：采样开奖前历史可形成的6码池，统计哪些池在目标期中三，并总结成功池的开奖前特征。",
+  "totalRecords": 2247,
+  "evaluatedPools": 267240,
+  "successPools": 4867,
+  "successRate": 1.82,
+  "successProfiles": [
+    {
+      "name": "成功池特征均值",
+      "count": 4867,
+      "avgRecent10Frequency": 8.65,
+      "avgRecent20Frequency": 17.1,
+      "avgLastIssueOverlap": 0.94,
+      "avgLast3Overlap": 2.26,
+      "avgOddCount": 3.45,
+      "avgSmallCount": 2.36,
+      "avgZoneCount": 3.68,
+      "avgTailCount": 4.84
+    },
+    {
+      "name": "失败池特征均值",
+      "count": 262373,
+      "avgRecent10Frequency": 8.55,
+      "avgRecent20Frequency": 17.09,
+      "avgLastIssueOverlap": 0.88,
+      "avgLast3Overlap": 2.22,
+      "avgOddCount": 3.47,
+      "avgSmallCount": 2.36,
+      "avgZoneCount": 3.66,
+      "avgTailCount": 4.78
+    }
+  ],
+  "topHistoricalPools": [
+    {
+      "pool": [
+        "01",
+        "12",
+        "17",
+        "32",
+        "34",
+        "43"
+      ],
+      "successCount": 4,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 4,
+        "avgRecent10Frequency": 13.5,
+        "avgRecent20Frequency": 24.5,
+        "avgLastIssueOverlap": 0.5,
+        "avgLast3Overlap": 2.75,
+        "avgOddCount": 3,
+        "avgSmallCount": 3,
+        "avgZoneCount": 4,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "08",
+        "12",
+        "29",
+        "31",
+        "41",
+        "49"
+      ],
+      "successCount": 4,
+      "reasons": [
+        "triple-plus-hot"
+      ],
+      "profile": {
+        "count": 4,
+        "avgRecent10Frequency": 7.25,
+        "avgRecent20Frequency": 14.5,
+        "avgLastIssueOverlap": 1.75,
+        "avgLast3Overlap": 3.25,
+        "avgOddCount": 4,
+        "avgSmallCount": 2,
+        "avgZoneCount": 5,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "19",
+        "22",
+        "23",
+        "27",
+        "34",
+        "45"
+      ],
+      "successCount": 4,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 4,
+        "avgRecent10Frequency": 8.75,
+        "avgRecent20Frequency": 18,
+        "avgLastIssueOverlap": 0.5,
+        "avgLast3Overlap": 2.25,
+        "avgOddCount": 4,
+        "avgSmallCount": 3,
+        "avgZoneCount": 4,
+        "avgTailCount": 6
+      }
+    },
+    {
+      "pool": [
+        "01",
+        "02",
+        "14",
+        "39",
+        "41",
+        "44"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 8.67,
+        "avgRecent20Frequency": 16,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 2.67,
+        "avgOddCount": 3,
+        "avgSmallCount": 3,
+        "avgZoneCount": 4,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "01",
+        "04",
+        "14",
+        "29",
+        "40",
+        "43"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 11,
+        "avgRecent20Frequency": 20,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 2,
+        "avgOddCount": 3,
+        "avgSmallCount": 3,
+        "avgZoneCount": 5,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "01",
+        "26",
+        "27",
+        "37",
+        "44",
+        "46"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 13.67,
+        "avgRecent20Frequency": 22,
+        "avgLastIssueOverlap": 1.33,
+        "avgLast3Overlap": 4,
+        "avgOddCount": 3,
+        "avgSmallCount": 1,
+        "avgZoneCount": 4,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "01",
+        "27",
+        "30",
+        "41",
+        "46",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "triple-plus-hot"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 8.33,
+        "avgRecent20Frequency": 18.33,
+        "avgLastIssueOverlap": 1.67,
+        "avgLast3Overlap": 3,
+        "avgOddCount": 4,
+        "avgSmallCount": 1,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "02",
+        "11",
+        "41",
+        "44",
+        "47",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "triple-plus-hot"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 10.67,
+        "avgRecent20Frequency": 21.67,
+        "avgLastIssueOverlap": 0.33,
+        "avgLast3Overlap": 2.33,
+        "avgOddCount": 4,
+        "avgSmallCount": 2,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "02",
+        "15",
+        "28",
+        "35",
+        "40",
+        "47"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 9,
+        "avgRecent20Frequency": 21,
+        "avgLastIssueOverlap": 1.67,
+        "avgLast3Overlap": 2.33,
+        "avgOddCount": 3,
+        "avgSmallCount": 2,
+        "avgZoneCount": 5,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "02",
+        "17",
+        "25",
+        "32",
+        "41",
+        "45"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 9,
+        "avgRecent20Frequency": 20.67,
+        "avgLastIssueOverlap": 1.33,
+        "avgLast3Overlap": 2.33,
+        "avgOddCount": 4,
+        "avgSmallCount": 2,
+        "avgZoneCount": 5,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "02",
+        "18",
+        "36",
+        "43",
+        "44",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "triple-plus-hot"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 8.67,
+        "avgRecent20Frequency": 18.67,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 2,
+        "avgOddCount": 2,
+        "avgSmallCount": 2,
+        "avgZoneCount": 4,
+        "avgTailCount": 6
+      }
+    },
+    {
+      "pool": [
+        "02",
+        "21",
+        "41",
+        "45",
+        "47",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 10,
+        "avgRecent20Frequency": 22,
+        "avgLastIssueOverlap": 2.33,
+        "avgLast3Overlap": 3,
+        "avgOddCount": 5,
+        "avgSmallCount": 2,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "03",
+        "05",
+        "37",
+        "42",
+        "44",
+        "47"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 11.33,
+        "avgRecent20Frequency": 22.33,
+        "avgLastIssueOverlap": 0.33,
+        "avgLast3Overlap": 1.67,
+        "avgOddCount": 4,
+        "avgSmallCount": 2,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "04",
+        "05",
+        "15",
+        "21",
+        "28",
+        "48"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 8,
+        "avgRecent20Frequency": 16,
+        "avgLastIssueOverlap": 0,
+        "avgLast3Overlap": 1,
+        "avgOddCount": 3,
+        "avgSmallCount": 4,
+        "avgZoneCount": 4,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "04",
+        "18",
+        "24",
+        "27",
+        "35",
+        "47"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 11.67,
+        "avgRecent20Frequency": 20.33,
+        "avgLastIssueOverlap": 1,
+        "avgLast3Overlap": 3.33,
+        "avgOddCount": 3,
+        "avgSmallCount": 3,
+        "avgZoneCount": 5,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "06",
+        "07",
+        "12",
+        "18",
+        "20",
+        "48"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 7.67,
+        "avgRecent20Frequency": 16.33,
+        "avgLastIssueOverlap": 0.33,
+        "avgLast3Overlap": 2,
+        "avgOddCount": 1,
+        "avgSmallCount": 5,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "06",
+        "07",
+        "15",
+        "17",
+        "19",
+        "38"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 12,
+        "avgRecent20Frequency": 21.33,
+        "avgLastIssueOverlap": 1,
+        "avgLast3Overlap": 3,
+        "avgOddCount": 4,
+        "avgSmallCount": 5,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "07",
+        "08",
+        "16",
+        "30",
+        "40",
+        "42"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 9,
+        "avgRecent20Frequency": 18.33,
+        "avgLastIssueOverlap": 0.33,
+        "avgLast3Overlap": 2,
+        "avgOddCount": 1,
+        "avgSmallCount": 3,
+        "avgZoneCount": 5,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "07",
+        "10",
+        "16",
+        "25",
+        "30",
+        "42"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 8.67,
+        "avgRecent20Frequency": 17.33,
+        "avgLastIssueOverlap": 0.33,
+        "avgLast3Overlap": 3.33,
+        "avgOddCount": 2,
+        "avgSmallCount": 3,
+        "avgZoneCount": 4,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "08",
+        "16",
+        "17",
+        "21",
+        "29",
+        "47"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 12,
+        "avgRecent20Frequency": 25.67,
+        "avgLastIssueOverlap": 2,
+        "avgLast3Overlap": 4,
+        "avgOddCount": 4,
+        "avgSmallCount": 4,
+        "avgZoneCount": 4,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "09",
+        "36",
+        "43",
+        "44",
+        "48",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "triple-plus-hot"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 8,
+        "avgRecent20Frequency": 16,
+        "avgLastIssueOverlap": 1,
+        "avgLast3Overlap": 3.33,
+        "avgOddCount": 3,
+        "avgSmallCount": 1,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "10",
+        "14",
+        "19",
+        "30",
+        "37",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 11.33,
+        "avgRecent20Frequency": 20,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 2.67,
+        "avgOddCount": 3,
+        "avgSmallCount": 3,
+        "avgZoneCount": 5,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "10",
+        "14",
+        "38",
+        "44",
+        "46",
+        "48"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 10,
+        "avgRecent20Frequency": 23,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 3.67,
+        "avgOddCount": 0,
+        "avgSmallCount": 2,
+        "avgZoneCount": 4,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "10",
+        "17",
+        "18",
+        "22",
+        "28",
+        "32"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 7,
+        "avgRecent20Frequency": 17.67,
+        "avgLastIssueOverlap": 1,
+        "avgLast3Overlap": 2,
+        "avgOddCount": 1,
+        "avgSmallCount": 4,
+        "avgZoneCount": 4,
+        "avgTailCount": 4
+      }
+    },
+    {
+      "pool": [
+        "11",
+        "19",
+        "25",
+        "27",
+        "34",
+        "37"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 10.67,
+        "avgRecent20Frequency": 19.33,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 3,
+        "avgOddCount": 5,
+        "avgSmallCount": 2,
+        "avgZoneCount": 3,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "11",
+        "22",
+        "23",
+        "29",
+        "34",
+        "35"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 11.33,
+        "avgRecent20Frequency": 19,
+        "avgLastIssueOverlap": 1.33,
+        "avgLast3Overlap": 3.67,
+        "avgOddCount": 4,
+        "avgSmallCount": 3,
+        "avgZoneCount": 3,
+        "avgTailCount": 6
+      }
+    },
+    {
+      "pool": [
+        "12",
+        "15",
+        "17",
+        "30",
+        "40",
+        "41"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 13,
+        "avgRecent20Frequency": 22,
+        "avgLastIssueOverlap": 1.33,
+        "avgLast3Overlap": 3.67,
+        "avgOddCount": 3,
+        "avgSmallCount": 3,
+        "avgZoneCount": 4,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "12",
+        "22",
+        "30",
+        "34",
+        "37",
+        "48"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 13.33,
+        "avgRecent20Frequency": 24.33,
+        "avgLastIssueOverlap": 3,
+        "avgLast3Overlap": 4.67,
+        "avgOddCount": 1,
+        "avgSmallCount": 2,
+        "avgZoneCount": 4,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "20",
+        "30",
+        "32",
+        "35",
+        "41",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "historical-draw"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 12,
+        "avgRecent20Frequency": 23.67,
+        "avgLastIssueOverlap": 0.67,
+        "avgLast3Overlap": 3,
+        "avgOddCount": 3,
+        "avgSmallCount": 1,
+        "avgZoneCount": 4,
+        "avgTailCount": 5
+      }
+    },
+    {
+      "pool": [
+        "22",
+        "23",
+        "41",
+        "42",
+        "43",
+        "49"
+      ],
+      "successCount": 3,
+      "reasons": [
+        "triple-plus-hot"
+      ],
+      "profile": {
+        "count": 3,
+        "avgRecent10Frequency": 13,
+        "avgRecent20Frequency": 19.33,
+        "avgLastIssueOverlap": 1,
+        "avgLast3Overlap": 3.67,
+        "avgOddCount": 4,
+        "avgSmallCount": 2,
+        "avgZoneCount": 2,
+        "avgTailCount": 4
+      }
+    }
+  ]
+}

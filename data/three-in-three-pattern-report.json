@@ -1,0 +1,3717 @@
+{
+  "generatedAt": "2026-07-18T11:41:13.739Z",
+  "source": "am",
+  "sourceName": "澳门",
+  "rule": "每期推荐6码；当期前6个正码命中>=3算三中三；特别号忽略；每期只使用开奖前历史数据。",
+  "totalRecords": 2247,
+  "formulas": [
+    {
+      "id": "hot-5",
+      "name": "近5期热码前6",
+      "evaluatedDraws": 2242,
+      "hits": 57,
+      "hitRate": 2.54,
+      "maxMissStreak": 124,
+      "windows": {
+        "3": {
+          "windows": 2240,
+          "hitWindows": 170,
+          "hitRate": 7.59
+        },
+        "5": {
+          "windows": 2238,
+          "hitWindows": 281,
+          "hitRate": 12.56
+        },
+        "10": {
+          "windows": 2233,
+          "hitWindows": 540,
+          "hitRate": 24.18
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 221,
+          "hits": 5,
+          "hitRate": 2.26,
+          "maxMissStreak": 115
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 107
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 14,
+          "hitRate": 3.84,
+          "maxMissStreak": 60
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 124
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 10,
+          "hitRate": 2.73,
+          "maxMissStreak": 116
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 12,
+          "hitRate": 3.31,
+          "maxMissStreak": 78
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 3,
+          "hitRate": 1.52,
+          "maxMissStreak": 88
+        }
+      },
+      "latestPool": [
+        "02",
+        "03",
+        "04",
+        "09",
+        "19",
+        "30"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "01",
+            "05",
+            "12",
+            "22",
+            "36",
+            "38"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "01",
+            "05",
+            "09",
+            "12",
+            "22",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "01",
+            "05",
+            "12",
+            "14",
+            "19",
+            "38"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "12",
+            "14",
+            "19",
+            "37",
+            "38",
+            "43"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "01",
+            "14",
+            "19",
+            "37",
+            "38",
+            "43"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "29",
+            "37",
+            "43",
+            "45"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "29",
+            "30",
+            "37",
+            "45"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "01",
+            "04",
+            "19",
+            "30",
+            "39",
+            "45"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "01",
+            "04",
+            "19",
+            "30",
+            "37",
+            "45"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "02",
+            "03",
+            "04",
+            "09",
+            "19",
+            "30"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "hot-10",
+      "name": "近10期热码前6",
+      "evaluatedDraws": 2237,
+      "hits": 53,
+      "hitRate": 2.37,
+      "maxMissStreak": 190,
+      "windows": {
+        "3": {
+          "windows": 2235,
+          "hitWindows": 157,
+          "hitRate": 7.02
+        },
+        "5": {
+          "windows": 2233,
+          "hitWindows": 258,
+          "hitRate": 11.55
+        },
+        "10": {
+          "windows": 2228,
+          "hitWindows": 488,
+          "hitRate": 21.9
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 216,
+          "hits": 6,
+          "hitRate": 2.78,
+          "maxMissStreak": 58
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 11,
+          "hitRate": 3.01,
+          "maxMissStreak": 90
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 12,
+          "hitRate": 3.29,
+          "maxMissStreak": 73
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 9,
+          "hitRate": 2.47,
+          "maxMissStreak": 90
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 9,
+          "hitRate": 2.46,
+          "maxMissStreak": 106
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 2,
+          "hitRate": 0.55,
+          "maxMissStreak": 190
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 4,
+          "hitRate": 2.02,
+          "maxMissStreak": 69
+        }
+      },
+      "latestPool": [
+        "01",
+        "04",
+        "19",
+        "30",
+        "37",
+        "45"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "01",
+            "05",
+            "09",
+            "10",
+            "23",
+            "38"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "01",
+            "09",
+            "12",
+            "23",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "09",
+            "12",
+            "23",
+            "29",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "09",
+            "12",
+            "19",
+            "23",
+            "24",
+            "38"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "01",
+            "05",
+            "12",
+            "19",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "01",
+            "12",
+            "19",
+            "29",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "01",
+            "12",
+            "19",
+            "22",
+            "29",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "22",
+            "29",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "01",
+            "04",
+            "19",
+            "37",
+            "38",
+            "45"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "01",
+            "04",
+            "19",
+            "30",
+            "37",
+            "45"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 1,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "stage-fixed-6-walk-forward",
+      "name": "阶段内累计热度6码滚动扫描",
+      "evaluatedDraws": 2216,
+      "hits": 50,
+      "hitRate": 2.26,
+      "maxMissStreak": 255,
+      "windows": {
+        "3": {
+          "windows": 2214,
+          "hitWindows": 146,
+          "hitRate": 6.59
+        },
+        "5": {
+          "windows": 2212,
+          "hitWindows": 238,
+          "hitRate": 10.76
+        },
+        "10": {
+          "windows": 2207,
+          "hitWindows": 447,
+          "hitRate": 20.25
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 206,
+          "hits": 6,
+          "hitRate": 2.91,
+          "maxMissStreak": 54
+        },
+        "2021": {
+          "evaluatedDraws": 355,
+          "hits": 10,
+          "hitRate": 2.82,
+          "maxMissStreak": 124
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 162
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 93
+        },
+        "2024": {
+          "evaluatedDraws": 365,
+          "hits": 10,
+          "hitRate": 2.74,
+          "maxMissStreak": 142
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 7,
+          "hitRate": 1.93,
+          "maxMissStreak": 174
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 3,
+          "hitRate": 1.52,
+          "maxMissStreak": 65
+        }
+      },
+      "latestPool": [
+        "03",
+        "07",
+        "12",
+        "15",
+        "26",
+        "33"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "03",
+            "07",
+            "12",
+            "15",
+            "26",
+            "33"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 1,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "hot-30",
+      "name": "近30期热码前6",
+      "evaluatedDraws": 2217,
+      "hits": 42,
+      "hitRate": 1.89,
+      "maxMissStreak": 161,
+      "windows": {
+        "3": {
+          "windows": 2215,
+          "hitWindows": 121,
+          "hitRate": 5.46
+        },
+        "5": {
+          "windows": 2213,
+          "hitWindows": 199,
+          "hitRate": 8.99
+        },
+        "10": {
+          "windows": 2208,
+          "hitWindows": 394,
+          "hitRate": 17.84
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 196,
+          "hits": 6,
+          "hitRate": 3.06,
+          "maxMissStreak": 60
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 5,
+          "hitRate": 1.37,
+          "maxMissStreak": 138
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 121
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 118
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 8,
+          "hitRate": 2.19,
+          "maxMissStreak": 161
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 10,
+          "hitRate": 2.76,
+          "maxMissStreak": 103
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 3,
+          "hitRate": 1.52,
+          "maxMissStreak": 107
+        }
+      },
+      "latestPool": [
+        "19",
+        "24",
+        "30",
+        "37",
+        "38",
+        "46"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "30",
+            "38",
+            "40",
+            "46"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "30",
+            "38",
+            "40",
+            "46"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "37",
+            "38",
+            "40",
+            "46"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "24",
+            "37",
+            "38",
+            "46"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "30",
+            "37",
+            "38",
+            "46"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "01",
+            "11",
+            "19",
+            "30",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "01",
+            "11",
+            "19",
+            "30",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "15",
+            "19",
+            "30",
+            "37",
+            "38",
+            "46"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "19",
+            "24",
+            "30",
+            "37",
+            "38",
+            "46"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "19",
+            "24",
+            "30",
+            "37",
+            "38",
+            "46"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 1,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "hot-20",
+      "name": "近20期热码前6",
+      "evaluatedDraws": 2227,
+      "hits": 40,
+      "hitRate": 1.8,
+      "maxMissStreak": 157,
+      "windows": {
+        "3": {
+          "windows": 2225,
+          "hitWindows": 115,
+          "hitRate": 5.17
+        },
+        "5": {
+          "windows": 2223,
+          "hitWindows": 187,
+          "hitRate": 8.41
+        },
+        "10": {
+          "windows": 2218,
+          "hitWindows": 367,
+          "hitRate": 16.55
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 206,
+          "hits": 5,
+          "hitRate": 2.43,
+          "maxMissStreak": 59
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 105
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 8,
+          "hitRate": 2.19,
+          "maxMissStreak": 107
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 157
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 11,
+          "hitRate": 3.01,
+          "maxMissStreak": 78
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 96
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 2,
+          "hitRate": 1.01,
+          "maxMissStreak": 107
+        }
+      },
+      "latestPool": [
+        "09",
+        "10",
+        "19",
+        "22",
+        "30",
+        "37"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "06",
+            "09",
+            "15",
+            "19",
+            "30",
+            "38"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "06",
+            "09",
+            "15",
+            "19",
+            "30",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "09",
+            "15",
+            "19",
+            "29",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "09",
+            "15",
+            "19",
+            "29",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "01",
+            "09",
+            "19",
+            "30",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "29",
+            "30",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "01",
+            "19",
+            "29",
+            "30",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "01",
+            "09",
+            "19",
+            "30",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "01",
+            "09",
+            "10",
+            "19",
+            "22",
+            "37"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "09",
+            "10",
+            "19",
+            "22",
+            "30",
+            "37"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "cold-20",
+      "name": "近20期冷码前6",
+      "evaluatedDraws": 2227,
+      "hits": 39,
+      "hitRate": 1.75,
+      "maxMissStreak": 172,
+      "windows": {
+        "3": {
+          "windows": 2225,
+          "hitWindows": 112,
+          "hitRate": 5.03
+        },
+        "5": {
+          "windows": 2223,
+          "hitWindows": 179,
+          "hitRate": 8.05
+        },
+        "10": {
+          "windows": 2218,
+          "hitWindows": 326,
+          "hitRate": 14.7
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 206,
+          "hits": 6,
+          "hitRate": 2.91,
+          "maxMissStreak": 85
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 10,
+          "hitRate": 2.74,
+          "maxMissStreak": 114
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 165
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 164
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 4,
+          "hitRate": 1.09,
+          "maxMissStreak": 172
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 6,
+          "hitRate": 1.66,
+          "maxMissStreak": 159
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 3,
+          "hitRate": 1.52,
+          "maxMissStreak": 118
+        }
+      },
+      "latestPool": [
+        "07",
+        "13",
+        "32",
+        "33",
+        "42",
+        "47"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "04",
+            "16",
+            "32",
+            "33",
+            "43",
+            "48"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "04",
+            "07",
+            "16",
+            "32",
+            "33",
+            "48"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "04",
+            "07",
+            "16",
+            "32",
+            "33",
+            "49"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "04",
+            "07",
+            "32",
+            "33",
+            "40",
+            "49"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "04",
+            "07",
+            "32",
+            "33",
+            "40",
+            "49"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "04",
+            "07",
+            "13",
+            "32",
+            "33",
+            "40"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "07",
+            "13",
+            "28",
+            "32",
+            "33",
+            "40"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "07",
+            "13",
+            "28",
+            "32",
+            "33",
+            "40"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "07",
+            "13",
+            "28",
+            "32",
+            "33",
+            "40"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "07",
+            "13",
+            "32",
+            "33",
+            "42",
+            "47"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "mix-10-3h3c",
+      "name": "近10期 3热+3冷",
+      "evaluatedDraws": 2237,
+      "hits": 39,
+      "hitRate": 1.74,
+      "maxMissStreak": 225,
+      "windows": {
+        "3": {
+          "windows": 2235,
+          "hitWindows": 116,
+          "hitRate": 5.19
+        },
+        "5": {
+          "windows": 2233,
+          "hitWindows": 188,
+          "hitRate": 8.42
+        },
+        "10": {
+          "windows": 2228,
+          "hitWindows": 341,
+          "hitRate": 15.31
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 216,
+          "hits": 2,
+          "hitRate": 0.93,
+          "maxMissStreak": 114
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 3,
+          "hitRate": 0.82,
+          "maxMissStreak": 225
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 9,
+          "hitRate": 2.47,
+          "maxMissStreak": 149
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 10,
+          "hitRate": 2.74,
+          "maxMissStreak": 99
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 7,
+          "hitRate": 1.91,
+          "maxMissStreak": 149
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 5,
+          "hitRate": 1.38,
+          "maxMissStreak": 110
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 3,
+          "hitRate": 1.52,
+          "maxMissStreak": 112
+        }
+      },
+      "latestPool": [
+        "06",
+        "07",
+        "13",
+        "19",
+        "30",
+        "37"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "07",
+            "09",
+            "10",
+            "23"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "07",
+            "09",
+            "12",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "07",
+            "09",
+            "12",
+            "38"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "06",
+            "09",
+            "12",
+            "38"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "01",
+            "02",
+            "04",
+            "06",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "01",
+            "03",
+            "04",
+            "06",
+            "12",
+            "38"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "01",
+            "03",
+            "06",
+            "07",
+            "12",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "01",
+            "03",
+            "06",
+            "07",
+            "19",
+            "38"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "06",
+            "07",
+            "13",
+            "19",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "06",
+            "07",
+            "13",
+            "19",
+            "30",
+            "37"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "cold-30",
+      "name": "近30期冷码前6",
+      "evaluatedDraws": 2217,
+      "hits": 38,
+      "hitRate": 1.71,
+      "maxMissStreak": 226,
+      "windows": {
+        "3": {
+          "windows": 2215,
+          "hitWindows": 111,
+          "hitRate": 5.01
+        },
+        "5": {
+          "windows": 2213,
+          "hitWindows": 178,
+          "hitRate": 8.04
+        },
+        "10": {
+          "windows": 2208,
+          "hitWindows": 343,
+          "hitRate": 15.53
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 196,
+          "hits": 4,
+          "hitRate": 2.04,
+          "maxMissStreak": 67
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 166
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 8,
+          "hitRate": 2.19,
+          "maxMissStreak": 103
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 3,
+          "hitRate": 0.82,
+          "maxMissStreak": 224
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 9,
+          "hitRate": 2.46,
+          "maxMissStreak": 72
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 190
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 4,
+          "hitRate": 2.02,
+          "maxMissStreak": 76
+        }
+      },
+      "latestPool": [
+        "07",
+        "18",
+        "32",
+        "33",
+        "35",
+        "47"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "16",
+            "18",
+            "32",
+            "35",
+            "43",
+            "48"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "04",
+            "18",
+            "32",
+            "35",
+            "43",
+            "48"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "16",
+            "18",
+            "32",
+            "35",
+            "43",
+            "48"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "04",
+            "13",
+            "18",
+            "32",
+            "35",
+            "48"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "04",
+            "18",
+            "32",
+            "33",
+            "35",
+            "48"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "18",
+            "32",
+            "33",
+            "35",
+            "41",
+            "48"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "18",
+            "32",
+            "33",
+            "35",
+            "41",
+            "48"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "18",
+            "32",
+            "33",
+            "35",
+            "41",
+            "47"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "18",
+            "32",
+            "33",
+            "35",
+            "47",
+            "48"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "07",
+            "18",
+            "32",
+            "33",
+            "35",
+            "47"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 1,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "cold-5",
+      "name": "近5期冷码前6",
+      "evaluatedDraws": 2242,
+      "hits": 38,
+      "hitRate": 1.69,
+      "maxMissStreak": 241,
+      "windows": {
+        "3": {
+          "windows": 2240,
+          "hitWindows": 113,
+          "hitRate": 5.04
+        },
+        "5": {
+          "windows": 2238,
+          "hitWindows": 185,
+          "hitRate": 8.27
+        },
+        "10": {
+          "windows": 2233,
+          "hitWindows": 357,
+          "hitRate": 15.99
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 221,
+          "hits": 4,
+          "hitRate": 1.81,
+          "maxMissStreak": 104
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 176
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 75
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 115
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 7,
+          "hitRate": 1.91,
+          "maxMissStreak": 89
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 7,
+          "hitRate": 1.93,
+          "maxMissStreak": 103
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 5,
+          "hitRate": 2.53,
+          "maxMissStreak": 54
+        }
+      },
+      "latestPool": [
+        "01",
+        "05",
+        "06",
+        "07",
+        "08",
+        "12"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "02",
+            "03",
+            "04",
+            "06",
+            "07",
+            "08"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "02",
+            "03",
+            "04",
+            "06",
+            "07",
+            "08"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "02",
+            "03",
+            "04",
+            "06",
+            "07",
+            "08"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "02",
+            "03",
+            "04",
+            "06",
+            "07",
+            "08"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "02",
+            "03",
+            "04",
+            "06",
+            "07",
+            "09"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "09"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "03",
+            "05",
+            "06",
+            "07",
+            "09",
+            "10"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "03",
+            "05",
+            "06",
+            "07",
+            "10",
+            "12"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "05",
+            "06",
+            "07",
+            "12",
+            "13",
+            "14"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "01",
+            "05",
+            "06",
+            "07",
+            "08",
+            "12"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 1,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "mix-30-3h3c",
+      "name": "近30期 3热+3冷",
+      "evaluatedDraws": 2217,
+      "hits": 35,
+      "hitRate": 1.58,
+      "maxMissStreak": 213,
+      "windows": {
+        "3": {
+          "windows": 2215,
+          "hitWindows": 103,
+          "hitRate": 4.65
+        },
+        "5": {
+          "windows": 2213,
+          "hitWindows": 170,
+          "hitRate": 7.68
+        },
+        "10": {
+          "windows": 2208,
+          "hitWindows": 330,
+          "hitRate": 14.95
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 196,
+          "hits": 5,
+          "hitRate": 2.55,
+          "maxMissStreak": 95
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 3,
+          "hitRate": 0.82,
+          "maxMissStreak": 168
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 143
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 72
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 6,
+          "hitRate": 1.64,
+          "maxMissStreak": 104
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 5,
+          "hitRate": 1.38,
+          "maxMissStreak": 82
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 3,
+          "hitRate": 1.52,
+          "maxMissStreak": 127
+        }
+      },
+      "latestPool": [
+        "07",
+        "19",
+        "30",
+        "32",
+        "33",
+        "37"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "01",
+            "32",
+            "38",
+            "43",
+            "46",
+            "48"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "01",
+            "18",
+            "19",
+            "32",
+            "38",
+            "48"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "16",
+            "18",
+            "19",
+            "32",
+            "38",
+            "46"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "18",
+            "19",
+            "24",
+            "32",
+            "35",
+            "38"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "18",
+            "19",
+            "32",
+            "35",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "18",
+            "19",
+            "32",
+            "33",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "18",
+            "19",
+            "30",
+            "32",
+            "33",
+            "37"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "19",
+            "30",
+            "32",
+            "33",
+            "37",
+            "47"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "19",
+            "30",
+            "32",
+            "33",
+            "37",
+            "47"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "07",
+            "19",
+            "30",
+            "32",
+            "33",
+            "37"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "cold-10",
+      "name": "近10期冷码前6",
+      "evaluatedDraws": 2237,
+      "hits": 35,
+      "hitRate": 1.56,
+      "maxMissStreak": 285,
+      "windows": {
+        "3": {
+          "windows": 2235,
+          "hitWindows": 105,
+          "hitRate": 4.7
+        },
+        "5": {
+          "windows": 2233,
+          "hitWindows": 170,
+          "hitRate": 7.61
+        },
+        "10": {
+          "windows": 2228,
+          "hitWindows": 308,
+          "hitRate": 13.82
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 216,
+          "hits": 4,
+          "hitRate": 1.85,
+          "maxMissStreak": 109
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 3,
+          "hitRate": 0.82,
+          "maxMissStreak": 166
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 5,
+          "hitRate": 1.37,
+          "maxMissStreak": 147
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 161
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 4,
+          "hitRate": 1.09,
+          "maxMissStreak": 115
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 7,
+          "hitRate": 1.93,
+          "maxMissStreak": 102
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 5,
+          "hitRate": 2.53,
+          "maxMissStreak": 96
+        }
+      },
+      "latestPool": [
+        "06",
+        "07",
+        "13",
+        "17",
+        "18",
+        "31"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "07",
+            "08",
+            "13",
+            "16"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "07",
+            "08",
+            "13",
+            "16"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "07",
+            "08",
+            "13",
+            "16"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "06",
+            "07",
+            "08",
+            "13"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "02",
+            "04",
+            "06",
+            "07",
+            "13",
+            "15"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "03",
+            "04",
+            "06",
+            "07",
+            "13",
+            "15"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "03",
+            "06",
+            "07",
+            "13",
+            "28",
+            "31"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "03",
+            "06",
+            "07",
+            "13",
+            "18",
+            "28"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "06",
+            "07",
+            "13",
+            "17",
+            "18",
+            "28"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "06",
+            "07",
+            "13",
+            "17",
+            "18",
+            "31"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    },
+    {
+      "id": "mix-20-3h3c",
+      "name": "近20期 3热+3冷",
+      "evaluatedDraws": 2227,
+      "hits": 32,
+      "hitRate": 1.44,
+      "maxMissStreak": 241,
+      "windows": {
+        "3": {
+          "windows": 2225,
+          "hitWindows": 96,
+          "hitRate": 4.31
+        },
+        "5": {
+          "windows": 2223,
+          "hitWindows": 155,
+          "hitRate": 6.97
+        },
+        "10": {
+          "windows": 2218,
+          "hitWindows": 297,
+          "hitRate": 13.39
+        }
+      },
+      "byYear": {
+        "2020": {
+          "evaluatedDraws": 206,
+          "hits": 5,
+          "hitRate": 2.43,
+          "maxMissStreak": 78
+        },
+        "2021": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 240
+        },
+        "2022": {
+          "evaluatedDraws": 365,
+          "hits": 7,
+          "hitRate": 1.92,
+          "maxMissStreak": 92
+        },
+        "2023": {
+          "evaluatedDraws": 365,
+          "hits": 4,
+          "hitRate": 1.1,
+          "maxMissStreak": 148
+        },
+        "2024": {
+          "evaluatedDraws": 366,
+          "hits": 9,
+          "hitRate": 2.46,
+          "maxMissStreak": 100
+        },
+        "2025": {
+          "evaluatedDraws": 362,
+          "hits": 2,
+          "hitRate": 0.55,
+          "maxMissStreak": 225
+        },
+        "2026": {
+          "evaluatedDraws": 198,
+          "hits": 1,
+          "hitRate": 0.51,
+          "maxMissStreak": 140
+        }
+      },
+      "latestPool": [
+        "07",
+        "09",
+        "13",
+        "19",
+        "32",
+        "37"
+      ],
+      "latestEvaluations": [
+        {
+          "issue": 189,
+          "date": "2026-07-08",
+          "year": "2026",
+          "pool": [
+            "04",
+            "19",
+            "30",
+            "32",
+            "33",
+            "38"
+          ],
+          "positives": [
+            "45",
+            "12",
+            "37",
+            "20",
+            "38",
+            "43"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 190,
+          "date": "2026-07-09",
+          "year": "2026",
+          "pool": [
+            "04",
+            "06",
+            "19",
+            "32",
+            "33",
+            "38"
+          ],
+          "positives": [
+            "46",
+            "14",
+            "19",
+            "37",
+            "48",
+            "29"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 191,
+          "date": "2026-07-10",
+          "year": "2026",
+          "pool": [
+            "04",
+            "19",
+            "32",
+            "33",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "19",
+            "43",
+            "39",
+            "24",
+            "16",
+            "26"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 192,
+          "date": "2026-07-11",
+          "year": "2026",
+          "pool": [
+            "04",
+            "19",
+            "32",
+            "33",
+            "37",
+            "38"
+          ],
+          "positives": [
+            "27",
+            "30",
+            "45",
+            "08",
+            "01",
+            "37"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 193,
+          "date": "2026-07-12",
+          "year": "2026",
+          "pool": [
+            "04",
+            "19",
+            "30",
+            "32",
+            "33",
+            "37"
+          ],
+          "positives": [
+            "02",
+            "49",
+            "25",
+            "11",
+            "45",
+            "29"
+          ],
+          "matchCount": 0,
+          "hit": false
+        },
+        {
+          "issue": 194,
+          "date": "2026-07-13",
+          "year": "2026",
+          "pool": [
+            "04",
+            "19",
+            "29",
+            "30",
+            "32",
+            "33"
+          ],
+          "positives": [
+            "30",
+            "21",
+            "22",
+            "15",
+            "04",
+            "34"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 195,
+          "date": "2026-07-14",
+          "year": "2026",
+          "pool": [
+            "13",
+            "19",
+            "29",
+            "30",
+            "32",
+            "33"
+          ],
+          "positives": [
+            "46",
+            "23",
+            "39",
+            "04",
+            "09",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 196,
+          "date": "2026-07-15",
+          "year": "2026",
+          "pool": [
+            "07",
+            "09",
+            "13",
+            "19",
+            "28",
+            "30"
+          ],
+          "positives": [
+            "03",
+            "37",
+            "24",
+            "10",
+            "41",
+            "19"
+          ],
+          "matchCount": 1,
+          "hit": false
+        },
+        {
+          "issue": 197,
+          "date": "2026-07-16",
+          "year": "2026",
+          "pool": [
+            "07",
+            "09",
+            "13",
+            "19",
+            "28",
+            "37"
+          ],
+          "positives": [
+            "40",
+            "19",
+            "30",
+            "48",
+            "44",
+            "28"
+          ],
+          "matchCount": 2,
+          "hit": false
+        },
+        {
+          "issue": 198,
+          "date": "2026-07-17",
+          "year": "2026",
+          "pool": [
+            "07",
+            "09",
+            "13",
+            "19",
+            "32",
+            "37"
+          ],
+          "positives": [
+            "48",
+            "35",
+            "45",
+            "21",
+            "12",
+            "24"
+          ],
+          "matchCount": 0,
+          "hit": false
+        }
+      ]
+    }
+  ]
+}

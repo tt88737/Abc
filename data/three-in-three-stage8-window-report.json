@@ -1,0 +1,948 @@
+{
+  "generatedAt": "2026-07-18T16:11:45.407Z",
+  "source": "am",
+  "sourceName": "澳门",
+  "rule": "阶段8码五期窗口：每个阶段固定8码；每个5期窗口内至少有1期前6正码命中阶段8码>=3，则窗口覆盖。",
+  "years": [
+    {
+      "year": "2020",
+      "totalWindows": 45,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08"
+          ],
+          "totalWindows": 0,
+          "coveredWindows": 0,
+          "hitRate": 0,
+          "fullCovered": false,
+          "missWindows": []
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "01",
+            "05",
+            "08",
+            "18",
+            "22",
+            "29",
+            "47",
+            "49"
+          ],
+          "totalWindows": 20,
+          "coveredWindows": 15,
+          "hitRate": 75,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 161,
+              "end": 165
+            },
+            {
+              "start": 166,
+              "end": 170
+            },
+            {
+              "start": 176,
+              "end": 180
+            },
+            {
+              "start": 201,
+              "end": 205
+            },
+            {
+              "start": 206,
+              "end": 210
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "22",
+            "34",
+            "35",
+            "38",
+            "40",
+            "41",
+            "46",
+            "49"
+          ],
+          "totalWindows": 25,
+          "coveredWindows": 19,
+          "hitRate": 76,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 236,
+              "end": 240
+            },
+            {
+              "start": 271,
+              "end": 275
+            },
+            {
+              "start": 301,
+              "end": 305
+            },
+            {
+              "start": 321,
+              "end": 325
+            },
+            {
+              "start": 326,
+              "end": 330
+            },
+            {
+              "start": 351,
+              "end": 355
+            }
+          ]
+        }
+      ],
+      "fullCovered": false
+    },
+    {
+      "year": "2021",
+      "totalWindows": 73,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "02",
+            "03",
+            "05",
+            "15",
+            "16",
+            "21",
+            "36",
+            "47"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 1,
+              "end": 5
+            },
+            {
+              "start": 6,
+              "end": 10
+            },
+            {
+              "start": 41,
+              "end": 45
+            },
+            {
+              "start": 91,
+              "end": 95
+            },
+            {
+              "start": 106,
+              "end": 110
+            },
+            {
+              "start": 111,
+              "end": 115
+            }
+          ]
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "13",
+            "16",
+            "19",
+            "21",
+            "22",
+            "27",
+            "32",
+            "33"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 121,
+              "end": 125
+            },
+            {
+              "start": 151,
+              "end": 155
+            },
+            {
+              "start": 156,
+              "end": 160
+            },
+            {
+              "start": 161,
+              "end": 165
+            },
+            {
+              "start": 216,
+              "end": 220
+            },
+            {
+              "start": 221,
+              "end": 225
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "02",
+            "11",
+            "24",
+            "29",
+            "30",
+            "40",
+            "47",
+            "49"
+          ],
+          "totalWindows": 27,
+          "coveredWindows": 21,
+          "hitRate": 77.78,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 246,
+              "end": 250
+            },
+            {
+              "start": 291,
+              "end": 295
+            },
+            {
+              "start": 296,
+              "end": 300
+            },
+            {
+              "start": 326,
+              "end": 330
+            },
+            {
+              "start": 331,
+              "end": 335
+            },
+            {
+              "start": 356,
+              "end": 360
+            }
+          ]
+        }
+      ],
+      "fullCovered": false
+    },
+    {
+      "year": "2022",
+      "totalWindows": 73,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "05",
+            "10",
+            "28",
+            "31",
+            "33",
+            "46",
+            "48",
+            "49"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 21,
+              "end": 25
+            },
+            {
+              "start": 26,
+              "end": 30
+            },
+            {
+              "start": 31,
+              "end": 35
+            },
+            {
+              "start": 41,
+              "end": 45
+            },
+            {
+              "start": 51,
+              "end": 55
+            },
+            {
+              "start": 56,
+              "end": 60
+            }
+          ]
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "01",
+            "03",
+            "07",
+            "12",
+            "26",
+            "33",
+            "40",
+            "43"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 18,
+          "hitRate": 78.26,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 141,
+              "end": 145
+            },
+            {
+              "start": 151,
+              "end": 155
+            },
+            {
+              "start": 161,
+              "end": 165
+            },
+            {
+              "start": 171,
+              "end": 175
+            },
+            {
+              "start": 221,
+              "end": 225
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "03",
+            "10",
+            "24",
+            "37",
+            "38",
+            "42",
+            "45",
+            "48"
+          ],
+          "totalWindows": 27,
+          "coveredWindows": 19,
+          "hitRate": 70.37,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 231,
+              "end": 235
+            },
+            {
+              "start": 251,
+              "end": 255
+            },
+            {
+              "start": 256,
+              "end": 260
+            },
+            {
+              "start": 276,
+              "end": 280
+            },
+            {
+              "start": 286,
+              "end": 290
+            },
+            {
+              "start": 296,
+              "end": 300
+            },
+            {
+              "start": 306,
+              "end": 310
+            },
+            {
+              "start": 331,
+              "end": 335
+            }
+          ]
+        }
+      ],
+      "fullCovered": false
+    },
+    {
+      "year": "2023",
+      "totalWindows": 73,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "11",
+            "12",
+            "30",
+            "36",
+            "38",
+            "39",
+            "43",
+            "45"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 21,
+              "end": 25
+            },
+            {
+              "start": 31,
+              "end": 35
+            },
+            {
+              "start": 36,
+              "end": 40
+            },
+            {
+              "start": 41,
+              "end": 45
+            },
+            {
+              "start": 86,
+              "end": 90
+            },
+            {
+              "start": 101,
+              "end": 105
+            }
+          ]
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "02",
+            "04",
+            "15",
+            "19",
+            "25",
+            "29",
+            "37",
+            "41"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 126,
+              "end": 130
+            },
+            {
+              "start": 171,
+              "end": 175
+            },
+            {
+              "start": 176,
+              "end": 180
+            },
+            {
+              "start": 196,
+              "end": 200
+            },
+            {
+              "start": 221,
+              "end": 225
+            },
+            {
+              "start": 226,
+              "end": 230
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "02",
+            "18",
+            "24",
+            "30",
+            "34",
+            "40",
+            "41",
+            "44"
+          ],
+          "totalWindows": 27,
+          "coveredWindows": 19,
+          "hitRate": 70.37,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 271,
+              "end": 275
+            },
+            {
+              "start": 286,
+              "end": 290
+            },
+            {
+              "start": 296,
+              "end": 300
+            },
+            {
+              "start": 301,
+              "end": 305
+            },
+            {
+              "start": 326,
+              "end": 330
+            },
+            {
+              "start": 341,
+              "end": 345
+            },
+            {
+              "start": 346,
+              "end": 350
+            },
+            {
+              "start": 356,
+              "end": 360
+            }
+          ]
+        }
+      ],
+      "fullCovered": false
+    },
+    {
+      "year": "2024",
+      "totalWindows": 73,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "03",
+            "07",
+            "10",
+            "23",
+            "27",
+            "31",
+            "36",
+            "44"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 11,
+              "end": 15
+            },
+            {
+              "start": 41,
+              "end": 45
+            },
+            {
+              "start": 51,
+              "end": 55
+            },
+            {
+              "start": 61,
+              "end": 65
+            },
+            {
+              "start": 86,
+              "end": 90
+            },
+            {
+              "start": 106,
+              "end": 110
+            }
+          ]
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "05",
+            "09",
+            "10",
+            "11",
+            "12",
+            "15",
+            "25",
+            "43"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 19,
+          "hitRate": 82.61,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 156,
+              "end": 160
+            },
+            {
+              "start": 186,
+              "end": 190
+            },
+            {
+              "start": 191,
+              "end": 195
+            },
+            {
+              "start": 196,
+              "end": 200
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "02",
+            "03",
+            "05",
+            "09",
+            "10",
+            "15",
+            "17",
+            "40"
+          ],
+          "totalWindows": 27,
+          "coveredWindows": 18,
+          "hitRate": 66.67,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 241,
+              "end": 245
+            },
+            {
+              "start": 246,
+              "end": 250
+            },
+            {
+              "start": 251,
+              "end": 255
+            },
+            {
+              "start": 266,
+              "end": 270
+            },
+            {
+              "start": 291,
+              "end": 295
+            },
+            {
+              "start": 306,
+              "end": 310
+            },
+            {
+              "start": 336,
+              "end": 340
+            },
+            {
+              "start": 341,
+              "end": 345
+            },
+            {
+              "start": 356,
+              "end": 360
+            }
+          ]
+        }
+      ],
+      "fullCovered": false
+    },
+    {
+      "year": "2025",
+      "totalWindows": 71,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "23",
+            "24",
+            "27",
+            "30",
+            "32",
+            "35",
+            "39",
+            "40"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 17,
+          "hitRate": 73.91,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 11,
+              "end": 15
+            },
+            {
+              "start": 56,
+              "end": 60
+            },
+            {
+              "start": 66,
+              "end": 70
+            },
+            {
+              "start": 86,
+              "end": 90
+            },
+            {
+              "start": 106,
+              "end": 110
+            },
+            {
+              "start": 111,
+              "end": 115
+            }
+          ]
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "03",
+            "08",
+            "11",
+            "15",
+            "25",
+            "30",
+            "39",
+            "46"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 16,
+          "hitRate": 69.57,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 121,
+              "end": 125
+            },
+            {
+              "start": 126,
+              "end": 130
+            },
+            {
+              "start": 131,
+              "end": 135
+            },
+            {
+              "start": 156,
+              "end": 160
+            },
+            {
+              "start": 181,
+              "end": 185
+            },
+            {
+              "start": 206,
+              "end": 210
+            },
+            {
+              "start": 211,
+              "end": 215
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "01",
+            "10",
+            "11",
+            "24",
+            "29",
+            "33",
+            "35",
+            "46"
+          ],
+          "totalWindows": 25,
+          "coveredWindows": 18,
+          "hitRate": 72,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 231,
+              "end": 235
+            },
+            {
+              "start": 256,
+              "end": 260
+            },
+            {
+              "start": 261,
+              "end": 265
+            },
+            {
+              "start": 316,
+              "end": 320
+            },
+            {
+              "start": 336,
+              "end": 340
+            },
+            {
+              "start": 351,
+              "end": 355
+            },
+            {
+              "start": 356,
+              "end": 360
+            }
+          ]
+        }
+      ],
+      "fullCovered": false
+    },
+    {
+      "year": "2026",
+      "totalWindows": 39,
+      "phases": [
+        {
+          "id": "001-115",
+          "start": 1,
+          "end": 115,
+          "pool": [
+            "07",
+            "08",
+            "10",
+            "17",
+            "19",
+            "20",
+            "22",
+            "24"
+          ],
+          "totalWindows": 23,
+          "coveredWindows": 18,
+          "hitRate": 78.26,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 26,
+              "end": 30
+            },
+            {
+              "start": 46,
+              "end": 50
+            },
+            {
+              "start": 51,
+              "end": 55
+            },
+            {
+              "start": 56,
+              "end": 60
+            },
+            {
+              "start": 61,
+              "end": 65
+            }
+          ]
+        },
+        {
+          "id": "116-230",
+          "start": 116,
+          "end": 230,
+          "pool": [
+            "17",
+            "20",
+            "22",
+            "29",
+            "31",
+            "34",
+            "40",
+            "46"
+          ],
+          "totalWindows": 16,
+          "coveredWindows": 15,
+          "hitRate": 93.75,
+          "fullCovered": false,
+          "missWindows": [
+            {
+              "start": 191,
+              "end": 195
+            }
+          ]
+        },
+        {
+          "id": "231-365",
+          "start": 231,
+          "end": 365,
+          "pool": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08"
+          ],
+          "totalWindows": 0,
+          "coveredWindows": 0,
+          "hitRate": 0,
+          "fullCovered": false,
+          "missWindows": []
+        }
+      ],
+      "fullCovered": false
+    }
+  ]
+}

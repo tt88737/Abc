@@ -98,6 +98,7 @@
       <button class="active" data-tab="decisionHome">总控台</button>
       <button data-tab="gateChallenge">闯三关判断</button>
       <button data-tab="fixed8Pattern">固定八码</button>
+      <button data-tab="positionStage8">正六码固定8码</button>
       <button data-tab="manualFetch">手动采集</button>
     </nav>
     <section id="app"></section>
@@ -110,6 +111,7 @@
     let recentRecords = [];
     let summary = null;
     let fixed8PatternState = {items: []};
+    let positionStage8State = {years: []};
     const dashboardCacheVersion = String(Date.now());
     const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const htmlText = (value) => String(value ?? '').replace(/&(?!(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z][\w]+);)/g, '&amp;').replace(/[<>"']/g, (ch) => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -742,6 +744,90 @@
       </div>`;
       document.getElementById('fixed8-source')?.addEventListener('change', renderFixed8Pattern);
     }
+    function latestRecordForSource(source) {
+      const latest = summary?.bySource?.[source]?.latest;
+      if (latest?.issue) return latest;
+      return sourceRecords(source)
+        .slice()
+        .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0] || null;
+    }
+    function positionStage8YearPlan(source) {
+      if (positionStage8State?.source && positionStage8State.source !== source) return null;
+      const years = asArray(positionStage8State.years)
+        .filter(year => asArray(year.phases).length)
+        .sort((a, b) => String(b.year || '').localeCompare(String(a.year || '')));
+      return years[0] || null;
+    }
+    function positionStage8PhaseForIssue(issue) {
+      const value = Number(issue || 0);
+      if (value >= 1 && value <= 115) return '001-115';
+      if (value >= 116 && value <= 230) return '116-230';
+      if (value >= 231 && value <= 365) return '231-365';
+      return '';
+    }
+    function positionStage8Window(issue) {
+      const value = Number(issue || 0);
+      if (!value) return {start: 1, end: 5};
+      const start = Math.floor((value - 1) / 5) * 5 + 1;
+      return {start, end: start + 4};
+    }
+    function positionStage8PositiveAt(row, index) {
+      const ball = asArray(row?.balls)[index] || {};
+      const value = Number(ball.numberText || ball.number || 0);
+      return value ? String(value).padStart(2, '0') : '';
+    }
+    function positionStage8CurrentRows(source, year, start, end) {
+      return sourceRecords(source)
+        .filter(row => String(row.date || '').startsWith(`${year}-`) && Number(row.issue || 0) >= start && Number(row.issue || 0) <= end)
+        .sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
+    }
+    function positionStage8HistoryRows() {
+      const years = asArray(positionStage8State.years).sort((a, b) => String(b.year || '').localeCompare(String(a.year || '')));
+      if (!years.length) return '<tr><td colspan="5" class="muted">暂无位置固定8码历史验证</td></tr>';
+      return years.map(year => {
+        const cells = asArray(year.phases).map(phase => {
+          const ok = phase.fullCovered ? '全覆盖' : '有漏窗';
+          const miss = asArray(phase.positions).filter(pos => !pos.fullCovered && Number(pos.totalWindows || 0) > 0)
+            .map(pos => `P${esc(pos.position)} ${esc(pos.coveredWindows)}/${esc(pos.totalWindows)}`)
+            .join('、');
+          return `<td><strong class="${phase.fullCovered ? 'result-hit' : 'result-miss'}">${ok}</strong><br><span class="muted">${miss || 'P1-P6 全部覆盖'}</span></td>`;
+        }).join('');
+        return `<tr><td>${esc(year.year || '-')}</td>${cells}<td>${year.fullCovered ? '成立' : '复核'}</td></tr>`;
+      }).join('');
+    }
+    function renderPositionStage8() {
+      const selected = document.getElementById('position-stage8-source')?.value || 'am';
+      const latest = latestRecordForSource(selected);
+      const yearPlan = positionStage8YearPlan(selected);
+      if (!yearPlan) {
+        app.innerHTML = `<div class="grid"><section class="panel full"><div class="filters"><label>来源<select id="position-stage8-source">${sourceOptions(selected)}</select></label></div><h2>正六码固定8码</h2><p class="muted">暂无位置固定8码报告，请先运行 node analyze-three-in-three-position-stage8.mjs。</p></section></div>`;
+        document.getElementById('position-stage8-source')?.addEventListener('change', renderPositionStage8);
+        return;
+      }
+      const phaseId = positionStage8PhaseForIssue(latest?.issue);
+      const phase = asArray(yearPlan.phases).find(item => item.id === phaseId) || asArray(yearPlan.phases).find(item => asArray(item.positions).some(pos => Number(pos.totalWindows || 0) > 0)) || asArray(yearPlan.phases)[0];
+      const currentWindow = positionStage8Window(latest?.issue);
+      const currentRows = positionStage8CurrentRows(selected, yearPlan.year, currentWindow.start, currentWindow.end);
+      const positionRows = asArray(phase?.positions).map(pos => {
+        const pool = asArray(pos.pool);
+        const poolSet = new Set(pool);
+        const hits = currentRows
+          .map(row => ({issue: row.issue, num: positionStage8PositiveAt(row, Number(pos.position || 1) - 1)}))
+          .filter(item => item.num && poolSet.has(item.num));
+        const status = hits.length ? '已覆盖' : '观察中';
+        return `<tr><td>P${esc(pos.position)}</td><td>${numberChips(pool)}</td><td>${esc(pos.coveredWindows || 0)} / ${esc(pos.totalWindows || 0)}</td><td class="${pos.fullCovered ? 'result-hit' : 'result-miss'}">${pos.fullCovered ? '全覆盖' : '有漏窗'}</td><td class="${hits.length ? 'result-hit' : ''}">${status}<br><span class="muted">${hits.map(hit => `${esc(hit.issue)}:${esc(hit.num)}`).join('、') || '当前窗口暂无命中'}</span></td></tr>`;
+      }).join('');
+      const drawRows = currentRows.map(row => `<tr><td>${esc(row.issue)}期<br><span class="muted">${esc(row.date || '')}</span></td>${[0,1,2,3,4,5].map(idx => `<td>${numberChips([positionStage8PositiveAt(row, idx)])}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="7" class="muted">当前窗口暂无开奖</td></tr>';
+      app.innerHTML = `<div class="grid">
+        <section class="panel full"><div class="filters"><label>来源<select id="position-stage8-source">${sourceOptions(selected)}</select></label></div><h2>正六码固定8码</h2><p class="muted">P1-P6 每个正码位置独立固定8码；每个5期窗口内，该位置开出自己的8码之一即覆盖。不做6码复式压缩。</p></section>
+        <section class="panel wide"><h2>当前阶段</h2><div class="metric">${esc(yearPlan.year || '-')} / ${esc(phase?.id || '-')}</div><p class="muted">最新开奖：${esc(latest?.issue || '-')}期；当前窗口 ${String(currentWindow.start).padStart(3, '0')}-${String(currentWindow.end).padStart(3, '0')}</p></section>
+        <section class="panel wide"><h2>阶段结论</h2><div class="metric ${phase?.fullCovered ? 'result-hit' : 'result-miss'}">${phase?.fullCovered ? 'P1-P6 全覆盖' : '存在位置漏窗'}</div><p class="muted">只验收位置固定8码五期窗口，不与特别号或复式压缩混用。</p></section>
+        <section class="panel full"><h2>当前位置固定8码</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>位置</th><th>固定8码</th><th>历史覆盖</th><th>历史状态</th><th>当前窗口</th></tr></thead><tbody>${positionRows}</tbody></table></div></section>
+        <section class="panel full"><h2>当前窗口正码</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>期号</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>P6</th></tr></thead><tbody>${drawRows}</tbody></table></div></section>
+        <section class="panel full"><h2>历史三阶段位置验证</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>年份</th><th>001-115</th><th>116-230</th><th>231-365</th><th>结论</th></tr></thead><tbody>${positionStage8HistoryRows()}</tbody></table></div></section>
+      </div>`;
+      document.getElementById('position-stage8-source')?.addEventListener('change', renderPositionStage8);
+    }
     function renderDecisionHome() {
       const focusCards = buildTodayFocusCards();
       const healthCards = buildDataHealthCards();
@@ -779,6 +865,7 @@
     }
     let recordsDataPromise = null;
     let fixed8PatternPromise = null;
+    let positionStage8Promise = null;
     function cacheBustUrl(src) {
       const separator = src.includes('?') ? '&' : '?';
       return `${src}${separator}v=${encodeURIComponent(dashboardCacheVersion)}`;
@@ -829,12 +916,25 @@
       }
       return fixed8PatternPromise;
     }
+    async function ensurePositionStage8Data() {
+      if (positionStage8State?.years?.length) return positionStage8State;
+      if (!positionStage8Promise) {
+        positionStage8Promise = loadJsonOrScript('data/three-in-three-position-stage8-report.json', 'data/three-in-three-position-stage8-report.js', '__THREE_IN_THREE_POSITION_STAGE8_REPORT__').then(data => {
+          positionStage8State = data || {years: []};
+          return positionStage8State;
+        });
+      }
+      return positionStage8Promise;
+    }
     const tabDataLoaders = {
       decisionHome: async () => {
         await Promise.all([ensureRecordsData(), ensureFixed8PatternData()]);
       },
       fixed8Pattern: async () => {
         fixed8PatternState = await ensureFixed8PatternData();
+      },
+      positionStage8: async () => {
+        await Promise.all([ensureRecordsData(), ensurePositionStage8Data()]);
       },
       gateChallenge: async () => {
         await ensureRecordsData();
@@ -843,6 +943,7 @@
     const renderers = {
       decisionHome: renderDecisionHome,
       fixed8Pattern: renderFixed8Pattern,
+      positionStage8: renderPositionStage8,
       gateChallenge: renderGateChallenge,
       manualFetch: renderManualFetch
     };

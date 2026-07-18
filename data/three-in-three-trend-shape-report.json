@@ -1,0 +1,407 @@
+{
+  "generatedAt": "2026-07-18T13:44:26.404Z",
+  "source": "am",
+  "sourceName": "澳门",
+  "rule": "走势形态反向分析：固定6码复式公式不变，按命中前的空窗、上期重叠、上期正码结构分桶，寻找触发条件。",
+  "totalRecords": 2247,
+  "formulas": [
+    {
+      "id": "hot-5",
+      "name": "近5期热码前6",
+      "evaluatedDraws": 2242,
+      "hits": 53,
+      "hitRate": 2.36,
+      "latestPool": [
+        "04",
+        "19",
+        "28",
+        "30",
+        "40",
+        "44"
+      ]
+    },
+    {
+      "id": "carry-hot-10",
+      "name": "上期延续+近10期热度6码",
+      "evaluatedDraws": 2237,
+      "hits": 52,
+      "hitRate": 2.32,
+      "latestPool": [
+        "19",
+        "28",
+        "30",
+        "40",
+        "44",
+        "48"
+      ]
+    },
+    {
+      "id": "hot-10",
+      "name": "近10期热码前6",
+      "evaluatedDraws": 2237,
+      "hits": 47,
+      "hitRate": 2.1,
+      "latestPool": [
+        "10",
+        "19",
+        "30",
+        "37",
+        "45",
+        "48"
+      ]
+    }
+  ],
+  "buckets": [
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevZone<=2",
+      "total": 46,
+      "hits": 2,
+      "hitRate": 4.35,
+      "lift": 2.03
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevSmall>=5",
+      "total": 180,
+      "hits": 7,
+      "hitRate": 3.89,
+      "lift": 1.57
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "miss>=20",
+      "total": 293,
+      "hits": 10,
+      "hitRate": 3.41,
+      "lift": 1.31
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "miss>=10",
+      "total": 401,
+      "hits": 12,
+      "hitRate": 2.99,
+      "lift": 0.67
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevOverlap2-3",
+      "total": 373,
+      "hits": 11,
+      "hitRate": 2.95,
+      "lift": 0.59
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "miss>=30",
+      "total": 1042,
+      "hits": 27,
+      "hitRate": 2.59,
+      "lift": 0.23
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevOdd>=5",
+      "total": 234,
+      "hits": 6,
+      "hitRate": 2.56,
+      "lift": 0.2
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "miss>=30",
+      "total": 1046,
+      "hits": 26,
+      "hitRate": 2.49,
+      "lift": 0.17
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "miss<10",
+      "total": 488,
+      "hits": 12,
+      "hitRate": 2.46,
+      "lift": 0.1
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevOverlap<=1",
+      "total": 1863,
+      "hits": 45,
+      "hitRate": 2.42,
+      "lift": 0.1
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevOverlap<=1",
+      "total": 1863,
+      "hits": 41,
+      "hitRate": 2.2,
+      "lift": 0.1
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevOdd>=5",
+      "total": 234,
+      "hits": 5,
+      "hitRate": 2.14,
+      "lift": 0.04
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "miss<10",
+      "total": 436,
+      "hits": 9,
+      "hitRate": 2.06,
+      "lift": -0.04
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "miss>=30",
+      "total": 1147,
+      "hits": 23,
+      "hitRate": 2.01,
+      "lift": -0.09
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevOverlap<=1",
+      "total": 1868,
+      "hits": 42,
+      "hitRate": 2.25,
+      "lift": -0.11
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevOdd>=5",
+      "total": 234,
+      "hits": 5,
+      "hitRate": 2.14,
+      "lift": -0.18
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "miss>=20",
+      "total": 322,
+      "hits": 7,
+      "hitRate": 2.17,
+      "lift": -0.19
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevTail<=4",
+      "total": 627,
+      "hits": 12,
+      "hitRate": 1.91,
+      "lift": -0.19
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevSameTail>=2",
+      "total": 627,
+      "hits": 12,
+      "hitRate": 1.91,
+      "lift": -0.19
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevSmall<=1",
+      "total": 239,
+      "hits": 5,
+      "hitRate": 2.09,
+      "lift": -0.23
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "miss>=20",
+      "total": 291,
+      "hits": 6,
+      "hitRate": 2.06,
+      "lift": -0.26
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevOdd<=1",
+      "total": 201,
+      "hits": 4,
+      "hitRate": 1.99,
+      "lift": -0.33
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevSmall>=5",
+      "total": 180,
+      "hits": 3,
+      "hitRate": 1.67,
+      "lift": -0.43
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevOverlap2-3",
+      "total": 373,
+      "hits": 7,
+      "hitRate": 1.88,
+      "lift": -0.44
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevOverlap2-3",
+      "total": 373,
+      "hits": 6,
+      "hitRate": 1.61,
+      "lift": -0.49
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "miss>=10",
+      "total": 390,
+      "hits": 7,
+      "hitRate": 1.79,
+      "lift": -0.57
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevSmall>=5",
+      "total": 180,
+      "hits": 3,
+      "hitRate": 1.67,
+      "lift": -0.69
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "miss>=10",
+      "total": 361,
+      "hits": 5,
+      "hitRate": 1.39,
+      "lift": -0.71
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "miss<10",
+      "total": 499,
+      "hits": 8,
+      "hitRate": 1.6,
+      "lift": -0.72
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevTail<=4",
+      "total": 627,
+      "hits": 10,
+      "hitRate": 1.59,
+      "lift": -0.73
+    },
+    {
+      "formula": "carry-hot-10",
+      "formulaName": "上期延续+近10期热度6码",
+      "bucket": "prevSameTail>=2",
+      "total": 627,
+      "hits": 10,
+      "hitRate": 1.59,
+      "lift": -0.73
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevTail<=4",
+      "total": 627,
+      "hits": 9,
+      "hitRate": 1.44,
+      "lift": -0.92
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevSameTail>=2",
+      "total": 627,
+      "hits": 9,
+      "hitRate": 1.44,
+      "lift": -0.92
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevOdd<=1",
+      "total": 201,
+      "hits": 2,
+      "hitRate": 1,
+      "lift": -1.1
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevSmall<=1",
+      "total": 239,
+      "hits": 2,
+      "hitRate": 0.84,
+      "lift": -1.26
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevOdd<=1",
+      "total": 201,
+      "hits": 2,
+      "hitRate": 1,
+      "lift": -1.36
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevSmall<=1",
+      "total": 239,
+      "hits": 2,
+      "hitRate": 0.84,
+      "lift": -1.52
+    },
+    {
+      "formula": "hot-10",
+      "formulaName": "近10期热码前6",
+      "bucket": "prevZone<=2",
+      "total": 46,
+      "hits": 0,
+      "hitRate": 0,
+      "lift": -2.1
+    },
+    {
+      "formula": "hot-5",
+      "formulaName": "近5期热码前6",
+      "bucket": "prevZone<=2",
+      "total": 46,
+      "hits": 0,
+      "hitRate": 0,
+      "lift": -2.36
+    }
+  ]
+}

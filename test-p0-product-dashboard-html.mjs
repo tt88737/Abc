@@ -20,10 +20,11 @@ const removedTokens = {
 };
 
 assert.ok(html.includes("renderDecisionHome"), "homepage should define a decision-first home renderer");
-assert.equal((navHtml.match(/data-tab=/g) || []).length, 4, "top nav should expose four primary menus");
+assert.equal((navHtml.match(/data-tab=/g) || []).length, 5, "top nav should expose five primary menus");
 assert.ok(navHtml.includes('data-tab="decisionHome"'), "top nav should keep decision home");
 assert.ok(navHtml.includes('data-tab="gateChallenge"'), "top nav should expose gate challenge decision");
 assert.ok(navHtml.includes('data-tab="fixed8Pattern"'), "top nav should expose fixed 8 pattern");
+assert.ok(navHtml.includes('data-tab="positionStage8"'), "top nav should expose position stage 8 pattern");
 assert.ok(navHtml.includes('data-tab="manualFetch"'), "top nav should expose manual fetch");
 assert.ok(!navHtml.includes('data-tab="window5"'), "top nav should not expose removed 5-period window");
 assert.ok(!navHtml.includes('data-tab="dataReview"'), "top nav should not expose data review hub");
@@ -33,6 +34,7 @@ assert.ok(!navHtml.includes('data-tab="worldcupAnalysis"'), "top nav should not 
 for (const [name, text] of [["index.html", html], ["build-data.ps1", build]]) {
   assert.ok(text.includes('data-tab="decisionHome"'), `${name} should keep decision home`);
   assert.ok(text.includes('data-tab="fixed8Pattern"'), `${name} should expose fixed 8 as a primary menu`);
+  assert.ok(text.includes('data-tab="positionStage8"'), `${name} should expose position stage 8 as a primary menu`);
   assert.ok(text.includes('data-tab="manualFetch"'), `${name} should expose manual fetch as a primary menu`);
   assert.ok(text.includes("reviewOnlyReason"), `${name} should carry review-only reasons on data review cards`);
   assert.ok(text.includes("sample:"), `${name} review summaries should carry sample context`);
