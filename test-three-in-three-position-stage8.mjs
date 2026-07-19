@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  analyzeAllPositionStage8,
   analyzePositionStage8,
   bestPositionStagePool,
   buildPositionWindows,
@@ -16,6 +17,13 @@ function record(issue, positives, special = 49, date = '2026-01-01') {
       number,
       numberText: String(number).padStart(2, '0'),
     })),
+  };
+}
+
+function sourceRecord(source, issue, positives, special = 49, date = '2026-01-01') {
+  return {
+    ...record(issue, positives, special, date),
+    source,
   };
 }
 
@@ -47,5 +55,12 @@ assert.equal(report.source, 'am');
 assert.equal(report.years.length, 1);
 assert.equal(report.years[0].phases.length, 3);
 assert.equal(report.years[0].phases[0].positions.length, 6);
+
+const multiReport = analyzeAllPositionStage8([
+  sourceRecord('am', 1, [1, 2, 3, 4, 5, 6], 49, '2026-01-01'),
+  sourceRecord('hk', 1, [7, 8, 9, 10, 11, 12], 49, '2026-01-01'),
+]);
+assert.deepEqual(multiReport.sources.map(item => item.source), ['am', 'hk']);
+assert.equal(multiReport.sources.find(item => item.source === 'hk').years.length, 1);
 
 console.log('test-three-in-three-position-stage8 passed');

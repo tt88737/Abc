@@ -18,4 +18,9 @@ for (const [name, text] of files) {
   assert.ok(text.includes('__THREE_IN_THREE_POSITION_STAGE8_REPORT__'), `${name} should use position stage 8 global fallback`);
 }
 
+const report = JSON.parse(fs.readFileSync('data/three-in-three-position-stage8-report.json', 'utf8'));
+const sources = Array.isArray(report.sources) ? report.sources : [report];
+assert.ok(sources.some(item => item.source === 'am'), 'position stage 8 report should include Macau source');
+assert.ok(sources.some(item => item.source === 'hk'), 'position stage 8 report should include Hong Kong source');
+
 console.log('position stage 8 dashboard menu ok');

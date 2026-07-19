@@ -26,11 +26,18 @@ function displayYear(record) {
   return date.length >= 4 ? date.slice(0, 4) : String(record?.year || '');
 }
 
+function sourceName(source) {
+  if (source === 'am') return '\u6fb3\u95e8';
+  if (source === 'hk') return '\u9999\u6e2f';
+  return source;
+}
+
 export function buildPositionWindows(rows, positionIndex) {
   const byIssue = new Map();
   for (const row of rows) byIssue.set(Number(row.issue || 0), row);
   const maxIssue = Math.max(0, ...byIssue.keys());
   const windows = [];
+
   for (let start = 1; start <= maxIssue; start += 5) {
     const nums = [];
     const draws = [];
@@ -52,6 +59,7 @@ export function buildPositionWindows(rows, positionIndex) {
       });
     }
   }
+
   return windows;
 }
 
@@ -79,11 +87,6 @@ function numberMasks(windows) {
     }
   });
   return masks;
-}
-
-function coveredByPool(windows, pool) {
-  const poolSet = new Set(pool || []);
-  return windows.filter(win => positionWindowCovered(win, poolSet)).length;
 }
 
 export function bestPositionStagePool(windows, poolSize = 8) {
@@ -149,6 +152,7 @@ export function bestPositionStagePool(windows, poolSize = 8) {
   const paddedPool = padPoolToSize(pool, candidates.map(item => item.num), poolSize);
   const coveredMask = paddedPool.reduce((mask, num) => mask | (masks.get(num) || 0n), 0n);
   const coveredWindows = bitCount(coveredMask);
+
   return {
     pool: paddedPool,
     totalWindows: windows.length,
@@ -209,58 +213,72 @@ export function analyzePositionStage8(records, options = {}) {
   return {
     generatedAt: new Date().toISOString(),
     source,
-    sourceName: source === 'am' ? '澳门' : source,
-    rule: '位置独立阶段8码：P1-P6 每个位置各自固定8码；该位置每个5期窗口内至少开出8码之一，则该位置窗口覆盖。',
+    sourceName: sourceName(source),
+    rule: 'Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.',
     years: outputYears,
   };
 }
 
+export function analyzeAllPositionStage8(records, sources = ['am', 'hk']) {
+  return {
+    generatedAt: new Date().toISOString(),
+    sources: sources.map(source => analyzePositionStage8(records, {source})),
+  };
+}
+
 function markdownReport(report) {
+  const reports = Array.isArray(report.sources) ? report.sources : [report];
   const lines = [
-    '# 三中三 正码位置独立阶段8码五期窗口验证',
+    '# Position Fixed 8 Window Validation',
     '',
-    `生成时间：${report.generatedAt}`,
+    `Generated: ${report.generatedAt}`,
     '',
-    `规则：${report.rule}`,
-    '',
-    '| 年份 | 阶段 | 位置 | 8码 | 覆盖 | 是否全覆盖 | 漏窗口 |',
-    '| --- | --- | --- | --- | --- | --- | --- |',
+    '| Source | Year | Phase | Position | Pool | Coverage | Full | Miss Windows |',
+    '| --- | --- | --- | --- | --- | --- | --- | --- |',
   ];
-  for (const year of report.years) {
-    for (const phase of year.phases) {
-      for (const pos of phase.positions) {
-        const misses = pos.missWindows.slice(0, 8).map(win => `${win.start}-${win.end}`).join(', ');
-        const more = pos.missWindows.length > 8 ? ` 等${pos.missWindows.length}个` : '';
-        lines.push(`| ${year.year} | ${phase.id} | P${pos.position} | ${pos.pool.join(' ')} | ${pos.coveredWindows}/${pos.totalWindows} ${pos.hitRate}% | ${pos.fullCovered ? '是' : '否'} | ${misses ? `${misses}${more}` : '-'} |`);
+
+  for (const sourceReport of reports) {
+    for (const year of sourceReport.years || []) {
+      for (const phase of year.phases || []) {
+        for (const pos of phase.positions || []) {
+          const misses = pos.missWindows.slice(0, 8).map(win => `${win.start}-${win.end}`).join(', ');
+          const more = pos.missWindows.length > 8 ? ` and ${pos.missWindows.length - 8} more` : '';
+          lines.push(`| ${sourceReport.sourceName || sourceReport.source} | ${year.year} | ${phase.id} | P${pos.position} | ${pos.pool.join(' ')} | ${pos.coveredWindows}/${pos.totalWindows} ${pos.hitRate}% | ${pos.fullCovered ? 'yes' : 'no'} | ${misses ? `${misses}${more}` : '-'} |`);
+        }
       }
     }
   }
+
   lines.push('');
-  lines.push('## 判断');
+  lines.push('## Notes');
   lines.push('');
-  lines.push('- 只有同一年同一阶段的 P1-P6 都满足全覆盖，才进入后续合并与压缩6码。');
-  lines.push('- 任一位置漏窗口，该阶段位置8码体系不成立。');
+  lines.push('- Each source is calculated independently.');
+  lines.push('- P1-P6 each has its own fixed 8-number pool per phase.');
   return `${lines.join('\n')}\n`;
 }
 
 function runCli() {
   const root = path.dirname(fileURLToPath(import.meta.url));
   const payload = JSON.parse(fs.readFileSync(path.join(root, 'data', 'records.json'), 'utf8'));
-  const report = analyzePositionStage8(payload.records || [], {source: 'am'});
+  const report = analyzeAllPositionStage8(payload.records || []);
   const jsonPath = path.join(root, 'data', 'three-in-three-position-stage8-report.json');
   const jsPath = path.join(root, 'data', 'three-in-three-position-stage8-report.js');
   const mdPath = path.join(root, 'docs', 'three-in-three-position-stage8-report.md');
   const json = JSON.stringify(report, null, 2);
+
   fs.writeFileSync(jsonPath, `${json}\n`, 'utf8');
   fs.writeFileSync(jsPath, `window.__THREE_IN_THREE_POSITION_STAGE8_REPORT__ = ${json};\n`, 'utf8');
   fs.writeFileSync(mdPath, markdownReport(report), 'utf8');
   console.log(`Saved: ${jsonPath}`);
   console.log(`Saved: ${jsPath}`);
   console.log(`Saved: ${mdPath}`);
-  for (const year of report.years) {
-    for (const phase of year.phases) {
-      const text = phase.positions.map(pos => `P${pos.position}:${pos.fullCovered ? 'OK' : `${pos.coveredWindows}/${pos.totalWindows}`}`).join(' ');
-      console.log(`${year.year} ${phase.id}: ${phase.fullCovered ? 'ALL_OK' : 'MISS'} ${text}`);
+
+  for (const sourceReport of report.sources) {
+    for (const year of sourceReport.years) {
+      for (const phase of year.phases) {
+        const text = phase.positions.map(pos => `P${pos.position}:${pos.fullCovered ? 'OK' : `${pos.coveredWindows}/${pos.totalWindows}`}`).join(' ');
+        console.log(`${sourceReport.source} ${year.year} ${phase.id}: ${phase.fullCovered ? 'ALL_OK' : 'MISS'} ${text}`);
+      }
     }
   }
 }

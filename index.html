@@ -751,9 +751,15 @@
         .slice()
         .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.issue || 0) - Number(a.issue || 0))[0] || null;
     }
-    function positionStage8YearPlan(source) {
+    function positionStage8SourceReport(source) {
+      const sources = asArray(positionStage8State?.sources);
+      if (sources.length) return sources.find(item => item.source === source) || null;
       if (positionStage8State?.source && positionStage8State.source !== source) return null;
-      const years = asArray(positionStage8State.years)
+      return positionStage8State;
+    }
+    function positionStage8YearPlan(source) {
+      const sourceReport = positionStage8SourceReport(source);
+      const years = asArray(sourceReport?.years)
         .filter(year => asArray(year.phases).length)
         .sort((a, b) => String(b.year || '').localeCompare(String(a.year || '')));
       return years[0] || null;
@@ -781,8 +787,9 @@
         .filter(row => String(row.date || '').startsWith(`${year}-`) && Number(row.issue || 0) >= start && Number(row.issue || 0) <= end)
         .sort((a, b) => Number(a.issue || 0) - Number(b.issue || 0));
     }
-    function positionStage8HistoryRows() {
-      const years = asArray(positionStage8State.years).sort((a, b) => String(b.year || '').localeCompare(String(a.year || '')));
+    function positionStage8HistoryRows(source) {
+      const sourceReport = positionStage8SourceReport(source);
+      const years = asArray(sourceReport?.years).sort((a, b) => String(b.year || '').localeCompare(String(a.year || '')));
       if (!years.length) return '<tr><td colspan="5" class="muted">暂无位置固定8码历史验证</td></tr>';
       return years.map(year => {
         const cells = asArray(year.phases).map(phase => {
@@ -824,7 +831,7 @@
         <section class="panel wide"><h2>阶段结论</h2><div class="metric ${phase?.fullCovered ? 'result-hit' : 'result-miss'}">${phase?.fullCovered ? 'P1-P6 全覆盖' : '存在位置漏窗'}</div><p class="muted">只验收位置固定8码五期窗口，不与特别号或复式压缩混用。</p></section>
         <section class="panel full"><h2>当前位置固定8码</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>位置</th><th>固定8码</th><th>历史覆盖</th><th>历史状态</th><th>当前窗口</th></tr></thead><tbody>${positionRows}</tbody></table></div></section>
         <section class="panel full"><h2>当前窗口正码</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>期号</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>P6</th></tr></thead><tbody>${drawRows}</tbody></table></div></section>
-        <section class="panel full"><h2>历史三阶段位置验证</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>年份</th><th>001-115</th><th>116-230</th><th>231-365</th><th>结论</th></tr></thead><tbody>${positionStage8HistoryRows()}</tbody></table></div></section>
+        <section class="panel full"><h2>历史三阶段位置验证</h2><div class="table-scroll"><table class="compact-table"><thead><tr><th>年份</th><th>001-115</th><th>116-230</th><th>231-365</th><th>结论</th></tr></thead><tbody>${positionStage8HistoryRows(selected)}</tbody></table></div></section>
       </div>`;
       document.getElementById('position-stage8-source')?.addEventListener('change', renderPositionStage8);
     }
@@ -917,7 +924,7 @@
       return fixed8PatternPromise;
     }
     async function ensurePositionStage8Data() {
-      if (positionStage8State?.years?.length) return positionStage8State;
+      if (positionStage8State?.years?.length || positionStage8State?.sources?.length) return positionStage8State;
       if (!positionStage8Promise) {
         positionStage8Promise = loadJsonOrScript('data/three-in-three-position-stage8-report.json', 'data/three-in-three-position-stage8-report.js', '__THREE_IN_THREE_POSITION_STAGE8_REPORT__').then(data => {
           positionStage8State = data || {years: []};
