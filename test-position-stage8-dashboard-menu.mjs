@@ -20,9 +20,8 @@ for (const [name, text] of files) {
   assert.ok(!text.includes('__THREE_IN_THREE_POSITION_STAGE8_REPORT__'), `${name} should not use old global fallback`);
 }
 
-const reportPath = fs.existsSync('data/positive-position-stage8-report.json')
-  ? 'data/positive-position-stage8-report.json'
-  : 'data/three-in-three-position-stage8-report.json';
+const reportPath = 'data/positive-position-stage8-report.json';
+assert.ok(fs.existsSync(reportPath), 'position fixed 8 JSON report should exist');
 const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
 const sources = Array.isArray(report.sources) ? report.sources : [report];
 assert.ok(sources.some(item => item.source === 'am'), 'position stage 8 report should include Macau source');

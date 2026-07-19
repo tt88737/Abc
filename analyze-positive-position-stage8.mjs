@@ -261,13 +261,13 @@ function runCli() {
   const root = path.dirname(fileURLToPath(import.meta.url));
   const payload = JSON.parse(fs.readFileSync(path.join(root, 'data', 'records.json'), 'utf8'));
   const report = analyzeAllPositionStage8(payload.records || []);
-  const jsonPath = path.join(root, 'data', 'three-in-three-position-stage8-report.json');
-  const jsPath = path.join(root, 'data', 'three-in-three-position-stage8-report.js');
-  const mdPath = path.join(root, 'docs', 'three-in-three-position-stage8-report.md');
+  const jsonPath = path.join(root, 'data', 'positive-position-stage8-report.json');
+  const jsPath = path.join(root, 'data', 'positive-position-stage8-report.js');
+  const mdPath = path.join(root, 'docs', 'positive-position-stage8-report.md');
   const json = JSON.stringify(report, null, 2);
 
   fs.writeFileSync(jsonPath, `${json}\n`, 'utf8');
-  fs.writeFileSync(jsPath, `window.__THREE_IN_THREE_POSITION_STAGE8_REPORT__ = ${json};\n`, 'utf8');
+  fs.writeFileSync(jsPath, `window.__POSITIVE_POSITION_STAGE8_REPORT__ = ${json};\n`, 'utf8');
   fs.writeFileSync(mdPath, markdownReport(report), 'utf8');
   console.log(`Saved: ${jsonPath}`);
   console.log(`Saved: ${jsPath}`);

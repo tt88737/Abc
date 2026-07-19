@@ -1140,7 +1140,7 @@ function New-DashboardHtml {
       const latest = latestRecordForSource(selected);
       const yearPlan = positionStage8YearPlan(selected);
       if (!yearPlan) {
-        app.innerHTML = `<div class="grid"><section class="panel full"><div class="filters"><label>来源<select id="position-stage8-source">${sourceOptions(selected)}</select></label></div><h2>正六码固定8码</h2><p class="muted">暂无位置固定8码报告，请先运行 node analyze-three-in-three-position-stage8.mjs。</p></section></div>`;
+        app.innerHTML = `<div class="grid"><section class="panel full"><div class="filters"><label>来源<select id="position-stage8-source">${sourceOptions(selected)}</select></label></div><h2>正六码固定8码</h2><p class="muted">暂无位置固定8码报告，请先运行 node analyze-positive-position-stage8.mjs。</p></section></div>`;
         document.getElementById('position-stage8-source')?.addEventListener('change', renderPositionStage8);
         return;
       }
@@ -1259,7 +1259,7 @@ function New-DashboardHtml {
     async function ensurePositionStage8Data() {
       if (positionStage8State?.years?.length || positionStage8State?.sources?.length) return positionStage8State;
       if (!positionStage8Promise) {
-        positionStage8Promise = loadJsonOrScript('data/three-in-three-position-stage8-report.json', 'data/three-in-three-position-stage8-report.js', '__THREE_IN_THREE_POSITION_STAGE8_REPORT__').then(data => {
+        positionStage8Promise = loadJsonOrScript('data/positive-position-stage8-report.json', 'data/positive-position-stage8-report.js', '__POSITIVE_POSITION_STAGE8_REPORT__').then(data => {
           positionStage8State = data || {years: []};
           return positionStage8State;
         });
@@ -1373,7 +1373,7 @@ if (Test-Path -LiteralPath $fixed8PatternScript) {
         & node $fixed8PatternScript | Out-Null
     } | Out-Null
 }
-$positionStage8Script = Join-Path $PSScriptRoot 'analyze-three-in-three-position-stage8.mjs'
+$positionStage8Script = Join-Path $PSScriptRoot 'analyze-positive-position-stage8.mjs'
 if (Test-Path -LiteralPath $positionStage8Script) {
     Invoke-Profiled 'position-stage8-node' {
         & node $positionStage8Script | Out-Null
