@@ -63,4 +63,4 @@ const multiReport = analyzeAllPositionStage8([
 assert.deepEqual(multiReport.sources.map(item => item.source), ['am', 'hk']);
 assert.equal(multiReport.sources.find(item => item.source === 'hk').years.length, 1);
 
-console.log('test-three-in-three-position-stage8 passed');
+console.log('test-positive-position-stage8 passed');
