@@ -6,6 +6,7 @@ const files = [
   "index.html",
   "test-p0-product-dashboard-html.mjs",
   "test-build-data.ps1",
+  "README.md",
 ];
 
 const forbidden = [
@@ -16,6 +17,8 @@ const forbidden = [
   "THREE" + "_COMPOUND",
   "three" + "FormulaGate",
   "three" + "Window5",
+  "three" + "-in-three-position-stage8",
+  "THREE" + "_IN_THREE_POSITION_STAGE8",
   "\u4e09\u4e2d\u4e09",
 ];
 
