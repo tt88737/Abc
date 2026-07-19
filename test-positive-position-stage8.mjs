@@ -5,7 +5,7 @@ import {
   bestPositionStagePool,
   buildPositionWindows,
   positionWindowCovered,
-} from './analyze-three-in-three-position-stage8.mjs';
+} from './analyze-positive-position-stage8.mjs';
 
 function record(issue, positives, special = 49, date = '2026-01-01') {
   return {
