@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T15:31:44.720Z",
+  "generatedAt": "2026-07-20T14:38:29.018Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -24743,7 +24743,7 @@
       "currentWindow": {
         "start": 201,
         "end": 205,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 116,
         "basisEnd": 200,
@@ -24820,9 +24820,9 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -24840,10 +24840,10 @@
         "43",
         "48"
       ],
-      "totalWindows": 196,
-      "coveredWindows": 178,
+      "totalWindows": 197,
+      "coveredWindows": 179,
       "missCount": 18,
-      "hitRate": 90.82,
+      "hitRate": 90.86,
       "fullCovered": false,
       "missWindows": [
         {
