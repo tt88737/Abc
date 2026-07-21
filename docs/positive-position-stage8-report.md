@@ -1,6 +1,6 @@
 # Position Fixed 8 Window Validation
 
-Generated: 2026-07-20T16:01:25.054Z
+Generated: 2026-07-21T14:56:33.961Z
 
 | Source | Year | Phase | Position | Pool | Coverage | Full | Miss Windows |
 | --- | --- | --- | --- | --- | --- | --- | --- |
