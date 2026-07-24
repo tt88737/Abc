@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T16:02:48.821Z",
+  "generatedAt": "2026-07-24T14:40:18.721Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -22895,51 +22895,52 @@
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
+        "05",
         "09",
+        "11",
         "15",
-        "16",
-        "29",
-        "33",
         "37",
         "39",
-        "41"
+        "41",
+        "49"
       ],
-      "totalWindows": 40,
-      "coveredWindows": 37,
+      "totalWindows": 41,
+      "coveredWindows": 38,
       "missCount": 3,
-      "hitRate": 92.5,
+      "hitRate": 92.68,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 11,
-          "end": 15,
+          "start": 41,
+          "end": 45,
           "nums": [
             "01",
-            "11",
-            "26",
-            "31"
+            "13",
+            "16",
+            "19",
+            "36"
           ]
         },
         {
-          "start": 36,
-          "end": 40,
+          "start": 71,
+          "end": 75,
           "nums": [
-            "01",
-            "11",
-            "28",
-            "42",
-            "43"
+            "10",
+            "33",
+            "34",
+            "46",
+            "48"
           ]
         },
         {
-          "start": 86,
-          "end": 90,
+          "start": 76,
+          "end": 80,
           "nums": [
-            "12",
-            "26",
-            "27",
-            "36",
-            "49"
+            "02",
+            "03",
+            "29",
+            "35",
+            "46"
           ]
         }
       ],
@@ -22981,12 +22982,13 @@
           },
           {
             "start": 196,
-            "end": 200,
-            "windowCount": 1,
+            "end": 205,
+            "windowCount": 2,
             "pool": [
+              "03",
               "07"
             ],
-            "coveredWindows": 1
+            "coveredWindows": 2
           }
         ]
       },
@@ -23016,18 +23018,18 @@
           {
             "start": 116,
             "end": 230,
-            "windowCount": 17,
+            "windowCount": 18,
             "pool": [
               "01",
+              "03",
+              "05",
               "07",
-              "08",
               "09",
               "15",
-              "23",
-              "26",
+              "16",
               "41"
             ],
-            "coveredWindows": 17,
+            "coveredWindows": 18,
             "missCount": 0,
             "fullCovered": true,
             "missWindows": []
@@ -23045,10 +23047,10 @@
         ]
       },
       "walkForwardPlan": {
-        "totalWindows": 38,
-        "coveredWindows": 13,
+        "totalWindows": 39,
+        "coveredWindows": 14,
         "missCount": 25,
-        "hitRate": 34.21,
+        "hitRate": 35.9,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -23756,14 +23758,38 @@
               "07"
             ],
             "covered": true
+          },
+          {
+            "phaseStart": 116,
+            "phaseEnd": 230,
+            "start": 201,
+            "end": 205,
+            "basisStart": 116,
+            "basisEnd": 200,
+            "basisWindowCount": 17,
+            "pool": [
+              "01",
+              "03",
+              "05",
+              "06",
+              "07",
+              "09",
+              "10",
+              "26"
+            ],
+            "hits": [
+              "03",
+              "05"
+            ],
+            "covered": true
           }
         ]
       },
       "crossYearWalkForwardPlan": {
-        "totalWindows": 38,
-        "coveredWindows": 26,
+        "totalWindows": 39,
+        "coveredWindows": 27,
         "missCount": 12,
-        "hitRate": 68.42,
+        "hitRate": 69.23,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -24737,25 +24763,52 @@
               "08"
             ],
             "covered": true
+          },
+          {
+            "phaseStart": 116,
+            "phaseEnd": 230,
+            "start": 201,
+            "end": 205,
+            "pool": [
+              "01",
+              "03",
+              "04",
+              "05",
+              "07",
+              "08",
+              "09",
+              "10"
+            ],
+            "basis": {
+              "historyYearCount": 6,
+              "currentWindowCount": 17,
+              "currentBasisStart": 116,
+              "currentBasisEnd": 200
+            },
+            "hits": [
+              "03",
+              "05"
+            ],
+            "covered": true
           }
         ]
       },
       "currentWindow": {
-        "start": 201,
-        "end": 205,
-        "count": 4,
+        "start": 206,
+        "end": 210,
+        "count": 0,
         "expected": 5,
         "basisStart": 116,
-        "basisEnd": 200,
-        "basisWindowCount": 17,
+        "basisEnd": 205,
+        "basisWindowCount": 18,
         "pool": [
           "01",
+          "03",
+          "05",
           "07",
-          "08",
           "09",
           "15",
-          "23",
-          "26",
+          "16",
           "41"
         ],
         "crossYearPool": {
@@ -24765,29 +24818,29 @@
           },
           "pool": [
             "01",
+            "03",
             "04",
-            "08",
-            "15",
-            "23",
+            "05",
+            "16",
             "39",
             "41",
             "49"
           ],
           "basis": {
             "historyYearCount": 6,
-            "currentWindowCount": 17,
+            "currentWindowCount": 18,
             "currentBasisStart": 116,
-            "currentBasisEnd": 200
+            "currentBasisEnd": 205
           }
         },
         "recommendedPool": [
           "01",
+          "03",
+          "05",
           "07",
-          "08",
           "09",
           "15",
-          "23",
-          "26",
+          "16",
           "41"
         ],
         "recommendationMode": "same-year-stage",
@@ -24795,7 +24848,7 @@
           "sameYearOnly": [
             "07",
             "09",
-            "26"
+            "15"
           ],
           "crossYearOnly": [
             "04",
@@ -24804,9 +24857,9 @@
           ],
           "intersection": [
             "01",
-            "08",
-            "15",
-            "23",
+            "03",
+            "05",
+            "16",
             "41"
           ]
         },
@@ -24820,9 +24873,9 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 1,
+        "remainingDraws": 5,
         "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "switchSignal": "no-current-draws"
       }
     },
     {
@@ -24832,18 +24885,18 @@
       "poolSize": 8,
       "pool": [
         "01",
+        "03",
         "16",
-        "29",
         "37",
         "39",
         "41",
         "43",
         "48"
       ],
-      "totalWindows": 200,
+      "totalWindows": 201,
       "coveredWindows": 182,
-      "missCount": 18,
-      "hitRate": 91,
+      "missCount": 19,
+      "hitRate": 90.55,
       "fullCovered": false,
       "missWindows": [
         {
@@ -24879,6 +24932,61 @@
           ]
         },
         {
+          "start": 57,
+          "end": 61,
+          "nums": [
+            "09",
+            "10",
+            "23",
+            "29",
+            "31"
+          ]
+        },
+        {
+          "start": 58,
+          "end": 62,
+          "nums": [
+            "09",
+            "10",
+            "24",
+            "29",
+            "31"
+          ]
+        },
+        {
+          "start": 59,
+          "end": 63,
+          "nums": [
+            "09",
+            "10",
+            "24",
+            "28",
+            "29"
+          ]
+        },
+        {
+          "start": 60,
+          "end": 64,
+          "nums": [
+            "09",
+            "18",
+            "24",
+            "28",
+            "29"
+          ]
+        },
+        {
+          "start": 61,
+          "end": 65,
+          "nums": [
+            "05",
+            "18",
+            "24",
+            "28",
+            "29"
+          ]
+        },
+        {
           "start": 72,
           "end": 76,
           "nums": [
@@ -24890,25 +24998,36 @@
           ]
         },
         {
-          "start": 78,
-          "end": 82,
+          "start": 73,
+          "end": 77,
           "nums": [
-            "03",
-            "17",
-            "27",
-            "35",
+            "02",
+            "10",
+            "29",
+            "33",
+            "34"
+          ]
+        },
+        {
+          "start": 74,
+          "end": 78,
+          "nums": [
+            "02",
+            "10",
+            "29",
+            "33",
             "46"
           ]
         },
         {
-          "start": 79,
-          "end": 83,
+          "start": 75,
+          "end": 79,
           "nums": [
-            "03",
-            "05",
-            "17",
-            "27",
-            "35"
+            "02",
+            "29",
+            "33",
+            "35",
+            "46"
           ]
         },
         {
@@ -24945,72 +25064,6 @@
           ]
         },
         {
-          "start": 164,
-          "end": 168,
-          "nums": [
-            "03",
-            "06",
-            "15",
-            "19",
-            "21"
-          ]
-        },
-        {
-          "start": 165,
-          "end": 169,
-          "nums": [
-            "03",
-            "06",
-            "15",
-            "19",
-            "24"
-          ]
-        },
-        {
-          "start": 166,
-          "end": 170,
-          "nums": [
-            "03",
-            "06",
-            "15",
-            "19",
-            "24"
-          ]
-        },
-        {
-          "start": 167,
-          "end": 171,
-          "nums": [
-            "03",
-            "15",
-            "19",
-            "24",
-            "28"
-          ]
-        },
-        {
-          "start": 168,
-          "end": 172,
-          "nums": [
-            "03",
-            "15",
-            "24",
-            "28",
-            "44"
-          ]
-        },
-        {
-          "start": 169,
-          "end": 173,
-          "nums": [
-            "03",
-            "24",
-            "26",
-            "28",
-            "44"
-          ]
-        },
-        {
           "start": 175,
           "end": 179,
           "nums": [
@@ -25041,6 +25094,16 @@
             "18",
             "19",
             "21"
+          ]
+        },
+        {
+          "start": 191,
+          "end": 195,
+          "nums": [
+            "09",
+            "25",
+            "26",
+            "29"
           ]
         }
       ],
