@@ -1,8 +1,8 @@
 window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
-  "generatedAt": "2026-07-24T15:41:24.337Z",
+  "generatedAt": "2026-07-25T14:43:21.688Z",
   "sources": [
     {
-      "generatedAt": "2026-07-24T15:41:24.779Z",
+      "generatedAt": "2026-07-25T14:43:22.118Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2511,7 +2511,7 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
       ]
     },
     {
-      "generatedAt": "2026-07-24T15:41:24.793Z",
+      "generatedAt": "2026-07-25T14:43:22.127Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -4654,14 +4654,14 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "04",
                     "06",
                     "08",
+                    "12",
                     "14",
                     "16",
                     "20",
-                    "32",
-                    "34"
+                    "32"
                   ],
-                  "totalWindows": 15,
-                  "coveredWindows": 15,
+                  "totalWindows": 16,
+                  "coveredWindows": 16,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4669,17 +4669,17 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                 {
                   "position": 2,
                   "pool": [
-                    "02",
                     "04",
                     "07",
-                    "10",
+                    "08",
                     "12",
                     "16",
-                    "39",
-                    "43"
+                    "28",
+                    "32",
+                    "44"
                   ],
-                  "totalWindows": 15,
-                  "coveredWindows": 15,
+                  "totalWindows": 16,
+                  "coveredWindows": 16,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4696,8 +4696,8 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "26",
                     "45"
                   ],
-                  "totalWindows": 15,
-                  "coveredWindows": 15,
+                  "totalWindows": 16,
+                  "coveredWindows": 16,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4705,17 +4705,17 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                 {
                   "position": 4,
                   "pool": [
+                    "01",
                     "02",
                     "03",
                     "05",
                     "09",
                     "10",
-                    "11",
-                    "34",
-                    "49"
+                    "21",
+                    "34"
                   ],
-                  "totalWindows": 15,
-                  "coveredWindows": 15,
+                  "totalWindows": 16,
+                  "coveredWindows": 16,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4726,14 +4726,14 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "01",
                     "13",
                     "14",
-                    "15",
+                    "16",
                     "18",
                     "25",
                     "35",
                     "49"
                   ],
-                  "totalWindows": 15,
-                  "coveredWindows": 15,
+                  "totalWindows": 16,
+                  "coveredWindows": 16,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4750,8 +4750,8 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "36",
                     "37"
                   ],
-                  "totalWindows": 15,
-                  "coveredWindows": 15,
+                  "totalWindows": 16,
+                  "coveredWindows": 16,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
