@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T16:12:55.225Z",
+  "generatedAt": "2026-07-29T14:35:20.948Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -22904,10 +22904,10 @@
         "41",
         "49"
       ],
-      "totalWindows": 41,
-      "coveredWindows": 38,
+      "totalWindows": 42,
+      "coveredWindows": 39,
       "missCount": 3,
-      "hitRate": 92.68,
+      "hitRate": 92.86,
       "fullCovered": false,
       "missWindows": [
         {
@@ -22982,13 +22982,13 @@
           },
           {
             "start": 196,
-            "end": 205,
-            "windowCount": 2,
+            "end": 210,
+            "windowCount": 3,
             "pool": [
               "03",
-              "07"
+              "08"
             ],
-            "coveredWindows": 2
+            "coveredWindows": 3
           }
         ]
       },
@@ -23018,18 +23018,18 @@
           {
             "start": 116,
             "end": 230,
-            "windowCount": 18,
+            "windowCount": 19,
             "pool": [
               "01",
-              "03",
               "05",
               "07",
+              "08",
               "09",
               "15",
-              "16",
+              "26",
               "41"
             ],
-            "coveredWindows": 18,
+            "coveredWindows": 19,
             "missCount": 0,
             "fullCovered": true,
             "missWindows": []
@@ -23047,10 +23047,10 @@
         ]
       },
       "walkForwardPlan": {
-        "totalWindows": 39,
+        "totalWindows": 40,
         "coveredWindows": 14,
-        "missCount": 25,
-        "hitRate": 35.9,
+        "missCount": 26,
+        "hitRate": 35,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -23782,14 +23782,35 @@
               "05"
             ],
             "covered": true
+          },
+          {
+            "phaseStart": 116,
+            "phaseEnd": 230,
+            "start": 206,
+            "end": 210,
+            "basisStart": 116,
+            "basisEnd": 205,
+            "basisWindowCount": 18,
+            "pool": [
+              "01",
+              "03",
+              "05",
+              "06",
+              "07",
+              "09",
+              "10",
+              "26"
+            ],
+            "hits": [],
+            "covered": false
           }
         ]
       },
       "crossYearWalkForwardPlan": {
-        "totalWindows": 39,
-        "coveredWindows": 27,
+        "totalWindows": 40,
+        "coveredWindows": 28,
         "missCount": 12,
-        "hitRate": 69.23,
+        "hitRate": 70,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -24790,25 +24811,51 @@
               "05"
             ],
             "covered": true
+          },
+          {
+            "phaseStart": 116,
+            "phaseEnd": 230,
+            "start": 206,
+            "end": 210,
+            "pool": [
+              "01",
+              "03",
+              "04",
+              "05",
+              "07",
+              "08",
+              "09",
+              "10"
+            ],
+            "basis": {
+              "historyYearCount": 6,
+              "currentWindowCount": 18,
+              "currentBasisStart": 116,
+              "currentBasisEnd": 205
+            },
+            "hits": [
+              "08"
+            ],
+            "covered": true
           }
         ]
       },
       "currentWindow": {
-        "start": 206,
-        "end": 210,
-        "count": 4,
+        "start": 211,
+        "end": 215,
+        "count": 0,
         "expected": 5,
         "basisStart": 116,
-        "basisEnd": 205,
-        "basisWindowCount": 18,
+        "basisEnd": 210,
+        "basisWindowCount": 19,
         "pool": [
           "01",
-          "03",
           "05",
           "07",
+          "08",
           "09",
           "15",
-          "16",
+          "26",
           "41"
         ],
         "crossYearPool": {
@@ -24818,29 +24865,29 @@
           },
           "pool": [
             "01",
-            "03",
             "04",
             "05",
-            "16",
+            "08",
+            "15",
             "39",
             "41",
             "49"
           ],
           "basis": {
             "historyYearCount": 6,
-            "currentWindowCount": 18,
+            "currentWindowCount": 19,
             "currentBasisStart": 116,
-            "currentBasisEnd": 205
+            "currentBasisEnd": 210
           }
         },
         "recommendedPool": [
           "01",
-          "03",
           "05",
           "07",
+          "08",
           "09",
           "15",
-          "16",
+          "26",
           "41"
         ],
         "recommendationMode": "same-year-stage",
@@ -24848,7 +24895,7 @@
           "sameYearOnly": [
             "07",
             "09",
-            "15"
+            "26"
           ],
           "crossYearOnly": [
             "04",
@@ -24857,9 +24904,9 @@
           ],
           "intersection": [
             "01",
-            "03",
             "05",
-            "16",
+            "08",
+            "15",
             "41"
           ]
         },
@@ -24873,9 +24920,9 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 1,
+        "remainingDraws": 5,
         "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "switchSignal": "no-current-draws"
       }
     },
     {
@@ -24893,10 +24940,10 @@
         "43",
         "48"
       ],
-      "totalWindows": 205,
+      "totalWindows": 206,
       "coveredWindows": 186,
-      "missCount": 19,
-      "hitRate": 90.73,
+      "missCount": 20,
+      "hitRate": 90.29,
       "fullCovered": false,
       "missWindows": [
         {
@@ -25104,6 +25151,17 @@
             "25",
             "26",
             "29"
+          ]
+        },
+        {
+          "start": 206,
+          "end": 210,
+          "nums": [
+            "08",
+            "19",
+            "31",
+            "47",
+            "49"
           ]
         }
       ],
