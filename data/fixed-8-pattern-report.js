@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-08-10T15:12:35.507Z",
+  "generatedAt": "2026-08-11T14:29:30.597Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -24953,7 +24953,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 221,
         "end": 225,
-        "count": 2,
+        "count": 3,
         "expected": 5,
         "basisStart": 116,
         "basisEnd": 220,
@@ -25039,7 +25039,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         ],
         "covered": true,
-        "remainingDraws": 3,
+        "remainingDraws": 2,
         "nextAction": "continue-current-stage",
         "switchSignal": "current-window-covered"
       }
@@ -25059,10 +25059,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "43",
         "48"
       ],
-      "totalWindows": 218,
-      "coveredWindows": 198,
+      "totalWindows": 219,
+      "coveredWindows": 199,
       "missCount": 20,
-      "hitRate": 90.83,
+      "hitRate": 90.87,
       "fullCovered": false,
       "missWindows": [
         {
@@ -33108,7 +33108,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 86,
         "end": 90,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -33181,7 +33181,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -33192,17 +33192,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "rolling-contiguous",
       "poolSize": 8,
       "pool": [
+        "03",
         "08",
         "27",
         "29",
         "34",
         "40",
         "44",
-        "46",
-        "48"
+        "46"
       ],
-      "totalWindows": 82,
-      "coveredWindows": 82,
+      "totalWindows": 83,
+      "coveredWindows": 83,
       "missCount": 0,
       "hitRate": 100,
       "fullCovered": true,
