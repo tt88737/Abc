@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T14:36:09.792Z",
+  "generatedAt": "2026-08-17T14:08:05.411Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -14866,13 +14866,14 @@
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 16,
-          "end": 20,
+          "start": 11,
+          "end": 15,
           "nums": [
+            "11",
+            "12",
             "17",
-            "23",
-            "29",
-            "47"
+            "33",
+            "37"
           ]
         },
         {
@@ -14978,49 +14979,51 @@
         "phases": [
           {
             "start": 1,
-            "end": 120,
-            "windowCount": 24,
+            "end": 105,
+            "windowCount": 21,
             "pool": [
+              "03",
               "05",
               "06",
-              "16",
-              "18",
-              "29",
+              "09",
+              "20",
+              "28",
               "30",
-              "31",
-              "41"
+              "33"
             ],
-            "coveredWindows": 24
+            "coveredWindows": 21
           },
           {
-            "start": 121,
-            "end": 230,
-            "windowCount": 22,
+            "start": 106,
+            "end": 255,
+            "windowCount": 30,
             "pool": [
               "01",
               "04",
               "14",
               "21",
+              "24",
               "25",
               "43",
               "49"
             ],
-            "coveredWindows": 22
+            "coveredWindows": 30
           },
           {
-            "start": 231,
+            "start": 256,
             "end": 365,
-            "windowCount": 27,
+            "windowCount": 22,
             "pool": [
+              "02",
               "04",
               "11",
-              "13",
-              "24",
+              "16",
+              "21",
               "27",
               "40",
-              "46"
+              "44"
             ],
-            "coveredWindows": 27
+            "coveredWindows": 22
           }
         ]
       },
@@ -15034,13 +15037,13 @@
             "windowCount": 23,
             "pool": [
               "05",
-              "06",
-              "17",
-              "30",
+              "11",
+              "28",
+              "29",
               "31",
               "34",
-              "41",
-              "43"
+              "35",
+              "46"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -15104,10 +15107,8 @@
             "pool": [
               "06"
             ],
-            "hits": [
-              "06"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -15118,7 +15119,8 @@
             "basisEnd": 10,
             "basisWindowCount": 2,
             "pool": [
-              "06"
+              "06",
+              "13"
             ],
             "hits": [],
             "covered": false
@@ -15133,7 +15135,8 @@
             "basisWindowCount": 3,
             "pool": [
               "06",
-              "18"
+              "11",
+              "13"
             ],
             "hits": [],
             "covered": false
@@ -15148,8 +15151,8 @@
             "basisWindowCount": 4,
             "pool": [
               "06",
-              "17",
-              "18"
+              "11",
+              "47"
             ],
             "hits": [],
             "covered": false
@@ -15164,7 +15167,8 @@
             "basisWindowCount": 5,
             "pool": [
               "06",
-              "17",
+              "11",
+              "13",
               "20"
             ],
             "hits": [],
@@ -15179,13 +15183,15 @@
             "basisEnd": 30,
             "basisWindowCount": 6,
             "pool": [
-              "03",
-              "06",
-              "17",
+              "11",
+              "13",
+              "16",
               "20"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "11"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -15196,15 +15202,13 @@
             "basisEnd": 35,
             "basisWindowCount": 7,
             "pool": [
-              "06",
-              "17",
-              "20",
-              "30"
+              "11",
+              "13",
+              "16",
+              "20"
             ],
-            "hits": [
-              "06"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -15216,12 +15220,14 @@
             "basisWindowCount": 8,
             "pool": [
               "06",
-              "17",
+              "11",
               "20",
-              "30"
+              "28"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "28"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -15233,8 +15239,7 @@
             "basisWindowCount": 9,
             "pool": [
               "06",
-              "07",
-              "17",
+              "11",
               "20",
               "28"
             ],
@@ -15252,9 +15257,9 @@
             "pool": [
               "02",
               "06",
-              "17",
+              "11",
               "20",
-              "30"
+              "28"
             ],
             "hits": [],
             "covered": false
@@ -15268,15 +15273,16 @@
             "basisEnd": 55,
             "basisWindowCount": 11,
             "pool": [
-              "02",
               "06",
-              "07",
               "09",
-              "17",
-              "20"
+              "11",
+              "20",
+              "28"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "11"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -15287,11 +15293,10 @@
             "basisEnd": 60,
             "basisWindowCount": 12,
             "pool": [
-              "02",
               "06",
-              "09",
-              "17",
+              "12",
               "20",
+              "28",
               "30"
             ],
             "hits": [],
@@ -15306,10 +15311,10 @@
             "basisEnd": 65,
             "basisWindowCount": 13,
             "pool": [
-              "02",
               "06",
-              "17",
+              "11",
               "20",
+              "28",
               "30",
               "31"
             ],
@@ -15328,12 +15333,12 @@
             "basisEnd": 70,
             "basisWindowCount": 14,
             "pool": [
-              "02",
+              "04",
               "06",
-              "17",
+              "12",
               "20",
-              "30",
-              "31"
+              "28",
+              "30"
             ],
             "hits": [],
             "covered": false
@@ -15347,18 +15352,16 @@
             "basisEnd": 75,
             "basisWindowCount": 15,
             "pool": [
-              "02",
               "03",
+              "04",
               "06",
-              "17",
+              "12",
               "20",
-              "30",
-              "31"
+              "28",
+              "30"
             ],
-            "hits": [
-              "17"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -15369,16 +15372,19 @@
             "basisEnd": 80,
             "basisWindowCount": 16,
             "pool": [
-              "02",
               "03",
+              "04",
+              "05",
               "06",
-              "17",
+              "12",
               "20",
-              "30",
-              "31"
+              "28",
+              "30"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "05"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -15389,14 +15395,14 @@
             "basisEnd": 85,
             "basisWindowCount": 17,
             "pool": [
-              "02",
               "03",
+              "04",
               "05",
               "06",
-              "17",
+              "12",
               "20",
-              "30",
-              "31"
+              "28",
+              "30"
             ],
             "hits": [
               "06"
@@ -15412,14 +15418,14 @@
             "basisEnd": 90,
             "basisWindowCount": 18,
             "pool": [
-              "02",
               "03",
+              "04",
               "05",
               "06",
-              "17",
+              "12",
               "20",
-              "30",
-              "31"
+              "28",
+              "30"
             ],
             "hits": [],
             "covered": false
@@ -15436,15 +15442,15 @@
               "03",
               "05",
               "06",
-              "17",
-              "18",
+              "09",
+              "20",
+              "28",
               "30",
-              "31",
-              "41"
+              "33"
             ],
             "hits": [
               "05",
-              "17"
+              "28"
             ],
             "covered": true
           },
@@ -15457,17 +15463,18 @@
             "basisEnd": 100,
             "basisWindowCount": 20,
             "pool": [
-              "03",
               "05",
               "06",
-              "17",
+              "11",
               "18",
-              "30",
+              "28",
               "31",
-              "41"
+              "34",
+              "35"
             ],
             "hits": [
-              "05"
+              "05",
+              "35"
             ],
             "covered": true
           },
@@ -15483,11 +15490,11 @@
               "03",
               "05",
               "06",
-              "17",
-              "18",
+              "09",
+              "20",
+              "28",
               "30",
-              "31",
-              "41"
+              "33"
             ],
             "hits": [],
             "covered": false
@@ -15501,19 +15508,17 @@
             "basisEnd": 110,
             "basisWindowCount": 22,
             "pool": [
+              "03",
               "05",
               "06",
-              "16",
-              "17",
-              "18",
-              "30",
-              "31",
-              "41"
+              "09",
+              "11",
+              "35",
+              "41",
+              "46"
             ],
-            "hits": [
-              "18"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 116,
@@ -16412,9 +16417,9 @@
       },
       "crossYearWalkForwardPlan": {
         "totalWindows": 70,
-        "coveredWindows": 37,
-        "missCount": 33,
-        "hitRate": 52.86,
+        "coveredWindows": 40,
+        "missCount": 30,
+        "hitRate": 57.14,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -16437,10 +16442,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 5
             },
-            "hits": [
-              "06"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -16451,9 +16454,9 @@
               "04",
               "06",
               "08",
-              "09",
               "10",
               "12",
+              "13",
               "14",
               "49"
             ],
@@ -16463,8 +16466,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 10
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "12"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -16476,10 +16481,10 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "14",
-              "18",
-              "39"
+              "13",
+              "14"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16500,10 +16505,10 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17",
-              "18"
+              "47"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16524,9 +16529,9 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17",
               "20"
             ],
             "basis": {
@@ -16544,14 +16549,14 @@
             "start": 31,
             "end": 35,
             "pool": [
-              "03",
               "04",
-              "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17"
+              "16",
+              "20"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16559,8 +16564,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 30
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "11"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -16569,12 +16576,12 @@
             "end": 40,
             "pool": [
               "04",
-              "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17",
+              "16",
               "20"
             ],
             "basis": {
@@ -16584,7 +16591,6 @@
               "currentBasisEnd": 35
             },
             "hits": [
-              "06",
               "10"
             ],
             "covered": true
@@ -16599,10 +16605,10 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17",
-              "20"
+              "28"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16610,8 +16616,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 40
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "28"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -16623,9 +16631,9 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17",
               "28"
             ],
             "basis": {
@@ -16643,14 +16651,14 @@
             "start": 51,
             "end": 55,
             "pool": [
-              "02",
               "04",
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17"
+              "28"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16674,9 +16682,9 @@
               "08",
               "09",
               "10",
+              "11",
               "12",
-              "14",
-              "17"
+              "14"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16684,8 +16692,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 55
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "11"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -16696,11 +16706,11 @@
               "04",
               "06",
               "08",
-              "09",
               "10",
               "12",
               "14",
-              "17"
+              "28",
+              "30"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16723,10 +16733,10 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14",
-              "17",
-              "30"
+              "28"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16752,7 +16762,7 @@
               "10",
               "12",
               "14",
-              "17",
+              "28",
               "30"
             ],
             "basis": {
@@ -16777,7 +16787,7 @@
               "10",
               "12",
               "14",
-              "17"
+              "28"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16785,10 +16795,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 75
             },
-            "hits": [
-              "17"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -16798,12 +16806,12 @@
             "pool": [
               "03",
               "04",
+              "05",
               "06",
               "08",
               "10",
               "12",
-              "14",
-              "17"
+              "14"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16811,8 +16819,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 80
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "05"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -16827,7 +16837,7 @@
               "08",
               "10",
               "12",
-              "17"
+              "14"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16853,7 +16863,7 @@
               "08",
               "10",
               "12",
-              "17"
+              "14"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16875,9 +16885,9 @@
               "05",
               "06",
               "08",
+              "09",
               "10",
-              "12",
-              "17"
+              "12"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16887,8 +16897,7 @@
             },
             "hits": [
               "05",
-              "10",
-              "17"
+              "10"
             ],
             "covered": true
           },
@@ -16898,14 +16907,14 @@
             "start": 101,
             "end": 105,
             "pool": [
-              "03",
               "04",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "17"
+              "14"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16929,9 +16938,9 @@
               "05",
               "06",
               "08",
+              "09",
               "10",
-              "12",
-              "17"
+              "12"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -16948,14 +16957,14 @@
             "start": 111,
             "end": 115,
             "pool": [
-              "04",
+              "03",
               "05",
               "06",
               "08",
+              "09",
               "10",
-              "12",
-              "14",
-              "17"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 3,
@@ -18290,20 +18299,64 @@
         "46"
       ],
       "totalWindows": 362,
-      "coveredWindows": 301,
-      "missCount": 61,
-      "hitRate": 83.15,
+      "coveredWindows": 297,
+      "missCount": 65,
+      "hitRate": 82.04,
       "fullCovered": false,
       "missWindows": [
+        {
+          "start": 1,
+          "end": 5,
+          "nums": [
+            "06",
+            "10",
+            "16",
+            "31",
+            "32"
+          ]
+        },
+        {
+          "start": 7,
+          "end": 11,
+          "nums": [
+            "11",
+            "13",
+            "28",
+            "36",
+            "47"
+          ]
+        },
+        {
+          "start": 8,
+          "end": 12,
+          "nums": [
+            "11",
+            "13",
+            "28",
+            "33",
+            "47"
+          ]
+        },
         {
           "start": 9,
           "end": 13,
           "nums": [
-            "06",
-            "18",
-            "22",
-            "36",
-            "43"
+            "11",
+            "12",
+            "13",
+            "33",
+            "47"
+          ]
+        },
+        {
+          "start": 10,
+          "end": 14,
+          "nums": [
+            "11",
+            "12",
+            "33",
+            "37",
+            "47"
           ]
         },
         {
@@ -18967,42 +19020,21 @@
         "40",
         "44"
       ],
-      "totalWindows": 71,
-      "coveredWindows": 62,
-      "missCount": 9,
-      "hitRate": 87.32,
+      "totalWindows": 73,
+      "coveredWindows": 65,
+      "missCount": 8,
+      "hitRate": 89.04,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 1,
-          "end": 5,
-          "nums": [
-            "08",
-            "22",
-            "33",
-            "37"
-          ]
-        },
-        {
-          "start": 6,
-          "end": 10,
-          "nums": [
-            "04",
-            "15",
-            "25",
-            "30",
-            "46"
-          ]
-        },
-        {
-          "start": 11,
-          "end": 15,
+          "start": 21,
+          "end": 25,
           "nums": [
             "06",
-            "07",
-            "27",
-            "36",
-            "39"
+            "25",
+            "30",
+            "33",
+            "43"
           ]
         },
         {
@@ -19025,6 +19057,17 @@
             "31",
             "34",
             "42"
+          ]
+        },
+        {
+          "start": 236,
+          "end": 240,
+          "nums": [
+            "02",
+            "04",
+            "11",
+            "39",
+            "46"
           ]
         },
         {
@@ -19077,50 +19120,51 @@
         "phases": [
           {
             "start": 1,
-            "end": 115,
-            "windowCount": 23,
-            "pool": [
-              "03",
-              "06",
-              "10",
-              "12",
-              "13",
-              "20",
-              "22",
-              "30"
-            ],
-            "coveredWindows": 23
-          },
-          {
-            "start": 116,
-            "end": 230,
-            "windowCount": 23,
+            "end": 135,
+            "windowCount": 27,
             "pool": [
               "01",
-              "02",
-              "07",
-              "08",
+              "03",
               "10",
+              "13",
+              "20",
               "23",
-              "24",
-              "36"
+              "30",
+              "43"
             ],
-            "coveredWindows": 23
+            "coveredWindows": 27
+          },
+          {
+            "start": 136,
+            "end": 230,
+            "windowCount": 19,
+            "pool": [
+              "02",
+              "05",
+              "09",
+              "10",
+              "16",
+              "18",
+              "24",
+              "30"
+            ],
+            "coveredWindows": 19
           },
           {
             "start": 231,
             "end": 365,
-            "windowCount": 25,
+            "windowCount": 27,
             "pool": [
               "03",
+              "04",
               "06",
               "08",
-              "23",
-              "41",
+              "10",
+              "24",
               "42",
               "44"
             ],
-            "coveredWindows": 25
+            "coveredWindows": 27
           }
         ]
       },
@@ -19137,9 +19181,9 @@
               "10",
               "20",
               "30",
-              "37",
               "38",
               "39",
+              "40",
               "43"
             ],
             "coveredWindows": 23,
@@ -19169,7 +19213,7 @@
           {
             "start": 231,
             "end": 365,
-            "windowCount": 25,
+            "windowCount": 27,
             "pool": [
               "03",
               "04",
@@ -19180,7 +19224,7 @@
               "42",
               "44"
             ],
-            "coveredWindows": 25,
+            "coveredWindows": 27,
             "missCount": 0,
             "fullCovered": true,
             "missWindows": []
@@ -19188,10 +19232,10 @@
         ]
       },
       "walkForwardPlan": {
-        "totalWindows": 68,
-        "coveredWindows": 29,
-        "missCount": 39,
-        "hitRate": 42.65,
+        "totalWindows": 70,
+        "coveredWindows": 30,
+        "missCount": 40,
+        "hitRate": 42.86,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -19202,7 +19246,7 @@
             "basisEnd": 5,
             "basisWindowCount": 1,
             "pool": [
-              "08"
+              "07"
             ],
             "hits": [],
             "covered": false
@@ -19216,8 +19260,7 @@
             "basisEnd": 10,
             "basisWindowCount": 2,
             "pool": [
-              "04",
-              "08"
+              "24"
             ],
             "hits": [],
             "covered": false
@@ -19231,14 +19274,11 @@
             "basisEnd": 15,
             "basisWindowCount": 3,
             "pool": [
-              "04",
-              "06",
-              "08"
+              "01",
+              "24"
             ],
-            "hits": [
-              "06"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -19249,12 +19289,11 @@
             "basisEnd": 20,
             "basisWindowCount": 4,
             "pool": [
-              "04",
-              "06",
-              "08"
+              "22",
+              "33"
             ],
             "hits": [
-              "04"
+              "33"
             ],
             "covered": true
           },
@@ -19267,9 +19306,8 @@
             "basisEnd": 25,
             "basisWindowCount": 5,
             "pool": [
-              "04",
-              "06",
-              "08"
+              "22",
+              "33"
             ],
             "hits": [],
             "covered": false
@@ -19283,12 +19321,14 @@
             "basisEnd": 30,
             "basisWindowCount": 6,
             "pool": [
-              "04",
-              "06",
-              "37"
+              "13",
+              "22",
+              "33"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "22"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -19299,10 +19339,9 @@
             "basisEnd": 35,
             "basisWindowCount": 7,
             "pool": [
-              "04",
-              "06",
               "13",
-              "22"
+              "22",
+              "33"
             ],
             "hits": [],
             "covered": false
@@ -19316,10 +19355,9 @@
             "basisEnd": 40,
             "basisWindowCount": 8,
             "pool": [
-              "04",
-              "06",
               "22",
-              "25"
+              "25",
+              "33"
             ],
             "hits": [],
             "covered": false
@@ -19333,10 +19371,10 @@
             "basisEnd": 45,
             "basisWindowCount": 9,
             "pool": [
-              "06",
+              "07",
               "22",
               "25",
-              "30"
+              "33"
             ],
             "hits": [],
             "covered": false
@@ -19350,16 +19388,13 @@
             "basisEnd": 50,
             "basisWindowCount": 10,
             "pool": [
-              "05",
-              "06",
-              "22",
-              "25",
-              "30"
+              "07",
+              "21",
+              "40",
+              "43"
             ],
-            "hits": [
-              "25"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -19371,10 +19406,10 @@
             "basisWindowCount": 11,
             "pool": [
               "05",
-              "06",
+              "07",
               "22",
               "25",
-              "30"
+              "33"
             ],
             "hits": [],
             "covered": false
@@ -19388,12 +19423,10 @@
             "basisEnd": 60,
             "basisWindowCount": 12,
             "pool": [
-              "05",
-              "06",
-              "11",
               "22",
               "25",
-              "30"
+              "42",
+              "43"
             ],
             "hits": [],
             "covered": false
@@ -19407,15 +19440,16 @@
             "basisEnd": 65,
             "basisWindowCount": 13,
             "pool": [
-              "05",
-              "06",
+              "10",
               "22",
               "25",
-              "30",
-              "31"
+              "42",
+              "43"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "43"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -19426,12 +19460,11 @@
             "basisEnd": 70,
             "basisWindowCount": 14,
             "pool": [
-              "06",
-              "12",
+              "10",
               "22",
               "25",
-              "30",
-              "31"
+              "42",
+              "43"
             ],
             "hits": [],
             "covered": false
@@ -19445,16 +19478,15 @@
             "basisEnd": 75,
             "basisWindowCount": 15,
             "pool": [
-              "03",
-              "06",
-              "12",
-              "22",
-              "25",
-              "30",
-              "31"
+              "07",
+              "10",
+              "11",
+              "21",
+              "40",
+              "43"
             ],
             "hits": [
-              "22"
+              "10"
             ],
             "covered": true
           },
@@ -19467,14 +19499,12 @@
             "basisEnd": 80,
             "basisWindowCount": 16,
             "pool": [
-              "03",
-              "04",
               "07",
               "10",
               "11",
-              "12",
-              "22",
-              "25"
+              "21",
+              "40",
+              "43"
             ],
             "hits": [],
             "covered": false
@@ -19488,18 +19518,15 @@
             "basisEnd": 85,
             "basisWindowCount": 17,
             "pool": [
-              "06",
+              "07",
               "10",
-              "12",
               "20",
-              "22",
-              "30",
-              "40"
+              "21",
+              "40",
+              "43"
             ],
-            "hits": [
-              "30"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -19510,20 +19537,14 @@
             "basisEnd": 90,
             "basisWindowCount": 18,
             "pool": [
-              "06",
-              "10",
-              "12",
-              "20",
               "22",
-              "30",
-              "40"
+              "25",
+              "35",
+              "42",
+              "43"
             ],
-            "hits": [
-              "10",
-              "20",
-              "40"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -19534,13 +19555,12 @@
             "basisEnd": 95,
             "basisWindowCount": 19,
             "pool": [
-              "06",
               "10",
-              "12",
               "20",
-              "22",
+              "21",
               "30",
-              "40"
+              "40",
+              "43"
             ],
             "hits": [
               "20"
@@ -19556,18 +19576,15 @@
             "basisEnd": 100,
             "basisWindowCount": 20,
             "pool": [
-              "06",
               "10",
-              "12",
               "20",
-              "22",
+              "21",
               "30",
-              "40"
+              "40",
+              "43"
             ],
-            "hits": [
-              "06"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -19578,13 +19595,13 @@
             "basisEnd": 105,
             "basisWindowCount": 21,
             "pool": [
-              "06",
+              "01",
               "10",
-              "12",
               "20",
-              "22",
+              "21",
               "30",
-              "40"
+              "40",
+              "43"
             ],
             "hits": [],
             "covered": false
@@ -19598,14 +19615,14 @@
             "basisEnd": 110,
             "basisWindowCount": 22,
             "pool": [
+              "01",
               "03",
-              "06",
               "10",
-              "12",
               "13",
               "20",
-              "22",
-              "30"
+              "21",
+              "30",
+              "43"
             ],
             "hits": [
               "03"
@@ -20010,8 +20027,8 @@
           {
             "phaseStart": 231,
             "phaseEnd": 365,
-            "start": 246,
-            "end": 250,
+            "start": 236,
+            "end": 240,
             "basisStart": 231,
             "basisEnd": 235,
             "basisWindowCount": 1,
@@ -20024,10 +20041,10 @@
           {
             "phaseStart": 231,
             "phaseEnd": 365,
-            "start": 251,
-            "end": 255,
+            "start": 241,
+            "end": 245,
             "basisStart": 231,
-            "basisEnd": 250,
+            "basisEnd": 240,
             "basisWindowCount": 2,
             "pool": [
               "02",
@@ -20039,13 +20056,48 @@
           {
             "phaseStart": 231,
             "phaseEnd": 365,
+            "start": 246,
+            "end": 250,
+            "basisStart": 231,
+            "basisEnd": 245,
+            "basisWindowCount": 3,
+            "pool": [
+              "02",
+              "13",
+              "24"
+            ],
+            "hits": [
+              "02"
+            ],
+            "covered": true
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
+            "start": 251,
+            "end": 255,
+            "basisStart": 231,
+            "basisEnd": 250,
+            "basisWindowCount": 4,
+            "pool": [
+              "02",
+              "13",
+              "24"
+            ],
+            "hits": [],
+            "covered": false
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
             "start": 256,
             "end": 260,
             "basisStart": 231,
             "basisEnd": 255,
-            "basisWindowCount": 3,
+            "basisWindowCount": 5,
             "pool": [
               "02",
+              "24",
               "42"
             ],
             "hits": [],
@@ -20058,10 +20110,11 @@
             "end": 265,
             "basisStart": 231,
             "basisEnd": 260,
-            "basisWindowCount": 4,
+            "basisWindowCount": 6,
             "pool": [
               "02",
               "17",
+              "24",
               "38"
             ],
             "hits": [
@@ -20076,10 +20129,11 @@
             "end": 270,
             "basisStart": 231,
             "basisEnd": 265,
-            "basisWindowCount": 5,
+            "basisWindowCount": 7,
             "pool": [
               "02",
               "17",
+              "24",
               "38"
             ],
             "hits": [],
@@ -20092,9 +20146,10 @@
             "end": 275,
             "basisStart": 231,
             "basisEnd": 270,
-            "basisWindowCount": 6,
+            "basisWindowCount": 8,
             "pool": [
               "02",
+              "24",
               "35",
               "38"
             ],
@@ -20108,11 +20163,12 @@
             "end": 280,
             "basisStart": 231,
             "basisEnd": 275,
-            "basisWindowCount": 7,
+            "basisWindowCount": 9,
             "pool": [
-              "06",
+              "02",
               "35",
-              "38"
+              "38",
+              "44"
             ],
             "hits": [],
             "covered": false
@@ -20124,12 +20180,13 @@
             "end": 285,
             "basisStart": 231,
             "basisEnd": 280,
-            "basisWindowCount": 8,
+            "basisWindowCount": 10,
             "pool": [
-              "06",
+              "02",
               "09",
               "35",
-              "38"
+              "38",
+              "44"
             ],
             "hits": [],
             "covered": false
@@ -20141,9 +20198,10 @@
             "end": 290,
             "basisStart": 231,
             "basisEnd": 285,
-            "basisWindowCount": 9,
+            "basisWindowCount": 11,
             "pool": [
-              "06",
+              "02",
+              "04",
               "09",
               "24",
               "35",
@@ -20159,15 +20217,17 @@
             "end": 295,
             "basisStart": 231,
             "basisEnd": 290,
-            "basisWindowCount": 10,
+            "basisWindowCount": 12,
             "pool": [
-              "06",
-              "10",
+              "02",
+              "03",
+              "41",
               "42",
-              "47"
+              "44"
             ],
             "hits": [
-              "47"
+              "02",
+              "44"
             ],
             "covered": true
           },
@@ -20178,7 +20238,7 @@
             "end": 300,
             "basisStart": 231,
             "basisEnd": 295,
-            "basisWindowCount": 11,
+            "basisWindowCount": 13,
             "pool": [
               "02",
               "03",
@@ -20198,7 +20258,7 @@
             "end": 305,
             "basisStart": 231,
             "basisEnd": 300,
-            "basisWindowCount": 12,
+            "basisWindowCount": 14,
             "pool": [
               "02",
               "03",
@@ -20218,7 +20278,7 @@
             "end": 310,
             "basisStart": 231,
             "basisEnd": 305,
-            "basisWindowCount": 13,
+            "basisWindowCount": 15,
             "pool": [
               "02",
               "03",
@@ -20236,8 +20296,9 @@
             "end": 315,
             "basisStart": 231,
             "basisEnd": 310,
-            "basisWindowCount": 14,
+            "basisWindowCount": 16,
             "pool": [
+              "02",
               "03",
               "06",
               "41",
@@ -20254,8 +20315,9 @@
             "end": 320,
             "basisStart": 231,
             "basisEnd": 315,
-            "basisWindowCount": 15,
+            "basisWindowCount": 17,
             "pool": [
+              "02",
               "06",
               "38",
               "41",
@@ -20274,16 +20336,19 @@
             "end": 325,
             "basisStart": 231,
             "basisEnd": 320,
-            "basisWindowCount": 16,
+            "basisWindowCount": 18,
             "pool": [
+              "03",
+              "04",
               "06",
-              "38",
               "41",
               "42",
               "44"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "04"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 231,
@@ -20292,16 +20357,19 @@
             "end": 330,
             "basisStart": 231,
             "basisEnd": 325,
-            "basisWindowCount": 17,
+            "basisWindowCount": 19,
             "pool": [
+              "03",
+              "04",
               "06",
-              "10",
-              "23",
+              "41",
               "42",
-              "47"
+              "44"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "03"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 231,
@@ -20310,17 +20378,18 @@
             "end": 335,
             "basisStart": 231,
             "basisEnd": 330,
-            "basisWindowCount": 18,
+            "basisWindowCount": 20,
             "pool": [
               "03",
+              "04",
               "06",
-              "10",
-              "23",
+              "41",
               "42",
-              "47"
+              "44"
             ],
             "hits": [
-              "06"
+              "06",
+              "44"
             ],
             "covered": true
           },
@@ -20331,14 +20400,14 @@
             "end": 340,
             "basisStart": 231,
             "basisEnd": 335,
-            "basisWindowCount": 19,
+            "basisWindowCount": 21,
             "pool": [
               "03",
+              "04",
               "06",
-              "10",
-              "23",
+              "41",
               "42",
-              "47"
+              "44"
             ],
             "hits": [],
             "covered": false
@@ -20350,16 +20419,18 @@
             "end": 345,
             "basisStart": 231,
             "basisEnd": 340,
-            "basisWindowCount": 20,
+            "basisWindowCount": 22,
             "pool": [
+              "03",
+              "04",
               "06",
-              "10",
-              "17",
-              "23",
+              "08",
+              "41",
               "42",
-              "47"
+              "44"
             ],
             "hits": [
+              "04",
               "06"
             ],
             "covered": true
@@ -20371,17 +20442,20 @@
             "end": 350,
             "basisStart": 231,
             "basisEnd": 345,
-            "basisWindowCount": 21,
+            "basisWindowCount": 23,
             "pool": [
+              "04",
               "06",
               "10",
               "17",
-              "23",
+              "22",
               "42",
               "47"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "22"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 231,
@@ -20390,17 +20464,19 @@
             "end": 355,
             "basisStart": 231,
             "basisEnd": 350,
-            "basisWindowCount": 22,
+            "basisWindowCount": 24,
             "pool": [
               "03",
+              "04",
               "06",
               "08",
               "10",
-              "23",
+              "22",
               "42",
               "47"
             ],
             "hits": [
+              "04",
               "08"
             ],
             "covered": true
@@ -20412,7 +20488,7 @@
             "end": 360,
             "basisStart": 231,
             "basisEnd": 355,
-            "basisWindowCount": 23,
+            "basisWindowCount": 25,
             "pool": [
               "03",
               "04",
@@ -20434,7 +20510,7 @@
             "end": 365,
             "basisStart": 231,
             "basisEnd": 360,
-            "basisWindowCount": 24,
+            "basisWindowCount": 26,
             "pool": [
               "03",
               "04",
@@ -20450,10 +20526,10 @@
         ]
       },
       "crossYearWalkForwardPlan": {
-        "totalWindows": 68,
-        "coveredWindows": 38,
-        "missCount": 30,
-        "hitRate": 55.88,
+        "totalWindows": 70,
+        "coveredWindows": 46,
+        "missCount": 24,
+        "hitRate": 65.71,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -20462,11 +20538,11 @@
             "end": 10,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14"
             ],
@@ -20476,10 +20552,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 5
             },
-            "hits": [
-              "04"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -20488,11 +20562,11 @@
             "end": 15,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
               "14"
             ],
@@ -20503,7 +20577,7 @@
               "currentBasisEnd": 10
             },
             "hits": [
-              "06"
+              "03"
             ],
             "covered": true
           },
@@ -20513,14 +20587,14 @@
             "start": 16,
             "end": 20,
             "pool": [
+              "01",
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
-              "12",
-              "14"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20528,11 +20602,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 15
             },
-            "hits": [
-              "06",
-              "10"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -20541,13 +20612,13 @@
             "end": 25,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "14"
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20556,8 +20627,7 @@
               "currentBasisEnd": 20
             },
             "hits": [
-              "04",
-              "14"
+              "06"
             ],
             "covered": true
           },
@@ -20568,13 +20638,13 @@
             "end": 30,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "14"
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20592,13 +20662,13 @@
             "end": 35,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "14"
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20606,8 +20676,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 30
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "22"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -20616,12 +20688,12 @@
             "end": 40,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
-              "14",
+              "11",
+              "12",
               "22"
             ],
             "basis": {
@@ -20640,12 +20712,12 @@
             "end": 45,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
               "10",
-              "14",
+              "11",
+              "12",
               "22"
             ],
             "basis": {
@@ -20663,14 +20735,14 @@
             "start": 46,
             "end": 50,
             "pool": [
-              "04",
+              "03",
               "05",
               "06",
               "08",
               "10",
-              "14",
-              "22",
-              "30"
+              "11",
+              "12",
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20679,7 +20751,8 @@
               "currentBasisEnd": 45
             },
             "hits": [
-              "05"
+              "05",
+              "12"
             ],
             "covered": true
           },
@@ -20689,14 +20762,14 @@
             "start": 51,
             "end": 55,
             "pool": [
-              "04",
+              "03",
               "05",
               "06",
               "08",
               "10",
-              "14",
-              "22",
-              "30"
+              "11",
+              "12",
+              "14"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20705,7 +20778,8 @@
               "currentBasisEnd": 50
             },
             "hits": [
-              "10"
+              "10",
+              "11"
             ],
             "covered": true
           },
@@ -20715,14 +20789,14 @@
             "start": 56,
             "end": 60,
             "pool": [
-              "04",
+              "03",
               "05",
               "06",
               "08",
               "10",
-              "14",
-              "22",
-              "30"
+              "11",
+              "12",
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20730,8 +20804,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 55
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "11"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -20739,14 +20815,14 @@
             "start": 61,
             "end": 65,
             "pool": [
-              "04",
+              "03",
               "05",
               "06",
               "08",
               "10",
               "11",
-              "22",
-              "30"
+              "12",
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20765,14 +20841,14 @@
             "start": 66,
             "end": 70,
             "pool": [
-              "04",
+              "03",
               "05",
               "06",
               "08",
               "10",
-              "22",
-              "30",
-              "31"
+              "11",
+              "12",
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20780,8 +20856,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 65
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "12"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -20789,14 +20867,14 @@
             "start": 71,
             "end": 75,
             "pool": [
+              "03",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "22",
-              "30",
-              "31"
+              "22"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20804,8 +20882,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 70
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "03"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -20814,13 +20894,13 @@
             "end": 80,
             "pool": [
               "03",
+              "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "22",
-              "30",
-              "31"
+              "14"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20829,8 +20909,7 @@
               "currentBasisEnd": 75
             },
             "hits": [
-              "10",
-              "22"
+              "10"
             ],
             "covered": true
           },
@@ -20841,13 +20920,13 @@
             "end": 85,
             "pool": [
               "03",
-              "04",
+              "05",
               "06",
               "08",
               "10",
               "11",
               "12",
-              "22"
+              "14"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20869,9 +20948,9 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "22",
-              "30"
+              "14"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20880,7 +20959,7 @@
               "currentBasisEnd": 85
             },
             "hits": [
-              "30"
+              "14"
             ],
             "covered": true
           },
@@ -20890,14 +20969,14 @@
             "start": 91,
             "end": 95,
             "pool": [
-              "05",
+              "03",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "14",
               "22",
-              "30"
+              "35"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20916,14 +20995,14 @@
             "start": 96,
             "end": 100,
             "pool": [
+              "03",
               "05",
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "14",
-              "22",
-              "30"
+              "14"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20931,8 +21010,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 95
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "03"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -20945,9 +21026,9 @@
               "06",
               "08",
               "10",
+              "11",
               "12",
-              "22",
-              "30"
+              "14"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20966,14 +21047,14 @@
             "start": 106,
             "end": 110,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
-              "12",
-              "22",
-              "30"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -20992,14 +21073,14 @@
             "start": 111,
             "end": 115,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
-              "12",
-              "22",
-              "30"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 4,
@@ -21569,8 +21650,8 @@
           {
             "phaseStart": 231,
             "phaseEnd": 365,
-            "start": 246,
-            "end": 250,
+            "start": 236,
+            "end": 240,
             "pool": [
               "01",
               "05",
@@ -21586,6 +21667,59 @@
               "currentWindowCount": 1,
               "currentBasisStart": 231,
               "currentBasisEnd": 235
+            },
+            "hits": [
+              "39",
+              "46"
+            ],
+            "covered": true
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
+            "start": 241,
+            "end": 245,
+            "pool": [
+              "01",
+              "05",
+              "09",
+              "13",
+              "24",
+              "39",
+              "41",
+              "46"
+            ],
+            "basis": {
+              "historyYearCount": 5,
+              "currentWindowCount": 2,
+              "currentBasisStart": 231,
+              "currentBasisEnd": 240
+            },
+            "hits": [
+              "24"
+            ],
+            "covered": true
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
+            "start": 246,
+            "end": 250,
+            "pool": [
+              "01",
+              "05",
+              "09",
+              "13",
+              "24",
+              "39",
+              "41",
+              "46"
+            ],
+            "basis": {
+              "historyYearCount": 5,
+              "currentWindowCount": 3,
+              "currentBasisStart": 231,
+              "currentBasisEnd": 245
             },
             "hits": [],
             "covered": false
@@ -21607,7 +21741,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 2,
+              "currentWindowCount": 4,
               "currentBasisStart": 231,
               "currentBasisEnd": 250
             },
@@ -21631,7 +21765,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 3,
+              "currentWindowCount": 5,
               "currentBasisStart": 231,
               "currentBasisEnd": 255
             },
@@ -21655,7 +21789,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 4,
+              "currentWindowCount": 6,
               "currentBasisStart": 231,
               "currentBasisEnd": 260
             },
@@ -21679,7 +21813,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 5,
+              "currentWindowCount": 7,
               "currentBasisStart": 231,
               "currentBasisEnd": 265
             },
@@ -21697,15 +21831,15 @@
               "01",
               "05",
               "09",
-              "10",
               "13",
+              "24",
               "39",
               "41",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 6,
+              "currentWindowCount": 8,
               "currentBasisStart": 231,
               "currentBasisEnd": 270
             },
@@ -21721,15 +21855,15 @@
               "01",
               "05",
               "09",
-              "10",
               "13",
               "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 7,
+              "currentWindowCount": 9,
               "currentBasisStart": 231,
               "currentBasisEnd": 275
             },
@@ -21747,15 +21881,15 @@
               "01",
               "05",
               "09",
-              "10",
               "13",
               "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 8,
+              "currentWindowCount": 10,
               "currentBasisStart": 231,
               "currentBasisEnd": 280
             },
@@ -21771,9 +21905,9 @@
             "end": 290,
             "pool": [
               "01",
+              "04",
               "05",
               "09",
-              "13",
               "24",
               "39",
               "41",
@@ -21781,7 +21915,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 9,
+              "currentWindowCount": 11,
               "currentBasisStart": 231,
               "currentBasisEnd": 285
             },
@@ -21795,22 +21929,23 @@
             "end": 295,
             "pool": [
               "01",
+              "03",
               "05",
               "09",
-              "10",
-              "13",
               "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 10,
+              "currentWindowCount": 12,
               "currentBasisStart": 231,
               "currentBasisEnd": 290
             },
             "hits": [
-              "05"
+              "05",
+              "44"
             ],
             "covered": true
           },
@@ -21831,7 +21966,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 11,
+              "currentWindowCount": 13,
               "currentBasisStart": 231,
               "currentBasisEnd": 295
             },
@@ -21857,7 +21992,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 12,
+              "currentWindowCount": 14,
               "currentBasisStart": 231,
               "currentBasisEnd": 300
             },
@@ -21883,7 +22018,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 13,
+              "currentWindowCount": 15,
               "currentBasisStart": 231,
               "currentBasisEnd": 305
             },
@@ -21909,7 +22044,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 14,
+              "currentWindowCount": 16,
               "currentBasisStart": 231,
               "currentBasisEnd": 310
             },
@@ -21925,30 +22060,6 @@
               "01",
               "05",
               "09",
-              "13",
-              "39",
-              "41",
-              "44",
-              "46"
-            ],
-            "basis": {
-              "historyYearCount": 5,
-              "currentWindowCount": 15,
-              "currentBasisStart": 231,
-              "currentBasisEnd": 315
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 231,
-            "phaseEnd": 365,
-            "start": 321,
-            "end": 325,
-            "pool": [
-              "01",
-              "05",
-              "09",
               "24",
               "39",
               "41",
@@ -21957,12 +22068,38 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 16,
+              "currentWindowCount": 17,
+              "currentBasisStart": 231,
+              "currentBasisEnd": 315
+            },
+            "hits": [
+              "24"
+            ],
+            "covered": true
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
+            "start": 321,
+            "end": 325,
+            "pool": [
+              "03",
+              "04",
+              "05",
+              "24",
+              "39",
+              "41",
+              "44",
+              "46"
+            ],
+            "basis": {
+              "historyYearCount": 5,
+              "currentWindowCount": 18,
               "currentBasisStart": 231,
               "currentBasisEnd": 320
             },
             "hits": [
-              "09"
+              "04"
             ],
             "covered": true
           },
@@ -21972,23 +22109,25 @@
             "start": 326,
             "end": 330,
             "pool": [
-              "01",
+              "03",
+              "04",
               "05",
               "09",
-              "10",
-              "24",
               "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 17,
+              "currentWindowCount": 19,
               "currentBasisStart": 231,
               "currentBasisEnd": 325
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "03"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 231,
@@ -21996,22 +22135,23 @@
             "start": 331,
             "end": 335,
             "pool": [
-              "01",
               "03",
+              "04",
               "05",
               "09",
-              "10",
               "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 18,
+              "currentWindowCount": 20,
               "currentBasisStart": 231,
               "currentBasisEnd": 330
             },
             "hits": [
+              "44",
               "46"
             ],
             "covered": true
@@ -22022,18 +22162,18 @@
             "start": 336,
             "end": 340,
             "pool": [
-              "01",
               "03",
+              "04",
               "05",
               "09",
-              "10",
               "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 19,
+              "currentWindowCount": 21,
               "currentBasisStart": 231,
               "currentBasisEnd": 335
             },
@@ -22048,23 +22188,23 @@
             "start": 341,
             "end": 345,
             "pool": [
-              "01",
+              "03",
+              "04",
               "05",
+              "08",
               "09",
-              "10",
-              "24",
-              "39",
               "41",
+              "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 20,
+              "currentWindowCount": 22,
               "currentBasisStart": 231,
               "currentBasisEnd": 340
             },
             "hits": [
-              "24"
+              "04"
             ],
             "covered": true
           },
@@ -22085,7 +22225,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 21,
+              "currentWindowCount": 23,
               "currentBasisStart": 231,
               "currentBasisEnd": 345
             },
@@ -22099,21 +22239,22 @@
             "end": 355,
             "pool": [
               "03",
+              "04",
               "05",
               "08",
               "09",
               "10",
-              "24",
               "39",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 22,
+              "currentWindowCount": 24,
               "currentBasisStart": 231,
               "currentBasisEnd": 350
             },
             "hits": [
+              "04",
               "08"
             ],
             "covered": true
@@ -22135,7 +22276,7 @@
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 23,
+              "currentWindowCount": 25,
               "currentBasisStart": 231,
               "currentBasisEnd": 355
             },
@@ -22154,19 +22295,21 @@
               "04",
               "05",
               "08",
-              "09",
+              "24",
               "41",
               "44",
               "46"
             ],
             "basis": {
               "historyYearCount": 5,
-              "currentWindowCount": 24,
+              "currentWindowCount": 26,
               "currentBasisStart": 231,
               "currentBasisEnd": 360
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "24"
+            ],
+            "covered": true
           }
         ]
       },
@@ -22195,8 +22338,8 @@
           },
           "pool": [
             "06",
-            "08",
             "09",
+            "11",
             "14",
             "16",
             "23",
@@ -22205,7 +22348,7 @@
           ],
           "basis": {
             "historyYearCount": 4,
-            "currentWindowCount": 71,
+            "currentWindowCount": 73,
             "currentBasisStart": 1,
             "currentBasisEnd": 365
           }
@@ -22230,8 +22373,8 @@
           ],
           "crossYearOnly": [
             "06",
-            "08",
             "09",
+            "11",
             "49"
           ],
           "intersection": [
@@ -22265,80 +22408,197 @@
         "03",
         "10",
         "15",
+        "16",
         "23",
-        "25",
-        "36",
+        "24",
         "42",
         "44"
       ],
-      "totalWindows": 353,
-      "coveredWindows": 297,
-      "missCount": 56,
-      "hitRate": 84.14,
+      "totalWindows": 361,
+      "coveredWindows": 301,
+      "missCount": 60,
+      "hitRate": 83.38,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 1,
-          "end": 5,
+          "start": 3,
+          "end": 7,
           "nums": [
-            "08",
+            "07",
+            "12",
+            "30",
+            "33",
+            "39"
+          ]
+        },
+        {
+          "start": 4,
+          "end": 8,
+          "nums": [
+            "07",
+            "12",
+            "26",
+            "33",
+            "39"
+          ]
+        },
+        {
+          "start": 5,
+          "end": 9,
+          "nums": [
+            "12",
+            "26",
+            "33",
+            "39",
+            "43"
+          ]
+        },
+        {
+          "start": 14,
+          "end": 18,
+          "nums": [
+            "01",
             "22",
-            "33",
-            "37"
-          ]
-        },
-        {
-          "start": 2,
-          "end": 6,
-          "nums": [
-            "04",
-            "08",
-            "33",
-            "37"
-          ]
-        },
-        {
-          "start": 19,
-          "end": 23,
-          "nums": [
-            "04",
-            "06",
-            "14",
-            "34",
-            "45"
+            "32",
+            "40",
+            "43"
           ]
         },
         {
           "start": 20,
           "end": 24,
           "nums": [
-            "04",
-            "14",
-            "34",
-            "41",
-            "45"
+            "06",
+            "25",
+            "30",
+            "33",
+            "37"
           ]
         },
         {
           "start": 21,
           "end": 25,
           "nums": [
-            "04",
-            "14",
+            "06",
+            "25",
             "30",
-            "41",
-            "45"
+            "33",
+            "43"
           ]
         },
         {
           "start": 22,
           "end": 26,
           "nums": [
-            "04",
-            "30",
-            "37",
-            "41",
-            "45"
+            "06",
+            "13",
+            "25",
+            "33",
+            "43"
+          ]
+        },
+        {
+          "start": 23,
+          "end": 27,
+          "nums": [
+            "06",
+            "13",
+            "25",
+            "33",
+            "43"
+          ]
+        },
+        {
+          "start": 24,
+          "end": 28,
+          "nums": [
+            "13",
+            "25",
+            "33",
+            "40",
+            "43"
+          ]
+        },
+        {
+          "start": 25,
+          "end": 29,
+          "nums": [
+            "13",
+            "25",
+            "40",
+            "43"
+          ]
+        },
+        {
+          "start": 26,
+          "end": 30,
+          "nums": [
+            "13",
+            "25",
+            "40"
+          ]
+        },
+        {
+          "start": 27,
+          "end": 31,
+          "nums": [
+            "13",
+            "22",
+            "25",
+            "40"
+          ]
+        },
+        {
+          "start": 28,
+          "end": 32,
+          "nums": [
+            "13",
+            "22",
+            "25",
+            "39",
+            "40"
+          ]
+        },
+        {
+          "start": 29,
+          "end": 33,
+          "nums": [
+            "13",
+            "22",
+            "25",
+            "39",
+            "48"
+          ]
+        },
+        {
+          "start": 35,
+          "end": 39,
+          "nums": [
+            "20",
+            "21",
+            "25",
+            "29",
+            "40"
+          ]
+        },
+        {
+          "start": 36,
+          "end": 40,
+          "nums": [
+            "20",
+            "25",
+            "29",
+            "40"
+          ]
+        },
+        {
+          "start": 37,
+          "end": 41,
+          "nums": [
+            "20",
+            "25",
+            "28",
+            "40"
           ]
         },
         {
@@ -22401,17 +22661,6 @@
             "28",
             "35",
             "39"
-          ]
-        },
-        {
-          "start": 80,
-          "end": 84,
-          "nums": [
-            "20",
-            "24",
-            "28",
-            "34",
-            "38"
           ]
         },
         {
@@ -22491,17 +22740,6 @@
           ]
         },
         {
-          "start": 119,
-          "end": 123,
-          "nums": [
-            "24",
-            "28",
-            "33",
-            "38",
-            "45"
-          ]
-        },
-        {
           "start": 125,
           "end": 129,
           "nums": [
@@ -22509,6 +22747,61 @@
             "13",
             "40",
             "49"
+          ]
+        },
+        {
+          "start": 134,
+          "end": 138,
+          "nums": [
+            "09",
+            "14",
+            "36",
+            "37",
+            "41"
+          ]
+        },
+        {
+          "start": 135,
+          "end": 139,
+          "nums": [
+            "09",
+            "14",
+            "36",
+            "37",
+            "41"
+          ]
+        },
+        {
+          "start": 136,
+          "end": 140,
+          "nums": [
+            "09",
+            "11",
+            "14",
+            "36",
+            "41"
+          ]
+        },
+        {
+          "start": 137,
+          "end": 141,
+          "nums": [
+            "11",
+            "13",
+            "14",
+            "36",
+            "41"
+          ]
+        },
+        {
+          "start": 144,
+          "end": 148,
+          "nums": [
+            "02",
+            "14",
+            "17",
+            "25",
+            "32"
           ]
         },
         {
@@ -22545,58 +22838,68 @@
           ]
         },
         {
-          "start": 158,
-          "end": 162,
-          "nums": [
-            "01",
-            "05",
-            "11",
-            "16",
-            "31"
-          ]
-        },
-        {
-          "start": 164,
-          "end": 168,
-          "nums": [
-            "09",
-            "13",
-            "16",
-            "41",
-            "47"
-          ]
-        },
-        {
-          "start": 165,
-          "end": 169,
+          "start": 169,
+          "end": 173,
           "nums": [
             "07",
-            "09",
-            "16",
-            "41",
-            "47"
-          ]
-        },
-        {
-          "start": 166,
-          "end": 170,
-          "nums": [
-            "07",
-            "09",
-            "16",
             "33",
-            "41"
+            "36",
+            "38",
+            "47"
           ]
         },
         {
-          "start": 167,
-          "end": 171,
+          "start": 170,
+          "end": 174,
           "nums": [
-            "07",
-            "09",
-            "16",
             "33",
+            "36",
+            "38",
+            "39",
             "47"
+          ]
+        },
+        {
+          "start": 171,
+          "end": 175,
+          "nums": [
+            "30",
+            "36",
+            "38",
+            "39",
+            "47"
+          ]
+        },
+        {
+          "start": 172,
+          "end": 176,
+          "nums": [
+            "30",
+            "36",
+            "38",
+            "39"
+          ]
+        },
+        {
+          "start": 173,
+          "end": 177,
+          "nums": [
+            "04",
+            "30",
+            "36",
+            "38",
+            "39"
+          ]
+        },
+        {
+          "start": 174,
+          "end": 178,
+          "nums": [
+            "04",
+            "27",
+            "30",
+            "36",
+            "39"
           ]
         },
         {
@@ -22611,24 +22914,14 @@
           ]
         },
         {
-          "start": 189,
-          "end": 193,
+          "start": 194,
+          "end": 198,
           "nums": [
-            "17",
-            "18",
-            "24",
+            "14",
+            "25",
             "29",
-            "45"
-          ]
-        },
-        {
-          "start": 190,
-          "end": 194,
-          "nums": [
-            "18",
-            "24",
-            "29",
-            "45"
+            "34",
+            "43"
           ]
         },
         {
@@ -22653,24 +22946,88 @@
           ]
         },
         {
-          "start": 275,
-          "end": 279,
+          "start": 219,
+          "end": 223,
           "nums": [
+            "08",
             "09",
-            "16",
-            "27",
-            "28",
-            "45"
+            "25",
+            "43"
           ]
         },
         {
-          "start": 281,
-          "end": 285,
+          "start": 236,
+          "end": 240,
           "nums": [
-            "24",
-            "41",
-            "45",
+            "02",
+            "04",
+            "11",
+            "39",
+            "46"
+          ]
+        },
+        {
+          "start": 237,
+          "end": 241,
+          "nums": [
+            "02",
+            "04",
+            "11",
+            "46",
             "47"
+          ]
+        },
+        {
+          "start": 238,
+          "end": 242,
+          "nums": [
+            "04",
+            "11",
+            "34",
+            "46",
+            "47"
+          ]
+        },
+        {
+          "start": 239,
+          "end": 243,
+          "nums": [
+            "04",
+            "11",
+            "34",
+            "47",
+            "49"
+          ]
+        },
+        {
+          "start": 246,
+          "end": 250,
+          "nums": [
+            "02",
+            "06",
+            "12",
+            "25"
+          ]
+        },
+        {
+          "start": 247,
+          "end": 251,
+          "nums": [
+            "02",
+            "12",
+            "25",
+            "35"
+          ]
+        },
+        {
+          "start": 269,
+          "end": 273,
+          "nums": [
+            "04",
+            "06",
+            "31",
+            "35",
+            "36"
           ]
         },
         {
@@ -22685,201 +23042,23 @@
           ]
         },
         {
-          "start": 306,
-          "end": 310,
+          "start": 329,
+          "end": 333,
           "nums": [
             "06",
-            "16",
             "17",
-            "20",
-            "39"
+            "26",
+            "36"
           ]
         },
         {
-          "start": 307,
-          "end": 311,
+          "start": 330,
+          "end": 334,
           "nums": [
             "06",
-            "16",
-            "20",
-            "37",
-            "39"
-          ]
-        },
-        {
-          "start": 308,
-          "end": 312,
-          "nums": [
-            "06",
-            "14",
-            "16",
-            "37",
-            "39"
-          ]
-        },
-        {
-          "start": 309,
-          "end": 313,
-          "nums": [
-            "06",
-            "14",
-            "16",
-            "37",
-            "38"
-          ]
-        },
-        {
-          "start": 315,
-          "end": 319,
-          "nums": [
-            "04",
-            "06",
-            "18",
-            "24",
-            "45"
-          ]
-        },
-        {
-          "start": 316,
-          "end": 320,
-          "nums": [
-            "06",
-            "18",
-            "24",
-            "28",
-            "45"
-          ]
-        },
-        {
-          "start": 336,
-          "end": 340,
-          "nums": [
-            "08",
-            "09",
-            "16",
-            "17",
-            "48"
-          ]
-        },
-        {
-          "start": 337,
-          "end": 341,
-          "nums": [
-            "06",
-            "08",
-            "09",
-            "16",
-            "48"
-          ]
-        },
-        {
-          "start": 338,
-          "end": 342,
-          "nums": [
-            "04",
-            "06",
-            "08",
-            "16",
-            "48"
-          ]
-        },
-        {
-          "start": 339,
-          "end": 343,
-          "nums": [
-            "04",
-            "06",
-            "16",
-            "38",
-            "48"
-          ]
-        },
-        {
-          "start": 340,
-          "end": 344,
-          "nums": [
-            "04",
-            "06",
-            "16",
-            "27",
-            "38"
-          ]
-        },
-        {
-          "start": 341,
-          "end": 345,
-          "nums": [
-            "04",
-            "06",
-            "24",
-            "27",
-            "38"
-          ]
-        },
-        {
-          "start": 347,
-          "end": 351,
-          "nums": [
-            "04",
-            "13",
-            "16",
-            "22",
-            "49"
-          ]
-        },
-        {
-          "start": 353,
-          "end": 357,
-          "nums": [
-            "01",
-            "08",
-            "24",
-            "30",
-            "49"
-          ]
-        },
-        {
-          "start": 354,
-          "end": 358,
-          "nums": [
-            "07",
-            "08",
-            "24",
-            "30",
-            "49"
-          ]
-        },
-        {
-          "start": 355,
-          "end": 359,
-          "nums": [
-            "07",
-            "08",
-            "11",
-            "24",
-            "49"
-          ]
-        },
-        {
-          "start": 356,
-          "end": 360,
-          "nums": [
-            "07",
-            "11",
-            "24",
-            "41",
-            "49"
-          ]
-        },
-        {
-          "start": 357,
-          "end": 361,
-          "nums": [
-            "07",
-            "11",
-            "24",
-            "41",
-            "49"
+            "26",
+            "36",
+            "46"
           ]
         }
       ],
@@ -22897,12 +23076,12 @@
       "pool": [
         "01",
         "03",
-        "05",
         "08",
-        "10",
-        "26",
+        "09",
+        "16",
+        "33",
         "37",
-        "45"
+        "41"
       ],
       "totalWindows": 45,
       "coveredWindows": 41,
@@ -22911,97 +23090,82 @@
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 6,
-          "end": 10,
+          "start": 26,
+          "end": 30,
           "nums": [
-            "13",
-            "21",
-            "27",
-            "28",
-            "41"
-          ]
-        },
-        {
-          "start": 16,
-          "end": 20,
-          "nums": [
-            "06",
-            "12",
-            "32",
-            "39",
+            "02",
+            "29",
+            "30",
+            "38",
             "46"
           ]
         },
         {
-          "start": 96,
-          "end": 100,
+          "start": 61,
+          "end": 65,
           "nums": [
-            "11",
-            "12",
-            "17",
-            "33",
-            "43"
+            "05",
+            "18",
+            "24",
+            "28",
+            "29"
           ]
         },
         {
-          "start": 146,
-          "end": 150,
+          "start": 86,
+          "end": 90,
           "nums": [
-            "09",
-            "13",
+            "12",
+            "26",
             "27",
-            "42",
-            "48"
+            "36",
+            "49"
+          ]
+        },
+        {
+          "start": 176,
+          "end": 180,
+          "nums": [
+            "10",
+            "14",
+            "15",
+            "18",
+            "21"
           ]
         }
       ],
       "phasePlan": {
-        "phaseCount": 3,
+        "phaseCount": 2,
         "fullCovered": true,
         "phases": [
           {
             "start": 1,
-            "end": 115,
-            "windowCount": 23,
+            "end": 170,
+            "windowCount": 34,
             "pool": [
               "01",
-              "06",
+              "02",
               "16",
-              "18",
-              "23",
+              "24",
               "27",
-              "29",
-              "33"
-            ],
-            "coveredWindows": 23
-          },
-          {
-            "start": 116,
-            "end": 195,
-            "windowCount": 16,
-            "pool": [
-              "01",
-              "05",
-              "06",
-              "07",
-              "09",
-              "10",
-              "26",
+              "31",
+              "33",
               "37"
             ],
-            "coveredWindows": 16
+            "coveredWindows": 34
           },
           {
-            "start": 196,
+            "start": 171,
             "end": 225,
-            "windowCount": 6,
+            "windowCount": 11,
             "pool": [
               "01",
               "03",
               "08",
-              "17"
+              "10",
+              "26"
             ],
-            "coveredWindows": 6
+            "coveredWindows": 11
           }
         ]
       },
@@ -23015,13 +23179,13 @@
             "windowCount": 23,
             "pool": [
               "01",
-              "09",
+              "02",
               "16",
               "17",
               "24",
-              "27",
-              "28",
-              "46"
+              "37",
+              "48",
+              "49"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -23061,9 +23225,9 @@
       },
       "walkForwardPlan": {
         "totalWindows": 43,
-        "coveredWindows": 17,
-        "missCount": 26,
-        "hitRate": 39.53,
+        "coveredWindows": 18,
+        "missCount": 25,
+        "hitRate": 41.86,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -23074,7 +23238,7 @@
             "basisEnd": 5,
             "basisWindowCount": 1,
             "pool": [
-              "09"
+              "02"
             ],
             "hits": [],
             "covered": false
@@ -23088,8 +23252,8 @@
             "basisEnd": 10,
             "basisWindowCount": 2,
             "pool": [
-              "09",
-              "13"
+              "02",
+              "04"
             ],
             "hits": [],
             "covered": false
@@ -23103,9 +23267,9 @@
             "basisEnd": 15,
             "basisWindowCount": 3,
             "pool": [
-              "01",
-              "09",
-              "13"
+              "02",
+              "04",
+              "27"
             ],
             "hits": [],
             "covered": false
@@ -23119,13 +23283,15 @@
             "basisEnd": 20,
             "basisWindowCount": 4,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "13"
+              "02",
+              "04",
+              "16",
+              "27"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "16"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23136,15 +23302,13 @@
             "basisEnd": 25,
             "basisWindowCount": 5,
             "pool": [
-              "01",
-              "06",
+              "04",
               "09",
-              "28"
+              "16",
+              "27"
             ],
-            "hits": [
-              "01"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23155,13 +23319,13 @@
             "basisEnd": 30,
             "basisWindowCount": 6,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "28"
+              "02",
+              "04",
+              "16",
+              "27"
             ],
             "hits": [
-              "06"
+              "04"
             ],
             "covered": true
           },
@@ -23174,16 +23338,13 @@
             "basisEnd": 35,
             "basisWindowCount": 7,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "18",
-              "41"
+              "02",
+              "04",
+              "16",
+              "27"
             ],
-            "hits": [
-              "01"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23194,15 +23355,14 @@
             "basisEnd": 40,
             "basisWindowCount": 8,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "28"
+              "02",
+              "04",
+              "16",
+              "24",
+              "27"
             ],
-            "hits": [
-              "01"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23213,13 +23373,16 @@
             "basisEnd": 45,
             "basisWindowCount": 9,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "28"
+              "02",
+              "16",
+              "19",
+              "24",
+              "27"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "24"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23230,16 +23393,14 @@
             "basisEnd": 50,
             "basisWindowCount": 10,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "13",
-              "18"
+              "02",
+              "16",
+              "19",
+              "24",
+              "27"
             ],
-            "hits": [
-              "01"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23250,11 +23411,11 @@
             "basisEnd": 55,
             "basisWindowCount": 11,
             "pool": [
-              "01",
-              "06",
               "09",
-              "13",
-              "18"
+              "19",
+              "24",
+              "27",
+              "38"
             ],
             "hits": [
               "09"
@@ -23270,14 +23431,14 @@
             "basisEnd": 60,
             "basisWindowCount": 12,
             "pool": [
-              "01",
-              "06",
               "09",
-              "13",
-              "18"
+              "19",
+              "24",
+              "27",
+              "38"
             ],
             "hits": [
-              "18"
+              "24"
             ],
             "covered": true
           },
@@ -23290,14 +23451,16 @@
             "basisEnd": 65,
             "basisWindowCount": 13,
             "pool": [
-              "01",
-              "03",
-              "06",
               "09",
-              "28"
+              "19",
+              "24",
+              "27",
+              "38"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "24"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23308,11 +23471,11 @@
             "basisEnd": 70,
             "basisWindowCount": 14,
             "pool": [
-              "01",
-              "06",
               "09",
-              "23",
-              "28"
+              "19",
+              "24",
+              "27",
+              "38"
             ],
             "hits": [],
             "covered": false
@@ -23326,12 +23489,11 @@
             "basisEnd": 75,
             "basisWindowCount": 15,
             "pool": [
-              "01",
-              "06",
-              "09",
               "10",
-              "23",
-              "28"
+              "19",
+              "24",
+              "27",
+              "38"
             ],
             "hits": [],
             "covered": false
@@ -23345,15 +23507,18 @@
             "basisEnd": 80,
             "basisWindowCount": 16,
             "pool": [
-              "01",
-              "06",
-              "09",
-              "23",
-              "28",
-              "46"
+              "02",
+              "10",
+              "19",
+              "24",
+              "27",
+              "38"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "19",
+              "27"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23364,16 +23529,17 @@
             "basisEnd": 85,
             "basisWindowCount": 17,
             "pool": [
-              "01",
-              "05",
-              "06",
-              "09",
-              "13",
-              "18",
-              "46"
+              "02",
+              "10",
+              "19",
+              "24",
+              "27",
+              "38"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "27"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23384,12 +23550,12 @@
             "basisEnd": 90,
             "basisWindowCount": 18,
             "pool": [
-              "01",
-              "18",
-              "23",
+              "02",
+              "10",
+              "19",
+              "24",
               "27",
-              "29",
-              "46"
+              "38"
             ],
             "hits": [],
             "covered": false
@@ -23403,13 +23569,12 @@
             "basisEnd": 95,
             "basisWindowCount": 19,
             "pool": [
-              "01",
-              "06",
               "10",
-              "18",
-              "23",
+              "19",
+              "24",
               "27",
-              "29"
+              "35",
+              "38"
             ],
             "hits": [],
             "covered": false
@@ -23423,19 +23588,16 @@
             "basisEnd": 100,
             "basisWindowCount": 20,
             "pool": [
-              "01",
-              "06",
-              "18",
-              "23",
+              "02",
+              "10",
+              "17",
+              "19",
+              "24",
               "27",
-              "29",
-              "33"
+              "38"
             ],
-            "hits": [
-              "01",
-              "06"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23447,15 +23609,18 @@
             "basisWindowCount": 21,
             "pool": [
               "01",
-              "06",
-              "18",
-              "23",
-              "27",
-              "29",
-              "33"
+              "02",
+              "04",
+              "10",
+              "16",
+              "17",
+              "24",
+              "27"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "16"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23467,16 +23632,17 @@
             "basisWindowCount": 22,
             "pool": [
               "01",
-              "06",
+              "09",
+              "12",
               "16",
-              "18",
-              "23",
+              "24",
               "27",
-              "29",
-              "33"
+              "37",
+              "46"
             ],
             "hits": [
-              "01"
+              "01",
+              "09"
             ],
             "covered": true
           },
@@ -23892,9 +24058,9 @@
       },
       "crossYearWalkForwardPlan": {
         "totalWindows": 43,
-        "coveredWindows": 30,
-        "missCount": 13,
-        "hitRate": 69.77,
+        "coveredWindows": 24,
+        "missCount": 19,
+        "hitRate": 55.81,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -23902,14 +24068,14 @@
             "start": 6,
             "end": 10,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "30"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -23927,13 +24093,13 @@
             "end": 15,
             "pool": [
               "03",
+              "04",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "13",
-              "30"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -23950,14 +24116,14 @@
             "start": 16,
             "end": 20,
             "pool": [
-              "01",
               "03",
+              "04",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "13"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -23965,11 +24131,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 15
             },
-            "hits": [
-              "06",
-              "12"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23977,14 +24140,14 @@
             "start": 21,
             "end": 25,
             "pool": [
-              "01",
               "03",
+              "04",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "13"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -23992,8 +24155,10 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 20
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "10"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24001,14 +24166,14 @@
             "start": 26,
             "end": 30,
             "pool": [
-              "01",
               "03",
+              "04",
+              "05",
               "06",
               "08",
               "09",
               "10",
-              "12",
-              "30"
+              "11"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24016,11 +24181,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 25
             },
-            "hits": [
-              "01",
-              "03"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24028,14 +24190,14 @@
             "start": 31,
             "end": 35,
             "pool": [
-              "01",
               "03",
+              "04",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "30"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24044,7 +24206,8 @@
               "currentBasisEnd": 30
             },
             "hits": [
-              "06"
+              "04",
+              "08"
             ],
             "covered": true
           },
@@ -24054,14 +24217,14 @@
             "start": 36,
             "end": 40,
             "pool": [
-              "01",
               "03",
+              "04",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "41"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24069,10 +24232,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 35
             },
-            "hits": [
-              "01"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24080,14 +24241,14 @@
             "start": 41,
             "end": 45,
             "pool": [
-              "01",
               "03",
+              "04",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "30"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24095,10 +24256,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 40
             },
-            "hits": [
-              "01"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24108,12 +24267,12 @@
             "pool": [
               "01",
               "03",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "30"
+              "11",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24134,12 +24293,12 @@
             "pool": [
               "01",
               "03",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "13"
+              "11",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24164,8 +24323,8 @@
               "08",
               "09",
               "10",
-              "12",
-              "13"
+              "11",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24191,8 +24350,8 @@
               "08",
               "09",
               "10",
-              "12",
-              "13"
+              "11",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24211,12 +24370,12 @@
             "pool": [
               "01",
               "03",
-              "05",
               "06",
               "08",
               "09",
               "10",
-              "12"
+              "11",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24224,10 +24383,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 65
             },
-            "hits": [
-              "05"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24235,14 +24392,14 @@
             "start": 71,
             "end": 75,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
               "09",
               "10",
-              "12"
+              "11",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24261,14 +24418,14 @@
             "start": 76,
             "end": 80,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
-              "09",
               "10",
-              "12"
+              "11",
+              "19",
+              "24"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24287,14 +24444,14 @@
             "start": 81,
             "end": 85,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
-              "09",
               "10",
-              "12"
+              "11",
+              "19",
+              "24"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24303,7 +24460,8 @@
               "currentBasisEnd": 80
             },
             "hits": [
-              "05"
+              "05",
+              "19"
             ],
             "covered": true
           },
@@ -24313,14 +24471,14 @@
             "start": 86,
             "end": 90,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
-              "09",
               "10",
-              "12"
+              "11",
+              "19",
+              "24"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24328,10 +24486,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 85
             },
-            "hits": [
-              "12"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24339,14 +24495,14 @@
             "start": 91,
             "end": 95,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
-              "12",
-              "30"
+              "11",
+              "19",
+              "24"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24365,14 +24521,14 @@
             "start": 96,
             "end": 100,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
-              "12",
-              "30"
+              "11",
+              "19",
+              "35"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24381,7 +24537,7 @@
               "currentBasisEnd": 95
             },
             "hits": [
-              "12"
+              "11"
             ],
             "covered": true
           },
@@ -24391,14 +24547,14 @@
             "start": 101,
             "end": 105,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
-              "12",
-              "30"
+              "11",
+              "17",
+              "19"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24407,7 +24563,6 @@
               "currentBasisEnd": 100
             },
             "hits": [
-              "01",
               "06"
             ],
             "covered": true
@@ -24420,12 +24575,12 @@
             "pool": [
               "01",
               "03",
-              "05",
+              "04",
               "06",
               "08",
               "10",
-              "12",
-              "30"
+              "11",
+              "17"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24433,10 +24588,8 @@
               "currentBasisStart": 1,
               "currentBasisEnd": 105
             },
-            "hits": [
-              "30"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24446,12 +24599,12 @@
             "pool": [
               "01",
               "03",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "12",
-              "30"
+              "46"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24461,7 +24614,7 @@
             },
             "hits": [
               "01",
-              "30"
+              "09"
             ],
             "covered": true
           },
@@ -25005,7 +25158,7 @@
       "currentWindow": {
         "start": 226,
         "end": 230,
-        "count": 3,
+        "count": 4,
         "expected": 5,
         "basisStart": 116,
         "basisEnd": 225,
@@ -25082,7 +25235,7 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 2,
+        "remainingDraws": 1,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25094,105 +25247,51 @@
       "poolSize": 8,
       "pool": [
         "01",
-        "03",
         "16",
+        "24",
+        "29",
         "37",
         "39",
         "41",
-        "43",
         "48"
       ],
-      "totalWindows": 224,
-      "coveredWindows": 204,
-      "missCount": 20,
-      "hitRate": 91.07,
+      "totalWindows": 225,
+      "coveredWindows": 198,
+      "missCount": 27,
+      "hitRate": 88,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 8,
-          "end": 12,
+          "start": 10,
+          "end": 14,
           "nums": [
-            "11",
-            "21",
+            "19",
             "27",
-            "28"
-          ]
-        },
-        {
-          "start": 19,
-          "end": 23,
-          "nums": [
-            "12",
-            "18",
-            "42",
-            "46",
-            "47"
-          ]
-        },
-        {
-          "start": 20,
-          "end": 24,
-          "nums": [
-            "12",
-            "18",
             "28",
-            "42",
-            "47"
+            "32",
+            "49"
           ]
         },
         {
-          "start": 57,
-          "end": 61,
+          "start": 23,
+          "end": 27,
           "nums": [
+            "02",
             "09",
-            "10",
-            "23",
-            "29",
-            "31"
+            "34",
+            "35",
+            "38"
           ]
         },
         {
-          "start": 58,
-          "end": 62,
+          "start": 24,
+          "end": 28,
           "nums": [
-            "09",
-            "10",
-            "24",
-            "29",
-            "31"
-          ]
-        },
-        {
-          "start": 59,
-          "end": 63,
-          "nums": [
-            "09",
-            "10",
-            "24",
-            "28",
-            "29"
-          ]
-        },
-        {
-          "start": 60,
-          "end": 64,
-          "nums": [
-            "09",
-            "18",
-            "24",
-            "28",
-            "29"
-          ]
-        },
-        {
-          "start": 61,
-          "end": 65,
-          "nums": [
-            "05",
-            "18",
-            "24",
-            "28",
-            "29"
+            "02",
+            "30",
+            "34",
+            "35",
+            "38"
           ]
         },
         {
@@ -25207,36 +25306,25 @@
           ]
         },
         {
-          "start": 73,
-          "end": 77,
+          "start": 78,
+          "end": 82,
           "nums": [
-            "02",
-            "10",
-            "29",
-            "33",
-            "34"
-          ]
-        },
-        {
-          "start": 74,
-          "end": 78,
-          "nums": [
-            "02",
-            "10",
-            "29",
-            "33",
-            "46"
-          ]
-        },
-        {
-          "start": 75,
-          "end": 79,
-          "nums": [
-            "02",
-            "29",
-            "33",
+            "03",
+            "17",
+            "27",
             "35",
             "46"
+          ]
+        },
+        {
+          "start": 79,
+          "end": 83,
+          "nums": [
+            "03",
+            "05",
+            "17",
+            "27",
+            "35"
           ]
         },
         {
@@ -25262,6 +25350,60 @@
           ]
         },
         {
+          "start": 92,
+          "end": 96,
+          "nums": [
+            "06",
+            "17",
+            "35",
+            "40",
+            "43"
+          ]
+        },
+        {
+          "start": 93,
+          "end": 97,
+          "nums": [
+            "11",
+            "17",
+            "35",
+            "40",
+            "43"
+          ]
+        },
+        {
+          "start": 94,
+          "end": 98,
+          "nums": [
+            "11",
+            "17",
+            "35",
+            "43"
+          ]
+        },
+        {
+          "start": 95,
+          "end": 99,
+          "nums": [
+            "11",
+            "12",
+            "17",
+            "35",
+            "43"
+          ]
+        },
+        {
+          "start": 96,
+          "end": 100,
+          "nums": [
+            "11",
+            "12",
+            "17",
+            "33",
+            "43"
+          ]
+        },
+        {
           "start": 112,
           "end": 116,
           "nums": [
@@ -25270,6 +25412,50 @@
             "09",
             "22",
             "30"
+          ]
+        },
+        {
+          "start": 141,
+          "end": 145,
+          "nums": [
+            "05",
+            "23",
+            "33",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 142,
+          "end": 146,
+          "nums": [
+            "05",
+            "23",
+            "42",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 143,
+          "end": 147,
+          "nums": [
+            "05",
+            "13",
+            "42",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 164,
+          "end": 168,
+          "nums": [
+            "03",
+            "06",
+            "15",
+            "19",
+            "21"
           ]
         },
         {
@@ -25306,13 +25492,58 @@
           ]
         },
         {
-          "start": 191,
-          "end": 195,
+          "start": 201,
+          "end": 205,
           "nums": [
-            "09",
+            "03",
+            "05",
             "25",
-            "26",
-            "29"
+            "32",
+            "40"
+          ]
+        },
+        {
+          "start": 202,
+          "end": 206,
+          "nums": [
+            "03",
+            "05",
+            "25",
+            "40",
+            "47"
+          ]
+        },
+        {
+          "start": 203,
+          "end": 207,
+          "nums": [
+            "03",
+            "05",
+            "25",
+            "31",
+            "47"
+          ]
+        },
+        {
+          "start": 204,
+          "end": 208,
+          "nums": [
+            "03",
+            "05",
+            "19",
+            "31",
+            "47"
+          ]
+        },
+        {
+          "start": 205,
+          "end": 209,
+          "nums": [
+            "03",
+            "08",
+            "19",
+            "31",
+            "47"
           ]
         },
         {
