@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-08-19T14:49:03.340Z",
+  "generatedAt": "2026-08-20T14:22:49.676Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25204,7 +25204,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 231,
         "end": 235,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -25283,7 +25283,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25303,10 +25303,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "41",
         "48"
       ],
-      "totalWindows": 227,
-      "coveredWindows": 200,
+      "totalWindows": 228,
+      "coveredWindows": 201,
       "missCount": 27,
-      "hitRate": 88.11,
+      "hitRate": 88.16,
       "fullCovered": false,
       "missWindows": [
         {
@@ -33473,7 +33473,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 91,
         "end": 95,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -33537,18 +33537,23 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         "tracking": {
-          "status": "watch-current-window",
+          "status": "continue-current-stage",
           "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [],
-        "covered": false,
-        "remainingDraws": 5,
-        "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "hits": [
+          {
+            "issue": 91,
+            "num": "34"
+          }
+        ],
+        "covered": true,
+        "remainingDraws": 4,
+        "nextAction": "continue-current-stage",
+        "switchSignal": "current-window-covered"
       }
     },
     {
@@ -33566,8 +33571,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "46",
         "47"
       ],
-      "totalWindows": 86,
-      "coveredWindows": 86,
+      "totalWindows": 87,
+      "coveredWindows": 87,
       "missCount": 0,
       "hitRate": 100,
       "fullCovered": true,
