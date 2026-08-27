@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-08-26T14:58:58.228Z",
+  "generatedAt": "2026-08-27T15:01:56.178Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25217,7 +25217,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 236,
         "end": 240,
-        "count": 3,
+        "count": 4,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 235,
@@ -25277,7 +25277,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 2,
+        "remainingDraws": 1,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25297,10 +25297,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "41",
         "48"
       ],
-      "totalWindows": 234,
+      "totalWindows": 235,
       "coveredWindows": 207,
-      "missCount": 27,
-      "hitRate": 88.46,
+      "missCount": 28,
+      "hitRate": 88.09,
       "fullCovered": false,
       "missWindows": [
         {
@@ -25597,6 +25597,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "31",
             "47",
             "49"
+          ]
+        },
+        {
+          "start": 235,
+          "end": 239,
+          "nums": [
+            "05",
+            "11",
+            "12",
+            "17",
+            "32"
           ]
         }
       ],
@@ -33467,7 +33478,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 91,
         "end": 95,
-        "count": 3,
+        "count": 4,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -33545,7 +33556,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
           }
         ],
         "covered": true,
-        "remainingDraws": 2,
+        "remainingDraws": 1,
         "nextAction": "continue-current-stage",
         "switchSignal": "current-window-covered"
       }
@@ -33565,8 +33576,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "46",
         "47"
       ],
-      "totalWindows": 89,
-      "coveredWindows": 89,
+      "totalWindows": 90,
+      "coveredWindows": 90,
       "missCount": 0,
       "hitRate": 100,
       "fullCovered": true,
