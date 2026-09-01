@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-08-31T20:01:43.620Z",
+  "generatedAt": "2026-09-01T14:28:59.580Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25262,7 +25262,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 241,
         "end": 245,
-        "count": 3,
+        "count": 4,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 240,
@@ -25335,7 +25335,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 2,
+        "remainingDraws": 1,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25350,15 +25350,15 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "05",
         "16",
         "24",
-        "29",
         "37",
         "39",
-        "41"
+        "41",
+        "46"
       ],
-      "totalWindows": 239,
-      "coveredWindows": 210,
+      "totalWindows": 240,
+      "coveredWindows": 211,
       "missCount": 29,
-      "hitRate": 87.87,
+      "hitRate": 87.92,
       "fullCovered": false,
       "missWindows": [
         {
@@ -25391,6 +25391,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "30",
             "34",
             "35",
+            "38"
+          ]
+        },
+        {
+          "start": 25,
+          "end": 29,
+          "nums": [
+            "02",
+            "29",
+            "30",
+            "34",
             "38"
           ]
         },
@@ -25447,47 +25458,25 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 70,
-          "end": 74,
+          "start": 57,
+          "end": 61,
           "nums": [
+            "09",
             "10",
-            "25",
-            "34",
-            "46",
-            "48"
+            "23",
+            "29",
+            "31"
           ]
         },
         {
-          "start": 71,
-          "end": 75,
-          "nums": [
-            "10",
-            "33",
-            "34",
-            "46",
-            "48"
-          ]
-        },
-        {
-          "start": 72,
-          "end": 76,
+          "start": 73,
+          "end": 77,
           "nums": [
             "02",
             "10",
+            "29",
             "33",
-            "34",
-            "46"
-          ]
-        },
-        {
-          "start": 78,
-          "end": 82,
-          "nums": [
-            "03",
-            "17",
-            "27",
-            "35",
-            "46"
+            "34"
           ]
         },
         {
@@ -25652,6 +25641,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "18",
             "19",
             "21"
+          ]
+        },
+        {
+          "start": 191,
+          "end": 195,
+          "nums": [
+            "09",
+            "25",
+            "26",
+            "29"
           ]
         },
         {
