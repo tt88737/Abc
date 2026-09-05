@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T17:38:33.115Z",
+  "generatedAt": "2026-09-05T14:29:03.783Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25305,7 +25305,7 @@
       "currentWindow": {
         "start": 246,
         "end": 250,
-        "count": 2,
+        "count": 3,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 245,
@@ -25383,7 +25383,7 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 3,
+        "remainingDraws": 2,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25403,10 +25403,10 @@
         "41",
         "46"
       ],
-      "totalWindows": 243,
-      "coveredWindows": 214,
+      "totalWindows": 244,
+      "coveredWindows": 215,
       "missCount": 29,
-      "hitRate": 88.07,
+      "hitRate": 88.11,
       "fullCovered": false,
       "missWindows": [
         {
@@ -33640,7 +33640,7 @@
       "currentWindow": {
         "start": 96,
         "end": 100,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -33712,9 +33712,9 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -33732,8 +33732,8 @@
         "46",
         "47"
       ],
-      "totalWindows": 91,
-      "coveredWindows": 91,
+      "totalWindows": 92,
+      "coveredWindows": 92,
       "missCount": 0,
       "hitRate": 100,
       "fullCovered": true,
