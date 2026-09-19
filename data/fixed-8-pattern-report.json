@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T17:42:50.216Z",
+  "generatedAt": "2026-09-19T14:29:13.754Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25444,7 +25444,7 @@
       "currentWindow": {
         "start": 261,
         "end": 265,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 260,
@@ -25513,18 +25513,23 @@
           ]
         },
         "tracking": {
-          "status": "watch-current-window",
+          "status": "continue-current-stage",
           "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [],
-        "covered": false,
-        "remainingDraws": 4,
-        "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "hits": [
+          {
+            "issue": 262,
+            "num": "30"
+          }
+        ],
+        "covered": true,
+        "remainingDraws": 3,
+        "nextAction": "continue-current-stage",
+        "switchSignal": "current-window-covered"
       }
     },
     {
@@ -25542,10 +25547,10 @@
         "41",
         "46"
       ],
-      "totalWindows": 257,
-      "coveredWindows": 224,
+      "totalWindows": 258,
+      "coveredWindows": 225,
       "missCount": 33,
-      "hitRate": 87.16,
+      "hitRate": 87.21,
       "fullCovered": false,
       "missWindows": [
         {
@@ -33871,7 +33876,7 @@
       "currentWindow": {
         "start": 101,
         "end": 105,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -33943,7 +33948,7 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -33963,10 +33968,10 @@
         "46",
         "49"
       ],
-      "totalWindows": 97,
-      "coveredWindows": 96,
+      "totalWindows": 98,
+      "coveredWindows": 97,
       "missCount": 1,
-      "hitRate": 98.97,
+      "hitRate": 98.98,
       "fullCovered": false,
       "missWindows": [
         {
