@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-01T14:31:06.479Z",
+  "generatedAt": "2026-10-01T19:07:11.227Z",
   "sources": [
     {
-      "generatedAt": "2026-10-01T14:31:07.086Z",
+      "generatedAt": "2026-10-01T19:07:11.814Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2523,7 +2523,7 @@
       ]
     },
     {
-      "generatedAt": "2026-10-01T14:31:07.096Z",
+      "generatedAt": "2026-10-01T19:07:11.824Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
