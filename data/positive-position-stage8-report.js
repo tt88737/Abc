@@ -1,8 +1,8 @@
 window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
-  "generatedAt": "2026-10-01T19:32:02.539Z",
+  "generatedAt": "2026-10-02T14:28:55.168Z",
   "sources": [
     {
-      "generatedAt": "2026-10-01T19:32:03.254Z",
+      "generatedAt": "2026-10-02T14:28:55.520Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2412,14 +2412,14 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "03",
                     "05",
                     "09",
-                    "10",
                     "22",
                     "25",
                     "26",
-                    "38"
+                    "38",
+                    "43"
                   ],
-                  "totalWindows": 8,
-                  "coveredWindows": 8,
+                  "totalWindows": 9,
+                  "coveredWindows": 9,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -2427,17 +2427,17 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                 {
                   "position": 2,
                   "pool": [
+                    "02",
                     "06",
+                    "15",
                     "20",
                     "22",
-                    "23",
                     "26",
-                    "34",
                     "35",
                     "46"
                   ],
-                  "totalWindows": 8,
-                  "coveredWindows": 8,
+                  "totalWindows": 9,
+                  "coveredWindows": 9,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -2446,16 +2446,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "position": 3,
                   "pool": [
                     "03",
+                    "05",
                     "09",
                     "11",
                     "14",
                     "23",
-                    "35",
-                    "37",
+                    "25",
                     "43"
                   ],
-                  "totalWindows": 8,
-                  "coveredWindows": 8,
+                  "totalWindows": 9,
+                  "coveredWindows": 9,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -2472,8 +2472,8 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "32",
                     "47"
                   ],
-                  "totalWindows": 8,
-                  "coveredWindows": 8,
+                  "totalWindows": 9,
+                  "coveredWindows": 9,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -2488,10 +2488,10 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "13",
                     "14",
                     "19",
-                    "26"
+                    "22"
                   ],
-                  "totalWindows": 8,
-                  "coveredWindows": 8,
+                  "totalWindows": 9,
+                  "coveredWindows": 9,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -2505,11 +2505,11 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "17",
                     "21",
                     "24",
-                    "41",
+                    "31",
                     "45"
                   ],
-                  "totalWindows": 8,
-                  "coveredWindows": 8,
+                  "totalWindows": 9,
+                  "coveredWindows": 9,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -2523,7 +2523,7 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
       ]
     },
     {
-      "generatedAt": "2026-10-01T19:32:03.266Z",
+      "generatedAt": "2026-10-02T14:28:55.526Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
