@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-10-07T19:58:40.811Z",
+  "generatedAt": "2026-10-08T14:30:57.683Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25630,7 +25630,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 281,
         "end": 285,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 280,
@@ -25710,9 +25710,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -25730,10 +25730,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "39",
         "46"
       ],
-      "totalWindows": 276,
+      "totalWindows": 277,
       "coveredWindows": 234,
-      "missCount": 42,
-      "hitRate": 84.78,
+      "missCount": 43,
+      "hitRate": 84.48,
       "fullCovered": false,
       "missWindows": [
         {
@@ -26185,6 +26185,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "22",
             "35",
             "40"
+          ]
+        },
+        {
+          "start": 277,
+          "end": 281,
+          "nums": [
+            "02",
+            "10",
+            "11",
+            "15"
           ]
         }
       ],
@@ -34200,7 +34210,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 106,
         "end": 110,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -34275,7 +34285,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -34295,10 +34305,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "47",
         "49"
       ],
-      "totalWindows": 102,
-      "coveredWindows": 101,
+      "totalWindows": 103,
+      "coveredWindows": 102,
       "missCount": 1,
-      "hitRate": 99.02,
+      "hitRate": 99.03,
       "fullCovered": false,
       "missWindows": [
         {
