@@ -1,8 +1,8 @@
 window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
-  "generatedAt": "2026-10-10T18:32:05.712Z",
+  "generatedAt": "2026-10-11T14:31:26.212Z",
   "sources": [
     {
-      "generatedAt": "2026-10-10T18:32:06.236Z",
+      "generatedAt": "2026-10-11T14:31:26.861Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2523,7 +2523,7 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
       ]
     },
     {
-      "generatedAt": "2026-10-10T18:32:06.245Z",
+      "generatedAt": "2026-10-11T14:31:26.872Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
