@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-10-12T22:09:47.828Z",
+  "generatedAt": "2026-10-13T14:31:15.673Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25675,7 +25675,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 286,
         "end": 290,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 285,
@@ -25754,9 +25754,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -25774,10 +25774,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "37",
         "39"
       ],
-      "totalWindows": 281,
-      "coveredWindows": 236,
+      "totalWindows": 282,
+      "coveredWindows": 237,
       "missCount": 45,
-      "hitRate": 83.99,
+      "hitRate": 84.04,
       "fullCovered": false,
       "missWindows": [
         {
@@ -34276,7 +34276,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 106,
         "end": 110,
-        "count": 3,
+        "count": 4,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -34351,7 +34351,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 2,
+        "remainingDraws": 1,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -34362,30 +34362,30 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "rolling-contiguous",
       "poolSize": 8,
       "pool": [
-        "19",
-        "27",
+        "03",
+        "08",
+        "11",
+        "13",
+        "28",
         "34",
-        "35",
         "40",
-        "46",
-        "47",
-        "49"
+        "46"
       ],
-      "totalWindows": 104,
-      "coveredWindows": 103,
+      "totalWindows": 105,
+      "coveredWindows": 104,
       "missCount": 1,
-      "hitRate": 99.04,
+      "hitRate": 99.05,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 29,
-          "end": 33,
+          "start": 56,
+          "end": 60,
           "nums": [
-            "03",
-            "07",
-            "13",
-            "24",
-            "48"
+            "20",
+            "33",
+            "42",
+            "44",
+            "47"
           ]
         }
       ],
