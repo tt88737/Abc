@@ -1,8 +1,8 @@
 window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
-  "generatedAt": "2026-10-14T18:34:53.618Z",
+  "generatedAt": "2026-10-15T14:31:10.041Z",
   "sources": [
     {
-      "generatedAt": "2026-10-14T18:34:54.226Z",
+      "generatedAt": "2026-10-15T14:31:10.631Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2523,7 +2523,7 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
       ]
     },
     {
-      "generatedAt": "2026-10-14T18:34:54.236Z",
+      "generatedAt": "2026-10-15T14:31:10.641Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -4664,16 +4664,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "position": 1,
                   "pool": [
                     "04",
-                    "05",
                     "06",
-                    "09",
-                    "12",
+                    "10",
                     "14",
-                    "39",
-                    "47"
+                    "20",
+                    "31",
+                    "34",
+                    "39"
                   ],
-                  "totalWindows": 21,
-                  "coveredWindows": 21,
+                  "totalWindows": 22,
+                  "coveredWindows": 22,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4683,15 +4683,15 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "pool": [
                     "04",
                     "07",
-                    "08",
+                    "10",
                     "12",
                     "16",
                     "23",
                     "28",
                     "44"
                   ],
-                  "totalWindows": 21,
-                  "coveredWindows": 21,
+                  "totalWindows": 22,
+                  "coveredWindows": 22,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4708,8 +4708,8 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "28",
                     "45"
                   ],
-                  "totalWindows": 21,
-                  "coveredWindows": 21,
+                  "totalWindows": 22,
+                  "coveredWindows": 22,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4726,8 +4726,8 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "19",
                     "34"
                   ],
-                  "totalWindows": 21,
-                  "coveredWindows": 21,
+                  "totalWindows": 22,
+                  "coveredWindows": 22,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4738,14 +4738,14 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "05",
                     "13",
                     "14",
-                    "16",
                     "18",
                     "28",
+                    "31",
                     "35",
                     "49"
                   ],
-                  "totalWindows": 21,
-                  "coveredWindows": 21,
+                  "totalWindows": 22,
+                  "coveredWindows": 22,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
@@ -4762,8 +4762,8 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "40",
                     "45"
                   ],
-                  "totalWindows": 21,
-                  "coveredWindows": 21,
+                  "totalWindows": 22,
+                  "coveredWindows": 22,
                   "hitRate": 100,
                   "fullCovered": true,
                   "missWindows": []
