@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-10-16T18:02:46.020Z",
+  "generatedAt": "2026-10-17T14:30:05.430Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -23074,94 +23074,94 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "mode": "fixed-block",
       "poolSize": 8,
       "pool": [
-        "05",
-        "09",
-        "14",
-        "16",
-        "19",
-        "37",
-        "39",
-        "46"
+        "01",
+        "07",
+        "10",
+        "17",
+        "24",
+        "40",
+        "44",
+        "49"
       ],
-      "totalWindows": 57,
-      "coveredWindows": 50,
+      "totalWindows": 58,
+      "coveredWindows": 51,
       "missCount": 7,
-      "hitRate": 87.72,
+      "hitRate": 87.93,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 11,
-          "end": 15,
-          "nums": [
-            "27",
-            "28",
-            "32",
-            "41",
-            "49"
-          ]
-        },
-        {
-          "start": 31,
-          "end": 35,
+          "start": 6,
+          "end": 10,
           "nums": [
             "04",
-            "08",
-            "24",
+            "19",
+            "21",
+            "37"
+          ]
+        },
+        {
+          "start": 26,
+          "end": 30,
+          "nums": [
+            "02",
             "29",
-            "34"
+            "30",
+            "38",
+            "46"
           ]
         },
         {
-          "start": 36,
-          "end": 40,
+          "start": 76,
+          "end": 80,
           "nums": [
-            "20",
-            "24",
-            "33",
-            "34",
-            "36"
+            "02",
+            "03",
+            "29",
+            "35",
+            "46"
           ]
         },
         {
-          "start": 86,
-          "end": 90,
+          "start": 116,
+          "end": 120,
           "nums": [
-            "12",
-            "26",
-            "27",
-            "36",
-            "49"
-          ]
-        },
-        {
-          "start": 96,
-          "end": 100,
-          "nums": [
+            "06",
+            "08",
             "11",
-            "12",
-            "17",
-            "33",
-            "43"
+            "16",
+            "22"
           ]
         },
         {
-          "start": 151,
-          "end": 155,
+          "start": 146,
+          "end": 150,
           "nums": [
-            "07",
-            "31",
-            "41",
-            "45"
+            "09",
+            "13",
+            "27",
+            "42",
+            "48"
           ]
         },
         {
-          "start": 171,
-          "end": 175,
+          "start": 161,
+          "end": 165,
           "nums": [
+            "03",
+            "08",
+            "21",
+            "32",
+            "37"
+          ]
+        },
+        {
+          "start": 191,
+          "end": 195,
+          "nums": [
+            "09",
+            "25",
             "26",
-            "28",
-            "41",
-            "44"
+            "29"
           ]
         }
       ],
@@ -23187,8 +23187,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
           },
           {
             "start": 171,
-            "end": 285,
-            "windowCount": 23,
+            "end": 290,
+            "windowCount": 24,
             "pool": [
               "01",
               "03",
@@ -23199,7 +23199,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "20",
               "44"
             ],
-            "coveredWindows": 23
+            "coveredWindows": 24
           }
         ]
       },
@@ -23248,18 +23248,18 @@ window.__FIXED8_PATTERN_REPORT__ = {
           {
             "start": 231,
             "end": 365,
-            "windowCount": 11,
+            "windowCount": 12,
             "pool": [
               "02",
+              "08",
               "10",
               "11",
               "18",
-              "19",
-              "22",
-              "30",
-              "32"
+              "20",
+              "24",
+              "40"
             ],
-            "coveredWindows": 11,
+            "coveredWindows": 12,
             "missCount": 0,
             "fullCovered": true,
             "missWindows": []
@@ -23267,10 +23267,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         ]
       },
       "walkForwardPlan": {
-        "totalWindows": 54,
+        "totalWindows": 55,
         "coveredWindows": 22,
-        "missCount": 32,
-        "hitRate": 40.74,
+        "missCount": 33,
+        "hitRate": 40,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -24290,14 +24290,32 @@ window.__FIXED8_PATTERN_REPORT__ = {
             ],
             "hits": [],
             "covered": false
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
+            "start": 286,
+            "end": 290,
+            "basisStart": 231,
+            "basisEnd": 285,
+            "basisWindowCount": 11,
+            "pool": [
+              "02",
+              "05",
+              "09",
+              "19",
+              "20"
+            ],
+            "hits": [],
+            "covered": false
           }
         ]
       },
       "crossYearWalkForwardPlan": {
-        "totalWindows": 54,
-        "coveredWindows": 31,
+        "totalWindows": 55,
+        "coveredWindows": 32,
         "missCount": 23,
-        "hitRate": 57.41,
+        "hitRate": 58.18,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -25669,26 +25687,52 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "10"
             ],
             "covered": true
+          },
+          {
+            "phaseStart": 231,
+            "phaseEnd": 365,
+            "start": 286,
+            "end": 290,
+            "pool": [
+              "04",
+              "05",
+              "09",
+              "10",
+              "19",
+              "20",
+              "24",
+              "46"
+            ],
+            "basis": {
+              "historyYearCount": 6,
+              "currentWindowCount": 11,
+              "currentBasisStart": 231,
+              "currentBasisEnd": 285
+            },
+            "hits": [
+              "24"
+            ],
+            "covered": true
           }
         ]
       },
       "currentWindow": {
-        "start": 286,
-        "end": 290,
-        "count": 4,
+        "start": 291,
+        "end": 295,
+        "count": 0,
         "expected": 5,
         "basisStart": 231,
-        "basisEnd": 285,
-        "basisWindowCount": 11,
+        "basisEnd": 290,
+        "basisWindowCount": 12,
         "pool": [
           "02",
+          "08",
           "10",
           "11",
           "18",
-          "19",
-          "22",
-          "30",
-          "32"
+          "20",
+          "24",
+          "40"
         ],
         "crossYearPool": {
           "phase": {
@@ -25697,51 +25741,49 @@ window.__FIXED8_PATTERN_REPORT__ = {
           },
           "pool": [
             "04",
+            "08",
             "10",
             "18",
-            "19",
+            "20",
             "24",
             "41",
-            "44",
             "46"
           ],
           "basis": {
             "historyYearCount": 6,
-            "currentWindowCount": 11,
+            "currentWindowCount": 12,
             "currentBasisStart": 231,
-            "currentBasisEnd": 285
+            "currentBasisEnd": 290
           }
         },
         "recommendedPool": [
           "02",
+          "08",
           "10",
           "11",
           "18",
-          "19",
-          "22",
-          "30",
-          "32"
+          "20",
+          "24",
+          "40"
         ],
         "recommendationMode": "same-year-stage",
         "comparePools": {
           "sameYearOnly": [
             "02",
             "11",
-            "22",
-            "30",
-            "32"
+            "40"
           ],
           "crossYearOnly": [
             "04",
-            "24",
             "41",
-            "44",
             "46"
           ],
           "intersection": [
+            "08",
             "10",
             "18",
-            "19"
+            "20",
+            "24"
           ]
         },
         "tracking": {
@@ -25754,9 +25796,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 1,
+        "remainingDraws": 5,
         "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "switchSignal": "no-current-draws"
       }
     },
     {
@@ -25774,10 +25816,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "37",
         "39"
       ],
-      "totalWindows": 285,
-      "coveredWindows": 240,
+      "totalWindows": 286,
+      "coveredWindows": 241,
       "missCount": 45,
-      "hitRate": 84.21,
+      "hitRate": 84.27,
       "fullCovered": false,
       "missWindows": [
         {
@@ -34321,7 +34363,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 111,
         "end": 115,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -34397,9 +34439,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -34410,28 +34452,38 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "pool": [
         "03",
         "08",
-        "11",
         "13",
+        "20",
         "28",
         "34",
-        "40",
-        "46"
+        "46",
+        "49"
       ],
-      "totalWindows": 106,
+      "totalWindows": 107,
       "coveredWindows": 105,
-      "missCount": 1,
-      "hitRate": 99.06,
+      "missCount": 2,
+      "hitRate": 98.13,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 56,
-          "end": 60,
+          "start": 8,
+          "end": 12,
           "nums": [
-            "20",
+            "11",
+            "15",
+            "27",
+            "45"
+          ]
+        },
+        {
+          "start": 17,
+          "end": 21,
+          "nums": [
+            "04",
+            "10",
+            "12",
             "33",
-            "42",
-            "44",
-            "47"
+            "40"
           ]
         }
       ],
