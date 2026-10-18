@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-10-17T17:04:42.084Z",
+  "generatedAt": "2026-10-18T14:30:06.714Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25719,7 +25719,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 291,
         "end": 295,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 290,
@@ -25796,9 +25796,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -25812,14 +25812,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "10",
         "16",
         "24",
-        "30",
         "37",
-        "39"
+        "39",
+        "40"
       ],
-      "totalWindows": 286,
+      "totalWindows": 287,
       "coveredWindows": 241,
-      "missCount": 45,
-      "hitRate": 84.27,
+      "missCount": 46,
+      "hitRate": 83.97,
       "fullCovered": false,
       "missWindows": [
         {
@@ -25867,17 +25867,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 14,
-          "end": 18,
-          "nums": [
-            "28",
-            "38",
-            "40",
-            "41",
-            "47"
-          ]
-        },
-        {
           "start": 23,
           "end": 27,
           "nums": [
@@ -25886,6 +25875,61 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "34",
             "35",
             "38"
+          ]
+        },
+        {
+          "start": 24,
+          "end": 28,
+          "nums": [
+            "02",
+            "30",
+            "34",
+            "35",
+            "38"
+          ]
+        },
+        {
+          "start": 25,
+          "end": 29,
+          "nums": [
+            "02",
+            "29",
+            "30",
+            "34",
+            "38"
+          ]
+        },
+        {
+          "start": 26,
+          "end": 30,
+          "nums": [
+            "02",
+            "29",
+            "30",
+            "38",
+            "46"
+          ]
+        },
+        {
+          "start": 27,
+          "end": 31,
+          "nums": [
+            "08",
+            "29",
+            "30",
+            "38",
+            "46"
+          ]
+        },
+        {
+          "start": 28,
+          "end": 32,
+          "nums": [
+            "04",
+            "08",
+            "29",
+            "30",
+            "46"
           ]
         },
         {
@@ -26007,28 +26051,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 92,
-          "end": 96,
-          "nums": [
-            "06",
-            "17",
-            "35",
-            "40",
-            "43"
-          ]
-        },
-        {
-          "start": 93,
-          "end": 97,
-          "nums": [
-            "11",
-            "17",
-            "35",
-            "40",
-            "43"
-          ]
-        },
-        {
           "start": 94,
           "end": 98,
           "nums": [
@@ -26058,6 +26080,27 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "17",
             "33",
             "43"
+          ]
+        },
+        {
+          "start": 112,
+          "end": 116,
+          "nums": [
+            "02",
+            "04",
+            "09",
+            "22",
+            "30"
+          ]
+        },
+        {
+          "start": 129,
+          "end": 133,
+          "nums": [
+            "07",
+            "29",
+            "30",
+            "41"
           ]
         },
         {
@@ -26233,65 +26276,36 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 263,
-          "end": 267,
+          "start": 242,
+          "end": 246,
+          "nums": [
+            "09",
+            "18",
+            "21",
+            "30",
+            "46"
+          ]
+        },
+        {
+          "start": 248,
+          "end": 252,
+          "nums": [
+            "14",
+            "20",
+            "22",
+            "23",
+            "30"
+          ]
+        },
+        {
+          "start": 262,
+          "end": 266,
           "nums": [
             "08",
             "09",
             "21",
-            "40",
+            "30",
             "49"
-          ]
-        },
-        {
-          "start": 264,
-          "end": 268,
-          "nums": [
-            "08",
-            "21",
-            "40",
-            "49"
-          ]
-        },
-        {
-          "start": 265,
-          "end": 269,
-          "nums": [
-            "08",
-            "22",
-            "40",
-            "49"
-          ]
-        },
-        {
-          "start": 266,
-          "end": 270,
-          "nums": [
-            "08",
-            "19",
-            "22",
-            "40"
-          ]
-        },
-        {
-          "start": 267,
-          "end": 271,
-          "nums": [
-            "19",
-            "22",
-            "35",
-            "40"
-          ]
-        },
-        {
-          "start": 268,
-          "end": 272,
-          "nums": [
-            "02",
-            "19",
-            "22",
-            "35",
-            "40"
           ]
         },
         {
