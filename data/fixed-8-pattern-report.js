@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-10-18T17:18:43.329Z",
+  "generatedAt": "2026-10-19T14:28:55.008Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -23075,13 +23075,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "poolSize": 8,
       "pool": [
         "01",
-        "07",
+        "08",
+        "09",
         "10",
         "17",
         "24",
-        "40",
-        "44",
-        "49"
+        "30",
+        "41"
       ],
       "totalWindows": 58,
       "coveredWindows": 51,
@@ -23090,24 +23090,25 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 6,
-          "end": 10,
+          "start": 16,
+          "end": 20,
           "nums": [
-            "04",
-            "19",
-            "21",
-            "37"
+            "06",
+            "12",
+            "32",
+            "39",
+            "46"
           ]
         },
         {
-          "start": 26,
-          "end": 30,
+          "start": 21,
+          "end": 25,
           "nums": [
-            "02",
-            "29",
-            "30",
-            "38",
-            "46"
+            "18",
+            "28",
+            "37",
+            "42",
+            "47"
           ]
         },
         {
@@ -23122,84 +23123,100 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 116,
-          "end": 120,
+          "start": 86,
+          "end": 90,
           "nums": [
-            "06",
-            "08",
-            "11",
-            "16",
-            "22"
-          ]
-        },
-        {
-          "start": 146,
-          "end": 150,
-          "nums": [
-            "09",
-            "13",
+            "12",
+            "26",
             "27",
-            "42",
-            "48"
+            "36",
+            "49"
           ]
         },
         {
-          "start": 161,
-          "end": 165,
+          "start": 141,
+          "end": 145,
+          "nums": [
+            "05",
+            "23",
+            "33",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 201,
+          "end": 205,
           "nums": [
             "03",
-            "08",
-            "21",
+            "05",
+            "25",
             "32",
-            "37"
+            "40"
           ]
         },
         {
-          "start": 191,
-          "end": 195,
+          "start": 231,
+          "end": 235,
           "nums": [
-            "09",
-            "25",
-            "26",
-            "29"
+            "07",
+            "20",
+            "32",
+            "39",
+            "42"
           ]
         }
       ],
       "phasePlan": {
-        "phaseCount": 2,
+        "phaseCount": 3,
         "fullCovered": true,
         "phases": [
           {
             "start": 1,
-            "end": 170,
-            "windowCount": 34,
+            "end": 115,
+            "windowCount": 23,
+            "pool": [
+              "01",
+              "06",
+              "16",
+              "18",
+              "23",
+              "27",
+              "29",
+              "33"
+            ],
+            "coveredWindows": 23
+          },
+          {
+            "start": 116,
+            "end": 195,
+            "windowCount": 16,
+            "pool": [
+              "01",
+              "05",
+              "06",
+              "07",
+              "09",
+              "10",
+              "26",
+              "37"
+            ],
+            "coveredWindows": 16
+          },
+          {
+            "start": 196,
+            "end": 290,
+            "windowCount": 19,
             "pool": [
               "01",
               "02",
-              "16",
-              "24",
-              "27",
-              "31",
-              "33",
-              "37"
-            ],
-            "coveredWindows": 34
-          },
-          {
-            "start": 171,
-            "end": 290,
-            "windowCount": 24,
-            "pool": [
-              "01",
-              "03",
               "08",
               "09",
-              "10",
               "17",
-              "20",
-              "44"
+              "30",
+              "32"
             ],
-            "coveredWindows": 24
+            "coveredWindows": 19
           }
         ]
       },
@@ -23213,13 +23230,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "windowCount": 23,
             "pool": [
               "01",
-              "02",
+              "09",
               "16",
               "17",
               "24",
-              "37",
-              "48",
-              "49"
+              "27",
+              "28",
+              "46"
             ],
             "coveredWindows": 23,
             "missCount": 0,
@@ -23268,9 +23285,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
       },
       "walkForwardPlan": {
         "totalWindows": 55,
-        "coveredWindows": 22,
-        "missCount": 33,
-        "hitRate": 40,
+        "coveredWindows": 21,
+        "missCount": 34,
+        "hitRate": 38.18,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -23281,7 +23298,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 5,
             "basisWindowCount": 1,
             "pool": [
-              "02"
+              "09"
             ],
             "hits": [],
             "covered": false
@@ -23295,8 +23312,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 10,
             "basisWindowCount": 2,
             "pool": [
-              "02",
-              "04"
+              "09",
+              "13"
             ],
             "hits": [],
             "covered": false
@@ -23310,9 +23327,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 15,
             "basisWindowCount": 3,
             "pool": [
-              "02",
-              "04",
-              "27"
+              "01",
+              "09",
+              "13"
             ],
             "hits": [],
             "covered": false
@@ -23326,15 +23343,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 20,
             "basisWindowCount": 4,
             "pool": [
-              "02",
-              "04",
-              "16",
-              "27"
+              "01",
+              "06",
+              "09",
+              "13"
             ],
-            "hits": [
-              "16"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23345,13 +23360,15 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 25,
             "basisWindowCount": 5,
             "pool": [
-              "04",
+              "01",
+              "06",
               "09",
-              "16",
-              "27"
+              "28"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23362,13 +23379,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 30,
             "basisWindowCount": 6,
             "pool": [
-              "02",
-              "04",
-              "16",
-              "27"
+              "01",
+              "06",
+              "09",
+              "28"
             ],
             "hits": [
-              "04"
+              "06"
             ],
             "covered": true
           },
@@ -23381,13 +23398,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 35,
             "basisWindowCount": 7,
             "pool": [
-              "02",
-              "04",
-              "16",
-              "27"
+              "01",
+              "06",
+              "09",
+              "18",
+              "41"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23398,14 +23418,15 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 40,
             "basisWindowCount": 8,
             "pool": [
-              "02",
-              "04",
-              "16",
-              "24",
-              "27"
+              "01",
+              "06",
+              "09",
+              "28"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23416,16 +23437,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 45,
             "basisWindowCount": 9,
             "pool": [
-              "02",
-              "16",
-              "19",
-              "24",
-              "27"
+              "01",
+              "06",
+              "09",
+              "28"
             ],
-            "hits": [
-              "24"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23436,14 +23454,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 50,
             "basisWindowCount": 10,
             "pool": [
-              "02",
-              "16",
-              "19",
-              "24",
-              "27"
+              "01",
+              "06",
+              "09",
+              "13",
+              "18"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23454,11 +23474,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 55,
             "basisWindowCount": 11,
             "pool": [
+              "01",
+              "06",
               "09",
-              "19",
-              "24",
-              "27",
-              "38"
+              "13",
+              "18"
             ],
             "hits": [
               "09"
@@ -23474,14 +23494,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 60,
             "basisWindowCount": 12,
             "pool": [
+              "01",
+              "06",
               "09",
-              "19",
-              "24",
-              "27",
-              "38"
+              "13",
+              "18"
             ],
             "hits": [
-              "24"
+              "18"
             ],
             "covered": true
           },
@@ -23494,16 +23514,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 65,
             "basisWindowCount": 13,
             "pool": [
+              "01",
+              "03",
+              "06",
               "09",
-              "19",
-              "24",
-              "27",
-              "38"
+              "28"
             ],
-            "hits": [
-              "24"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23514,11 +23532,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 70,
             "basisWindowCount": 14,
             "pool": [
+              "01",
+              "06",
               "09",
-              "19",
-              "24",
-              "27",
-              "38"
+              "23",
+              "28"
             ],
             "hits": [],
             "covered": false
@@ -23532,11 +23550,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 75,
             "basisWindowCount": 15,
             "pool": [
+              "01",
+              "06",
+              "09",
               "10",
-              "19",
-              "24",
-              "27",
-              "38"
+              "23",
+              "28"
             ],
             "hits": [],
             "covered": false
@@ -23550,18 +23569,15 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 80,
             "basisWindowCount": 16,
             "pool": [
-              "02",
-              "10",
-              "19",
-              "24",
-              "27",
-              "38"
+              "01",
+              "06",
+              "09",
+              "23",
+              "28",
+              "46"
             ],
-            "hits": [
-              "19",
-              "27"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23572,17 +23588,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 85,
             "basisWindowCount": 17,
             "pool": [
-              "02",
-              "10",
-              "19",
-              "24",
-              "27",
-              "38"
+              "01",
+              "05",
+              "06",
+              "09",
+              "13",
+              "18",
+              "46"
             ],
-            "hits": [
-              "27"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23593,12 +23608,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 90,
             "basisWindowCount": 18,
             "pool": [
-              "02",
-              "10",
-              "19",
-              "24",
+              "01",
+              "18",
+              "23",
               "27",
-              "38"
+              "29",
+              "46"
             ],
             "hits": [],
             "covered": false
@@ -23612,12 +23627,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 95,
             "basisWindowCount": 19,
             "pool": [
+              "01",
+              "06",
               "10",
-              "19",
-              "24",
+              "18",
+              "23",
               "27",
-              "35",
-              "38"
+              "29"
             ],
             "hits": [],
             "covered": false
@@ -23631,16 +23647,19 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisEnd": 100,
             "basisWindowCount": 20,
             "pool": [
-              "02",
-              "10",
-              "17",
-              "19",
-              "24",
+              "01",
+              "06",
+              "18",
+              "23",
               "27",
-              "38"
+              "29",
+              "33"
             ],
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01",
+              "06"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -23652,18 +23671,15 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisWindowCount": 21,
             "pool": [
               "01",
-              "02",
-              "04",
-              "10",
-              "16",
-              "17",
-              "24",
-              "27"
+              "06",
+              "18",
+              "23",
+              "27",
+              "29",
+              "33"
             ],
-            "hits": [
-              "16"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -23675,17 +23691,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "basisWindowCount": 22,
             "pool": [
               "01",
-              "09",
-              "12",
+              "06",
               "16",
-              "24",
+              "18",
+              "23",
               "27",
-              "37",
-              "46"
+              "29",
+              "33"
             ],
             "hits": [
-              "01",
-              "09"
+              "01"
             ],
             "covered": true
           },
@@ -24313,9 +24328,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
       },
       "crossYearWalkForwardPlan": {
         "totalWindows": 55,
-        "coveredWindows": 32,
-        "missCount": 23,
-        "hitRate": 58.18,
+        "coveredWindows": 37,
+        "missCount": 18,
+        "hitRate": 67.27,
         "evaluations": [
           {
             "phaseStart": 1,
@@ -24323,11 +24338,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 6,
             "end": 10,
             "pool": [
-              "01",
               "03",
               "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
               "12"
@@ -24348,13 +24363,13 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "end": 15,
             "pool": [
               "03",
-              "04",
               "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
-              "12"
+              "13"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24362,8 +24377,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 10
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "11"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24371,14 +24388,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 16,
             "end": 20,
             "pool": [
+              "01",
               "03",
-              "04",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
-              "12"
+              "13"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24386,8 +24403,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 15
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "06"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24395,14 +24414,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 21,
             "end": 25,
             "pool": [
+              "01",
               "03",
-              "04",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
-              "12"
+              "13"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24410,10 +24429,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 20
             },
-            "hits": [
-              "10"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24421,14 +24438,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 26,
             "end": 30,
             "pool": [
+              "01",
               "03",
-              "04",
-              "05",
               "06",
               "08",
               "09",
               "10",
-              "11"
+              "11",
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24436,8 +24453,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 25
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01",
+              "03"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24445,11 +24465,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 31,
             "end": 35,
             "pool": [
+              "01",
               "03",
-              "04",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
               "12"
@@ -24461,8 +24481,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisEnd": 30
             },
             "hits": [
-              "04",
-              "08"
+              "06"
             ],
             "covered": true
           },
@@ -24472,14 +24491,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 36,
             "end": 40,
             "pool": [
+              "01",
               "03",
-              "04",
-              "05",
               "06",
               "08",
+              "09",
               "10",
-              "11",
-              "12"
+              "18",
+              "41"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24487,8 +24506,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 35
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24496,11 +24517,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 41,
             "end": 45,
             "pool": [
+              "01",
               "03",
-              "04",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
               "12"
@@ -24511,8 +24532,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 40
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "01"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24522,12 +24545,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "pool": [
               "01",
               "03",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
-              "19"
+              "12"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24548,12 +24571,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "pool": [
               "01",
               "03",
-              "05",
               "06",
               "08",
+              "09",
               "10",
-              "11",
-              "19"
+              "13",
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24578,8 +24601,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "08",
               "09",
               "10",
-              "11",
-              "19"
+              "13",
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24605,8 +24628,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "08",
               "09",
               "10",
-              "11",
-              "19"
+              "13",
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24614,8 +24637,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 60
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "18"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24625,12 +24650,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "pool": [
               "01",
               "03",
+              "05",
               "06",
               "08",
               "09",
               "10",
-              "11",
-              "19"
+              "11"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24638,8 +24663,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 65
             },
-            "hits": [],
-            "covered": false
+            "hits": [
+              "05"
+            ],
+            "covered": true
           },
           {
             "phaseStart": 1,
@@ -24647,14 +24674,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 71,
             "end": 75,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
               "09",
               "10",
-              "11",
-              "19"
+              "11"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24673,14 +24700,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 76,
             "end": 80,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
+              "09",
               "10",
-              "11",
-              "19",
-              "24"
+              "11"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24699,14 +24726,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 81,
             "end": 85,
             "pool": [
+              "01",
               "03",
-              "05",
               "06",
               "08",
+              "09",
               "10",
               "11",
-              "19",
-              "24"
+              "46"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24714,11 +24741,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisStart": 1,
               "currentBasisEnd": 80
             },
-            "hits": [
-              "05",
-              "19"
-            ],
-            "covered": true
+            "hits": [],
+            "covered": false
           },
           {
             "phaseStart": 1,
@@ -24726,14 +24750,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 86,
             "end": 90,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
+              "09",
               "10",
-              "11",
-              "19",
-              "24"
+              "46"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24750,14 +24774,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 91,
             "end": 95,
             "pool": [
+              "01",
               "03",
-              "05",
               "06",
               "08",
               "10",
               "11",
-              "19",
-              "24"
+              "18",
+              "46"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24776,14 +24800,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 96,
             "end": 100,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
               "11",
-              "19",
-              "35"
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24802,14 +24826,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "start": 101,
             "end": 105,
             "pool": [
+              "01",
               "03",
               "05",
               "06",
               "08",
               "10",
               "11",
-              "17",
-              "19"
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24818,6 +24842,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisEnd": 100
             },
             "hits": [
+              "01",
               "06"
             ],
             "covered": true
@@ -24830,12 +24855,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "pool": [
               "01",
               "03",
-              "04",
+              "05",
               "06",
               "08",
               "10",
               "11",
-              "17"
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24854,12 +24879,12 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "pool": [
               "01",
               "03",
+              "05",
               "06",
               "08",
-              "09",
               "10",
-              "12",
-              "46"
+              "11",
+              "18"
             ],
             "basis": {
               "historyYearCount": 5,
@@ -24868,8 +24893,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "currentBasisEnd": 110
             },
             "hits": [
-              "01",
-              "09"
+              "01"
             ],
             "covered": true
           },
@@ -25719,7 +25743,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 291,
         "end": 295,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 290,
@@ -25796,7 +25820,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25808,150 +25832,105 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "poolSize": 8,
       "pool": [
         "01",
-        "05",
+        "09",
         "10",
         "16",
-        "24",
+        "17",
+        "19",
         "37",
-        "39",
-        "40"
+        "39"
       ],
-      "totalWindows": 287,
-      "coveredWindows": 241,
-      "missCount": 46,
-      "hitRate": 83.97,
+      "totalWindows": 288,
+      "coveredWindows": 244,
+      "missCount": 44,
+      "hitRate": 84.72,
       "fullCovered": false,
       "missWindows": [
         {
-          "start": 10,
-          "end": 14,
+          "start": 4,
+          "end": 8,
           "nums": [
-            "19",
-            "27",
-            "28",
-            "32",
-            "49"
-          ]
-        },
-        {
-          "start": 11,
-          "end": 15,
-          "nums": [
-            "27",
-            "28",
-            "32",
+            "13",
+            "21",
             "41",
-            "49"
+            "43",
+            "45"
           ]
         },
         {
-          "start": 12,
-          "end": 16,
+          "start": 5,
+          "end": 9,
           "nums": [
+            "13",
+            "21",
+            "28",
+            "41",
+            "43"
+          ]
+        },
+        {
+          "start": 6,
+          "end": 10,
+          "nums": [
+            "13",
+            "21",
             "27",
             "28",
-            "32",
-            "38",
             "41"
           ]
         },
         {
-          "start": 13,
-          "end": 17,
+          "start": 7,
+          "end": 11,
           "nums": [
+            "11",
+            "21",
+            "27",
             "28",
-            "32",
-            "38",
-            "41",
+            "41"
+          ]
+        },
+        {
+          "start": 8,
+          "end": 12,
+          "nums": [
+            "11",
+            "21",
+            "27",
+            "28"
+          ]
+        },
+        {
+          "start": 19,
+          "end": 23,
+          "nums": [
+            "12",
+            "18",
+            "42",
+            "46",
             "47"
           ]
         },
         {
-          "start": 23,
-          "end": 27,
+          "start": 20,
+          "end": 24,
           "nums": [
-            "02",
-            "09",
-            "34",
-            "35",
-            "38"
+            "12",
+            "18",
+            "28",
+            "42",
+            "47"
           ]
         },
         {
-          "start": 24,
-          "end": 28,
+          "start": 37,
+          "end": 41,
           "nums": [
-            "02",
-            "30",
-            "34",
-            "35",
-            "38"
-          ]
-        },
-        {
-          "start": 25,
-          "end": 29,
-          "nums": [
-            "02",
-            "29",
-            "30",
-            "34",
-            "38"
-          ]
-        },
-        {
-          "start": 26,
-          "end": 30,
-          "nums": [
-            "02",
-            "29",
-            "30",
-            "38",
-            "46"
-          ]
-        },
-        {
-          "start": 27,
-          "end": 31,
-          "nums": [
-            "08",
-            "29",
-            "30",
-            "38",
-            "46"
-          ]
-        },
-        {
-          "start": 28,
-          "end": 32,
-          "nums": [
-            "04",
-            "08",
-            "29",
-            "30",
-            "46"
-          ]
-        },
-        {
-          "start": 29,
-          "end": 33,
-          "nums": [
-            "04",
-            "08",
-            "29",
-            "34",
-            "46"
-          ]
-        },
-        {
-          "start": 30,
-          "end": 34,
-          "nums": [
-            "04",
-            "08",
-            "29",
-            "34",
-            "46"
+            "11",
+            "28",
+            "36",
+            "42",
+            "43"
           ]
         },
         {
@@ -25985,6 +25964,50 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
+          "start": 61,
+          "end": 65,
+          "nums": [
+            "05",
+            "18",
+            "24",
+            "28",
+            "29"
+          ]
+        },
+        {
+          "start": 67,
+          "end": 71,
+          "nums": [
+            "05",
+            "23",
+            "24",
+            "25",
+            "48"
+          ]
+        },
+        {
+          "start": 68,
+          "end": 72,
+          "nums": [
+            "23",
+            "24",
+            "25",
+            "46",
+            "48"
+          ]
+        },
+        {
+          "start": 69,
+          "end": 73,
+          "nums": [
+            "24",
+            "25",
+            "34",
+            "46",
+            "48"
+          ]
+        },
+        {
           "start": 75,
           "end": 79,
           "nums": [
@@ -26007,39 +26030,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 77,
-          "end": 81,
-          "nums": [
-            "03",
-            "17",
-            "29",
-            "35",
-            "46"
-          ]
-        },
-        {
-          "start": 78,
-          "end": 82,
-          "nums": [
-            "03",
-            "17",
-            "27",
-            "35",
-            "46"
-          ]
-        },
-        {
-          "start": 85,
-          "end": 89,
-          "nums": [
-            "12",
-            "19",
-            "26",
-            "27",
-            "49"
-          ]
-        },
-        {
           "start": 86,
           "end": 90,
           "nums": [
@@ -26048,49 +26038,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "27",
             "36",
             "49"
-          ]
-        },
-        {
-          "start": 94,
-          "end": 98,
-          "nums": [
-            "11",
-            "17",
-            "35",
-            "43"
-          ]
-        },
-        {
-          "start": 95,
-          "end": 99,
-          "nums": [
-            "11",
-            "12",
-            "17",
-            "35",
-            "43"
-          ]
-        },
-        {
-          "start": 96,
-          "end": 100,
-          "nums": [
-            "11",
-            "12",
-            "17",
-            "33",
-            "43"
-          ]
-        },
-        {
-          "start": 112,
-          "end": 116,
-          "nums": [
-            "02",
-            "04",
-            "09",
-            "22",
-            "30"
           ]
         },
         {
@@ -26104,57 +26051,69 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 146,
-          "end": 150,
+          "start": 135,
+          "end": 139,
           "nums": [
-            "09",
+            "24",
+            "26",
+            "30",
+            "48",
+            "49"
+          ]
+        },
+        {
+          "start": 141,
+          "end": 145,
+          "nums": [
+            "05",
+            "23",
+            "33",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 142,
+          "end": 146,
+          "nums": [
+            "05",
+            "23",
+            "42",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 143,
+          "end": 147,
+          "nums": [
+            "05",
+            "13",
+            "42",
+            "43",
+            "44"
+          ]
+        },
+        {
+          "start": 144,
+          "end": 148,
+          "nums": [
+            "05",
+            "13",
+            "42",
+            "43",
+            "48"
+          ]
+        },
+        {
+          "start": 145,
+          "end": 149,
+          "nums": [
+            "05",
             "13",
             "27",
             "42",
             "48"
-          ]
-        },
-        {
-          "start": 147,
-          "end": 151,
-          "nums": [
-            "09",
-            "13",
-            "27",
-            "31",
-            "48"
-          ]
-        },
-        {
-          "start": 148,
-          "end": 152,
-          "nums": [
-            "09",
-            "27",
-            "31",
-            "45",
-            "48"
-          ]
-        },
-        {
-          "start": 149,
-          "end": 153,
-          "nums": [
-            "09",
-            "27",
-            "31",
-            "41",
-            "45"
-          ]
-        },
-        {
-          "start": 150,
-          "end": 154,
-          "nums": [
-            "09",
-            "31",
-            "41",
-            "45"
           ]
         },
         {
@@ -26168,14 +26127,25 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 164,
-          "end": 168,
+          "start": 168,
+          "end": 172,
           "nums": [
             "03",
-            "06",
             "15",
-            "19",
-            "21"
+            "24",
+            "28",
+            "44"
+          ]
+        },
+        {
+          "start": 169,
+          "end": 173,
+          "nums": [
+            "03",
+            "24",
+            "26",
+            "28",
+            "44"
           ]
         },
         {
@@ -26200,90 +26170,91 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 177,
-          "end": 181,
-          "nums": [
-            "14",
-            "15",
-            "18",
-            "19",
-            "21"
-          ]
-        },
-        {
-          "start": 178,
-          "end": 182,
-          "nums": [
-            "15",
-            "18",
-            "19",
-            "21",
-            "41"
-          ]
-        },
-        {
-          "start": 191,
-          "end": 195,
-          "nums": [
-            "09",
-            "25",
-            "26",
-            "29"
-          ]
-        },
-        {
-          "start": 205,
-          "end": 209,
+          "start": 201,
+          "end": 205,
           "nums": [
             "03",
-            "08",
-            "19",
+            "05",
+            "25",
+            "32",
+            "40"
+          ]
+        },
+        {
+          "start": 202,
+          "end": 206,
+          "nums": [
+            "03",
+            "05",
+            "25",
+            "40",
+            "47"
+          ]
+        },
+        {
+          "start": 203,
+          "end": 207,
+          "nums": [
+            "03",
+            "05",
+            "25",
             "31",
             "47"
           ]
         },
         {
-          "start": 206,
-          "end": 210,
+          "start": 243,
+          "end": 247,
           "nums": [
-            "08",
-            "19",
-            "31",
-            "47",
-            "49"
-          ]
-        },
-        {
-          "start": 240,
-          "end": 244,
-          "nums": [
-            "09",
-            "21",
-            "27",
-            "46",
-            "49"
-          ]
-        },
-        {
-          "start": 241,
-          "end": 245,
-          "nums": [
-            "09",
-            "18",
-            "21",
-            "46",
-            "49"
-          ]
-        },
-        {
-          "start": 242,
-          "end": 246,
-          "nums": [
-            "09",
             "18",
             "21",
             "30",
+            "40",
             "46"
+          ]
+        },
+        {
+          "start": 244,
+          "end": 248,
+          "nums": [
+            "18",
+            "20",
+            "30",
+            "40",
+            "46"
+          ]
+        },
+        {
+          "start": 245,
+          "end": 249,
+          "nums": [
+            "18",
+            "20",
+            "23",
+            "30",
+            "40"
+          ]
+        },
+        {
+          "start": 246,
+          "end": 250,
+          "nums": [
+            "14",
+            "20",
+            "23",
+            "30",
+            "40"
+          ]
+        },
+        {
+          "start": 247,
+          "end": 251,
+          "nums": [
+            "14",
+            "20",
+            "23",
+            "30",
+            "40"
           ]
         },
         {
@@ -26298,25 +26269,56 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         {
-          "start": 262,
-          "end": 266,
+          "start": 257,
+          "end": 261,
+          "nums": [
+            "07",
+            "20",
+            "22",
+            "24",
+            "46"
+          ]
+        },
+        {
+          "start": 258,
+          "end": 262,
+          "nums": [
+            "20",
+            "22",
+            "24",
+            "30",
+            "46"
+          ]
+        },
+        {
+          "start": 264,
+          "end": 268,
           "nums": [
             "08",
-            "09",
             "21",
-            "30",
+            "40",
             "49"
           ]
         },
         {
-          "start": 274,
-          "end": 278,
+          "start": 265,
+          "end": 269,
           "nums": [
-            "02",
-            "11",
-            "14",
-            "17",
-            "33"
+            "08",
+            "22",
+            "40",
+            "49"
+          ]
+        },
+        {
+          "start": 286,
+          "end": 290,
+          "nums": [
+            "08",
+            "24",
+            "25",
+            "38",
+            "40"
           ]
         }
       ],
@@ -33335,1169 +33337,6 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "36",
             "38",
             "41"
-          ]
-        }
-      ],
-      "phasePlan": null,
-      "presetThreePhasePlan": null,
-      "walkForwardPlan": null,
-      "crossYearWalkForwardPlan": null,
-      "currentWindow": null
-    },
-    {
-      "source": "hk",
-      "year": "2026",
-      "mode": "fixed-block",
-      "poolSize": 8,
-      "pool": [
-        "08",
-        "19",
-        "20",
-        "27",
-        "28",
-        "34",
-        "46",
-        "49"
-      ],
-      "totalWindows": 22,
-      "coveredWindows": 22,
-      "missCount": 0,
-      "hitRate": 100,
-      "fullCovered": true,
-      "missWindows": [],
-      "phasePlan": {
-        "phaseCount": 1,
-        "fullCovered": true,
-        "phases": [
-          {
-            "start": 1,
-            "end": 110,
-            "windowCount": 22,
-            "pool": [
-              "02",
-              "03",
-              "05",
-              "08",
-              "13",
-              "20",
-              "27",
-              "34"
-            ],
-            "coveredWindows": 22
-          }
-        ]
-      },
-      "presetThreePhasePlan": {
-        "phaseCount": 3,
-        "fullCovered": true,
-        "phases": [
-          {
-            "start": 1,
-            "end": 115,
-            "windowCount": 22,
-            "pool": [
-              "08",
-              "19",
-              "20",
-              "27",
-              "28",
-              "34",
-              "46",
-              "49"
-            ],
-            "coveredWindows": 22,
-            "missCount": 0,
-            "fullCovered": true,
-            "missWindows": []
-          },
-          {
-            "start": 116,
-            "end": 230,
-            "windowCount": 0,
-            "pool": [],
-            "coveredWindows": 0,
-            "missCount": 0,
-            "fullCovered": true,
-            "missWindows": []
-          },
-          {
-            "start": 231,
-            "end": 365,
-            "windowCount": 0,
-            "pool": [],
-            "coveredWindows": 0,
-            "missCount": 0,
-            "fullCovered": true,
-            "missWindows": []
-          }
-        ]
-      },
-      "walkForwardPlan": {
-        "totalWindows": 21,
-        "coveredWindows": 8,
-        "missCount": 13,
-        "hitRate": 38.1,
-        "evaluations": [
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 6,
-            "end": 10,
-            "basisStart": 1,
-            "basisEnd": 5,
-            "basisWindowCount": 1,
-            "pool": [
-              "01"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 11,
-            "end": 15,
-            "basisStart": 1,
-            "basisEnd": 10,
-            "basisWindowCount": 2,
-            "pool": [
-              "27"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 16,
-            "end": 20,
-            "basisStart": 1,
-            "basisEnd": 15,
-            "basisWindowCount": 3,
-            "pool": [
-              "05",
-              "27"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 21,
-            "end": 25,
-            "basisStart": 1,
-            "basisEnd": 20,
-            "basisWindowCount": 4,
-            "pool": [
-              "04",
-              "05",
-              "27"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 26,
-            "end": 30,
-            "basisStart": 1,
-            "basisEnd": 25,
-            "basisWindowCount": 5,
-            "pool": [
-              "04",
-              "11",
-              "27"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 31,
-            "end": 35,
-            "basisStart": 1,
-            "basisEnd": 30,
-            "basisWindowCount": 6,
-            "pool": [
-              "04",
-              "11",
-              "13",
-              "27"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 36,
-            "end": 40,
-            "basisStart": 1,
-            "basisEnd": 35,
-            "basisWindowCount": 7,
-            "pool": [
-              "03",
-              "04",
-              "11",
-              "13",
-              "27"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 41,
-            "end": 45,
-            "basisStart": 1,
-            "basisEnd": 40,
-            "basisWindowCount": 8,
-            "pool": [
-              "03",
-              "11",
-              "13",
-              "27",
-              "40"
-            ],
-            "hits": [
-              "40"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 46,
-            "end": 50,
-            "basisStart": 1,
-            "basisEnd": 45,
-            "basisWindowCount": 9,
-            "pool": [
-              "03",
-              "05",
-              "27",
-              "34",
-              "40"
-            ],
-            "hits": [
-              "40"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 51,
-            "end": 55,
-            "basisStart": 1,
-            "basisEnd": 50,
-            "basisWindowCount": 10,
-            "pool": [
-              "03",
-              "11",
-              "13",
-              "27",
-              "40"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 56,
-            "end": 60,
-            "basisStart": 1,
-            "basisEnd": 55,
-            "basisWindowCount": 11,
-            "pool": [
-              "11",
-              "13",
-              "19",
-              "27",
-              "40"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 61,
-            "end": 65,
-            "basisStart": 1,
-            "basisEnd": 60,
-            "basisWindowCount": 12,
-            "pool": [
-              "19",
-              "27",
-              "34",
-              "40",
-              "42"
-            ],
-            "hits": [
-              "27"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 66,
-            "end": 70,
-            "basisStart": 1,
-            "basisEnd": 65,
-            "basisWindowCount": 13,
-            "pool": [
-              "11",
-              "13",
-              "19",
-              "20",
-              "27",
-              "40"
-            ],
-            "hits": [
-              "13"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 71,
-            "end": 75,
-            "basisStart": 1,
-            "basisEnd": 70,
-            "basisWindowCount": 14,
-            "pool": [
-              "11",
-              "13",
-              "19",
-              "20",
-              "40",
-              "46"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 76,
-            "end": 80,
-            "basisStart": 1,
-            "basisEnd": 75,
-            "basisWindowCount": 15,
-            "pool": [
-              "11",
-              "13",
-              "19",
-              "20",
-              "27",
-              "40"
-            ],
-            "hits": [
-              "11",
-              "27"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 81,
-            "end": 85,
-            "basisStart": 1,
-            "basisEnd": 80,
-            "basisWindowCount": 16,
-            "pool": [
-              "11",
-              "13",
-              "19",
-              "20",
-              "27",
-              "40"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 86,
-            "end": 90,
-            "basisStart": 1,
-            "basisEnd": 85,
-            "basisWindowCount": 17,
-            "pool": [
-              "10",
-              "19",
-              "27",
-              "34",
-              "40",
-              "42"
-            ],
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 91,
-            "end": 95,
-            "basisStart": 1,
-            "basisEnd": 90,
-            "basisWindowCount": 18,
-            "pool": [
-              "13",
-              "19",
-              "27",
-              "34",
-              "40",
-              "42"
-            ],
-            "hits": [
-              "34",
-              "42"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 96,
-            "end": 100,
-            "basisStart": 1,
-            "basisEnd": 95,
-            "basisWindowCount": 19,
-            "pool": [
-              "13",
-              "19",
-              "27",
-              "34",
-              "40",
-              "42"
-            ],
-            "hits": [
-              "19",
-              "34"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 101,
-            "end": 105,
-            "basisStart": 1,
-            "basisEnd": 100,
-            "basisWindowCount": 20,
-            "pool": [
-              "13",
-              "19",
-              "27",
-              "34",
-              "40",
-              "42"
-            ],
-            "hits": [
-              "19"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 106,
-            "end": 110,
-            "basisStart": 1,
-            "basisEnd": 105,
-            "basisWindowCount": 21,
-            "pool": [
-              "03",
-              "08",
-              "10",
-              "27",
-              "34",
-              "42",
-              "49"
-            ],
-            "hits": [],
-            "covered": false
-          }
-        ]
-      },
-      "crossYearWalkForwardPlan": {
-        "totalWindows": 21,
-        "coveredWindows": 13,
-        "missCount": 8,
-        "hitRate": 61.9,
-        "evaluations": [
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 6,
-            "end": 10,
-            "pool": [
-              "01",
-              "02",
-              "03",
-              "08",
-              "13",
-              "14",
-              "20",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 1,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 5
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 11,
-            "end": 15,
-            "pool": [
-              "01",
-              "02",
-              "03",
-              "08",
-              "13",
-              "14",
-              "27",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 2,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 10
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 16,
-            "end": 20,
-            "pool": [
-              "01",
-              "02",
-              "03",
-              "08",
-              "13",
-              "14",
-              "27",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 3,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 15
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 21,
-            "end": 25,
-            "pool": [
-              "01",
-              "02",
-              "03",
-              "04",
-              "08",
-              "13",
-              "20",
-              "27"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 4,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 20
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 26,
-            "end": 30,
-            "pool": [
-              "01",
-              "02",
-              "04",
-              "08",
-              "11",
-              "13",
-              "20",
-              "27"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 5,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 25
-            },
-            "hits": [
-              "13"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 31,
-            "end": 35,
-            "pool": [
-              "01",
-              "02",
-              "04",
-              "08",
-              "11",
-              "13",
-              "20",
-              "27"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 6,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 30
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 36,
-            "end": 40,
-            "pool": [
-              "02",
-              "03",
-              "04",
-              "08",
-              "11",
-              "13",
-              "27",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 7,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 35
-            },
-            "hits": [
-              "02"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 41,
-            "end": 45,
-            "pool": [
-              "02",
-              "03",
-              "08",
-              "11",
-              "13",
-              "27",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 8,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 40
-            },
-            "hits": [
-              "08",
-              "40"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 46,
-            "end": 50,
-            "pool": [
-              "02",
-              "03",
-              "08",
-              "13",
-              "27",
-              "34",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 9,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 45
-            },
-            "hits": [
-              "08",
-              "40"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 51,
-            "end": 55,
-            "pool": [
-              "02",
-              "03",
-              "08",
-              "11",
-              "13",
-              "27",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 10,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 50
-            },
-            "hits": [
-              "08"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 56,
-            "end": 60,
-            "pool": [
-              "02",
-              "03",
-              "08",
-              "11",
-              "13",
-              "27",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 11,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 55
-            },
-            "hits": [
-              "44"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 61,
-            "end": 65,
-            "pool": [
-              "02",
-              "08",
-              "13",
-              "27",
-              "34",
-              "40",
-              "42",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 12,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 60
-            },
-            "hits": [
-              "27"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 66,
-            "end": 70,
-            "pool": [
-              "02",
-              "08",
-              "11",
-              "13",
-              "20",
-              "27",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 13,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 65
-            },
-            "hits": [
-              "13"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 71,
-            "end": 75,
-            "pool": [
-              "02",
-              "08",
-              "11",
-              "13",
-              "20",
-              "40",
-              "44",
-              "46"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 14,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 70
-            },
-            "hits": [
-              "44"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 76,
-            "end": 80,
-            "pool": [
-              "02",
-              "08",
-              "11",
-              "13",
-              "20",
-              "27",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 15,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 75
-            },
-            "hits": [
-              "08",
-              "11",
-              "27"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 81,
-            "end": 85,
-            "pool": [
-              "02",
-              "08",
-              "11",
-              "13",
-              "20",
-              "27",
-              "40",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 16,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 80
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 86,
-            "end": 90,
-            "pool": [
-              "02",
-              "08",
-              "10",
-              "27",
-              "34",
-              "40",
-              "42",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 17,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 85
-            },
-            "hits": [],
-            "covered": false
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 91,
-            "end": 95,
-            "pool": [
-              "02",
-              "08",
-              "13",
-              "27",
-              "34",
-              "40",
-              "42",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 18,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 90
-            },
-            "hits": [
-              "34",
-              "42"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 96,
-            "end": 100,
-            "pool": [
-              "02",
-              "08",
-              "13",
-              "27",
-              "34",
-              "40",
-              "42",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 19,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 95
-            },
-            "hits": [
-              "34"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 101,
-            "end": 105,
-            "pool": [
-              "02",
-              "08",
-              "13",
-              "27",
-              "34",
-              "40",
-              "42",
-              "44"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 20,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 100
-            },
-            "hits": [
-              "08"
-            ],
-            "covered": true
-          },
-          {
-            "phaseStart": 1,
-            "phaseEnd": 115,
-            "start": 106,
-            "end": 110,
-            "pool": [
-              "02",
-              "03",
-              "08",
-              "10",
-              "13",
-              "27",
-              "34",
-              "42"
-            ],
-            "basis": {
-              "historyYearCount": 6,
-              "currentWindowCount": 21,
-              "currentBasisStart": 1,
-              "currentBasisEnd": 105
-            },
-            "hits": [],
-            "covered": false
-          }
-        ]
-      },
-      "currentWindow": {
-        "start": 111,
-        "end": 115,
-        "count": 1,
-        "expected": 5,
-        "basisStart": null,
-        "basisEnd": null,
-        "basisWindowCount": 0,
-        "pool": [
-          "02",
-          "03",
-          "05",
-          "08",
-          "13",
-          "20",
-          "27",
-          "34"
-        ],
-        "crossYearPool": {
-          "phase": {
-            "start": 1,
-            "end": 115
-          },
-          "pool": [
-            "02",
-            "08",
-            "13",
-            "20",
-            "27",
-            "34",
-            "42",
-            "46"
-          ],
-          "basis": {
-            "historyYearCount": 6,
-            "currentWindowCount": 22,
-            "currentBasisStart": 1,
-            "currentBasisEnd": 110
-          }
-        },
-        "recommendedPool": [
-          "02",
-          "03",
-          "05",
-          "08",
-          "13",
-          "20",
-          "27",
-          "34"
-        ],
-        "recommendationMode": "same-year-stage",
-        "comparePools": {
-          "sameYearOnly": [
-            "03",
-            "05"
-          ],
-          "crossYearOnly": [
-            "42",
-            "46"
-          ],
-          "intersection": [
-            "02",
-            "08",
-            "13",
-            "20",
-            "27",
-            "34"
-          ]
-        },
-        "tracking": {
-          "status": "watch-current-window",
-          "rule": "fixed-8-same-year-stage",
-          "noChangeBeforeWindowEnd": true,
-          "recalcWhen": "completed-window-miss",
-          "stageDecayWhen": "two-completed-window-misses",
-          "completedMissStreak": 0
-        },
-        "hits": [],
-        "covered": false,
-        "remainingDraws": 4,
-        "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
-      }
-    },
-    {
-      "source": "hk",
-      "year": "2026",
-      "mode": "rolling-contiguous",
-      "poolSize": 8,
-      "pool": [
-        "03",
-        "08",
-        "13",
-        "20",
-        "28",
-        "34",
-        "46",
-        "49"
-      ],
-      "totalWindows": 107,
-      "coveredWindows": 105,
-      "missCount": 2,
-      "hitRate": 98.13,
-      "fullCovered": false,
-      "missWindows": [
-        {
-          "start": 8,
-          "end": 12,
-          "nums": [
-            "11",
-            "15",
-            "27",
-            "45"
-          ]
-        },
-        {
-          "start": 17,
-          "end": 21,
-          "nums": [
-            "04",
-            "10",
-            "12",
-            "33",
-            "40"
           ]
         }
       ],

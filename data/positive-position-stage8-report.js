@@ -1,8 +1,8 @@
 window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
-  "generatedAt": "2026-10-18T17:18:43.511Z",
+  "generatedAt": "2026-10-19T14:28:55.108Z",
   "sources": [
     {
-      "generatedAt": "2026-10-18T17:18:43.887Z",
+      "generatedAt": "2026-10-19T14:28:55.499Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2177,14 +2177,14 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                 {
                   "position": 1,
                   "pool": [
-                    "04",
-                    "06",
-                    "08",
+                    "07",
                     "10",
-                    "12",
-                    "15",
+                    "17",
                     "20",
-                    "21"
+                    "21",
+                    "23",
+                    "40",
+                    "46"
                   ],
                   "totalWindows": 23,
                   "coveredWindows": 23,
@@ -2195,13 +2195,13 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                 {
                   "position": 2,
                   "pool": [
-                    "02",
                     "03",
-                    "21",
+                    "08",
+                    "16",
+                    "17",
+                    "18",
                     "22",
-                    "23",
                     "29",
-                    "32",
                     "42"
                   ],
                   "totalWindows": 23,
@@ -2214,13 +2214,13 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "position": 3,
                   "pool": [
                     "01",
+                    "05",
                     "06",
                     "14",
                     "20",
-                    "24",
-                    "26",
-                    "30",
-                    "43"
+                    "25",
+                    "39",
+                    "44"
                   ],
                   "totalWindows": 23,
                   "coveredWindows": 23,
@@ -2233,12 +2233,12 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "pool": [
                     "01",
                     "05",
-                    "13",
-                    "14",
-                    "17",
-                    "25",
-                    "30",
-                    "37"
+                    "07",
+                    "19",
+                    "20",
+                    "29",
+                    "33",
+                    "49"
                   ],
                   "totalWindows": 23,
                   "coveredWindows": 23,
@@ -2249,14 +2249,14 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                 {
                   "position": 5,
                   "pool": [
-                    "02",
                     "03",
                     "11",
-                    "34",
-                    "38",
-                    "39",
+                    "26",
+                    "33",
                     "41",
-                    "47"
+                    "42",
+                    "44",
+                    "46"
                   ],
                   "totalWindows": 23,
                   "coveredWindows": 23,
@@ -2268,12 +2268,12 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "position": 6,
                   "pool": [
                     "08",
-                    "09",
-                    "12",
-                    "13",
-                    "24",
+                    "15",
                     "31",
-                    "43",
+                    "34",
+                    "36",
+                    "38",
+                    "41",
                     "49"
                   ],
                   "totalWindows": 23,
@@ -2523,7 +2523,7 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
       ]
     },
     {
-      "generatedAt": "2026-10-18T17:18:43.893Z",
+      "generatedAt": "2026-10-19T14:28:55.506Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -4528,360 +4528,6 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                   "coveredWindows": 3,
                   "hitRate": 100,
                   "fullCovered": true,
-                  "missWindows": []
-                }
-              ],
-              "fullCovered": true
-            },
-            {
-              "id": "231-365",
-              "start": 231,
-              "end": 365,
-              "positions": [
-                {
-                  "position": 1,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 2,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 3,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 4,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 5,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 6,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                }
-              ],
-              "fullCovered": true
-            }
-          ],
-          "fullCovered": true
-        },
-        {
-          "year": "2026",
-          "phases": [
-            {
-              "id": "001-115",
-              "start": 1,
-              "end": 115,
-              "positions": [
-                {
-                  "position": 1,
-                  "pool": [
-                    "04",
-                    "06",
-                    "10",
-                    "14",
-                    "20",
-                    "31",
-                    "34",
-                    "39"
-                  ],
-                  "totalWindows": 22,
-                  "coveredWindows": 22,
-                  "hitRate": 100,
-                  "fullCovered": true,
-                  "missWindows": []
-                },
-                {
-                  "position": 2,
-                  "pool": [
-                    "04",
-                    "07",
-                    "10",
-                    "12",
-                    "16",
-                    "23",
-                    "28",
-                    "44"
-                  ],
-                  "totalWindows": 22,
-                  "coveredWindows": 22,
-                  "hitRate": 100,
-                  "fullCovered": true,
-                  "missWindows": []
-                },
-                {
-                  "position": 3,
-                  "pool": [
-                    "01",
-                    "07",
-                    "22",
-                    "23",
-                    "24",
-                    "26",
-                    "28",
-                    "45"
-                  ],
-                  "totalWindows": 22,
-                  "coveredWindows": 22,
-                  "hitRate": 100,
-                  "fullCovered": true,
-                  "missWindows": []
-                },
-                {
-                  "position": 4,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "05",
-                    "09",
-                    "10",
-                    "19",
-                    "34"
-                  ],
-                  "totalWindows": 22,
-                  "coveredWindows": 22,
-                  "hitRate": 100,
-                  "fullCovered": true,
-                  "missWindows": []
-                },
-                {
-                  "position": 5,
-                  "pool": [
-                    "05",
-                    "13",
-                    "14",
-                    "18",
-                    "28",
-                    "31",
-                    "35",
-                    "49"
-                  ],
-                  "totalWindows": 22,
-                  "coveredWindows": 22,
-                  "hitRate": 100,
-                  "fullCovered": true,
-                  "missWindows": []
-                },
-                {
-                  "position": 6,
-                  "pool": [
-                    "06",
-                    "08",
-                    "14",
-                    "31",
-                    "33",
-                    "37",
-                    "40",
-                    "45"
-                  ],
-                  "totalWindows": 22,
-                  "coveredWindows": 22,
-                  "hitRate": 100,
-                  "fullCovered": true,
-                  "missWindows": []
-                }
-              ],
-              "fullCovered": true
-            },
-            {
-              "id": "116-230",
-              "start": 116,
-              "end": 230,
-              "positions": [
-                {
-                  "position": 1,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 2,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 3,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 4,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 5,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
-                  "missWindows": []
-                },
-                {
-                  "position": 6,
-                  "pool": [
-                    "01",
-                    "02",
-                    "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
-                  ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
                   "missWindows": []
                 }
               ],
