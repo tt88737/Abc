@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-10-23T18:19:55.821Z",
+  "generatedAt": "2026-10-24T14:28:30.809Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25766,7 +25766,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 296,
         "end": 300,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 295,
@@ -25844,7 +25844,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -25864,10 +25864,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "39",
         "40"
       ],
-      "totalWindows": 292,
-      "coveredWindows": 246,
+      "totalWindows": 293,
+      "coveredWindows": 247,
       "missCount": 46,
-      "hitRate": 84.25,
+      "hitRate": 84.3,
       "fullCovered": false,
       "missWindows": [
         {
@@ -34425,7 +34425,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 111,
         "end": 115,
-        "count": 3,
+        "count": 4,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -34503,10 +34503,14 @@ window.__FIXED8_PATTERN_REPORT__ = {
           {
             "issue": 113,
             "num": "05"
+          },
+          {
+            "issue": 114,
+            "num": "20"
           }
         ],
         "covered": true,
-        "remainingDraws": 2,
+        "remainingDraws": 1,
         "nextAction": "continue-current-stage",
         "switchSignal": "current-window-covered"
       }
@@ -34526,10 +34530,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "46",
         "49"
       ],
-      "totalWindows": 109,
-      "coveredWindows": 107,
+      "totalWindows": 110,
+      "coveredWindows": 108,
       "missCount": 2,
-      "hitRate": 98.17,
+      "hitRate": 98.18,
       "fullCovered": false,
       "missWindows": [
         {
