@@ -1,8 +1,8 @@
 window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
-  "generatedAt": "2026-11-11T21:22:04.731Z",
+  "generatedAt": "2026-11-12T14:30:15.343Z",
   "sources": [
     {
-      "generatedAt": "2026-11-11T21:22:05.318Z",
+      "generatedAt": "2026-11-12T14:30:15.952Z",
       "source": "am",
       "sourceName": "澳门",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -2523,7 +2523,7 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
       ]
     },
     {
-      "generatedAt": "2026-11-11T21:22:05.328Z",
+      "generatedAt": "2026-11-12T14:30:15.961Z",
       "source": "hk",
       "sourceName": "香港",
       "rule": "Position fixed 8: P1-P6 each uses its own stage pool; a 5-issue window is covered when that position opens at least one number from its pool.",
@@ -4782,16 +4782,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "01",
                     "02",
                     "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
+                    "11",
+                    "24",
+                    "29",
+                    "33",
+                    "47"
                   ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
+                  "totalWindows": 1,
+                  "coveredWindows": 1,
+                  "hitRate": 100,
+                  "fullCovered": true,
                   "missWindows": []
                 },
                 {
@@ -4800,16 +4800,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "01",
                     "02",
                     "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
+                    "11",
+                    "14",
+                    "20",
+                    "28",
+                    "43"
                   ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
+                  "totalWindows": 1,
+                  "coveredWindows": 1,
+                  "hitRate": 100,
+                  "fullCovered": true,
                   "missWindows": []
                 },
                 {
@@ -4818,16 +4818,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "01",
                     "02",
                     "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
+                    "17",
+                    "20",
+                    "21",
+                    "24",
+                    "27"
                   ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
+                  "totalWindows": 1,
+                  "coveredWindows": 1,
+                  "hitRate": 100,
+                  "fullCovered": true,
                   "missWindows": []
                 },
                 {
@@ -4837,15 +4837,15 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "02",
                     "03",
                     "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
+                    "10",
+                    "22",
+                    "37",
+                    "42"
                   ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
+                  "totalWindows": 1,
+                  "coveredWindows": 1,
+                  "hitRate": 100,
+                  "fullCovered": true,
                   "missWindows": []
                 },
                 {
@@ -4854,16 +4854,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "01",
                     "02",
                     "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
+                    "11",
+                    "13",
+                    "19",
+                    "29",
+                    "42"
                   ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
+                  "totalWindows": 1,
+                  "coveredWindows": 1,
+                  "hitRate": 100,
+                  "fullCovered": true,
                   "missWindows": []
                 },
                 {
@@ -4872,16 +4872,16 @@ window.__POSITIVE_POSITION_STAGE8_REPORT__ = {
                     "01",
                     "02",
                     "03",
-                    "04",
-                    "05",
-                    "06",
-                    "07",
-                    "08"
+                    "11",
+                    "15",
+                    "17",
+                    "37",
+                    "46"
                   ],
-                  "totalWindows": 0,
-                  "coveredWindows": 0,
-                  "hitRate": 0,
-                  "fullCovered": false,
+                  "totalWindows": 1,
+                  "coveredWindows": 1,
+                  "hitRate": 100,
+                  "fullCovered": true,
                   "missWindows": []
                 }
               ],

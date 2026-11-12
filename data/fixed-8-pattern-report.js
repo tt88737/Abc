@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-11-11T21:22:04.613Z",
+  "generatedAt": "2026-11-12T14:30:15.218Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25975,7 +25975,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 316,
         "end": 320,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 315,
@@ -26052,9 +26052,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -26072,10 +26072,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "46",
         "49"
       ],
-      "totalWindows": 311,
+      "totalWindows": 312,
       "coveredWindows": 261,
-      "missCount": 50,
-      "hitRate": 83.92,
+      "missCount": 51,
+      "hitRate": 83.65,
       "fullCovered": false,
       "missWindows": [
         {
@@ -26610,6 +26610,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
           "nums": [
             "31",
             "34",
+            "38",
+            "43",
+            "48"
+          ]
+        },
+        {
+          "start": 312,
+          "end": 316,
+          "nums": [
+            "03",
+            "31",
             "38",
             "43",
             "48"
@@ -33647,16 +33658,16 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "poolSize": 8,
       "pool": [
         "08",
+        "13",
         "19",
         "20",
-        "27",
         "28",
         "34",
-        "46",
-        "49"
+        "40",
+        "46"
       ],
-      "totalWindows": 23,
-      "coveredWindows": 23,
+      "totalWindows": 24,
+      "coveredWindows": 24,
       "missCount": 0,
       "hitRate": 100,
       "fullCovered": true,
@@ -33667,8 +33678,8 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "phases": [
           {
             "start": 1,
-            "end": 115,
-            "windowCount": 23,
+            "end": 120,
+            "windowCount": 24,
             "pool": [
               "02",
               "03",
@@ -33679,7 +33690,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
               "27",
               "34"
             ],
-            "coveredWindows": 23
+            "coveredWindows": 24
           }
         ]
       },
@@ -33709,9 +33720,11 @@ window.__FIXED8_PATTERN_REPORT__ = {
           {
             "start": 116,
             "end": 230,
-            "windowCount": 0,
-            "pool": [],
-            "coveredWindows": 0,
+            "windowCount": 1,
+            "pool": [
+              "08"
+            ],
+            "coveredWindows": 1,
             "missCount": 0,
             "fullCovered": true,
             "missWindows": []
@@ -34721,9 +34734,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
         ]
       },
       "currentWindow": {
-        "start": 116,
-        "end": 120,
-        "count": 4,
+        "start": 121,
+        "end": 125,
+        "count": 0,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -34755,9 +34768,9 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ],
           "basis": {
             "historyYearCount": 4,
-            "currentWindowCount": 0,
-            "currentBasisStart": null,
-            "currentBasisEnd": null
+            "currentWindowCount": 1,
+            "currentBasisStart": 116,
+            "currentBasisEnd": 120
           }
         },
         "recommendedPool": [
@@ -34795,23 +34808,18 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         "tracking": {
-          "status": "continue-current-stage",
+          "status": "watch-current-window",
           "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [
-          {
-            "issue": 116,
-            "num": "08"
-          }
-        ],
-        "covered": true,
-        "remainingDraws": 1,
-        "nextAction": "continue-current-stage",
-        "switchSignal": "current-window-covered"
+        "hits": [],
+        "covered": false,
+        "remainingDraws": 5,
+        "nextAction": "watch-current-window",
+        "switchSignal": "no-current-draws"
       }
     },
     {
@@ -34829,10 +34837,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "46",
         "49"
       ],
-      "totalWindows": 115,
-      "coveredWindows": 113,
+      "totalWindows": 116,
+      "coveredWindows": 114,
       "missCount": 2,
-      "hitRate": 98.26,
+      "hitRate": 98.28,
       "fullCovered": false,
       "missWindows": [
         {
