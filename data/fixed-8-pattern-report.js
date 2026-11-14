@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-11-13T20:54:04.239Z",
+  "generatedAt": "2026-11-14T14:29:33.705Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -25975,7 +25975,7 @@ window.__FIXED8_PATTERN_REPORT__ = {
       "currentWindow": {
         "start": 316,
         "end": 320,
-        "count": 2,
+        "count": 3,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 315,
@@ -26043,18 +26043,23 @@ window.__FIXED8_PATTERN_REPORT__ = {
           ]
         },
         "tracking": {
-          "status": "watch-current-window",
+          "status": "continue-current-stage",
           "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [],
-        "covered": false,
-        "remainingDraws": 3,
-        "nextAction": "watch-current-window",
-        "switchSignal": "active-window-not-covered-yet"
+        "hits": [
+          {
+            "issue": 318,
+            "num": "38"
+          }
+        ],
+        "covered": true,
+        "remainingDraws": 2,
+        "nextAction": "continue-current-stage",
+        "switchSignal": "current-window-covered"
       }
     },
     {
@@ -26072,10 +26077,10 @@ window.__FIXED8_PATTERN_REPORT__ = {
         "46",
         "49"
       ],
-      "totalWindows": 313,
+      "totalWindows": 314,
       "coveredWindows": 261,
-      "missCount": 52,
-      "hitRate": 83.39,
+      "missCount": 53,
+      "hitRate": 83.12,
       "fullCovered": false,
       "missWindows": [
         {
@@ -26634,6 +26639,17 @@ window.__FIXED8_PATTERN_REPORT__ = {
             "26",
             "31",
             "43",
+            "48"
+          ]
+        },
+        {
+          "start": 314,
+          "end": 318,
+          "nums": [
+            "03",
+            "26",
+            "31",
+            "38",
             "48"
           ]
         }
