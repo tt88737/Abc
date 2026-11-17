@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T23:23:31.715Z",
+  "generatedAt": "2026-11-17T14:30:28.079Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -26035,7 +26035,7 @@
       "currentWindow": {
         "start": 321,
         "end": 325,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 320,
@@ -26113,9 +26113,9 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 5,
+        "remainingDraws": 4,
         "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "switchSignal": "active-window-not-covered-yet"
       }
     },
     {
@@ -26133,10 +26133,10 @@
         "46",
         "49"
       ],
-      "totalWindows": 316,
+      "totalWindows": 317,
       "coveredWindows": 262,
-      "missCount": 54,
-      "hitRate": 82.91,
+      "missCount": 55,
+      "hitRate": 82.65,
       "fullCovered": false,
       "missWindows": [
         {
@@ -26717,6 +26717,17 @@
             "38",
             "43",
             "48"
+          ]
+        },
+        {
+          "start": 317,
+          "end": 321,
+          "nums": [
+            "05",
+            "20",
+            "26",
+            "38",
+            "41"
           ]
         }
       ],
@@ -34829,7 +34840,7 @@
       "currentWindow": {
         "start": 121,
         "end": 125,
-        "count": 1,
+        "count": 2,
         "expected": 5,
         "basisStart": null,
         "basisEnd": null,
@@ -34910,7 +34921,7 @@
         },
         "hits": [],
         "covered": false,
-        "remainingDraws": 4,
+        "remainingDraws": 3,
         "nextAction": "watch-current-window",
         "switchSignal": "active-window-not-covered-yet"
       }
@@ -34930,10 +34941,10 @@
         "46",
         "49"
       ],
-      "totalWindows": 117,
-      "coveredWindows": 115,
+      "totalWindows": 118,
+      "coveredWindows": 116,
       "missCount": 2,
-      "hitRate": 98.29,
+      "hitRate": 98.31,
       "fullCovered": false,
       "missWindows": [
         {
