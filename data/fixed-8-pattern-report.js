@@ -1,5 +1,5 @@
 window.__FIXED8_PATTERN_REPORT__ = {
-  "generatedAt": "2026-11-17T21:58:37.033Z",
+  "generatedAt": "2026-11-17T22:15:02.654Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
