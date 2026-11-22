@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T20:32:40.902Z",
+  "generatedAt": "2026-11-22T14:31:24.891Z",
   "poolRule": "fixed-8-codes",
   "modes": [
     "fixed-block",
@@ -26081,7 +26081,7 @@
       "currentWindow": {
         "start": 326,
         "end": 330,
-        "count": 0,
+        "count": 1,
         "expected": 5,
         "basisStart": 231,
         "basisEnd": 325,
@@ -26150,18 +26150,23 @@
           ]
         },
         "tracking": {
-          "status": "watch-current-window",
+          "status": "continue-current-stage",
           "rule": "fixed-8-same-year-stage",
           "noChangeBeforeWindowEnd": true,
           "recalcWhen": "completed-window-miss",
           "stageDecayWhen": "two-completed-window-misses",
           "completedMissStreak": 0
         },
-        "hits": [],
-        "covered": false,
-        "remainingDraws": 5,
-        "nextAction": "watch-current-window",
-        "switchSignal": "no-current-draws"
+        "hits": [
+          {
+            "issue": 326,
+            "num": "23"
+          }
+        ],
+        "covered": true,
+        "remainingDraws": 4,
+        "nextAction": "continue-current-stage",
+        "switchSignal": "current-window-covered"
       }
     },
     {
@@ -26179,10 +26184,10 @@
         "46",
         "49"
       ],
-      "totalWindows": 321,
-      "coveredWindows": 266,
+      "totalWindows": 322,
+      "coveredWindows": 267,
       "missCount": 55,
-      "hitRate": 82.87,
+      "hitRate": 82.92,
       "fullCovered": false,
       "missWindows": [
         {
